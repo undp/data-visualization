@@ -1,3 +1,9 @@
+
+
+@import 'tailwindcss';
+
+@config '../../tailwind.config.js';
+
 .undp-viz-bivariate-legend-container {
   width: 20rem;
   position: absolute;

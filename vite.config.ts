@@ -4,9 +4,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import eslint from 'vite-plugin-eslint';
 import dts from 'vite-plugin-dts';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [dts({ rollupTypes: true }), react(), eslint()],
+  plugins: [dts({ rollupTypes: true }), react(), eslint(), tailwindcss()],
   build: {
     cssCodeSplit: false,
     lib: {
