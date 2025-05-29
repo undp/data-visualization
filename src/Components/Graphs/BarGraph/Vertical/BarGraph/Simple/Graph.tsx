@@ -210,8 +210,7 @@ export function Graph(props: Props) {
                         : 0.3
                       : 0.85
                 }
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onMouseEnter={(event: any) => {
+                onMouseEnter={event => {
                   setMouseOverData(d);
                   setEventY(event.clientY);
                   setEventX(event.clientX);
@@ -230,8 +229,7 @@ export function Graph(props: Props) {
                     }
                   }
                 }}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onMouseMove={(event: any) => {
+                onMouseMove={event => {
                   setMouseOverData(d);
                   setEventY(event.clientY);
                   setEventX(event.clientX);

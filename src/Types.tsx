@@ -723,7 +723,7 @@ export interface GraphSettingsDataType {
   lineTitles?: [string, string];
   noOfXTicks?: number;
   dateFormat?: string;
-  lineColors?: [string, string];
+  lineColors?: string[];
   sameAxes?: boolean;
   highlightAreaSettings?:
     | HighlightAreaSettingsDataType[]

@@ -177,8 +177,7 @@ export function Graph(props: Props) {
                     className='undp-viz-g-with-hover'
                     key={j}
                     opacity={selectedColor ? (barColors[j] === selectedColor ? 1 : 0.3) : 0.85}
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    onMouseEnter={(event: any) => {
+                    onMouseEnter={event => {
                       setMouseOverData({ ...d, sizeIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -186,8 +185,7 @@ export function Graph(props: Props) {
                         onSeriesMouseOver({ ...d, sizeIndex: j });
                       }
                     }}
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    onMouseMove={(event: any) => {
+                    onMouseMove={event => {
                       setMouseOverData({ ...d, sizeIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);

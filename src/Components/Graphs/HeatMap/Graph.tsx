@@ -174,8 +174,7 @@ export function Graph(props: Props) {
                 <g
                   key={i}
                   transform={`translate(${x(d.column)},${y(d.row)})`}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onMouseEnter={(event: any) => {
+                  onMouseEnter={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -194,8 +193,7 @@ export function Graph(props: Props) {
                       }
                     }
                   }}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onMouseMove={(event: any) => {
+                  onMouseMove={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);

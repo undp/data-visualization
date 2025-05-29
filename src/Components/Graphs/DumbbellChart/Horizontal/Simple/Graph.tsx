@@ -196,7 +196,7 @@ export function Graph(props: Props) {
             text={axisTitle}
           />
           <YTicksAndGridLines
-            y={data.map((_d, i) => (y(`${i}`) as number) + y.bandwidth() / 2)}
+            y={dataWithId.map(d => (y(`${d.id}`) as number) + y.bandwidth() / 2)}
             x1={0}
             x2={graphWidth}
             styles={{ gridLines: styles?.yAxis?.gridLines }}
@@ -254,8 +254,7 @@ export function Graph(props: Props) {
                 <g
                   key={j}
                   opacity={selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onMouseEnter={(event: any) => {
+                  onMouseEnter={event => {
                     setMouseOverData({ ...d, xIndex: j });
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -277,8 +276,7 @@ export function Graph(props: Props) {
                       }
                     }
                   }}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onMouseMove={(event: any) => {
+                  onMouseMove={event => {
                     setMouseOverData({ ...d, xIndex: j });
                     setEventY(event.clientY);
                     setEventX(event.clientX);

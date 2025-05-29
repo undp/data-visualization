@@ -6220,8 +6220,6 @@ export const SettingsSchema = {
     lineColor: { type: 'string' },
     lineColors: {
       items: { type: 'string' },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
     },
     lineTitle: { type: 'string' },

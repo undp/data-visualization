@@ -350,8 +350,7 @@ export function Graph(props: Props) {
               <g
                 className='undp-viz-g-with-hover'
                 key={i}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onMouseEnter={(event: any) => {
+                onMouseEnter={event => {
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   setMouseOverData((d as any).data);
                   setEventY(event.clientY);
@@ -359,8 +358,7 @@ export function Graph(props: Props) {
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onSeriesMouseOver?.((d as any).data);
                 }}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onMouseMove={(event: any) => {
+                onMouseMove={event => {
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   setMouseOverData((d as any).data);
                   setEventY(event.clientY);
