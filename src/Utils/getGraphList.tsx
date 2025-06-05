@@ -28,13 +28,6 @@ export const GraphList = [
     availableInWideToLongFormat: false,
   },
   {
-    graphName: 'Animated bar chart',
-    graphID: 'radarChart',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
     graphName: 'Animated stacked bar chart',
     graphID: 'animatedStackedBarChart',
     availableInGriddedGraph: true,
@@ -134,7 +127,7 @@ export const GraphList = [
   },
   {
     graphName: 'Multi-line chart alternative',
-    graphID: 'multiLineChart',
+    graphID: 'multiLineAltChart',
     availableInGriddedGraph: true,
     geoHubMapPresentation: false,
     availableInWideToLongFormat: false,

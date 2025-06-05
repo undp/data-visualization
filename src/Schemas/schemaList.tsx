@@ -5916,6 +5916,7 @@ export const unitChartSettingsSchema = {
 };
 
 export const SettingsSchema = {
+  type: 'object',
   properties: {
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -5935,7 +5936,9 @@ export const SettingsSchema = {
       type: 'string',
       enum: ['center', 'top', 'bottom'],
     },
-    regressionLine: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
+    regressionLine: {
+      oneOf: [{ type: 'string' }, { type: 'boolean' }],
+    },
     ariaLabel: { type: 'string' },
     includeLayers: {
       type: 'array',
@@ -5951,7 +5954,11 @@ export const SettingsSchema = {
         type: 'object',
         properties: {
           name: { type: 'string' },
-          layerID: { type: 'array', items: { type: 'string' }, minItems: 1 },
+          layerID: {
+            type: 'array',
+            items: { type: 'string' },
+            minItems: 1,
+          },
         },
         required: ['name', 'layerID'],
       },
@@ -5961,22 +5968,29 @@ export const SettingsSchema = {
     minBarThickness: { type: 'number' },
     maxNumberOfBars: { type: 'number' },
     aggregationMethod: {
-      enum: ['average', 'count', 'max', 'min', 'sum'],
       type: 'string',
+      enum: ['average', 'count', 'max', 'min', 'sum'],
     },
     mapProjection: {
-      enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
       type: 'string',
+      enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
     },
-    animateLine: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    animateLine: {
+      oneOf: [{ type: 'number' }, { type: 'boolean' }],
+    },
     annotations: {
       type: 'array',
       items: {
+        type: 'object',
         properties: {
           color: { type: 'string' },
           text: { type: 'string' },
-          xCoordinate: { oneOf: [{ type: 'string' }, { type: 'number' }] },
-          yCoordinate: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+          xCoordinate: {
+            oneOf: [{ type: 'string' }, { type: 'number' }],
+          },
+          yCoordinate: {
+            oneOf: [{ type: 'string' }, { type: 'number' }],
+          },
           xOffset: { type: 'number' },
           yOffset: { type: 'number' },
           align: {
@@ -5987,7 +6001,9 @@ export const SettingsSchema = {
             type: 'string',
             enum: ['regular', 'bold', 'medium'],
           },
-          showConnector: { oneOf: [{ type: 'boolean' }, { type: 'number' }] },
+          showConnector: {
+            oneOf: [{ type: 'boolean' }, { type: 'number' }],
+          },
           connectorRadius: { type: 'number' },
           maxWidth: { type: 'number' },
           styles: {
@@ -6005,7 +6021,6 @@ export const SettingsSchema = {
             },
           },
         },
-        type: 'object',
         required: ['text'],
       },
     },
@@ -6014,120 +6029,126 @@ export const SettingsSchema = {
     autoPlay: { type: 'boolean' },
     autoSort: { type: 'boolean' },
     axisTitles: {
-      items: { type: 'string' },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
+      items: { type: 'string' },
+      minItems: 2,
+      maxItems: 2,
     },
-    backgroundColor: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
+    backgroundColor: {
+      oneOf: [{ type: 'string' }, { type: 'boolean' }],
+    },
     barColor: { type: 'string' },
     barColors: {
-      items: { type: 'string' },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
+      items: { type: 'string' },
+      minItems: 2,
+      maxItems: 2,
     },
     barGraphLayout: {
-      enum: ['horizontal', 'vertical'],
       type: 'string',
+      enum: ['horizontal', 'vertical'],
     },
     barPadding: { type: 'number' },
     barTitle: { type: 'string' },
     bottomMargin: { type: 'number' },
     center: {
-      items: { type: 'number' },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
+      items: { type: 'number' },
+      minItems: 2,
+      maxItems: 2,
     },
     centerGap: { type: 'number' },
     centerPoint: {
-      items: { type: 'number' },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
+      items: { type: 'number' },
+      minItems: 2,
+      maxItems: 2,
     },
     color: {
       anyOf: [
         {
-          items: { type: 'string' },
           type: 'array',
+          items: { type: 'string' },
         },
         { type: 'string' },
       ],
     },
-    oneOf: [
-      {
-        type: 'array',
-        items: { type: 'number' },
-      },
-      {
-        type: 'array',
-        items: { type: 'string' },
-      },
-    ],
+    colorDomain: {
+      oneOf: [
+        {
+          type: 'array',
+          items: { type: 'number' },
+        },
+        {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      ],
+    },
     colorLegendTitle: { type: 'string' },
     colors: {
       anyOf: [
         {
-          items: { type: 'string' },
           type: 'array',
+          items: { type: 'string' },
         },
         {
-          items: {
-            items: { type: 'string' },
-            type: 'array',
-          },
           type: 'array',
+          items: {
+            type: 'array',
+            items: { type: 'string' },
+          },
         },
         { type: 'string' },
       ],
     },
     columnData: {
+      type: 'array',
       items: {
+        type: 'object',
         properties: {
           align: {
-            enum: ['center', 'left', 'right'],
             type: 'string',
+            enum: ['center', 'left', 'right'],
           },
           chip: { type: 'boolean' },
           chipColors: {
+            type: 'array',
             items: {
+              type: 'object',
               properties: {
                 color: { type: 'string' },
                 value: { type: 'string' },
               },
-              type: 'object',
             },
-            type: 'array',
           },
           columnId: { type: 'string' },
           columnTitle: { type: 'string' },
           columnWidth: { type: 'number' },
           filterOptions: {
-            items: { type: 'string' },
             type: 'array',
+            items: { type: 'string' },
           },
           prefix: { type: 'string' },
           separator: { type: 'string' },
           sortable: { type: 'boolean' },
           suffix: { type: 'string' },
         },
-        type: 'object',
         required: ['columnId'],
       },
-      type: 'array',
     },
     connectorStrokeWidth: { type: 'number' },
     countOnly: {
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
       type: 'array',
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     dataDownload: { type: 'boolean' },
     dateFormat: { type: 'string' },
     donutColorDomain: {
-      items: { type: 'string' },
       type: 'array',
+      items: { type: 'string' },
     },
     donutStrokeWidth: { type: 'number' },
     dotOpacity: { type: 'number' },
@@ -6139,8 +6160,8 @@ export const SettingsSchema = {
     showColorScale: { type: 'boolean' },
     graphTitle: { type: 'string' },
     graphType: {
-      enum: ['barGraph', 'circlePacking', 'donutChart', 'treeMap'],
       type: 'string',
+      enum: ['barGraph', 'circlePacking', 'donutChart', 'treeMap'],
     },
     gridSize: { type: 'number' },
     height: { type: 'number' },
@@ -6175,7 +6196,9 @@ export const SettingsSchema = {
             properties: {
               coordinates: {
                 type: 'array',
-                items: { oneOf: [{ type: 'number' }, { type: 'null' }] },
+                items: {
+                  oneOf: [{ type: 'number' }, { type: 'null' }],
+                },
                 minItems: 4,
                 maxItems: 4,
               },
@@ -6191,36 +6214,42 @@ export const SettingsSchema = {
     },
     highlightColor: { type: 'string' },
     highlightedIds: {
-      items: { type: 'string' },
       type: 'array',
+      items: { type: 'string' },
     },
     highlightedDataPoints: {
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
       type: 'array',
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     highlightedLines: {
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
       type: 'array',
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     isWorldMap: { type: 'boolean' },
     labelOrder: {
-      items: { type: 'string' },
       type: 'array',
+      items: { type: 'string' },
     },
     labels: {
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
       type: 'array',
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     language: {
-      enum: ['ar', 'en', 'he'],
       type: 'string',
+      enum: ['ar', 'en', 'he'],
     },
     leftBarTitle: { type: 'string' },
     leftMargin: { type: 'number' },
     lineColor: { type: 'string' },
     lineColors: {
-      items: { type: 'string' },
       type: 'array',
+      items: { type: 'string' },
     },
     lineTitle: { type: 'string' },
     mainText: {
@@ -6239,7 +6268,9 @@ export const SettingsSchema = {
     },
     mapBorderColor: { type: 'string' },
     mapBorderWidth: { type: 'number' },
-    mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    mapData: {
+      oneOf: [{ type: 'object' }, { type: 'string' }],
+    },
     mapNoDataColor: { type: 'string' },
     mapProperty: { type: 'string' },
     mapStyle: {
@@ -6260,10 +6291,10 @@ export const SettingsSchema = {
       ],
     },
     mapStyles: {
-      items: { type: 'string' },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
+      items: { type: 'string' },
+      minItems: 2,
+      maxItems: 2,
     },
     maxPositionValue: { type: 'number' },
     maxRadiusValue: { type: 'number' },
@@ -6283,7 +6314,9 @@ export const SettingsSchema = {
     prefix: { type: 'string' },
     radius: { type: 'number' },
     refValues: {
+      type: 'array',
       items: {
+        type: 'object',
         properties: {
           color: { type: 'string' },
           text: { type: 'string' },
@@ -6303,13 +6336,13 @@ export const SettingsSchema = {
             },
           },
         },
-        type: 'object',
         required: ['value', 'text'],
       },
-      type: 'array',
     },
     refXValues: {
+      type: 'array',
       items: {
+        type: 'object',
         properties: {
           color: { type: 'string' },
           text: { type: 'string' },
@@ -6329,13 +6362,13 @@ export const SettingsSchema = {
             },
           },
         },
-        type: 'object',
         required: ['value', 'text'],
       },
-      type: 'array',
     },
     refYValues: {
+      type: 'array',
       items: {
+        type: 'object',
         properties: {
           color: { type: 'string' },
           text: { type: 'string' },
@@ -6355,18 +6388,19 @@ export const SettingsSchema = {
             },
           },
         },
-        type: 'object',
         required: ['value', 'text'],
       },
-      type: 'array',
     },
     customHighlightAreaSettings: {
       type: 'array',
       items: {
+        type: 'object',
         properties: {
           coordinates: {
             type: 'array',
-            items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+            items: {
+              oneOf: [{ type: 'string' }, { type: 'number' }],
+            },
             minItems: 4,
           },
           color: { type: 'string' },
@@ -6374,7 +6408,6 @@ export const SettingsSchema = {
           dashedStroke: { type: 'boolean' },
           closePath: { type: 'boolean' },
         },
-        type: 'object',
         required: ['coordinates'],
       },
     },
@@ -6384,8 +6417,8 @@ export const SettingsSchema = {
     sameAxes: { type: 'boolean' },
     scale: { type: 'number' },
     scaleType: {
-      enum: ['categorical', 'linear', 'threshold'],
       type: 'string',
+      enum: ['categorical', 'linear', 'threshold'],
     },
     showAntarctica: { type: 'boolean' },
     showAxis: { type: 'boolean' },
@@ -6400,8 +6433,8 @@ export const SettingsSchema = {
     showValues: { type: 'boolean' },
     size: { type: 'number' },
     sortData: {
-      enum: ['asc', 'desc'],
       type: 'string',
+      enum: ['asc', 'desc'],
     },
     sortParameter: {
       anyOf: [
@@ -6424,8 +6457,8 @@ export const SettingsSchema = {
       },
     },
     stripType: {
-      enum: ['dot', 'strip'],
       type: 'string',
+      enum: ['dot', 'strip'],
     },
     strokeWidth: { type: 'number' },
     subNote: { type: 'string' },
@@ -6440,33 +6473,35 @@ export const SettingsSchema = {
     xAxisTitle: { type: 'string' },
     xColorLegendTitle: { type: 'string' },
     xDomain: {
-      items: { type: 'number' },
       type: 'array',
+      items: { type: 'number' },
     },
     yAxisTitle: { type: 'string' },
     yColorLegendTitle: { type: 'string' },
     yDomain: {
-      items: { type: 'number' },
       type: 'array',
+      items: { type: 'number' },
     },
-    year: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+    year: {
+      oneOf: [{ type: 'string' }, { type: 'number' }],
+    },
     zoomLevel: { type: 'number' },
     zoomScaleExtend: {
-      items: { type: 'number' },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
+      items: { type: 'number' },
+      minItems: 2,
+      maxItems: 2,
     },
     zoomTranslateExtend: {
-      items: {
-        items: { type: 'number' },
-        maxItems: 2,
-        minItems: 2,
-        type: 'array',
-      },
-      maxItems: 2,
-      minItems: 2,
       type: 'array',
+      items: {
+        type: 'array',
+        items: { type: 'number' },
+        minItems: 2,
+        maxItems: 2,
+      },
+      minItems: 2,
+      maxItems: 2,
     },
     sortNodes: {
       type: 'string',
@@ -6474,27 +6509,57 @@ export const SettingsSchema = {
     },
     nodePadding: { type: 'number' },
     nodeWidth: { type: 'number' },
-    defaultLinkOpacity: { type: 'number', minimum: 0, maximum: 1 },
-    animateLinks: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
-    sourceColors: { oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }] },
-    targetColors: { oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }] },
+    defaultLinkOpacity: {
+      type: 'number',
+      minimum: 0,
+      maximum: 1,
+    },
+    animateLinks: {
+      oneOf: [{ type: 'number' }, { type: 'boolean' }],
+    },
+    sourceColors: {
+      oneOf: [
+        { type: 'string' },
+        {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      ],
+    },
+    targetColors: {
+      oneOf: [
+        { type: 'string' },
+        {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      ],
+    },
     sourceColorDomain: {
       type: 'array',
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     targetColorDomain: {
       type: 'array',
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     sourceTitle: { type: 'string' },
     targetTitle: { type: 'string' },
     highlightedSourceDataPoints: {
       type: 'array',
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     highlightedTargetDataPoints: {
       type: 'array',
-      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      items: {
+        oneOf: [{ type: 'string' }, { type: 'number' }],
+      },
     },
     cardSearchColumns: {
       type: 'array',
@@ -6510,8 +6575,13 @@ export const SettingsSchema = {
           column: { type: 'string' },
           width: { type: 'string' },
           label: { type: 'string' },
-          defaultValue: { oneOf: [{ type: 'string' }, { type: 'number' }] },
-          excludeValues: { type: 'array', items: { type: 'string' } },
+          defaultValue: {
+            oneOf: [{ type: 'string' }, { type: 'number' }],
+          },
+          excludeValues: {
+            type: 'array',
+            items: { type: 'string' },
+          },
         },
         required: ['column'],
       },
@@ -6528,7 +6598,10 @@ export const SettingsSchema = {
             properties: {
               value: { type: 'string' },
               label: { type: 'string' },
-              type: { type: 'string', enum: ['asc', 'desc'] },
+              type: {
+                type: 'string',
+                enum: ['asc', 'desc'],
+              },
             },
             required: ['value', 'label', 'type'],
           },
@@ -6545,8 +6618,12 @@ export const SettingsSchema = {
     labelColor: { type: 'string' },
     noOfYTicks: { type: 'number' },
     noOfTicks: { type: 'number' },
-    minDate: { oneOf: [{ type: 'string' }, { type: 'number' }] },
-    maxDate: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+    minDate: {
+      oneOf: [{ type: 'string' }, { type: 'number' }],
+    },
+    maxDate: {
+      oneOf: [{ type: 'string' }, { type: 'number' }],
+    },
     colorLegendColors: {
       type: 'array',
       items: { type: 'string' },
@@ -6581,8 +6658,13 @@ export const SettingsSchema = {
       type: 'string',
       enum: ['light', 'normal'],
     },
-    allowDataDownloadOnDetail: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
-    noOfItemsInAPage: { type: 'number', minimum: 0 },
+    allowDataDownloadOnDetail: {
+      oneOf: [{ type: 'string' }, { type: 'boolean' }],
+    },
+    noOfItemsInAPage: {
+      type: 'number',
+      minimum: 0,
+    },
     orientation: {
       type: 'string',
       enum: ['vertical', 'horizontal'],
@@ -6597,5 +6679,4 @@ export const SettingsSchema = {
     },
     minWidth: { type: 'string' },
   },
-  type: 'object',
 };
