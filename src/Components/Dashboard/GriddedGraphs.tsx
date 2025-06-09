@@ -106,9 +106,7 @@ export function GriddedGraphs(props: Props) {
     graphDataConfiguration,
   );
   const [filterSettings, setFilterSettings] = useState<FilterSettingsDataType[]>([]);
-  const [advancedGraphSettings, setAdvancedGraphSettings] = useState<
-    GraphSettingsDataType | object
-  >({});
+  const [advancedGraphSettings, setAdvancedGraphSettings] = useState<GraphSettingsDataType>({});
 
   const filterConfig = useMemo(
     () => ({
@@ -246,22 +244,31 @@ export function GriddedGraphs(props: Props) {
           }}
         >
           <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {graphSettings?.graphTitle ||
+            {advancedGraphSettings?.graphTitle ||
+            advancedGraphSettings?.graphDescription ||
+            graphSettings?.graphTitle ||
             graphSettings?.graphDescription ||
             graphSettings?.graphDownload ||
             graphSettings?.dataDownload ? (
               <GraphHeader
                 styles={{
-                  title: graphSettings?.styles?.title,
-                  description: graphSettings?.styles?.description,
+                  title: advancedGraphSettings?.styles?.title || graphSettings?.styles?.title,
+                  description:
+                    advancedGraphSettings?.styles?.description ||
+                    graphSettings?.styles?.description,
                 }}
                 classNames={{
-                  title: graphSettings?.classNames?.title,
-                  description: graphSettings?.classNames?.description,
+                  title:
+                    advancedGraphSettings?.classNames?.title || graphSettings?.classNames?.title,
+                  description:
+                    advancedGraphSettings?.classNames?.description ||
+                    graphSettings?.classNames?.description,
                 }}
-                graphTitle={graphSettings?.graphTitle}
-                graphDescription={graphSettings?.graphDescription}
-                width={graphSettings?.width}
+                graphTitle={advancedGraphSettings?.graphTitle || graphSettings?.graphTitle}
+                graphDescription={
+                  advancedGraphSettings?.graphDescription || graphSettings?.graphDescription
+                }
+                width={advancedGraphSettings?.width || graphSettings?.width}
                 graphDownload={graphSettings?.graphDownload ? graphParentDiv.current : undefined}
                 dataDownload={
                   graphSettings?.dataDownload && data ? (data.length > 0 ? data : null) : null

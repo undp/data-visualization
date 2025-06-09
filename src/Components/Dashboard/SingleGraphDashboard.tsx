@@ -344,22 +344,32 @@ export function SingleGraphDashboard(props: Props) {
               .map(el => el.graphID)
               .indexOf(graphType) !== -1 ? (
               <>
-                {graphSettings?.graphTitle ||
+                {advancedGraphSettings?.graphTitle ||
+                advancedGraphSettings?.graphDescription ||
+                graphSettings?.graphTitle ||
                 graphSettings?.graphDescription ||
                 graphSettings?.graphDownload ||
                 graphSettings?.dataDownload ? (
                   <GraphHeader
                     styles={{
-                      title: graphSettings?.styles?.title,
-                      description: graphSettings?.styles?.description,
+                      title: advancedGraphSettings?.styles?.title || graphSettings?.styles?.title,
+                      description:
+                        advancedGraphSettings?.styles?.description ||
+                        graphSettings?.styles?.description,
                     }}
                     classNames={{
-                      title: graphSettings?.classNames?.title,
-                      description: graphSettings?.classNames?.description,
+                      title:
+                        advancedGraphSettings?.classNames?.title ||
+                        graphSettings?.classNames?.title,
+                      description:
+                        advancedGraphSettings?.classNames?.description ||
+                        graphSettings?.classNames?.description,
                     }}
-                    graphTitle={graphSettings?.graphTitle}
-                    graphDescription={graphSettings?.graphDescription}
-                    width={graphSettings?.width}
+                    graphTitle={advancedGraphSettings?.graphTitle || graphSettings?.graphTitle}
+                    graphDescription={
+                      advancedGraphSettings?.graphDescription || graphSettings?.graphDescription
+                    }
+                    width={advancedGraphSettings?.width || graphSettings?.width}
                     graphDownload={
                       graphSettings?.graphDownload ? graphParentDiv.current : undefined
                     }
