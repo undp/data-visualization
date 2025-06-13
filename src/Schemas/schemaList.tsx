@@ -3832,6 +3832,10 @@ export const choroplethMapSettingsSchema = {
     graphTitle: { type: 'string' },
     ariaLabel: { type: 'string' },
     mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    zoomInteraction: {
+      type: 'string',
+      enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+    },
     mapProjection: {
       enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
       type: 'string',
@@ -3950,6 +3954,10 @@ export const biVariateChoroplethMapSettingsSchema = {
     detailsOnClick: { type: 'string' },
     ariaLabel: { type: 'string' },
     mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    zoomInteraction: {
+      type: 'string',
+      enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+    },
     mapProjection: {
       enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
       type: 'string',
@@ -4066,6 +4074,10 @@ export const dotDensityMapSettingsSchema = {
     ariaLabel: { type: 'string' },
     graphTitle: { type: 'string' },
     mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    zoomInteraction: {
+      type: 'string',
+      enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+    },
     mapProjection: {
       enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
       type: 'string',
@@ -4180,6 +4192,10 @@ export const animatedChoroplethMapSettingsSchema = {
     ariaLabel: { type: 'string' },
     graphTitle: { type: 'string' },
     mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    zoomInteraction: {
+      type: 'string',
+      enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+    },
     mapProjection: {
       enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
       type: 'string',
@@ -4300,6 +4316,10 @@ export const animatedBiVariateChoroplethMapSettingsSchema = {
     classNames: { type: 'object' },
     detailsOnClick: { type: 'string' },
     mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    zoomInteraction: {
+      type: 'string',
+      enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+    },
     mapProjection: {
       enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
       type: 'string',
@@ -4420,6 +4440,10 @@ export const animatedDotDensityMapSettingsSchema = {
     graphTitle: { type: 'string' },
     ariaLabel: { type: 'string' },
     mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    zoomInteraction: {
+      type: 'string',
+      enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+    },
     mapProjection: {
       enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
       type: 'string',
@@ -6618,6 +6642,10 @@ export const SettingsSchema = {
     labelColor: { type: 'string' },
     noOfYTicks: { type: 'number' },
     noOfTicks: { type: 'number' },
+    zoomInteraction: {
+      type: 'string',
+      enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+    },
     minDate: {
       oneOf: [{ type: 'string' }, { type: 'number' }],
     },

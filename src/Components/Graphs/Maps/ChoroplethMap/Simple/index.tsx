@@ -12,6 +12,8 @@ import {
   StyleObject,
   ClassNameObject,
   ScaleDataType,
+  MapProjectionTypes,
+  ZoomInteractionTypes,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -73,6 +75,8 @@ interface Props {
   scale?: number;
   /** Center point of the map */
   centerPoint?: [number, number];
+  /** Defines the zoom mode for the map */
+  zoomInteraction?: ZoomInteractionTypes;
   /** Stroke width of the regions in the map */
   mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
@@ -80,7 +84,7 @@ interface Props {
   /** Toggle if the map is a world map */
   isWorldMap?: boolean;
   /** Map projection type */
-  mapProjection?: 'mercator' | 'equalEarth' | 'naturalEarth' | 'orthographic' | 'albersUSA';
+  mapProjection?: MapProjectionTypes;
   /** Extend of the allowed zoom in the map */
   zoomScaleExtend?: [number, number];
   /** Extend of the allowed panning in the map */
@@ -169,6 +173,7 @@ export function ChoroplethMap(props: Props) {
     styles,
     classNames,
     mapProjection,
+    zoomInteraction = 'button',
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -331,6 +336,7 @@ export function ChoroplethMap(props: Props) {
                   classNames={classNames}
                   detailsOnClick={detailsOnClick}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
+                  zoomInteraction={zoomInteraction}
                 />
               ) : null}
             </div>

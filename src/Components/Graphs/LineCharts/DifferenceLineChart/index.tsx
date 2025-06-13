@@ -16,6 +16,7 @@ import {
   StyleObject,
   ClassNameObject,
   HighlightAreaSettingsDataType,
+  CurveTypes,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { generateRandomString } from '@/Utils/generateRandomString';
@@ -116,7 +117,7 @@ interface Props {
   /** Highlighted area(custom shape) on the chart  */
   customHighlightAreaSettings?: CustomHighlightAreaSettingsDataType[];
   /** Curve type for the line */
-  curveType?: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType?: CurveTypes;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */

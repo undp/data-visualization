@@ -14,6 +14,8 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  ZoomInteractionTypes,
+  MapProjectionTypes,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
@@ -73,6 +75,8 @@ interface Props {
   scale?: number;
   /** Center point of the map */
   centerPoint?: [number, number];
+  /** Defines the zoom mode for the map */
+  zoomInteraction?: ZoomInteractionTypes;
   /** Stroke width of the regions in the map */
   mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
@@ -80,7 +84,7 @@ interface Props {
   /** Toggle if the map is a world map */
   isWorldMap?: boolean;
   /** Map projection type */
-  mapProjection?: 'mercator' | 'equalEarth' | 'naturalEarth' | 'orthographic' | 'albersUSA';
+  mapProjection?: MapProjectionTypes;
   /** Extend of the allowed zoom in the map */
   zoomScaleExtend?: [number, number];
   /** Extend of the allowed panning in the map */
@@ -165,6 +169,7 @@ export function DotDensityMap(props: Props) {
     styles,
     classNames,
     mapProjection,
+    zoomInteraction = 'button',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -322,6 +327,7 @@ export function DotDensityMap(props: Props) {
                   resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
                   styles={styles}
                   classNames={classNames}
+                  zoomInteraction={zoomInteraction}
                   detailsOnClick={detailsOnClick}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
                 />

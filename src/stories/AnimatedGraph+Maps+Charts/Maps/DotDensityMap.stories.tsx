@@ -78,6 +78,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    zoomInteraction: {
+      control: 'inline-radio',
+      options: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
+      table: {
+        type: {
+          summary: "'scroll' | 'ctrlScroll' | 'button' | 'noZoom'",
+        },
+        defaultValue: { summary: 'button' },
+      },
+    },
     centerPoint: {
       control: 'text',
       table: { type: { summary: '[number, number]' } },

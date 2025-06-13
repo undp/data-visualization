@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   HighlightAreaSettingsDataType,
+  CurveTypes,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -101,7 +102,7 @@ interface Props {
   /** Highlighted area(custom shape) on the chart  */
   customHighlightAreaSettings?: CustomHighlightAreaSettingsDataType[];
   /** Curve type for the line */
-  curveType?: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType?: CurveTypes;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */

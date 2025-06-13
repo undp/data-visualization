@@ -22,6 +22,7 @@ import { Delaunay } from 'd3-delaunay';
 import {
   AnnotationSettingsDataType,
   ClassNameObject,
+  CurveTypes,
   CustomHighlightAreaSettingsDataType,
   HighlightAreaSettingsDataType,
   MultiLineAltChartDataType,
@@ -77,7 +78,7 @@ interface Props {
   minDate?: string | number;
   maxDate?: string | number;
   colorDomain: (string | number)[];
-  curveType: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   selectedColor?: string;

@@ -15,6 +15,7 @@ import {
   StyleObject,
   ClassNameObject,
   HighlightAreaSettingsDataType,
+  CurveTypes,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { ColorLegend } from '@/Components/Elements/ColorLegend';
@@ -127,7 +128,7 @@ interface Props {
   /** Toggles the visibility of the regression line for the data. If the type is string then string is use to define the color of the line. */
   regressionLine?: boolean | string;
   /** Curve type for the line */
-  curveType?: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType?: CurveTypes;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */

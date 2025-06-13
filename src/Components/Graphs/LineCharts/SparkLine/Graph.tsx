@@ -17,7 +17,7 @@ import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
 import { cn } from '@undp/design-system-react';
 
-import { ClassNameObject, LineChartDataType, StyleObject } from '@/Types';
+import { ClassNameObject, CurveTypes, LineChartDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 
@@ -37,7 +37,7 @@ interface Props {
   onSeriesMouseOver?: (_d: any) => void;
   maxValue?: number;
   minValue?: number;
-  curveType: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
 }

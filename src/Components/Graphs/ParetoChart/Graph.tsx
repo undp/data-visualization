@@ -13,7 +13,7 @@ import maxBy from 'lodash.maxby';
 import minBy from 'lodash.minby';
 import { cn, Modal } from '@undp/design-system-react';
 
-import { ClassNameObject, ParetoChartDataType, StyleObject } from '@/Types';
+import { ClassNameObject, CurveTypes, ParetoChartDataType, StyleObject } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { string2HTML } from '@/Utils/string2HTML';
@@ -50,7 +50,7 @@ interface Props {
   linePrefix: string;
   showValues: boolean;
   barPrefix: string;
-  curveType: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
 }

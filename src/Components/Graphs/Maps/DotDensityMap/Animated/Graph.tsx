@@ -7,7 +7,7 @@ import {
   geoNaturalEarth1,
   geoOrthographic,
 } from 'd3-geo';
-import { zoom } from 'd3-zoom';
+import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { scaleSqrt } from 'd3-scale';
 import maxBy from 'lodash.maxby';
@@ -19,7 +19,13 @@ import { Modal, P } from '@undp/design-system-react';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
 
-import { ClassNameObject, DotDensityMapWithDateDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  DotDensityMapWithDateDataType,
+  MapProjectionTypes,
+  StyleObject,
+  ZoomInteractionTypes,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { Colors } from '@/Components/ColorPalette';
 import { string2HTML } from '@/Utils/string2HTML';
@@ -57,7 +63,8 @@ interface Props {
   detailsOnClick?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  mapProjection: 'mercator' | 'equalEarth' | 'naturalEarth' | 'orthographic' | 'albersUSA';
+  zoomInteraction: ZoomInteractionTypes;
+  mapProjection: MapProjectionTypes;
 }
 
 export function Graph(props: Props) {
@@ -90,6 +97,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     mapProjection,
+    zoomInteraction,
   } = props;
   const groupedData = Array.from(
     group(
@@ -113,6 +121,7 @@ export function Graph(props: Props) {
   const [eventY, setEventY] = useState<number | undefined>(undefined);
   const mapSvg = useRef<SVGSVGElement>(null);
   const mapG = useRef<SVGGElement>(null);
+  const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const radiusScale =
     data.filter(d => d.radius === undefined).length !== data.length
       ? scaleSqrt()
@@ -124,7 +133,21 @@ export function Graph(props: Props) {
   useEffect(() => {
     const mapGSelect = select(mapG.current);
     const mapSvgSelect = select(mapSvg.current);
-    const zoomBehavior = zoom()
+    const zoomFilter = (e: D3ZoomEvent<SVGSVGElement, unknown>['sourceEvent']) => {
+      if (zoomInteraction === 'noZoom') return false;
+      if (zoomInteraction === 'button') return !e.type.includes('wheel');
+      const isWheel = e.type === 'wheel';
+      const isTouch = e.type.startsWith('touch');
+      const isDrag = e.type === 'mousedown' || e.type === 'mousemove';
+
+      if (isTouch) return true;
+      if (isWheel) {
+        if (zoomInteraction === 'scroll') return true;
+        return e.ctrlKey;
+      }
+      return isDrag && !e.button && !e.ctrlKey;
+    };
+    const zoomBehavior = zoom<SVGSVGElement, unknown>()
       .scaleExtent(zoomScaleExtend)
       .translateExtent(
         zoomTranslateExtend || [
@@ -132,14 +155,17 @@ export function Graph(props: Props) {
           [width + 20, height + 20],
         ],
       )
+      .filter(zoomFilter)
       .on('zoom', ({ transform }) => {
         mapGSelect.attr('transform', transform);
       });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mapSvgSelect.call(zoomBehavior as any);
+
+    zoomRef.current = zoomBehavior;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height, width]);
+  }, [height, width, zoomInteraction]);
 
   useEffect(() => {
     const updateHeight = () => {
@@ -192,6 +218,12 @@ export function Graph(props: Props) {
                 .center(centerPoint || (center.geometry.coordinates as [number, number]))
                 .translate([width / 2, height / 2])
                 .scale(scaleVar);
+
+  const handleZoom = (direction: 'in' | 'out') => {
+    if (!mapSvg.current || !zoomRef.current) return;
+    const svg = select(mapSvg.current);
+    svg.call(zoomRef.current.scaleBy, direction === 'in' ? 1.2 : 1 / 1.2);
+  };
 
   return (
     <>
@@ -444,6 +476,22 @@ export function Graph(props: Props) {
           )}
         </foreignObject>
       </svg>
+      {zoomInteraction === 'button' && (
+        <div className='absolute left-5 top-4 flex flex-col'>
+          <button
+            onClick={() => handleZoom('in')}
+            className='px-2 py-3.5 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+          >
+            +
+          </button>
+          <button
+            onClick={() => handleZoom('out')}
+            className='px-2 py-3.5 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+          >
+            –
+          </button>
+        </div>
+      )}
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

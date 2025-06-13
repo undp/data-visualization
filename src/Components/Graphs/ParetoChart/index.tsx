@@ -12,6 +12,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CurveTypes,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -89,7 +90,7 @@ interface Props {
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Curve type for the line */
-  curveType?: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType?: CurveTypes;
   /** Enables same axis for bars and line */
   sameAxes?: boolean;
   /** Title for the bar axis */

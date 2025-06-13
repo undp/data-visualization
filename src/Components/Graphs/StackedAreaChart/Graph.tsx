@@ -18,6 +18,7 @@ import { cn } from '@undp/design-system-react';
 import {
   AnnotationSettingsDataType,
   ClassNameObject,
+  CurveTypes,
   CustomHighlightAreaSettingsDataType,
   HighlightAreaSettingsDataType,
   MultiLineChartDataType,
@@ -62,7 +63,7 @@ interface Props {
   noOfYTicks: number;
   prefix: string;
   suffix: string;
-  curveType: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
 }

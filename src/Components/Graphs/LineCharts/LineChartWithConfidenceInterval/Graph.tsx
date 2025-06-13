@@ -20,6 +20,7 @@ import { cn } from '@undp/design-system-react';
 import {
   AnnotationSettingsDataType,
   ClassNameObject,
+  CurveTypes,
   CustomHighlightAreaSettingsDataType,
   HighlightAreaSettingsDataType,
   LineChartWithConfidenceIntervalDataType,
@@ -77,7 +78,7 @@ interface Props {
   noOfYTicks: number;
   minDate?: string | number;
   maxDate?: string | number;
-  curveType: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
 }

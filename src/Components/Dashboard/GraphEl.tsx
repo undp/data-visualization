@@ -902,6 +902,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          zoomInteraction: settings?.zoomInteraction,
         };
       case 'biVariateChoroplethMap':
         return {
@@ -955,6 +956,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          zoomInteraction: settings?.zoomInteraction,
         };
       case 'dotDensityMap':
         return {
@@ -1001,6 +1003,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          zoomInteraction: settings?.zoomInteraction,
         };
       case 'donutChart':
         return {
@@ -1819,6 +1822,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          zoomInteraction: settings?.zoomInteraction,
         };
       case 'animatedChoroplethMap':
         return {
@@ -1868,6 +1872,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          zoomInteraction: settings?.zoomInteraction,
         };
       case 'animatedDotDensityMap':
         return {
@@ -1917,6 +1922,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          zoomInteraction: settings?.zoomInteraction,
         };
       case 'animatedButterflyChart':
         return {

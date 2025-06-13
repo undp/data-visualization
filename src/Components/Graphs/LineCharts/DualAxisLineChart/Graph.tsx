@@ -19,6 +19,7 @@ import { cn } from '@undp/design-system-react';
 
 import {
   ClassNameObject,
+  CurveTypes,
   DualAxisLineChartDataType,
   HighlightAreaSettingsDataType,
   StyleObject,
@@ -57,7 +58,7 @@ interface Props {
   linePrefixes: [string, string];
   minDate?: string | number;
   maxDate?: string | number;
-  curveType: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
 }

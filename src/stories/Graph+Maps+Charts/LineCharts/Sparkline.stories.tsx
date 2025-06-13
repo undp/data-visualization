@@ -55,7 +55,12 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     curveType: {
       control: 'radio',
       options: ['linear', 'curve', 'step', 'stepAfter', 'stepBefore'],
-      table: { defaultValue: { summary: 'curve' } },
+      table: {
+        type: {
+          summary: "'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore'",
+        },
+        defaultValue: { summary: 'curve' },
+      },
     },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },

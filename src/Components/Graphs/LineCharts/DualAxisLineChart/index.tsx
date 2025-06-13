@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   HighlightAreaSettingsDataType,
+  CurveTypes,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -100,7 +101,7 @@ interface Props {
   /** Highlighted area(square) on the chart  */
   highlightAreaSettings?: HighlightAreaSettingsDataType[];
   /** Curve type for the line */
-  curveType?: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType?: CurveTypes;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */

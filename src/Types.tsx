@@ -63,6 +63,17 @@ export type GeoHubGraphType = 'geoHubCompareMap' | 'geoHubMap' | 'geoHubMapWithL
 
 export type GraphType = GraphTypeForGriddedGraph | GeoHubGraphType;
 
+export type ZoomInteractionTypes = 'scroll' | 'ctrlScroll' | 'button' | 'noZoom';
+
+export type CurveTypes = 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+
+export type MapProjectionTypes =
+  | 'mercator'
+  | 'equalEarth'
+  | 'naturalEarth'
+  | 'orthographic'
+  | 'albersUSA';
+
 export interface SourcesDataType {
   source: string;
   link?: string;
@@ -871,13 +882,14 @@ export interface GraphSettingsDataType {
   linePrefixes?: [string, string];
   allowDataDownloadOnDetail?: string | boolean;
   noOfItemsInAPage?: number;
-  curveType?: 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
+  curveType?: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  mapProjection?: 'mercator' | 'equalEarth' | 'naturalEarth' | 'orthographic' | 'albersUSA';
+  mapProjection?: MapProjectionTypes;
   filterNA?: boolean;
   fillShape?: boolean;
   colorScaleMaxWidth?: string;
   axisLabels?: (string | number)[];
   minWidth?: string;
+  zoomInteraction?: ZoomInteractionTypes;
 }
