@@ -93,9 +93,7 @@ export function Graph(props: Props) {
   } = props;
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   const [showLegend, setShowLegend] = useState(!(width < 680));
-  const legendContentRef = useRef(null);
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
-  const [legendHeight, setLegendHeight] = useState(50);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -191,18 +189,6 @@ export function Graph(props: Props) {
                 .translate([width / 2, height / 2])
                 .scale(scaleVar);
 
-  useEffect(() => {
-    const updateHeight = () => {
-      if (legendContentRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const contentHeight = (legendContentRef.current as any).getBoundingClientRect().height;
-        setLegendHeight(contentHeight + 16);
-      }
-    };
-
-    updateHeight(); // Initial calculation
-  }, []);
-
   const handleZoom = (direction: 'in' | 'out') => {
     if (!mapSvg.current || !zoomRef.current) return;
     const svg = select(mapSvg.current);
@@ -211,262 +197,260 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <svg
-        width={`${width}px`}
-        height={`${height}px`}
-        viewBox={`0 0 ${width} ${height}`}
-        ref={mapSvg}
-        direction='ltr'
-      >
-        <g ref={mapG}>
-          {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            mapData.features.map((d: any, i: number) => {
-              return (
-                <g key={i}>
-                  {d.geometry.type === 'MultiPolygon'
-                    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      d.geometry.coordinates.map((el: any, j: any) => {
-                        let masterPath = '';
-                        el.forEach((geo: number[][]) => {
-                          let path = ' M';
-                          geo.forEach((c: number[], k: number) => {
+      <div className='relative'>
+        <svg
+          width={`${width}px`}
+          height={`${height}px`}
+          viewBox={`0 0 ${width} ${height}`}
+          ref={mapSvg}
+          direction='ltr'
+        >
+          <g ref={mapG}>
+            {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              mapData.features.map((d: any, i: number) => {
+                return (
+                  <g key={i}>
+                    {d.geometry.type === 'MultiPolygon'
+                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        d.geometry.coordinates.map((el: any, j: any) => {
+                          let masterPath = '';
+                          el.forEach((geo: number[][]) => {
+                            let path = ' M';
+                            geo.forEach((c: number[], k: number) => {
+                              const point = projection([c[0], c[1]]) as [number, number];
+                              if (k !== geo.length - 1) path = `${path}${point[0]} ${point[1]}L`;
+                              else path = `${path}${point[0]} ${point[1]}`;
+                            });
+                            masterPath += path;
+                          });
+                          return (
+                            <path
+                              key={j}
+                              d={masterPath}
+                              style={{
+                                stroke: mapBorderColor,
+                                strokeWidth: mapBorderWidth,
+                                fill: mapNoDataColor,
+                              }}
+                            />
+                          );
+                        })
+                      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        d.geometry.coordinates.map((el: any, j: number) => {
+                          let path = 'M';
+                          el.forEach((c: number[], k: number) => {
                             const point = projection([c[0], c[1]]) as [number, number];
-                            if (k !== geo.length - 1) path = `${path}${point[0]} ${point[1]}L`;
+                            if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
                             else path = `${path}${point[0]} ${point[1]}`;
                           });
-                          masterPath += path;
-                        });
-                        return (
-                          <path
-                            key={j}
-                            d={masterPath}
-                            style={{
-                              stroke: mapBorderColor,
-                              strokeWidth: mapBorderWidth,
-                              fill: mapNoDataColor,
-                            }}
-                          />
-                        );
-                      })
-                    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      d.geometry.coordinates.map((el: any, j: number) => {
-                        let path = 'M';
-                        el.forEach((c: number[], k: number) => {
-                          const point = projection([c[0], c[1]]) as [number, number];
-                          if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                          else path = `${path}${point[0]} ${point[1]}`;
-                        });
-                        return (
-                          <path
-                            key={j}
-                            d={path}
-                            style={{
-                              stroke: mapBorderColor,
-                              strokeWidth: mapBorderWidth,
-                              fill: mapNoDataColor,
-                            }}
-                          />
-                        );
-                      })}
-                </g>
-              );
-            })
-          }
-          {data.map((d, i) => {
-            const color =
-              data.filter(el => el.color).length === 0
-                ? colors[0]
-                : !d.color
-                  ? Colors.gray
-                  : colors[colorDomain.indexOf(`${d.color}`)];
-            return (
-              <g
-                key={i}
-                opacity={
-                  selectedColor
-                    ? selectedColor === color
-                      ? 1
-                      : 0.3
-                    : highlightedDataPoints.length !== 0
-                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        highlightedDataPoints.indexOf((d.data as any).id) !== -1
+                          return (
+                            <path
+                              key={j}
+                              d={path}
+                              style={{
+                                stroke: mapBorderColor,
+                                strokeWidth: mapBorderWidth,
+                                fill: mapNoDataColor,
+                              }}
+                            />
+                          );
+                        })}
+                  </g>
+                );
+              })
+            }
+            {data.map((d, i) => {
+              const color =
+                data.filter(el => el.color).length === 0
+                  ? colors[0]
+                  : !d.color
+                    ? Colors.gray
+                    : colors[colorDomain.indexOf(`${d.color}`)];
+              return (
+                <g
+                  key={i}
+                  opacity={
+                    selectedColor
+                      ? selectedColor === color
                         ? 1
                         : 0.3
-                      : 1
-                }
-                onMouseEnter={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                  if (onSeriesMouseOver) {
-                    onSeriesMouseOver(d);
+                      : highlightedDataPoints.length !== 0
+                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          highlightedDataPoints.indexOf((d.data as any).id) !== -1
+                          ? 1
+                          : 0.3
+                        : 1
                   }
-                }}
-                onMouseMove={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  if (onSeriesMouseOver) {
-                    onSeriesMouseOver(undefined);
-                  }
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      setMouseClickData(d);
-                      onSeriesMouseClick?.(d);
+                  onMouseEnter={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    if (onSeriesMouseOver) {
+                      onSeriesMouseOver(d);
                     }
-                  }
-                }}
-                transform={`translate(${
-                  (projection([d.long, d.lat]) as [number, number])[0]
-                },${(projection([d.long, d.lat]) as [number, number])[1]})`}
-              >
-                <circle
-                  cx={0}
-                  cy={0}
-                  r={!radiusScale ? radius : radiusScale(d.radius || 0)}
-                  style={{
-                    fill:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : colors[colorDomain.indexOf(`${d.color}`)],
-                    stroke:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : colors[colorDomain.indexOf(`${d.color}`)],
-                    fillOpacity: 0.8,
                   }}
-                />
-                {showLabels && d.label ? (
-                  <text
-                    x={!radiusScale ? radius : radiusScale(d.radius || 0)}
-                    y={0}
-                    className='fill-primary-gray-600 dark:fill-primary-gray-300 text-sm'
-                    style={{ textAnchor: 'start' }}
-                    dx={4}
-                    dy={5}
-                  >
-                    {d.label}
-                  </text>
-                ) : null}
-              </g>
-            );
-          })}
-        </g>
-        <foreignObject
-          x={10}
-          y={showLegend ? height - legendHeight - 5 : height - 46}
-          width={showLegend ? 150 : 101}
-          height={showLegend ? legendHeight : 36}
-        >
-          {data.filter(el => el.color).length === 0 ||
-          showColorScale === false ? null : showLegend ? (
-            <div ref={legendContentRef}>
-              <div
-                style={{
-                  marginBottom: '-0.75rem',
-                  marginLeft: '126px',
-                  backgroundColor: 'rgba(240,240,240, 0.7)',
-                  border: '1px solid var(--gray-400)',
-                  borderRadius: '999px',
-                  width: '24px',
-                  height: '24px',
-                  padding: '3px',
-                  cursor: 'pointer',
-                  zIndex: 10,
-                  position: 'relative',
-                }}
-                onClick={() => {
-                  setShowLegend(false);
-                }}
-              >
-                <X />
-              </div>
-              <div
-                className='p-2'
-                style={{ backgroundColor: 'rgba(240,240,240, 0.5', width: '138px' }}
-              >
-                {colorLegendTitle && colorLegendTitle !== '' ? (
-                  <p
-                    className='p-0 leading-normal overflow-hidden text-primary-gray-700 dark:text-primary-gray-300'
+                  onMouseMove={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    if (onSeriesMouseOver) {
+                      onSeriesMouseOver(undefined);
+                    }
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        setMouseClickData(d);
+                        onSeriesMouseClick?.(d);
+                      }
+                    }
+                  }}
+                  transform={`translate(${
+                    (projection([d.long, d.lat]) as [number, number])[0]
+                  },${(projection([d.long, d.lat]) as [number, number])[1]})`}
+                >
+                  <circle
+                    cx={0}
+                    cy={0}
+                    r={!radiusScale ? radius : radiusScale(d.radius || 0)}
                     style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: '1',
-                      WebkitBoxOrient: 'vertical',
+                      fill:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      fillOpacity: 0.8,
                     }}
-                  >
-                    {colorLegendTitle}
-                  </p>
-                ) : null}
-                <div className='flex flex-col gap-3'>
-                  {colorDomain.map((d, i) => (
-                    <div
-                      key={i}
-                      className='flex gap-2 items-center'
-                      onMouseOver={() => {
-                        setSelectedColor(colors[i % colors.length]);
-                      }}
-                      onMouseLeave={() => {
-                        setSelectedColor(undefined);
+                  />
+                  {showLabels && d.label ? (
+                    <text
+                      x={!radiusScale ? radius : radiusScale(d.radius || 0)}
+                      y={0}
+                      className='fill-primary-gray-600 dark:fill-primary-gray-300 text-sm'
+                      style={{ textAnchor: 'start' }}
+                      dx={4}
+                      dy={5}
+                    >
+                      {d.label}
+                    </text>
+                  ) : null}
+                </g>
+              );
+            })}
+          </g>
+        </svg>
+        {data.filter(el => el.color).length === 0 || showColorScale === false ? null : (
+          <div className='absolute left-4 bottom-4'>
+            {showLegend ? (
+              <>
+                <div
+                  style={{
+                    marginBottom: '-0.75rem',
+                    marginLeft: '126px',
+                    backgroundColor: 'rgba(240,240,240, 0.7)',
+                    border: '1px solid var(--gray-400)',
+                    borderRadius: '999px',
+                    width: '24px',
+                    height: '24px',
+                    padding: '3px',
+                    cursor: 'pointer',
+                    zIndex: 10,
+                    position: 'relative',
+                  }}
+                  onClick={() => {
+                    setShowLegend(false);
+                  }}
+                >
+                  <X />
+                </div>
+                <div
+                  className='p-2'
+                  style={{ backgroundColor: 'rgba(240,240,240, 0.5', width: '138px' }}
+                >
+                  {colorLegendTitle && colorLegendTitle !== '' ? (
+                    <p
+                      className='p-0 leading-normal overflow-hidden text-primary-gray-700 dark:text-primary-gray-300'
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: '1',
+                        WebkitBoxOrient: 'vertical',
                       }}
                     >
+                      {colorLegendTitle}
+                    </p>
+                  ) : null}
+                  <div className='flex flex-col gap-3'>
+                    {colorDomain.map((d, i) => (
                       <div
-                        className='w-2 h-2 rounded-full'
-                        style={{ backgroundColor: colors[i % colors.length] }}
-                      />
-                      <P size='sm' marginBottom='none' leading='none'>
-                        {d}
-                      </P>
-                    </div>
-                  ))}
+                        key={i}
+                        className='flex gap-2 items-center'
+                        onMouseOver={() => {
+                          setSelectedColor(colors[i % colors.length]);
+                        }}
+                        onMouseLeave={() => {
+                          setSelectedColor(undefined);
+                        }}
+                      >
+                        <div
+                          className='w-2 h-2 rounded-full'
+                          style={{ backgroundColor: colors[i % colors.length] }}
+                        />
+                        <P size='sm' marginBottom='none' leading='none'>
+                          {d}
+                        </P>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </div>
-          ) : (
+              </>
+            ) : (
+              <button
+                type='button'
+                className='mb-0 border-0 bg-transparent p-0 self-start'
+                onClick={() => {
+                  setShowLegend(true);
+                }}
+              >
+                <div className='items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-550 border-primary-gray-400 dark:border-primary-gray-500'>
+                  Show Legend
+                </div>
+              </button>
+            )}
+          </div>
+        )}
+        {zoomInteraction === 'button' && (
+          <div className='absolute left-4 top-4 flex flex-col'>
             <button
-              type='button'
-              className='mb-0 border-0 bg-transparent p-0 self-start'
-              onClick={() => {
-                setShowLegend(true);
-              }}
+              onClick={() => handleZoom('in')}
+              className='px-2 py-3.5 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
             >
-              <div className='items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-550 border-primary-gray-400 dark:border-primary-gray-500'>
-                Show Legend
-              </div>
+              +
             </button>
-          )}
-        </foreignObject>
-      </svg>
-      {zoomInteraction === 'button' && (
-        <div className='absolute left-5 top-4 flex flex-col'>
-          <button
-            onClick={() => handleZoom('in')}
-            className='px-2 py-3.5 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
-          >
-            +
-          </button>
-          <button
-            onClick={() => handleZoom('out')}
-            className='px-2 py-3.5 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
-          >
-            –
-          </button>
-        </div>
-      )}
+            <button
+              onClick={() => handleZoom('out')}
+              className='px-2 py-3.5 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+            >
+              –
+            </button>
+          </div>
+        )}
+      </div>
       {detailsOnClick ? (
         <Modal
           open={mouseClickData !== undefined}

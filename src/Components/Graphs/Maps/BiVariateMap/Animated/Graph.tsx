@@ -111,8 +111,6 @@ export function Graph(props: Props) {
     }),
   );
   const [showLegend, setShowLegend] = useState(!(width < 680));
-  const legendContentRef = useRef(null);
-  const [legendHeight, setLegendHeight] = useState(50);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -167,18 +165,6 @@ export function Graph(props: Props) {
     zoomRef.current = zoomBehavior;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, width, zoomInteraction]);
-
-  useEffect(() => {
-    const updateHeight = () => {
-      if (legendContentRef.current) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const contentHeight = (legendContentRef.current as any).getBoundingClientRect().height;
-        setLegendHeight(contentHeight + 16);
-      }
-    };
-
-    updateHeight(); // Initial calculation
-  }, []);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bounds = bbox(mapData as any);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -227,148 +213,38 @@ export function Graph(props: Props) {
   };
   return (
     <>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        width={`${width}px`}
-        height={`${height}px`}
-        ref={mapSvg}
-        direction='ltr'
-      >
-        <g ref={mapG}>
-          {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            mapData.features.map((d: any, i: number) => {
-              const index = groupedData[indx].values.findIndex(
-                el => el.id === d.properties[mapProperty],
-              );
-              if (index !== -1) return null;
-              return (
-                <g
-                  key={i}
-                  opacity={
-                    selectedColor
-                      ? 0.3
-                      : highlightedIds.length !== 0
-                        ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
-                          ? 1
-                          : 0.3
-                        : 1
-                  }
-                >
-                  {d.geometry.type === 'MultiPolygon'
-                    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      d.geometry.coordinates.map((el: any, j: any) => {
-                        let masterPath = '';
-                        el.forEach((geo: number[][]) => {
-                          let path = ' M';
-                          geo.forEach((c: number[], k: number) => {
-                            const point = projection([c[0], c[1]]) as [number, number];
-                            if (k !== geo.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                            else path = `${path}${point[0]} ${point[1]}`;
-                          });
-                          masterPath += path;
-                        });
-                        return (
-                          <path
-                            key={j}
-                            d={masterPath}
-                            style={{
-                              stroke: mapBorderColor,
-                              strokeWidth: mapBorderWidth,
-                              fill: mapNoDataColor,
-                            }}
-                          />
-                        );
-                      })
-                    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      d.geometry.coordinates.map((el: any, j: number) => {
-                        let path = 'M';
-                        el.forEach((c: number[], k: number) => {
-                          const point = projection([c[0], c[1]]) as [number, number];
-                          if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                          else path = `${path}${point[0]} ${point[1]}`;
-                        });
-                        return (
-                          <path
-                            key={j}
-                            d={path}
-                            style={{
-                              stroke: mapBorderColor,
-                              strokeWidth: mapBorderWidth,
-                              fill: mapNoDataColor,
-                            }}
-                          />
-                        );
-                      })}
-                </g>
-              );
-            })
-          }
-          {groupedData[indx].values.map((d, i) => {
-            const index = mapData.features.findIndex(
+      <div className='relative'>
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          width={`${width}px`}
+          height={`${height}px`}
+          ref={mapSvg}
+          direction='ltr'
+        >
+          <g ref={mapG}>
+            {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (el: any) => d.id === el.properties[mapProperty],
-            );
-            const xColorCoord = !checkIfNullOrUndefined(d.x) ? xScale(d.x as number) : undefined;
-            const yColorCoord = !checkIfNullOrUndefined(d.y) ? yScale(d.y as number) : undefined;
-            const color =
-              xColorCoord !== undefined && yColorCoord !== undefined
-                ? colors[yColorCoord][xColorCoord]
-                : mapNoDataColor;
-
-            return (
-              <g
-                key={i}
-                opacity={
-                  selectedColor
-                    ? selectedColor === color
-                      ? 1
-                      : 0.3
-                    : highlightedIds.length !== 0
-                      ? highlightedIds.indexOf(d.id) !== -1
-                        ? 1
-                        : 0.3
-                      : 1
-                }
-                onMouseEnter={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                  if (onSeriesMouseOver) {
-                    onSeriesMouseOver(d);
-                  }
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      setMouseClickData(d);
-                      onSeriesMouseClick?.(d);
+              mapData.features.map((d: any, i: number) => {
+                const index = groupedData[indx].values.findIndex(
+                  el => el.id === d.properties[mapProperty],
+                );
+                if (index !== -1) return null;
+                return (
+                  <g
+                    key={i}
+                    opacity={
+                      selectedColor
+                        ? 0.3
+                        : highlightedIds.length !== 0
+                          ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
+                            ? 1
+                            : 0.3
+                          : 1
                     }
-                  }
-                }}
-                onMouseMove={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  if (onSeriesMouseOver) {
-                    onSeriesMouseOver(undefined);
-                  }
-                }}
-              >
-                {index === -1
-                  ? null
-                  : mapData.features[index].geometry.type === 'MultiPolygon'
-                    ? mapData.features[index].geometry.coordinates.map(
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (el: any, j: any) => {
+                  >
+                    {d.geometry.type === 'MultiPolygon'
+                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        d.geometry.coordinates.map((el: any, j: any) => {
                           let masterPath = '';
                           el.forEach((geo: number[][]) => {
                             let path = ' M';
@@ -383,22 +259,16 @@ export function Graph(props: Props) {
                             <path
                               key={j}
                               d={masterPath}
-                              className={`${
-                                color === mapNoDataColor
-                                  ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                                  : 'stroke-primary-white dark:stroke-primary-gray-650'
-                              }`}
                               style={{
+                                stroke: mapBorderColor,
                                 strokeWidth: mapBorderWidth,
-                                fill: color,
+                                fill: mapNoDataColor,
                               }}
                             />
                           );
-                        },
-                      )
-                    : mapData.features[index].geometry.coordinates.map(
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (el: any, j: number) => {
+                        })
+                      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        d.geometry.coordinates.map((el: any, j: number) => {
                           let path = 'M';
                           el.forEach((c: number[], k: number) => {
                             const point = projection([c[0], c[1]]) as [number, number];
@@ -409,35 +279,83 @@ export function Graph(props: Props) {
                             <path
                               key={j}
                               d={path}
-                              className={`${
-                                color === mapNoDataColor
-                                  ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                                  : 'stroke-primary-white dark:stroke-primary-gray-650'
-                              }`}
                               style={{
+                                stroke: mapBorderColor,
                                 strokeWidth: mapBorderWidth,
-                                fill: color,
+                                fill: mapNoDataColor,
                               }}
                             />
                           );
-                        },
-                      )}
-              </g>
-            );
-          })}
-          {mouseOverData
-            ? mapData.features
-                .filter(
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  (d: { properties: any }) => d.properties[mapProperty] === mouseOverData.id,
-                )
+                        })}
+                  </g>
+                );
+              })
+            }
+            {groupedData[indx].values.map((d, i) => {
+              const index = mapData.features.findIndex(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .map((d: any, i: number) => {
-                  return (
-                    <g key={i}>
-                      {d.geometry.type === 'MultiPolygon'
-                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          d.geometry.coordinates.map((el: any, j: any) => {
+                (el: any) => d.id === el.properties[mapProperty],
+              );
+              const xColorCoord = !checkIfNullOrUndefined(d.x) ? xScale(d.x as number) : undefined;
+              const yColorCoord = !checkIfNullOrUndefined(d.y) ? yScale(d.y as number) : undefined;
+              const color =
+                xColorCoord !== undefined && yColorCoord !== undefined
+                  ? colors[yColorCoord][xColorCoord]
+                  : mapNoDataColor;
+
+              return (
+                <g
+                  key={i}
+                  opacity={
+                    selectedColor
+                      ? selectedColor === color
+                        ? 1
+                        : 0.3
+                      : highlightedIds.length !== 0
+                        ? highlightedIds.indexOf(d.id) !== -1
+                          ? 1
+                          : 0.3
+                        : 1
+                  }
+                  onMouseEnter={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    if (onSeriesMouseOver) {
+                      onSeriesMouseOver(d);
+                    }
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        setMouseClickData(d);
+                        onSeriesMouseClick?.(d);
+                      }
+                    }
+                  }}
+                  onMouseMove={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    if (onSeriesMouseOver) {
+                      onSeriesMouseOver(undefined);
+                    }
+                  }}
+                >
+                  {index === -1
+                    ? null
+                    : mapData.features[index].geometry.type === 'MultiPolygon'
+                      ? mapData.features[index].geometry.coordinates.map(
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (el: any, j: any) => {
                             let masterPath = '';
                             el.forEach((geo: number[][]) => {
                               let path = ' M';
@@ -452,17 +370,22 @@ export function Graph(props: Props) {
                               <path
                                 key={j}
                                 d={masterPath}
-                                className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+                                className={`${
+                                  color === mapNoDataColor
+                                    ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                                    : 'stroke-primary-white dark:stroke-primary-gray-650'
+                                }`}
                                 style={{
-                                  fill: 'none',
-                                  fillOpacity: 0,
-                                  strokeWidth: '0.5',
+                                  strokeWidth: mapBorderWidth,
+                                  fill: color,
                                 }}
                               />
                             );
-                          })
-                        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          d.geometry.coordinates.map((el: any, j: number) => {
+                          },
+                        )
+                      : mapData.features[index].geometry.coordinates.map(
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (el: any, j: number) => {
                             let path = 'M';
                             el.forEach((c: number[], k: number) => {
                               const point = projection([c[0], c[1]]) as [number, number];
@@ -473,29 +396,90 @@ export function Graph(props: Props) {
                               <path
                                 key={j}
                                 d={path}
-                                className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+                                className={`${
+                                  color === mapNoDataColor
+                                    ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                                    : 'stroke-primary-white dark:stroke-primary-gray-650'
+                                }`}
                                 style={{
-                                  fill: 'none',
-                                  fillOpacity: 0,
-                                  strokeWidth: '0.5',
+                                  strokeWidth: mapBorderWidth,
+                                  fill: color,
                                 }}
                               />
                             );
-                          })}
-                    </g>
-                  );
-                })
-            : null}
-        </g>
-        <foreignObject
-          x={10}
-          y={showLegend ? height - legendHeight - 5 : height - 46}
-          width={showLegend ? 189 : 101}
-          height={showLegend ? legendHeight : 36}
-        >
-          {showColorScale ? (
-            showLegend ? (
-              <div ref={legendContentRef}>
+                          },
+                        )}
+                </g>
+              );
+            })}
+            {mouseOverData
+              ? mapData.features
+                  .filter(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (d: { properties: any }) => d.properties[mapProperty] === mouseOverData.id,
+                  )
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  .map((d: any, i: number) => {
+                    return (
+                      <g key={i}>
+                        {d.geometry.type === 'MultiPolygon'
+                          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            d.geometry.coordinates.map((el: any, j: any) => {
+                              let masterPath = '';
+                              el.forEach((geo: number[][]) => {
+                                let path = ' M';
+                                geo.forEach((c: number[], k: number) => {
+                                  const point = projection([c[0], c[1]]) as [number, number];
+                                  if (k !== geo.length - 1)
+                                    path = `${path}${point[0]} ${point[1]}L`;
+                                  else path = `${path}${point[0]} ${point[1]}`;
+                                });
+                                masterPath += path;
+                              });
+                              return (
+                                <path
+                                  key={j}
+                                  d={masterPath}
+                                  className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+                                  style={{
+                                    fill: 'none',
+                                    fillOpacity: 0,
+                                    strokeWidth: '0.5',
+                                  }}
+                                />
+                              );
+                            })
+                          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            d.geometry.coordinates.map((el: any, j: number) => {
+                              let path = 'M';
+                              el.forEach((c: number[], k: number) => {
+                                const point = projection([c[0], c[1]]) as [number, number];
+                                if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
+                                else path = `${path}${point[0]} ${point[1]}`;
+                              });
+                              return (
+                                <path
+                                  key={j}
+                                  d={path}
+                                  className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+                                  style={{
+                                    fill: 'none',
+                                    fillOpacity: 0,
+                                    strokeWidth: '0.5',
+                                  }}
+                                />
+                              );
+                            })}
+                      </g>
+                    );
+                  })
+              : null}
+          </g>
+        </svg>
+        {showColorScale === false ? null : (
+          <div className='absolute left-4 bottom-4'>
+            {showLegend ? (
+              <>
                 <div
                   style={{
                     marginBottom: '-0.75rem',
@@ -608,7 +592,7 @@ export function Graph(props: Props) {
                     {xColorLegendTitle}
                   </P>
                 </div>
-              </div>
+              </>
             ) : (
               <button
                 type='button'
@@ -621,26 +605,26 @@ export function Graph(props: Props) {
                   Show Legend
                 </div>
               </button>
-            )
-          ) : null}
-        </foreignObject>
-      </svg>
-      {zoomInteraction === 'button' && (
-        <div className='absolute left-5 top-4 flex flex-col'>
-          <button
-            onClick={() => handleZoom('in')}
-            className='px-2 py-3.5 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
-          >
-            +
-          </button>
-          <button
-            onClick={() => handleZoom('out')}
-            className='px-2 py-3.5 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
-          >
-            –
-          </button>
-        </div>
-      )}
+            )}
+          </div>
+        )}
+        {zoomInteraction === 'button' && (
+          <div className='absolute left-4 top-4 flex flex-col'>
+            <button
+              onClick={() => handleZoom('in')}
+              className='px-2 py-3.5 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+            >
+              +
+            </button>
+            <button
+              onClick={() => handleZoom('out')}
+              className='px-2 py-3.5 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+            >
+              –
+            </button>
+          </div>
+        )}
+      </div>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

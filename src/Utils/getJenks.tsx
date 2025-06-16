@@ -41,5 +41,5 @@ export function getJenks(data: (number | null | undefined)[], noOfSteps: number)
       return Math.round(formattedValue);
     }
   });
-  return valueArray;
+  return [...new Set(valueArray)];
 }
