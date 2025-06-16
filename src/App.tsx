@@ -1,162 +1,51 @@
-import { SingleGraphDashboard } from './Components/Dashboard/SingleGraphDashboard';
 import './styles/styles.css';
 import '@undp/design-system-react/style.css';
 
 function App() {
   return (
-    <SingleGraphDashboard
-      dataSettings={{
-        dataURL:
-          'https://raw.githubusercontent.com/UNDP-Data/dv-energy-ndc-data-repository/refs/heads/main/data/key-insights/gdp_and_gdp_per_capita.csv',
-        fileType: 'csv',
+    <div
+      style={{
+        height: '90vh',
+        maxWidth: '712px',
+        margin: '0 auto',
+        padding: '2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
-      graphType='multiLineChart'
-      graphDataConfiguration={[
-        { columnId: 'Year', chartConfigId: 'date' },
-        { columnId: ['BaseCase', 'RA', 'RA+SDG'], chartConfigId: 'y' },
-      ]}
-      advancedDataSelectionOptions={[
-        {
-          label: 'Select indicator',
-          options: [
-            {
-              label: 'GDP at MER',
-              dataConfiguration: [
-                {
-                  columnId: ['BaseCase', 'RA', 'RA+SDG'],
-                  chartConfigId: 'y',
-                },
-                {
-                  columnId: 'Year',
-                  chartConfigId: 'date',
-                },
-              ],
-              graphSettings: {
-                graphTitle: 'GDP at MER',
-                graphDescription: 'Trillion US$',
-                suffix: 'T',
-                prefix: '$',
-                tooltip: `
-                  <div class="font-bold p-2 bg-primary-gray-300 uppercase text-xs">
-                    {{data.Year}}
-                  </div>
-                  <div class="p-2 flex min-w-[240px] justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      BaseCase
-                    </div>
-                    <div class="font-bold">\${{y.[0]}}T</div>
-                  </div>
-                  <div class="p-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      RA
-                    </div>
-                    <div class="font-bold">\${{y.[1]}}T</div>
-                  </div>
-                  <div class="p-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      RA + SDG
-                    </div>
-                    <div class="font-bold">\${{y.[2]}}T</div>
-                  </div>
-                `,
-              },
-            },
-            {
-              label: 'GDP per capita',
-              dataConfiguration: [
-                {
-                  columnId: ['BaseCase_per_capita', 'RA_per_capita', 'RA+SDG_per_capita'],
-                  chartConfigId: 'y',
-                },
-                {
-                  columnId: 'Year',
-                  chartConfigId: 'date',
-                },
-              ],
-              graphSettings: {
-                graphTitle: 'GDP per capita',
-                graphDescription: 'Thousand US$',
-                suffix: 'K',
-                prefix: '$',
-                tooltip: `
-                  <div class="font-bold p-2 bg-primary-gray-300 uppercase text-xs">
-                    {{data.Year}}
-                  </div>
-                  <div class="p-2 flex min-w-[240px] justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      BaseCase
-                    </div>
-                    <div class="font-bold">\${{y.[0]}}K</div>
-                  </div>
-                  <div class="p-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      RA
-                    </div>
-                    <div class="font-bold">\${{y.[1]}}K</div>
-                  </div>
-                  <div class="p-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      RA + SDG
-                    </div>
-                    <div class="font-bold">\${{y.[2]}}K</div>
-                  </div>
-                `,
-              },
-            },
-          ],
-          ui: 'radio',
-        },
-      ]}
-      graphSettings={{
-        showValues: false,
-        graphTitle: 'GDP at MER',
-        graphDescription: 'Trillion US$',
-        showColorLegendAtTop: true,
-        showDots: false,
-        labels: ['BaseCase', 'RA', 'RA + SDG'],
-        suffix: 'T',
-        prefix: '$',
-        padding: '0',
-        tooltip: `
-                  <div class="font-bold p-2 bg-primary-gray-300 uppercase text-xs">
-                    {{data.Year}}
-                  </div>
-                  <div class="p-2 flex min-w-[240px] justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      BaseCase
-                    </div>
-                    <div class="font-bold">\${{y.[0]}}T</div>
-                  </div>
-                  <div class="p-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      RA
-                    </div>
-                    <div class="font-bold">\${{y.[1]}}T</div>
-                  </div>
-                  <div class="p-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                      <span class='w-2 h-2 rounded-full inline'></span>
-                      RA + SDG
-                    </div>
-                    <div class="font-bold">\${{y.[2]}}T</div>
-                  </div>
-                `,
-        styles: {
-          tooltip: {
-            padding: '0',
-            minWidth: '150px',
-          },
-        },
-      }}
-    />
+    >
+      <img width='56' alt='undp-logo' src='/undp-logo-blue.svg' />
+      <h3 className='undp-viz-typography' style={{ textAlign: 'center', paddingTop: '24px' }}>
+        UNDP Data Visualization Library
+      </h3>
+      <p className='undp-viz-typography' style={{ textAlign: 'center' }}>
+        This open-source graphing library, developed by the United Nations Development Programme,
+        offers ready-to-use charts, including bar charts, line charts, area charts, and more. You
+        can access the documentation{' '}
+        <a
+          href='https://data-viz.data.undp.org/'
+          target='_blank'
+          rel='noreferrer'
+          className='undp-viz-style'
+        >
+          here
+        </a>
+        .
+      </p>
+      <p
+        className='undp-viz-typography'
+        style={{
+          fontSize: '16px',
+          textAlign: 'center',
+        }}
+      >
+        For any feedback or inquiries, please feel free to reach out to us at{' '}
+        <a href='mailto:data@undp.org' target='_blank' rel='noreferrer' className='undp-viz-style'>
+          data@undp.org
+        </a>
+      </p>
+    </div>
   );
 }
 
