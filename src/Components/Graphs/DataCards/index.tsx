@@ -1,31 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
 import sortBy from 'lodash.sortby';
-import {
-  cn,
-  createFilter,
-  DropdownSelect,
-  Modal,
-  P,
-  Pagination,
-  Search,
-} from '@undp/design-system-react';
+import { cn, createFilter, DropdownSelect, P, Pagination, Search } from '@undp/design-system-react';
 
-import {
-  FilterSettingsDataType,
-  Languages,
-  SourcesDataType,
-  StyleObject,
-  ClassNameObject,
-} from '@/Types';
+import { Graph } from './Graph';
+
+import { Languages, SourcesDataType, StyleObject, ClassNameObject } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { string2HTML } from '@/Utils/string2HTML';
 import { getUniqValue } from '@/Utils/getUniqValue';
 import { transformDefaultValue } from '@/Utils/transformDataForSelect';
-import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
-import { FileDown } from '@/Components/Icons';
 
 export type FilterDataType = {
   column: string;
@@ -33,24 +18,6 @@ export type FilterDataType = {
   defaultValue?: string;
   excludeValues?: string[];
   width?: string;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const csvData = (data: any) => {
-  if (!data) return {};
-  const dataForCsv = Object.entries(data).map(([key, value]) => {
-    if (Array.isArray(value)) {
-      return {
-        ' ': key,
-        value: `"${value.join('; ')}"`,
-      };
-    }
-    return {
-      ' ': key,
-      value: `"${value}"`,
-    };
-  });
-  return dataForCsv;
 };
 
 interface Props {
@@ -172,11 +139,26 @@ export function DataCards(props: Props) {
   const [cardData, setCardData] = useState(data);
 
   const [page, setPage] = useState(1);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [selectedData, setSelectedData] = useState<any>(undefined);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterSettings, setFilterSettings] = useState<FilterSettingsDataType[]>([]);
+  const filterSettings = cardFilters.map(el => ({
+    filter: el.column,
+    label: el.label || `Filter by ${el.column}`,
+    singleSelect: true,
+    clearable: true,
+    defaultValue: transformDefaultValue(el.defaultValue),
+    availableValues: getUniqValue(data, el.column)
+      .filter(v => !el.excludeValues?.includes(`${v}`))
+      .map(v => ({ value: v, label: v })),
+    width: el.width,
+  }));
+
+  const [selectedFilters, setSelectedFilters] = useState(
+    cardFilters.map(el => ({
+      filter: el.column,
+      value: transformDefaultValue(el.defaultValue),
+    })),
+  );
   const [sortedBy, setSortedBy] = useState<
     | {
         value: string;
@@ -221,30 +203,11 @@ export function DataCards(props: Props) {
         : undefined,
     );
   }, [cardSortingOptions]);
-  useEffect(() => {
-    const newFilterSettings = cardFilters.map(el => ({
-      filter: el.column,
-      label: el.label || `Filter by ${el.column}`,
-      singleSelect: true,
-      clearable: true,
-      defaultValue: transformDefaultValue(el.defaultValue),
-      availableValues: getUniqValue(data, el.column)
-        .filter(v => !el.excludeValues?.includes(`${v}`))
-        .map(v => ({ value: v, label: v })),
-      width: el.width,
-    }));
-    setFilterSettings(newFilterSettings);
-  }, [data, cardFilters]);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFilterChange = useCallback((filter: string, values: any) => {
-    setFilterSettings(prev => prev.map(f => (f.filter === filter ? { ...f, value: values } : f)));
-  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const filteredData = data.filter((item: any) =>
-      filterSettings.every(filter =>
+    const filteredData = filterByKeys(data, cardSearchColumns, searchQuery).filter((item: any) =>
+      selectedFilters.every(filter =>
         filter.value && flattenDeep([filter.value]).length > 0
           ? intersection(
               flattenDeep([item[filter.filter]]),
@@ -258,11 +221,11 @@ export function DataCards(props: Props) {
     } else {
       setCardData(filteredData);
     }
-  }, [filterSettings, data, sortedBy]);
+  }, [selectedFilters, data, sortedBy, searchQuery, cardSearchColumns]);
 
   useEffect(() => {
     setPage(1);
-  }, [cardData, cardSearchColumns, searchQuery]);
+  }, [cardData]);
 
   return (
     <div
@@ -375,7 +338,10 @@ export function DataCards(props: Props) {
                       controlShouldRenderValue
                       filterOption={createFilter(filterConfig)}
                       onChange={el => {
-                        handleFilterChange(d.filter, el);
+                        setSelectedFilters(prev =>
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          prev.map(f => (f.filter === d.filter ? { ...f, value: el as any } : f)),
+                        );
                       }}
                       defaultValue={d.defaultValue}
                     />
@@ -384,57 +350,37 @@ export function DataCards(props: Props) {
               </div>
             ) : null}
             {cardSearchColumns.length > 0 ? (
-              <Search
-                placeholder='Search...'
-                value={searchQuery}
-                onChange={e => {
-                  setSearchQuery(e.target.value);
-                }}
-                buttonVariant='icon'
-                inputVariant={uiMode}
-                showSearchButton={false}
-                inputSize='sm'
-              />
+              <div style={{ paddingTop: '1px' }}>
+                <Search
+                  placeholder='Search...'
+                  onSearch={e => {
+                    setSearchQuery(e || '');
+                  }}
+                  buttonVariant='icon'
+                  inputVariant={uiMode}
+                  showSearchButton={false}
+                  inputSize='sm'
+                />
+              </div>
             ) : null}
-            <div
-              className='undp-scrollbar w-full my-0 mx-auto grid gap-4 undp-viz-data-cards-container'
-              style={{
-                width: width ? `${width}px` : '100%',
-                height: height ? `${height}px` : 'auto',
-                gridTemplateColumns: `repeat(auto-fit, minmax(${cardMinWidth}px, 1fr))`,
-              }}
-            >
-              {filterByKeys(cardData, cardSearchColumns, searchQuery)
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .filter((_d: any, i: number) =>
-                  noOfItemsInAPage
-                    ? i < page * noOfItemsInAPage && i >= (page - 1) * noOfItemsInAPage
-                    : true,
-                )
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .map((d: any, i: number) => (
-                  <div
-                    key={i}
-                    style={{
-                      ...(styles?.dataCards || {}),
-                      ...(cardBackgroundColor && { backgroundColor: cardBackgroundColor }),
-                    }}
-                    className={`w-full flex flex-col ${
-                      onSeriesMouseClick || detailsOnClick ? 'cursor-pointer' : 'cursor-auto'
-                    }${
-                      !cardBackgroundColor ? 'bg-primary-gray-200 dark:bg-primary-gray-600' : ''
-                    } ${classNames?.dataCards || ''}`}
-                    onClick={() => {
-                      onSeriesMouseClick?.(d);
-                      if (detailsOnClick) setSelectedData(d);
-                    }}
-                    dangerouslySetInnerHTML={{ __html: string2HTML(cardTemplate, d) }}
-                  />
-                ))}
-            </div>
+            <Graph
+              data={cardData}
+              width={width}
+              height={height}
+              cardTemplate={cardTemplate}
+              cardMinWidth={cardMinWidth}
+              page={page}
+              cardBackgroundColor={cardBackgroundColor}
+              styles={styles}
+              classNames={classNames}
+              noOfItemsInAPage={noOfItemsInAPage}
+              detailsOnClick={detailsOnClick}
+              onSeriesMouseClick={onSeriesMouseClick}
+              allowDataDownloadOnDetail={allowDataDownloadOnDetail}
+            />
             {noOfItemsInAPage ? (
               <Pagination
-                total={filterByKeys(cardData, cardSearchColumns, searchQuery).length}
+                total={cardData.length}
                 defaultPage={0}
                 pageSize={noOfItemsInAPage}
                 onChange={setPage}
@@ -454,46 +400,6 @@ export function DataCards(props: Props) {
             ) : null}
           </div>
         </div>
-        <Modal
-          open={selectedData !== undefined}
-          onClose={() => {
-            setSelectedData(undefined);
-          }}
-        >
-          {detailsOnClick ? (
-            <>
-              <div
-                className='graph-modal-content m-0'
-                dangerouslySetInnerHTML={{ __html: string2HTML(detailsOnClick, selectedData) }}
-              />
-              {allowDataDownloadOnDetail ? (
-                <div className='flex'>
-                  <CsvDownloadButton
-                    csvData={csvData(selectedData)}
-                    headers={[
-                      {
-                        label: ' ',
-                        key: ' ',
-                      },
-                      {
-                        label: 'value',
-                        key: 'value',
-                      },
-                    ]}
-                    buttonContent={
-                      <div className='flex items-center gap-4'>
-                        {typeof allowDataDownloadOnDetail === 'string'
-                          ? allowDataDownloadOnDetail
-                          : null}
-                        <FileDown />
-                      </div>
-                    }
-                  />
-                </div>
-              ) : null}
-            </>
-          ) : null}
-        </Modal>
       </div>
     </div>
   );
