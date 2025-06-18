@@ -373,7 +373,7 @@ export const Graph = memo((props: Props) => {
             className={classNames?.tooltip}
           />
         )}
-        {detailsOnClick ? (
+        {detailsOnClick && mouseClickData !== undefined ? (
           <Modal
             open={mouseClickData !== undefined}
             onClose={() => {

@@ -105,46 +105,44 @@ export function Graph(props: Props) {
             />
           ))}
       </div>
-      <Modal
-        open={selectedData !== undefined}
-        onClose={() => {
-          setSelectedData(undefined);
-        }}
-      >
-        {detailsOnClick ? (
-          <>
-            <div
-              className='graph-modal-content m-0'
-              dangerouslySetInnerHTML={{ __html: string2HTML(detailsOnClick, selectedData) }}
-            />
-            {allowDataDownloadOnDetail ? (
-              <div className='flex'>
-                <CsvDownloadButton
-                  csvData={csvData(selectedData)}
-                  headers={[
-                    {
-                      label: ' ',
-                      key: ' ',
-                    },
-                    {
-                      label: 'value',
-                      key: 'value',
-                    },
-                  ]}
-                  buttonContent={
-                    <div className='flex items-center gap-4'>
-                      {typeof allowDataDownloadOnDetail === 'string'
-                        ? allowDataDownloadOnDetail
-                        : null}
-                      <FileDown />
-                    </div>
-                  }
-                />
-              </div>
-            ) : null}
-          </>
-        ) : null}
-      </Modal>
+      {detailsOnClick && selectedData !== undefined ? (
+        <Modal
+          open={selectedData !== undefined}
+          onClose={() => {
+            setSelectedData(undefined);
+          }}
+        >
+          <div
+            className='graph-modal-content m-0'
+            dangerouslySetInnerHTML={{ __html: string2HTML(detailsOnClick, selectedData) }}
+          />
+          {allowDataDownloadOnDetail ? (
+            <div className='flex'>
+              <CsvDownloadButton
+                csvData={csvData(selectedData)}
+                headers={[
+                  {
+                    label: ' ',
+                    key: ' ',
+                  },
+                  {
+                    label: 'value',
+                    key: 'value',
+                  },
+                ]}
+                buttonContent={
+                  <div className='flex items-center gap-4'>
+                    {typeof allowDataDownloadOnDetail === 'string'
+                      ? allowDataDownloadOnDetail
+                      : null}
+                    <FileDown />
+                  </div>
+                }
+              />
+            </div>
+          ) : null}
+        </Modal>
+      ) : null}
     </>
   );
 }

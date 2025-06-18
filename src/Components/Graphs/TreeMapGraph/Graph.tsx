@@ -308,7 +308,7 @@ export function Graph(props: Props) {
           className={classNames?.tooltip}
         />
       ) : null}
-      {detailsOnClick ? (
+      {detailsOnClick && mouseClickData !== undefined ? (
         <Modal
           open={mouseClickData !== undefined}
           onClose={() => {
