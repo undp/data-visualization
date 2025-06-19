@@ -3,7 +3,7 @@ import { FootNote } from '@/Components/Typography/FootNote';
 import { Source } from '@/Components/Typography/Source';
 
 interface Props {
-  footNote?: string;
+  footNote?: string | React.ReactNode;
   sources?: SourcesDataType[];
   width?: number;
   styles?: { footnote?: React.CSSProperties; source?: React.CSSProperties };

@@ -23,15 +23,15 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 interface Props {
   data: BarGraphDataType[];
   colors?: string | string[];
-  graphTitle?: string;
+  graphTitle?: string | React.ReactNode;
   labelOrder?: string[];
   width?: number;
   height?: number;
   suffix?: string;
   prefix?: string;
   sources?: SourcesDataType[];
-  graphDescription?: string;
-  footNote?: string;
+  graphDescription?: string | React.ReactNode;
+  footNote?: string | React.ReactNode;
   barPadding?: number;
   showLabels?: boolean;
   showValues?: boolean;

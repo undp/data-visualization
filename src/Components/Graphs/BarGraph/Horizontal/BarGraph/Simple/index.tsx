@@ -24,9 +24,9 @@ interface Props {
   data: BarGraphDataType[];
   colors?: string | string[];
   labelOrder?: string[];
-  graphTitle?: string;
-  graphDescription?: string;
-  footNote?: string;
+  graphTitle?: string | React.ReactNode;
+  graphDescription?: string | React.ReactNode;
+  footNote?: string | React.ReactNode;
   width?: number;
   height?: number;
   minHeight?: number;

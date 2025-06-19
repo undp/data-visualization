@@ -23,14 +23,14 @@ import { Pause, Play } from '@/Components/Icons';
 interface Props {
   data: GroupedBarGraphWithDateDataType[];
   colors?: string[];
-  graphTitle?: string;
+  graphTitle?: string | React.ReactNode;
   width?: number;
   height?: number;
   suffix?: string;
   prefix?: string;
   sources?: SourcesDataType[];
-  graphDescription?: string;
-  footNote?: string;
+  graphDescription?: string | React.ReactNode;
+  footNote?: string | React.ReactNode;
   barPadding?: number;
   showLabels?: boolean;
   showValues?: boolean;

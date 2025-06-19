@@ -23,9 +23,9 @@ import { Pause, Play } from '@/Components/Icons';
 interface Props {
   data: GroupedBarGraphWithDateDataType[];
   colors?: string[];
-  graphTitle?: string;
-  graphDescription?: string;
-  footNote?: string;
+  graphTitle?: string | React.ReactNode;
+  graphDescription?: string | React.ReactNode;
+  footNote?: string | React.ReactNode;
   width?: number;
   height?: number;
   sources?: SourcesDataType[];

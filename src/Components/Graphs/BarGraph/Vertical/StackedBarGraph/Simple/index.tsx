@@ -23,13 +23,13 @@ import { EmptyState } from '@/Components/Elements/EmptyState';
 interface Props {
   data: GroupedBarGraphDataType[];
   colors?: string[];
-  graphTitle?: string;
+  graphTitle?: string | React.ReactNode;
   width?: number;
   labelOrder?: string[];
   height?: number;
   sources?: SourcesDataType[];
-  graphDescription?: string;
-  footNote?: string;
+  graphDescription?: string | React.ReactNode;
+  footNote?: string | React.ReactNode;
   barPadding?: number;
   showLabels?: boolean;
   showTicks?: boolean;

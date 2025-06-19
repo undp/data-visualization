@@ -677,10 +677,10 @@ export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
   axisTitles?: [string, string];
-  graphTitle?: string;
+  graphTitle?: string | React.ReactNode;
   labelOrder?: string[];
-  graphDescription?: string;
-  footNote?: string;
+  graphDescription?: string | React.ReactNode;
+  footNote?: string | React.ReactNode;
   height?: number;
   width?: number;
   suffix?: string;

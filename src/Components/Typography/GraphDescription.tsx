@@ -1,33 +1,29 @@
 import { cn, P } from '@undp/design-system-react';
 
-import { extractInnerString } from '@/Utils/extractInnerString';
-
 interface Props {
-  text: string;
+  text: string | React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
 }
 
 export function GraphDescription(props: Props) {
   const { text, style, className } = props;
-  if (extractInnerString(text)) {
+  if (typeof text === 'string')
     return (
-      <div
-        dangerouslySetInnerHTML={{ __html: extractInnerString(text) as string }}
-        className={className}
+      <P
+        size='sm'
+        marginBottom='none'
+        className={cn('text-primary-gray-550 dark:text-primary-gray-400', className)}
+        aria-label='Graph description'
         style={style}
-      />
+      >
+        {text}
+      </P>
     );
-  }
+
   return (
-    <P
-      size='sm'
-      marginBottom='none'
-      className={cn('text-primary-gray-550 dark:text-primary-gray-400', className)}
-      aria-label='Graph description'
-      style={style}
-    >
+    <div className={className} style={style}>
       {text}
-    </P>
+    </div>
   );
 }

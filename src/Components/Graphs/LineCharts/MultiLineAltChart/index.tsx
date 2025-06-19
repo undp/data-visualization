@@ -29,11 +29,11 @@ interface Props {
 
   // Titles, Labels, and Sources
   /** Title of the graph */
-  graphTitle?: string;
+  graphTitle?: string | React.ReactNode;
   /** Description of the graph */
-  graphDescription?: string;
+  graphDescription?: string | React.ReactNode;
   /** Footnote for the graph */
-  footNote?: string;
+  footNote?: string | React.ReactNode;
   /** Source data for the graph */
   sources?: SourcesDataType[];
   /** Accessibility label */

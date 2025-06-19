@@ -35,6 +35,31 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     dateFormat: { table: { defaultValue: { summary: 'yyyy' } } },
 
     // Titles and Labels and Sources
+
+    graphTitle: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'string | React.ReactNode',
+        },
+      },
+    },
+    graphDescription: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'string | React.ReactNode',
+        },
+      },
+    },
+    footNote: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'string | React.ReactNode',
+        },
+      },
+    },
     sources: { table: { type: { detail: SOURCE_OBJECT } } },
     mapNoDataColor: { control: 'color' },
     mapBorderColor: { control: 'color' },

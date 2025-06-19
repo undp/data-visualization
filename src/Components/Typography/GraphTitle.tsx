@@ -1,9 +1,8 @@
 import { cn, H5, P } from '@undp/design-system-react';
-
-import { extractInnerString } from '@/Utils/extractInnerString';
+import React from 'react';
 
 interface Props {
-  text: string;
+  text: string | React.ReactNode;
   isDashboard?: boolean;
   style?: React.CSSProperties;
   className?: string;
@@ -11,33 +10,32 @@ interface Props {
 
 export function GraphTitle(props: Props) {
   const { text, isDashboard, style, className } = props;
-  if (extractInnerString(text)) {
+  if (typeof text === 'string') {
+    if (isDashboard)
+      return (
+        <H5
+          marginBottom='base'
+          className={cn('font-bold pb-3 text-primary-black dark:text-primary-gray-100', className)}
+          aria-label='Dashboard title'
+          style={style}
+        >
+          {text}
+        </H5>
+      );
     return (
-      <div
-        dangerouslySetInnerHTML={{ __html: extractInnerString(text) as string }}
-        className={className}
-      />
-    );
-  }
-  if (isDashboard)
-    return (
-      <H5
-        marginBottom='base'
-        className={cn('font-bold pb-3 text-primary-black dark:text-primary-gray-100', className)}
-        aria-label='Dashboard title'
+      <P
+        marginBottom='none'
+        className={cn('text-primary-black dark:text-primary-gray-100', className)}
+        aria-label='Graph title'
         style={style}
       >
         {text}
-      </H5>
+      </P>
     );
+  }
   return (
-    <P
-      marginBottom='none'
-      className={cn('text-primary-black dark:text-primary-gray-100', className)}
-      aria-label='Graph title'
-      style={style}
-    >
+    <div className={className} style={style}>
       {text}
-    </P>
+    </div>
   );
 }

@@ -20,14 +20,14 @@ import { EmptyState } from '@/Components/Elements/EmptyState';
 interface Props {
   data: GroupedBarGraphDataType[];
   colors?: string[];
-  graphTitle?: string;
+  graphTitle?: string | React.ReactNode;
   width?: number;
   height?: number;
   suffix?: string;
   prefix?: string;
   sources?: SourcesDataType[];
-  graphDescription?: string;
-  footNote?: string;
+  graphDescription?: string | React.ReactNode;
+  footNote?: string | React.ReactNode;
   barPadding?: number;
   showLabels?: boolean;
   showValues?: boolean;

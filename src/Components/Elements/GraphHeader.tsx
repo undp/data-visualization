@@ -4,8 +4,8 @@ import { GraphDescription } from '@/Components/Typography/GraphDescription';
 import { GraphTitle } from '@/Components/Typography/GraphTitle';
 
 interface Props {
-  graphTitle?: string;
-  graphDescription?: string;
+  graphTitle?: string | React.ReactNode;
+  graphDescription?: string | React.ReactNode;
   width?: number;
   graphDownload?: HTMLDivElement | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
