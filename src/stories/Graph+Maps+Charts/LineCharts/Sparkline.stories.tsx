@@ -67,6 +67,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
 
     // Interactions and Callbacks
     onSeriesMouseOver: { action: 'seriesMouseOver' },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
 
     // Configuration and Options
     language: {

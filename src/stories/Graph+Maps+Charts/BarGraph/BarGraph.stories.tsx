@@ -97,6 +97,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '(string | number)[]' } },
     },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
     resetSelectionOnDoubleClick: {

@@ -43,7 +43,8 @@ interface Props {
   mapNoDataColor: string;
   showLabels: boolean;
   mapBorderColor: string;
-  tooltip?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
   isWorldMap: boolean;
@@ -54,7 +55,8 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
-  detailsOnClick?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
   zoomInteraction: ZoomInteractionTypes;
@@ -460,8 +462,14 @@ export function Graph(props: Props) {
         >
           <div
             className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={{ __html: string2HTML(detailsOnClick, mouseClickData) }}
-          />
+            dangerouslySetInnerHTML={
+              typeof detailsOnClick === 'string'
+                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
+                : undefined
+            }
+          >
+            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
+          </div>
         </Modal>
       ) : null}
       {mouseOverData && tooltip && eventX && eventY ? (

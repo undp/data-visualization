@@ -237,7 +237,7 @@ interface Props {
     source?: string;
     description?: string;
     graphContainer?: string;
-    tooltip?: string;
+    detailsOnClick?: string | ((_d: any) => React.ReactNode);
     xAxis?: {
       gridLines?: string;
       labels?: string;

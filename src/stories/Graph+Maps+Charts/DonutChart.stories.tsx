@@ -59,6 +59,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
 
     // Size and Spacing
     minHeight: { table: { defaultValue: { summary: '0' } } },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
 
     // Graph parameters
     mainText: {

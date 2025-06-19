@@ -24,7 +24,8 @@ interface Props {
   cardTemplate: string;
   cardMinWidth: number;
   noOfItemsInAPage?: number;
-  detailsOnClick?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   allowDataDownloadOnDetail: boolean | string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
@@ -114,8 +115,14 @@ export function Graph(props: Props) {
         >
           <div
             className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={{ __html: string2HTML(detailsOnClick, selectedData) }}
-          />
+            dangerouslySetInnerHTML={
+              typeof detailsOnClick === 'string'
+                ? { __html: string2HTML(detailsOnClick, selectedData) }
+                : undefined
+            }
+          >
+            {typeof detailsOnClick === 'function' ? detailsOnClick(selectedData) : null}
+          </div>
           {allowDataDownloadOnDetail ? (
             <div className='flex'>
               <CsvDownloadButton

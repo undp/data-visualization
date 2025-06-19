@@ -86,6 +86,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
     zoomInteraction: {
       control: 'inline-radio',
       options: ['scroll', 'ctrlScroll', 'button', 'noZoom'],

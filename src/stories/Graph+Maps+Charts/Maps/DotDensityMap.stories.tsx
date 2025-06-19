@@ -86,6 +86,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: 'button' },
       },
     },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
     centerPoint: {
       control: 'text',
       table: { type: { summary: '[number, number]' } },

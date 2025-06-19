@@ -100,6 +100,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
 
     // Interactions and Callbacks
     onSeriesMouseOver: { action: 'seriesMouseOver' },

@@ -91,6 +91,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '[number, number]' } },
     },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
     zoomTranslateExtend: {
       control: 'text',
       table: { type: { summary: '[[number, number], [number, number]]' } },

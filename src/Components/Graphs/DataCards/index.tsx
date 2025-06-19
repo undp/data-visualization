@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
 import sortBy from 'lodash.sortby';
@@ -80,8 +80,9 @@ interface Props {
   noOfItemsInAPage?: number;
 
   // Interactions and Callbacks
-  /** Details displayed on the modal when user clicks of a data point */
-  detailsOnClick?: string;
+  /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse click event */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;

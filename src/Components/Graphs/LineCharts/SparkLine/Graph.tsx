@@ -32,7 +32,8 @@ interface Props {
   rightMargin: number;
   topMargin: number;
   bottomMargin: number;
-  tooltip?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
   maxValue?: number;

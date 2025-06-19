@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import uniqBy from 'lodash.uniqby';
 import { useState, useRef, useEffect } from 'react';
 import { format, parse } from 'date-fns';
@@ -49,11 +48,14 @@ interface Props {
   showColorScale?: boolean;
   maxValue?: number;
   minValue?: number;
-  tooltip?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tooltip?: string | ((_d: any) => React.ReactNode);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
   refValues?: ReferenceDataType[];
   graphID?: string;
   highlightedDataPoints?: (string | number)[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   graphDownload?: boolean;
   dataDownload?: boolean;
@@ -69,7 +71,8 @@ interface Props {
   minBarThickness?: number;
   ariaLabel?: string;
   resetSelectionOnDoubleClick?: boolean;
-  detailsOnClick?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   barAxisTitle?: string;
   noOfTicks?: number;
   valueColor?: string;
@@ -160,6 +163,7 @@ export function AnimatedHorizontalBarChart(props: Props) {
   );
   const [index, setIndex] = useState(autoPlay ? 0 : uniqDatesSorted.length - 1);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markObj: any = {};
 
   uniqDatesSorted.forEach((d, i) => {

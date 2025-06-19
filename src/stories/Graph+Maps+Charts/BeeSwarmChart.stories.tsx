@@ -66,6 +66,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     showTicks: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'true' } } },
     showNAColor: { table: { defaultValue: { summary: 'true' } } },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
     highlightedDataPoints: {
       control: 'text',
       table: { type: { summary: '(string | number)[]' } },

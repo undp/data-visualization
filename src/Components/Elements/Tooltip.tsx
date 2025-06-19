@@ -3,7 +3,8 @@ import { cn } from '@undp/design-system-react';
 import { string2HTML } from '@/Utils/string2HTML';
 
 interface Props {
-  body: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body: string | ((_d: any) => React.ReactNode);
   xPos: number;
   yPos: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +25,6 @@ export function Tooltip(props: Props) {
     },
     className,
   } = props;
-  const htmlString = string2HTML(body, data);
   return (
     <div
       className={cn(
@@ -42,8 +42,12 @@ export function Tooltip(props: Props) {
     >
       <div
         className='text-sm leading-normal text-primary-black dark:text-primary-gray-100 m-0'
-        dangerouslySetInnerHTML={{ __html: htmlString }}
-      />
+        dangerouslySetInnerHTML={
+          typeof body === 'string' ? { __html: string2HTML(body, data) } : undefined
+        }
+      >
+        {typeof body === 'function' ? body(data) : null}
+      </div>
     </div>
   );
 }

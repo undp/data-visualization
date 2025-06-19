@@ -84,6 +84,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     showTicks: { table: { defaultValue: { summary: 'true' } } },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
 
     // Interactions and Callbacks
     onSeriesMouseOver: { action: 'seriesMouseOver' },

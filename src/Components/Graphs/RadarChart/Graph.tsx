@@ -20,12 +20,14 @@ interface Props {
   lineColors: string[];
   axisLabels: (string | number)[];
   data: RadarChartDataType[];
-  tooltip?: string;
+
+  tooltip?: string | ((_d: any) => React.ReactNode);
   selectedColor?: string;
   onSeriesMouseOver?: (_d: any) => void;
   onSeriesMouseClick?: (_d: any) => void;
   colorDomain: string[];
-  detailsOnClick?: string;
+
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   strokeWidth: number;
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -352,8 +354,14 @@ export function Graph(props: Props) {
         >
           <div
             className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={{ __html: string2HTML(detailsOnClick, mouseClickData) }}
-          />
+            dangerouslySetInnerHTML={
+              typeof detailsOnClick === 'string'
+                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
+                : undefined
+            }
+          >
+            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
+          </div>
         </Modal>
       ) : null}
     </>

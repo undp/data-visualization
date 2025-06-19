@@ -17,14 +17,16 @@ interface Props {
   subNote?: string;
   strokeWidth: number;
   data: DonutChartDataType[];
-  tooltip?: string;
+
+  tooltip?: string | ((_d: any) => React.ReactNode);
 
   onSeriesMouseOver?: (_d: any) => void;
 
   onSeriesMouseClick?: (_d: any) => void;
   colorDomain: string[];
   resetSelectionOnDoubleClick: boolean;
-  detailsOnClick?: string;
+
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
 }
@@ -189,8 +191,14 @@ export function Graph(props: Props) {
         >
           <div
             className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={{ __html: string2HTML(detailsOnClick, mouseClickData) }}
-          />
+            dangerouslySetInnerHTML={
+              typeof detailsOnClick === 'string'
+                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
+                : undefined
+            }
+          >
+            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
+          </div>
         </Modal>
       ) : null}
     </>

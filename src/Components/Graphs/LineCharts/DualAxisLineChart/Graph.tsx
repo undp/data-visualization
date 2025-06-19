@@ -47,7 +47,8 @@ interface Props {
   bottomMargin: number;
   sameAxes: boolean;
   highlightAreaSettings: HighlightAreaSettingsDataType[];
-  tooltip?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
   animateLine: boolean | number;

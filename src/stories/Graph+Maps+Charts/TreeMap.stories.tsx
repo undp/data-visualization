@@ -75,6 +75,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
     resetSelectionOnDoubleClick: { table: { defaultValue: { summary: 'true' } } },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
 
     // Interactions and Callbacks
     onSeriesMouseOver: { action: 'seriesMouseOver' },

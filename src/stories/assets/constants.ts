@@ -30,6 +30,7 @@ export const CLASS_NAME_OBJECT = `{
   source?: string;
   description?: string;
   graphContainer?: string;
+  detailsOnClick?: string;
   tooltip?: string;
   xAxis?: {
     gridLines?: string;

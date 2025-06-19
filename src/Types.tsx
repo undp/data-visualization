@@ -701,7 +701,7 @@ export interface GraphSettingsDataType {
   showColorScale?: boolean;
   maxValue?: number;
   minValue?: number;
-  tooltip?: string;
+  tooltip?: string | ((_d: any) => React.ReactNode);
   refValues?: ReferenceDataType[];
   graphID?: string;
   highlightedDataPoints?: (string | number)[];
@@ -860,7 +860,7 @@ export interface GraphSettingsDataType {
   verticalAlign?: 'center' | 'top' | 'bottom';
   resetSelectionOnDoubleClick?: boolean;
   intervalAreaOpacity?: number;
-  detailsOnClick?: string;
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   valueColor?: string;
   labelColor?: string;
   noOfYTicks?: number;

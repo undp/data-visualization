@@ -101,6 +101,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     },
 
     dateFormat: { table: { defaultValue: { summary: 'yyyy' } } },
+    detailsOnClick: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
+    tooltip: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
 
     // Interactions and Callbacks
     onSeriesMouseOver: { action: 'seriesMouseOver' },

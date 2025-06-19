@@ -46,7 +46,8 @@ interface Props {
   topMargin?: number;
   relativeHeight?: number;
   bottomMargin?: number;
-  tooltip?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
   refValues?: ReferenceDataType[];
@@ -69,7 +70,8 @@ interface Props {
   minBarThickness?: number;
   ariaLabel?: string;
   resetSelectionOnDoubleClick?: boolean;
-  detailsOnClick?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  detailsOnClick?: string | ((_d: any) => React.ReactNode);
   barAxisTitle?: string;
   noOfTicks?: number;
   valueColor?: string;
