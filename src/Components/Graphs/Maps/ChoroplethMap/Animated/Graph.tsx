@@ -316,9 +316,7 @@ export function Graph(props: Props) {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
-                    if (onSeriesMouseOver) {
-                      onSeriesMouseOver(d);
-                    }
+                    onSeriesMouseOver?.(d);
                   }}
                   onMouseMove={event => {
                     setMouseOverData(d);
@@ -329,9 +327,7 @@ export function Graph(props: Props) {
                     setMouseOverData(undefined);
                     setEventX(undefined);
                     setEventY(undefined);
-                    if (onSeriesMouseOver) {
-                      onSeriesMouseOver(undefined);
-                    }
+                    onSeriesMouseOver?.(undefined);
                   }}
                   onClick={() => {
                     if (onSeriesMouseClick || detailsOnClick) {
@@ -469,8 +465,6 @@ export function Graph(props: Props) {
               <>
                 <div
                   style={{
-                    marginBottom: '-0.75rem',
-                    marginLeft: categorical ? '126px' : '328px',
                     backgroundColor: 'rgba(240,240,240, 0.7)',
                     border: '1px solid var(--gray-400)',
                     borderRadius: '999px',
@@ -479,7 +473,9 @@ export function Graph(props: Props) {
                     padding: '3px',
                     cursor: 'pointer',
                     zIndex: 10,
-                    position: 'relative',
+                    position: 'absolute',
+                    right: '-0.75rem',
+                    top: '-0.75rem',
                   }}
                   onClick={() => {
                     setShowLegend(false);
@@ -491,7 +487,7 @@ export function Graph(props: Props) {
                   className='p-2'
                   style={{
                     backgroundColor: 'rgba(240,240,240, 0.5',
-                    width: categorical ? '138px' : '340px',
+                    width: categorical ? undefined : '340px',
                   }}
                 >
                   {colorLegendTitle && colorLegendTitle !== '' ? (

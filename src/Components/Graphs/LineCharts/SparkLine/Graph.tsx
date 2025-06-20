@@ -139,24 +139,18 @@ export function Graph(props: Props) {
           )
         ];
       setMouseOverData(selectedData || dataFormatted[dataFormatted.length - 1]);
-      if (onSeriesMouseOver) {
-        onSeriesMouseOver(selectedData || dataFormatted[dataFormatted.length - 1]);
-      }
+      onSeriesMouseOver?.(selectedData || dataFormatted[dataFormatted.length - 1]);
       setEventY(event.clientY);
       setEventX(event.clientX);
     };
     const mouseout = () => {
       setMouseOverData(undefined);
-      if (onSeriesMouseOver) {
-        onSeriesMouseOver(undefined);
-      }
+      onSeriesMouseOver?.(undefined);
       setEventX(undefined);
       setEventY(undefined);
     };
     select(MouseoverRectRef.current).on('mousemove', mousemove).on('mouseout', mouseout);
-    if (onSeriesMouseOver) {
-      onSeriesMouseOver(undefined);
-    }
+    onSeriesMouseOver?.(undefined);
   }, [x, dataFormatted, onSeriesMouseOver]);
   return (
     <>

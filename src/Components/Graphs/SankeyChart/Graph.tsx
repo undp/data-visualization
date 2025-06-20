@@ -357,8 +357,8 @@ export function Graph(props: Props) {
                   setMouseOverData((d as any).data);
                   setEventY(event.clientY);
                   setEventX(event.clientX);
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onSeriesMouseOver?.((d as any).data);
+
+                  onSeriesMouseOver?.(d);
                 }}
                 onMouseMove={event => {
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -387,9 +387,7 @@ export function Graph(props: Props) {
                   setMouseOverData(undefined);
                   setEventX(undefined);
                   setEventY(undefined);
-                  if (onSeriesMouseOver) {
-                    onSeriesMouseOver(undefined);
-                  }
+                  onSeriesMouseOver?.(undefined);
                 }}
                 opacity={
                   selectedNode

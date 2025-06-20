@@ -343,9 +343,7 @@ export function Graph(props: Props) {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(d);
-                      }
+                      onSeriesMouseOver?.(d);
                     }}
                     onMouseMove={event => {
                       setMouseOverData(d);
@@ -356,9 +354,7 @@ export function Graph(props: Props) {
                       setMouseOverData(undefined);
                       setEventX(undefined);
                       setEventY(undefined);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(undefined);
-                      }
+                      onSeriesMouseOver?.(undefined);
                     }}
                     onClick={() => {
                       if (onSeriesMouseClick || detailsOnClick) {
@@ -400,9 +396,7 @@ export function Graph(props: Props) {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(d);
-                      }
+                      onSeriesMouseOver?.(d);
                     }}
                     onMouseMove={event => {
                       setMouseOverData(d);
@@ -413,9 +407,7 @@ export function Graph(props: Props) {
                       setMouseOverData(undefined);
                       setEventX(undefined);
                       setEventY(undefined);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(undefined);
-                      }
+                      onSeriesMouseOver?.(undefined);
                     }}
                     onClick={() => {
                       if (onSeriesMouseClick || detailsOnClick) {

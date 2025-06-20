@@ -171,9 +171,7 @@ export function Graph(props: Props) {
                   setMouseOverData(undefined);
                   setEventX(undefined);
                   setEventY(undefined);
-                  if (onSeriesMouseOver) {
-                    onSeriesMouseOver(undefined);
-                  }
+                  onSeriesMouseOver?.(undefined);
                 }}
               >
                 <rect

@@ -239,9 +239,7 @@ export function Graph(props: Props) {
       setMouseOverData(selectedData || dataFormatted[dataFormatted.length - 1]);
       setEventY(event.clientY);
       setEventX(event.clientX);
-      if (onSeriesMouseOver) {
-        onSeriesMouseOver(selectedData || dataFormatted[dataFormatted.length - 1]);
-      }
+      onSeriesMouseOver?.(selectedData || dataFormatted[dataFormatted.length - 1]);
     };
     const mouseout = () => {
       setMouseOverData(undefined);
@@ -249,9 +247,7 @@ export function Graph(props: Props) {
       setEventY(undefined);
     };
     select(MouseoverRectRef.current).on('mousemove', mousemove).on('mouseout', mouseout);
-    if (onSeriesMouseOver) {
-      onSeriesMouseOver(undefined);
-    }
+    onSeriesMouseOver?.(undefined);
   }, [x, dataFormatted, onSeriesMouseOver]);
 
   useEffect(() => {
@@ -500,9 +496,7 @@ export function Graph(props: Props) {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(d);
-                      }
+                      onSeriesMouseOver?.(d);
                     }}
                     onMouseMove={event => {
                       setMouseOverData(d);
@@ -513,9 +507,7 @@ export function Graph(props: Props) {
                       setMouseOverData(undefined);
                       setEventX(undefined);
                       setEventY(undefined);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(undefined);
-                      }
+                      onSeriesMouseOver?.(undefined);
                     }}
                   />
                 </g>

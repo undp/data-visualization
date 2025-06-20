@@ -322,9 +322,7 @@ export function Graph(props: Props) {
                       setMouseOverData({ ...d, xIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver({ ...d, xIndex: j });
-                      }
+                      onSeriesMouseOver?.({ ...d, xIndex: j });
                     }}
                     onClick={() => {
                       if (onSeriesMouseClick || detailsOnClick) {
@@ -349,9 +347,7 @@ export function Graph(props: Props) {
                       setMouseOverData(undefined);
                       setEventX(undefined);
                       setEventY(undefined);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(undefined);
-                      }
+                      onSeriesMouseOver?.(undefined);
                     }}
                   >
                     <motion.circle

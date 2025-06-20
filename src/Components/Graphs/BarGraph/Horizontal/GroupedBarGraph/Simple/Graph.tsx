@@ -183,9 +183,7 @@ export function Graph(props: Props) {
                       setMouseOverData({ ...d, sizeIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver({ ...d, sizeIndex: j });
-                      }
+                      onSeriesMouseOver?.({ ...d, sizeIndex: j });
                     }}
                     onMouseMove={event => {
                       setMouseOverData({ ...d, sizeIndex: j });
@@ -196,9 +194,7 @@ export function Graph(props: Props) {
                       setMouseOverData(undefined);
                       setEventX(undefined);
                       setEventY(undefined);
-                      if (onSeriesMouseOver) {
-                        onSeriesMouseOver(undefined);
-                      }
+                      onSeriesMouseOver?.(undefined);
                     }}
                     onClick={() => {
                       if (onSeriesMouseClick || detailsOnClick) {
