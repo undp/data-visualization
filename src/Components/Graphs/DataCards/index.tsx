@@ -124,9 +124,9 @@ export function DataCards(props: Props) {
     ariaLabel,
     cardTemplate,
     cardBackgroundColor,
-    cardFilters = [],
+    cardFilters,
     cardSortingOptions,
-    cardSearchColumns = [],
+    cardSearchColumns,
     cardMinWidth = 320,
     backgroundColor = false,
     padding,
@@ -143,20 +143,24 @@ export function DataCards(props: Props) {
   const [page, setPage] = useState(1);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const filterSettings = cardFilters.map(el => ({
-    filter: el.column,
-    label: el.label || `Filter by ${el.column}`,
-    singleSelect: true,
-    clearable: true,
-    defaultValue: transformDefaultValue(el.defaultValue),
-    availableValues: getUniqValue(data, el.column)
-      .filter(v => !el.excludeValues?.includes(`${v}`))
-      .map(v => ({ value: v, label: v })),
-    width: el.width,
-  }));
+  const filterSettings = useMemo(
+    () =>
+      (cardFilters || []).map(el => ({
+        filter: el.column,
+        label: el.label || `Filter by ${el.column}`,
+        singleSelect: true,
+        clearable: true,
+        defaultValue: transformDefaultValue(el.defaultValue),
+        availableValues: getUniqValue(data, el.column)
+          .filter(v => !el.excludeValues?.includes(`${v}`))
+          .map(v => ({ value: v, label: v })),
+        width: el.width,
+      })),
+    [cardFilters, data],
+  );
 
   const [selectedFilters, setSelectedFilters] = useState(
-    cardFilters.map(el => ({
+    (cardFilters || []).map(el => ({
       filter: el.column,
       value: transformDefaultValue(el.defaultValue),
     })),
@@ -207,23 +211,24 @@ export function DataCards(props: Props) {
   }, [cardSortingOptions]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const filteredData = filterByKeys(data, cardSearchColumns, searchQuery).filter((item: any) =>
-      selectedFilters.every(filter =>
-        filter.value && flattenDeep([filter.value]).length > 0
-          ? intersection(
-              flattenDeep([item[filter.filter]]),
-              flattenDeep([filter.value]).map(el => el.value),
-            ).length > 0
-          : true,
-      ),
+    const filteredData = filterByKeys(data, cardSearchColumns || [], searchQuery).filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) =>
+        selectedFilters.every(filter =>
+          filter.value && flattenDeep([filter.value]).length > 0
+            ? intersection(
+                flattenDeep([item[filter.filter]]),
+                flattenDeep([filter.value]).map(el => el.value),
+              ).length > 0
+            : true,
+        ),
     );
     if (sortedBy) {
       setCardData(sortBy(filteredData, sortedBy?.value, sortedBy?.type));
     } else {
       setCardData(filteredData);
     }
-  }, [selectedFilters, data, sortedBy, searchQuery, cardSearchColumns]);
+  }, [data, cardSearchColumns, searchQuery, selectedFilters, sortedBy]);
 
   useEffect(() => {
     setPage(1);
@@ -351,7 +356,7 @@ export function DataCards(props: Props) {
                 ))}
               </div>
             ) : null}
-            {cardSearchColumns.length > 0 ? (
+            {(cardSearchColumns || []).length > 0 ? (
               <div style={{ paddingTop: '1px' }}>
                 <Search
                   placeholder='Search...'
