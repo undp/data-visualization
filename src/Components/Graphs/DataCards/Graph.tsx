@@ -21,7 +21,8 @@ interface Props {
   classNames?: ClassNameObject;
   width?: number;
   height?: number;
-  cardTemplate: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cardTemplate: string | ((_d: any) => React.ReactNode);
   cardMinWidth: number;
   noOfItemsInAPage?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,8 +103,14 @@ export function Graph(props: Props) {
                 onSeriesMouseClick?.(d);
                 setSelectedData(d);
               }}
-              dangerouslySetInnerHTML={{ __html: string2HTML(cardTemplate, d) }}
-            />
+              dangerouslySetInnerHTML={
+                typeof cardTemplate === 'string'
+                  ? { __html: string2HTML(cardTemplate, d) }
+                  : undefined
+              }
+            >
+              {typeof cardTemplate === 'function' ? cardTemplate(d) : null}
+            </div>
           ))}
       </div>
       {detailsOnClick && selectedData !== undefined ? (

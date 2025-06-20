@@ -56,8 +56,9 @@ interface Props {
   padding?: string;
 
   // Graph Parameters
-  /** Html for each card based on handlebars template. */
-  cardTemplate: string;
+  /** Html for each card. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cardTemplate: string | ((_d: any) => React.ReactNode);
   /** Allows users to add a dropdown menus, that can be used as filters in the graph. Each filter is an object that specifies the column to filter by, and the default value. All the filters are single select only.  */
   cardFilters?: FilterDataType[];
   /** Allows users to add a dropdown menus, that can be used to sort the cards based on different columns. */

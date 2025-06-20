@@ -95,6 +95,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     cardSearchColumns: { control: 'text' },
     styles: { table: { type: { detail: STYLE_OBJECT } } },
     classNames: { table: { type: { detail: CLASS_NAME_OBJECT } } },
+    cardTemplate: {
+      control: 'text',
+      table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
+    },
     detailsOnClick: {
       control: 'text',
       table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },

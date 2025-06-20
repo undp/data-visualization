@@ -833,7 +833,7 @@ export interface GraphSettingsDataType {
   intervalLineStrokeWidth?: number;
   intervalLineColors?: [string, string];
   intervalAreaColor?: string;
-  cardTemplate?: string;
+  cardTemplate?: string | ((_d: any) => React.ReactNode);
   cardBackgroundColor?: string;
   legendMaxWidth?: string;
   cardFilters?: {
