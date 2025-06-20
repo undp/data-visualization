@@ -176,7 +176,7 @@ export function Graph(props: Props) {
           <g>
             <text
               className={cn(
-                'xs:max-[360px]:hidden fill-primary-gray-700 dark:fill-primary-gray-300 text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs',
+                'xs:max-[360px]:hidden fill-primary-gray-700 dark:fill-primary-gray-300 text-[9px] md:text-[10px] lg:text-xs',
                 classNames?.xAxis?.labels,
               )}
               y={graphHeight}
@@ -197,7 +197,7 @@ export function Graph(props: Props) {
                 ...styles?.xAxis?.labels,
               }}
               className={cn(
-                'xs:max-[360px]:hidden fill-primary-gray-700 dark:fill-primary-gray-300 text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs',
+                'xs:max-[360px]:hidden fill-primary-gray-700 dark:fill-primary-gray-300 text-[9px] md:text-[10px] lg:text-xs',
                 classNames?.xAxis?.labels,
               )}
               dy='1em'

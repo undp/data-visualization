@@ -371,7 +371,7 @@ export function Graph(props: Props) {
               classNames={{
                 gridLines: cn('opacity-0', classNames?.xAxis?.gridLines),
                 labels: cn(
-                  'fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs',
+                  'fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[9px] md:text-[10px] lg:text-xs',
                   classNames?.xAxis?.labels,
                 ),
               }}

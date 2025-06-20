@@ -394,7 +394,7 @@ export function Graph(props: Props) {
                   y={graphHeight}
                   x={x(d)}
                   style={{ textAnchor: 'middle' }}
-                  className='fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs'
+                  className='fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[9px] md:text-[10px] lg:text-xs'
                   dy={15}
                 >
                   {format(d, dateFormat)}
