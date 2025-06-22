@@ -1,3 +1,4 @@
+import { H3, P, A } from '@undp/design-system-react';
 import './styles/styles.css';
 import '@undp/design-system-react/style.css';
 
@@ -16,35 +17,26 @@ function App() {
       }}
     >
       <img width='56' alt='undp-logo' src='/undp-logo-blue.svg' />
-      <h3 className='undp-viz-typography' style={{ textAlign: 'center', paddingTop: '24px' }}>
-        UNDP Data Visualization Library
-      </h3>
-      <p className='undp-viz-typography' style={{ textAlign: 'center' }}>
+      <H3 style={{ textAlign: 'center', paddingTop: '24px' }}>UNDP Data Visualization Library</H3>
+      <P style={{ textAlign: 'center' }}>
         This open-source graphing library, developed by the United Nations Development Programme,
         offers ready-to-use charts, including bar charts, line charts, area charts, and more. You
         can access the documentation{' '}
-        <a
-          href='https://data-viz.data.undp.org/'
-          target='_blank'
-          rel='noreferrer'
-          className='undp-viz-style'
-        >
+        <A href='https://dataviz.design.undp.org/' target='_blank' rel='noreferrer'>
           here
-        </a>
+        </A>
         .
-      </p>
-      <p
-        className='undp-viz-typography'
+      </P>
+      <P
         style={{
-          fontSize: '16px',
           textAlign: 'center',
         }}
       >
         For any feedback or inquiries, please feel free to reach out to us at{' '}
-        <a href='mailto:data@undp.org' target='_blank' rel='noreferrer' className='undp-viz-style'>
+        <A href='mailto:data@undp.org' target='_blank' rel='noreferrer'>
           data@undp.org
-        </a>
-      </p>
+        </A>
+      </P>
     </div>
   );
 }
