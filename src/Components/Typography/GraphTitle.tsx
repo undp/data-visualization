@@ -33,9 +33,12 @@ export function GraphTitle(props: Props) {
       </P>
     );
   }
-  return (
-    <div className={className} style={style}>
-      {text}
-    </div>
-  );
+  if (React.isValidElement(text))
+    return (
+      <div className={className} style={style}>
+        {text}
+      </div>
+    );
+  console.error('GraphTitle: Invalid text type. Expected string or React element.');
+  return null;
 }

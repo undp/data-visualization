@@ -76,7 +76,7 @@ export function validateDataSchema(data: any, graph: GraphType) {
   };
 }
 /**
- * Validates the settings against the appropriate schema for the given graph type.
+ * Validates the settings against the appropriate schema for the given graph type. This does not validate graphTitle, graphDescription, footNote, tooltip, detailsOnClick, and cardTemplate.
  *
  * @param settings - The settings to validate.
  * @param graph - The graph type for which the settings validation is performed.
@@ -116,7 +116,7 @@ export function validateSettingsSchema(settings: any, graph: GraphType) {
   };
 }
 /**
- * Validates the configuration against the appropriate schema for the given graph type.
+ * Validates the configuration against the appropriate schema for the given graph type. This does not validate graphTitle, graphDescription, footNote, tooltip, detailsOnClick or cardTemplate in the graphSettings.
  *
  * @param config - The configuration to validate.
  * @param graph - The graph type for which the configuration validation is performed. Can be one of:

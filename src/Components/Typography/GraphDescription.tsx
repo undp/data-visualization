@@ -1,4 +1,5 @@
 import { cn, P } from '@undp/design-system-react';
+import React from 'react';
 
 interface Props {
   text: string | React.ReactNode;
@@ -21,9 +22,12 @@ export function GraphDescription(props: Props) {
       </P>
     );
 
-  return (
-    <div className={className} style={style}>
-      {text}
-    </div>
-  );
+  if (React.isValidElement(text))
+    return (
+      <div className={className} style={style}>
+        {text}
+      </div>
+    );
+  console.error('GraphDescription: Invalid text type. Expected string or React element.');
+  return null;
 }
