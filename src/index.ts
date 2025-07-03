@@ -32,6 +32,8 @@ export { GeoHubMapWithLayerSelection } from './Components/Graphs/Maps/GeoHubMaps
 export { ScatterPlot } from './Components/Graphs/ScatterPlot/Simple';
 // Slope Chart
 export { SlopeChart } from './Components/Graphs/SlopeChart';
+// BUllet chart
+export { BulletChart } from './Components/Graphs/BulletChart';
 // Area Chart
 export { AreaChart } from './Components/Graphs/StackedAreaChart';
 // Stat Cards

@@ -40,6 +40,26 @@ export function GraphDataConfigSelector(graph: string) {
     chartConfigId: 'label',
   }
 ]`,
+    'Bullet chart': `[
+  // ----Required objects---- //
+  {
+    columnId: 'Column 1',
+    chartConfigId: 'size',
+  },
+  {
+    columnId: 'Column 2',
+    chartConfigId: 'label',
+  },
+  // ----Not required objects---- //
+  {
+    columnId: 'Column 3',
+    chartConfigId: 'target',
+  }
+  {
+    columnId: ['Column 1', 'Column 2', 'Column 3'],
+    chartConfigId: 'qualitativeRange',
+  }
+]`,
     'Line chart': `[
   // ----Required objects---- //
   {

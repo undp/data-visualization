@@ -57,7 +57,8 @@ export type GraphTypeForGriddedGraph =
   | 'sankeyChart'
   | 'lineChartWithConfidenceInterval'
   | 'dataCards'
-  | 'radarChart';
+  | 'radarChart'
+  | 'bulletChart';
 
 export type GeoHubGraphType = 'geoHubCompareMap' | 'geoHubMap' | 'geoHubMapWithLayerSelection';
 
@@ -159,6 +160,14 @@ export interface BarGraphDataType {
   label: string | number;
   size?: number | null;
   color?: string | null;
+  data?: object;
+}
+
+export interface BulletChartDataType {
+  label: string | number;
+  size?: number | null;
+  target?: number | null;
+  qualitativeRange?: number[] | null;
   data?: object;
 }
 
@@ -892,4 +901,9 @@ export interface GraphSettingsDataType {
   axisLabels?: (string | number)[];
   minWidth?: string;
   zoomInteraction?: ZoomInteractionTypes;
+  layout?: 'primary' | 'secondary';
+  qualitativeRangeColors?: string[];
+  targetStyle?: 'background' | 'line';
+  targetColor?: 'string';
+  measureBarWidthFactor?: number;
 }

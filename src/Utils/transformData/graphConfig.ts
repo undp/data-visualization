@@ -25,6 +25,31 @@ export const ChartConfiguration: {
     ],
   },
   {
+    chartID: 'bulletChart',
+    configuration: [
+      {
+        id: 'label',
+        required: true,
+        multiple: false,
+      },
+      {
+        id: 'size',
+        required: true,
+        multiple: false,
+      },
+      {
+        id: 'target',
+        required: false,
+        multiple: false,
+      },
+      {
+        id: 'qualitativeRange',
+        required: false,
+        multiple: true,
+      },
+    ],
+  },
+  {
     chartID: 'radarChart',
     configuration: [
       {

@@ -28,6 +28,7 @@ import animatedScatterPlot from './config/animatedScatterPlot.json';
 import slopeChart from './config/slopeChart.json';
 import stripChart from './config/stripChart.json';
 import stackedAreaChart from './config/stackedAreaChart.json';
+import bulletChart from './config/bulletChart.json';
 import statCard from './config/statCard.json';
 import unitChart from './config/unitChart.json';
 import choroplethMap from './config/choroplethMap.json';
@@ -82,6 +83,7 @@ export function GraphSettingsSelector(
     'Bi-variate choropleth map (animated)': animatedBiVariateChoroplethMap,
     'Dot density map': dotDensityMap,
     'Dot density map (animated)': animatedDotDensityMap,
+    'Bullet chart': bulletChart,
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

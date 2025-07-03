@@ -300,6 +300,8 @@ export function getGraphConfigChartConfigIdEnum(
   switch (chartType) {
     case 'barChart':
       return ['label', 'size', 'color'];
+    case 'bulletChart':
+      return ['label', 'size', 'target', 'qualitativeRange'];
     case 'animatedBarChart':
       return ['label', 'size', 'color', 'date'];
     case 'treeMap':

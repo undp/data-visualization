@@ -271,4 +271,8 @@ export const GraphNames = [
     name: 'Dot density map (animated)',
     id: 'animatedDotDensityMap',
   },
+  {
+    name: 'Bullet chart',
+    id: 'bulletChart',
+  },
 ];

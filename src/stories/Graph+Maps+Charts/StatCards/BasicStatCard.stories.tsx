@@ -55,6 +55,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: 'false' },
       },
     },
+    layout: {
+      control: 'inline-radio',
+      options: ['primary', 'secondary'],
+      table: {
+        type: {
+          summary: 'primary | secondary',
+        },
+        defaultValue: { summary: 'primary' },
+      },
+    },
     styles: { table: { type: { detail: STYLE_OBJECT } } },
     verticalAlign: {
       control: 'inline-radio',

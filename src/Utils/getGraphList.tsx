@@ -63,6 +63,13 @@ export const GraphList = [
     availableInWideToLongFormat: false,
   },
   {
+    graphName: 'Bullet chart',
+    graphID: 'bulletChart',
+    availableInGriddedGraph: true,
+    geoHubMapPresentation: false,
+    availableInWideToLongFormat: false,
+  },
+  {
     graphName: 'Circle packing',
     graphID: 'circlePacking',
     availableInGriddedGraph: true,

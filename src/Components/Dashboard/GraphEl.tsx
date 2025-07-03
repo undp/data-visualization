@@ -44,6 +44,7 @@ import {
 import { StripChart } from '../Graphs/StripChart';
 import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
 import { RadarChart } from '../Graphs/RadarChart';
+import { BulletChart } from '../Graphs/BulletChart';
 
 import { getValues } from '@/Utils/getValues';
 import { validateDataSchema, validateSettingsSchema } from '@/Utils/validateSchema';
@@ -107,6 +108,7 @@ function GraphEl(props: Props) {
     );
   const graphComponents: Record<GraphType, React.ElementType | null> = {
     barChart: SimpleBarGraph,
+    bulletChart: BulletChart,
     groupedBarChart: GroupedBarGraph,
     stackedBarChart: StackedBarGraph,
     lineChart: SimpleLineChart,
@@ -480,6 +482,72 @@ function GraphEl(props: Props) {
           valueColor: settings?.valueColor,
           styles: settings?.styles,
           classNames: settings?.classNames,
+        };
+      case 'bulletChart':
+        return {
+          theme: settings?.theme,
+          orientation: settings?.orientation,
+          data: graphData,
+          barColor: settings?.colors as string,
+          graphTitle: settings?.graphTitle,
+          graphDescription: settings?.graphDescription,
+          footNote: settings?.footNote,
+          height: settings?.height,
+          width: settings?.width,
+          suffix: settings?.suffix,
+          prefix: settings?.prefix,
+          sources: settings?.sources,
+          barPadding: settings?.barPadding,
+          showValues: settings?.showValues,
+          showTicks: settings?.showTicks,
+          leftMargin: settings?.leftMargin,
+          rightMargin: settings?.rightMargin,
+          truncateBy: settings?.truncateBy,
+          colorDomain: settings?.colorDomain,
+          colorLegendTitle:
+            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
+              ? settings?.colorLegendTitle
+              : getValues('color', graphDataConfiguration || [], readableHeader || []),
+          backgroundColor: settings?.backgroundColor,
+          padding: settings?.padding,
+          topMargin: settings?.topMargin,
+          bottomMargin: settings?.bottomMargin,
+          relativeHeight: settings?.relativeHeight,
+          showLabels: settings?.showLabels,
+          showColorScale: settings?.showColorScale,
+          maxValue: settings?.maxValue,
+          minValue: settings?.minValue,
+          labelOrder: settings?.labelOrder,
+          tooltip: settings?.tooltip,
+          refValues: settings?.refValues,
+          graphID: settings?.graphID,
+          highlightedDataPoints: settings?.highlightedDataPoints,
+          graphDownload: settings?.graphDownload,
+          dataDownload: settings?.dataDownload,
+          sortData: settings?.sortData,
+          language: settings?.language,
+          minHeight: settings?.minHeight,
+          showNAColor: settings?.showNAColor,
+          maxBarThickness: settings?.maxBarThickness,
+          minBarThickness: settings?.minBarThickness,
+          maxNumberOfBars: settings?.maxNumberOfBars,
+          ariaLabel: settings?.ariaLabel,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onSeriesMouseClick: (el: any) => {
+            updateFilters?.(el.label);
+          },
+          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
+          detailsOnClick: settings?.detailsOnClick,
+          barAxisTitle: settings?.barAxisTitle,
+          noOfTicks: settings?.noOfTicks,
+          valueColor: settings?.valueColor,
+          styles: settings?.styles,
+          classNames: settings?.classNames,
+          filterNA: settings?.filterNA,
+          qualitativeRangeColors: settings?.qualitativeRangeColors,
+          targetStyle: settings?.targetStyle,
+          targetColor: settings?.targetColor,
+          measureBarWidthFactor: settings?.measureBarWidthFactor,
         };
       case 'lineChart':
         return {
@@ -1670,6 +1738,7 @@ function GraphEl(props: Props) {
           verticalAlign: settings?.verticalAlign,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          layout: settings?.layout,
         };
       case 'geoHubCompareMap':
         return {

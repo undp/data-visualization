@@ -26,6 +26,24 @@ export const circlePackingDataSchema = {
   },
 };
 
+export const bulletChartDataSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      label: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      size: { oneOf: [{ type: 'number' }, { type: 'null' }] },
+      target: { oneOf: [{ type: 'number' }, { type: 'null' }] },
+      qualitativeRange: {
+        type: 'array',
+        items: { oneOf: [{ type: 'number' }, { type: 'null' }] },
+      },
+      data: { type: 'object' },
+    },
+    required: ['label'],
+  },
+};
+
 export const radarChartDataSchema = {
   type: 'array',
   items: {
@@ -5630,6 +5648,10 @@ export const statCardSettingsSchema = {
       type: 'string',
       enum: ['center', 'top', 'bottom'],
     },
+    layout: {
+      type: 'string',
+      enum: ['primary', 'secondary'],
+    },
     headingFontSize: { type: 'string' },
     graphTitle: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphDescription: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -5936,6 +5958,146 @@ export const unitChartSettingsSchema = {
     height: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
+  },
+};
+
+export const bulletChartSettingsSchema = {
+  type: 'object',
+  properties: {
+    detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    styles: { type: 'object' },
+    classNames: { type: 'object' },
+    labelOrder: {
+      type: 'array',
+      items: { type: 'string' },
+    },
+    filterNA: { type: 'boolean' },
+    graphTitle: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    resetSelectionOnDoubleClick: { type: 'boolean' },
+    graphDescription: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    footNote: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    width: { type: 'number' },
+    height: { type: 'number' },
+    suffix: { type: 'string' },
+    prefix: { type: 'string' },
+    sources: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          source: { type: 'string' },
+          link: { type: 'string' },
+        },
+        required: ['source'],
+      },
+    },
+    barPadding: { type: 'number' },
+    showValues: { type: 'boolean' },
+    showTicks: { type: 'boolean' },
+    leftMargin: { type: 'number' },
+    rightMargin: { type: 'number' },
+    truncateBy: { type: 'number' },
+    colorDomain: {
+      type: 'array',
+      items: { type: 'string' },
+    },
+    barColor: { type: 'string' },
+    qualitativeRangeColors: {
+      type: 'array',
+      items: { type: 'string' },
+    },
+    targetStyle: { type: 'string', enum: ['background', 'line'] },
+    targetColor: { type: 'string' },
+    measureBarWidthFactor: {
+      type: 'number',
+      minimum: 0,
+      maximum: 1,
+    },
+    colorLegendTitle: { type: 'string' },
+    backgroundColor: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
+    padding: { type: 'string' },
+    topMargin: { type: 'number' },
+    bottomMargin: { type: 'number' },
+    relativeHeight: { type: 'number' },
+    minHeight: { type: 'number' },
+    showLabels: { type: 'boolean' },
+    showColorScale: { type: 'boolean' },
+    maxValue: { type: 'number' },
+    minValue: { type: 'number' },
+    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    refValues: {
+      type: 'array',
+      items: {
+        properties: {
+          color: { type: 'string' },
+          text: { type: 'string' },
+          value: { type: 'number' },
+          styles: {
+            type: 'object',
+            properties: {
+              line: { type: 'object' },
+              text: { type: 'object' },
+            },
+          },
+          classNames: {
+            type: 'object',
+            properties: {
+              line: { type: 'string' },
+              text: { type: 'string' },
+            },
+          },
+        },
+        type: 'object',
+        required: ['value', 'text'],
+      },
+    },
+    graphID: { type: 'string' },
+    highlightedDataPoints: {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+    },
+    graphDownload: { type: 'boolean' },
+    dataDownload: { type: 'boolean' },
+    showNAColor: { type: 'boolean' },
+    sortData: {
+      type: 'string',
+      enum: ['asc', 'desc'],
+    },
+    language: {
+      type: 'string',
+      enum: [
+        'en',
+        'ar',
+        'az',
+        'bn',
+        'cy',
+        'he',
+        'hi',
+        'jp',
+        'ka',
+        'km',
+        'ko',
+        'my',
+        'ne',
+        'zh',
+        'custom',
+      ],
+    },
+    theme: {
+      type: 'string',
+      enum: ['light', 'dark'],
+    },
+    maxBarThickness: { type: 'number' },
+    minBarThickness: { type: 'number' },
+    maxNumberOfBars: { type: 'number' },
+    ariaLabel: { type: 'string' },
+    valueColor: { type: 'string' },
+    barAxisTitle: { type: 'string' },
+    noOfTicks: { type: 'number' },
+    orientation: {
+      type: 'string',
+      enum: ['vertical', 'horizontal'],
+    },
   },
 };
 
@@ -6706,5 +6868,20 @@ export const SettingsSchema = {
       minItems: 1,
     },
     minWidth: { type: 'string' },
+    layout: {
+      type: 'string',
+      enum: ['primary', 'secondary'],
+    },
+    qualitativeRangeColors: {
+      type: 'array',
+      items: { type: 'string' },
+    },
+    targetStyle: { type: 'string', enum: ['background', 'line'] },
+    targetColor: { type: 'string' },
+    measureBarWidthFactor: {
+      type: 'number',
+      minimum: 0,
+      maximum: 1,
+    },
   },
 };
