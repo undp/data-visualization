@@ -112,16 +112,42 @@ export function Graph(props: Props) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  const xMaxValue = !checkIfNullOrUndefined(maxValue)
-    ? (maxValue as number)
-    : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) < 0
+  const barMaxValue =
+    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) < 0
       ? 0
       : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
-  const xMinValue = !checkIfNullOrUndefined(minValue)
-    ? (minValue as number)
-    : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) >= 0
+  const targetMaxValue =
+    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.size as number)) < 0
+      ? 0
+      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
+  const qualitativeRangeMaxValue = Math.max(
+    ...data.map(d => sum((d.qualitativeRange || []).filter(l => !checkIfNullOrUndefined(l))) || 0),
+  );
+  const xMaxValue = !checkIfNullOrUndefined(maxValue)
+    ? (maxValue as number)
+    : Math.max(...[barMaxValue, targetMaxValue, qualitativeRangeMaxValue].filter(Number.isFinite)) <
+        0
+      ? 0
+      : Math.max(
+          ...[barMaxValue, targetMaxValue, qualitativeRangeMaxValue].filter(Number.isFinite),
+        );
+  const barMinValue =
+    Math.min(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) >= 0
       ? 0
       : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
+
+  const targetMinValue =
+    Math.min(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number)) >=
+    0
+      ? 0
+      : Math.min(
+          ...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number),
+        );
+  const xMinValue = !checkIfNullOrUndefined(minValue)
+    ? (minValue as number)
+    : Math.min(...[barMinValue, targetMinValue].filter(Number.isFinite)) >= 0
+      ? 0
+      : Math.min(...[barMinValue, targetMinValue].filter(Number.isFinite));
 
   const y = scaleLinear().domain([xMinValue, xMaxValue]).range([graphHeight, 0]).nice();
 
