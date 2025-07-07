@@ -682,6 +682,11 @@ export interface BackgroundStyleDataType {
   border?: string;
 }
 
+export interface MapLegendDataType {
+  mapStyleName: string;
+  legend: string | React.ReactNode;
+}
+
 export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
@@ -906,4 +911,5 @@ export interface GraphSettingsDataType {
   targetStyle?: 'background' | 'line';
   targetColor?: 'string';
   measureBarWidthFactor?: number;
+  mapLegend?: string | React.ReactNode | MapLegendDataType[];
 }

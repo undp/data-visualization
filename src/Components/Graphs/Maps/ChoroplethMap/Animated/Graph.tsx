@@ -486,7 +486,7 @@ export function Graph(props: Props) {
                 <div
                   className='p-2'
                   style={{
-                    backgroundColor: 'rgba(240,240,240, 0.5',
+                    backgroundColor: 'rgba(240,240,240, 0.7)',
                     width: categorical ? undefined : '340px',
                   }}
                 >

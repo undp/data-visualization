@@ -55,6 +55,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '{ layerID: string[]; name: string }[]' } },
     },
+    mapLegend: {
+      control: 'text',
+      table: {
+        type: {
+          summary: '{ mapStyleName: string; legend: string | React.ReactNode }[]',
+          detail:
+            'mapLegend is of type { mapStyleName: string; legend: string | React.ReactNode }[] where mapStyleName corresponds to the each name in the layerSelection.',
+        },
+      },
+    },
 
     // Values and Ticks
     center: {

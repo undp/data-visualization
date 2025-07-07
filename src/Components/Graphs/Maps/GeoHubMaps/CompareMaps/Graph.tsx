@@ -12,14 +12,17 @@ import {
   DragMoveEvent,
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import React from 'react';
 
-import { ChevronLeftRight } from '@/Components/Icons';
+import { ChevronLeftRight, X } from '@/Components/Icons';
+import { string2HTML } from '@/Utils/string2HTML';
 
 interface Props {
   width: number;
   height: number;
   mapStyles: [string, string];
   center: [number, number];
+  mapLegend?: string | React.ReactNode;
   zoomLevel: number;
 }
 
@@ -54,10 +57,11 @@ function synchronizeMap(map1: maplibreGl.Map, map2: maplibreGl.Map) {
 }
 
 export function Graph(props: Props) {
-  const { height, width, mapStyles, center, zoomLevel } = props;
+  const { height, width, mapStyles, center, zoomLevel, mapLegend } = props;
   const [position, setPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [showLegend, setShowLegend] = useState(true);
   const dragStartPositionRef = useRef(50);
   const sliderWidthRef = useRef(0);
 
@@ -206,6 +210,57 @@ export function Graph(props: Props) {
           </DndContext>
         </div>
       </div>
+      {mapLegend ? (
+        <div className='absolute left-[22px] bottom-13'>
+          {showLegend ? (
+            <>
+              <div
+                style={{
+                  backgroundColor: 'rgba(240,240,240, 0.7)',
+                  border: '1px solid var(--gray-400)',
+                  borderRadius: '999px',
+                  width: '24px',
+                  height: '24px',
+                  padding: '3px',
+                  cursor: 'pointer',
+                  zIndex: 10,
+                  position: 'absolute',
+                  right: '-0.75rem',
+                  top: '-0.75rem',
+                }}
+                onClick={() => {
+                  setShowLegend(false);
+                }}
+              >
+                <X />
+              </div>
+              <div
+                className='p-2'
+                style={{
+                  backgroundColor: 'rgba(240,240,240, 0.7)',
+                }}
+                dangerouslySetInnerHTML={
+                  typeof mapLegend === 'string' ? { __html: string2HTML(mapLegend) } : undefined
+                }
+              >
+                {React.isValidElement(mapLegend) ? mapLegend : null}
+              </div>
+            </>
+          ) : (
+            <button
+              type='button'
+              className='mb-0 border-0 bg-transparent p-0 self-start'
+              onClick={() => {
+                setShowLegend(true);
+              }}
+            >
+              <div className='items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-550 border-primary-gray-400 dark:border-primary-gray-500'>
+                Show Legend
+              </div>
+            </button>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -4603,6 +4603,7 @@ export const geoHubCompareMapSettingsSchema = {
       minItems: 2,
       maxItems: 2,
     },
+    mapLegend: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     center: {
       type: 'array',
       items: { type: 'number' },
@@ -4660,6 +4661,7 @@ export const geoHubMapSettingsSchema = {
         },
       ],
     },
+    mapLegend: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     center: {
       type: 'array',
       items: { type: 'number' },
@@ -4735,6 +4737,7 @@ export const geoHubMapWithLayerSelectionSettingsSchema = {
     styles: { type: 'object' },
     classNames: { type: 'object' },
     mapStyle: { type: 'string' },
+    mapLegend: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     center: {
       type: 'array',
       items: { type: 'number' },
@@ -6883,5 +6886,6 @@ export const SettingsSchema = {
       minimum: 0,
       maximum: 1,
     },
+    mapLegend: { oneOf: [{ type: 'string' }, { type: 'object' }] },
   },
 };

@@ -486,7 +486,7 @@ export function Graph(props: Props) {
                 </div>
                 <div
                   className='p-2'
-                  style={{ backgroundColor: 'rgba(240,240,240, 0.5', width: '175px' }}
+                  style={{ backgroundColor: 'rgba(240,240,240, 0.7)', width: '175px' }}
                 >
                   <div className='flex gap-1 items-center'>
                     <svg width='136px' viewBox='0 0 136 136' className='shrink-0'>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DropdownSelect, cn, createFilter } from '@undp/design-system-react';
 
 import { GeoHubMultipleMap } from './GeoHubMultipleMap';
@@ -6,7 +6,13 @@ import { GeoHubSingleMap } from './GeoHubSingleMap';
 
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { ClassNameObject, Languages, SourcesDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  Languages,
+  MapLegendDataType,
+  SourcesDataType,
+  StyleObject,
+} from '@/Types';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -44,6 +50,8 @@ interface Props {
   // Graph Parameters
   /** URL for mapStyle JSON. If the type is string, otherwise it creates and dropdown and provide end user to select the map style they would like to  */
   mapStyle: string | { style: string; name: string }[];
+  /** Defines the legend for the map. If the mapStyle is string, mapLegend can be string or ReactNode. mapLegend with type string is show as innerHTML. If the mapStyle is not string, mapLegend is of type { mapStyleName: string; legend: string | React.ReactNode }[] where mapStyleName corresponds to the each name in the mapStyle. */
+  mapLegend?: string | React.ReactNode | MapLegendDataType[];
   /** Starting center point of the map */
   center?: [number, number];
   /** Starting zoom level of the map */
@@ -89,6 +97,7 @@ export function GeoHubMap(props: Props) {
     uiMode = 'normal',
     styles,
     classNames,
+    mapLegend,
   } = props;
 
   const [selectedMapStyle, setSelectedMapStyle] = useState(
@@ -186,6 +195,7 @@ export function GeoHubMap(props: Props) {
                 minHeight={minHeight}
                 includeLayers={includeLayers}
                 excludeLayers={excludeLayers}
+                mapLegend={mapLegend as string | React.ReactNode}
               />
             ) : (
               <GeoHubMultipleMap
@@ -198,6 +208,12 @@ export function GeoHubMap(props: Props) {
                 minHeight={minHeight}
                 includeLayers={includeLayers}
                 excludeLayers={excludeLayers}
+                mapLegend={
+                  (mapLegend as MapLegendDataType[]).find(
+                    d =>
+                      d.mapStyleName === mapStyle.find(el => el.style === selectedMapStyle)?.name,
+                  )?.legend
+                }
               />
             )}
             {sources || footNote ? (

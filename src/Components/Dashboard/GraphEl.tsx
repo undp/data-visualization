@@ -1761,6 +1761,7 @@ function GraphEl(props: Props) {
           ariaLabel: settings?.ariaLabel,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          mapLegend: settings?.mapLegend,
         };
       case 'geoHubMap':
         return {
@@ -1786,6 +1787,7 @@ function GraphEl(props: Props) {
           uiMode: settings?.uiMode,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          mapLegend: settings?.mapLegend,
         };
       case 'geoHubMapWithLayerSelection':
         return {
@@ -1809,6 +1811,7 @@ function GraphEl(props: Props) {
           excludeLayers: settings?.excludeLayers,
           ariaLabel: settings?.ariaLabel,
           uiMode: settings?.uiMode,
+          mapLegend: settings?.mapLegend,
         };
       case 'unitChart':
         return {

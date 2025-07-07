@@ -400,7 +400,7 @@ export function Graph(props: Props) {
                 >
                   <X />
                 </div>
-                <div className='p-2' style={{ backgroundColor: 'rgba(240,240,240, 0.5' }}>
+                <div className='p-2' style={{ backgroundColor: 'rgba(240,240,240, 0.7)' }}>
                   {colorLegendTitle && colorLegendTitle !== '' ? (
                     <p
                       className='p-0 leading-normal overflow-hidden text-primary-gray-700 dark:text-primary-gray-300'

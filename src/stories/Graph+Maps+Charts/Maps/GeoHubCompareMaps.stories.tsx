@@ -55,6 +55,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '[string, string]' } },
     },
+    mapLegend: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'string | React.ReactNode',
+          detail: 'mapLegend with type string is show as innerHTML.',
+        },
+      },
+    },
 
     // Values and Ticks
     center: {

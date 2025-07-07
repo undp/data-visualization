@@ -6,7 +6,13 @@ import { MapEl } from './MapEl';
 
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { ClassNameObject, Languages, SourcesDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  Languages,
+  MapLegendDataType,
+  SourcesDataType,
+  StyleObject,
+} from '@/Types';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -50,6 +56,8 @@ interface Props {
   zoomLevel?: number;
   /** List of the layers that the user select and switch between sing a drop down */
   layerSelection: { layerID: string[]; name: string }[];
+  /** Defines the legend for the map. mapLegend is of type { mapStyleName: string; legend: string | React.ReactNode }[] where mapStyleName corresponds to the each name in the layerSelection. */
+  mapLegend?: MapLegendDataType[];
   /** List of layer IDs to be excluded from the visualization */
   excludeLayers?: string[];
 
@@ -89,6 +97,7 @@ export function GeoHubMapWithLayerSelection(props: Props) {
     uiMode = 'normal',
     styles,
     classNames,
+    mapLegend,
   } = props;
 
   const [selectedLayer, setSelectedLayer] = useState(layerSelection[0].layerID);
@@ -185,6 +194,13 @@ export function GeoHubMapWithLayerSelection(props: Props) {
               selectedLayer={selectedLayer}
               layerIdList={flattenDeep(layerSelection.map(d => d.layerID))}
               excludeLayers={excludeLayers}
+              mapLegend={
+                (mapLegend as MapLegendDataType[]).find(
+                  d =>
+                    d.mapStyleName ===
+                    layerSelection.find(el => el.layerID === selectedLayer)?.name,
+                )?.legend
+              }
             />
             {sources || footNote ? (
               <GraphFooter

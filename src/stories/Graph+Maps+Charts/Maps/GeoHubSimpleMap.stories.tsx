@@ -60,6 +60,17 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    mapLegend: {
+      control: 'text',
+      table: {
+        type: {
+          summary:
+            'string | React.ReactNode | { mapStyleName: string; legend: string | React.ReactNode }[]',
+          detail:
+            'If the mapStyle is string, mapLegend can be string or ReactNode. mapLegend with type string is show as innerHTML. If the mapStyle is not string, mapLegend is of type { mapStyleName: string; legend: string | React.ReactNode }[] where mapStyleName corresponds to the each name in the mapStyle.',
+        },
+      },
+    },
     minHeight: { table: { defaultValue: { summary: '0' } } },
 
     // Values and Ticks

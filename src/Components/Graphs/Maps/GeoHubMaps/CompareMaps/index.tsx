@@ -43,6 +43,8 @@ interface Props {
   // Graph Parameters
   /** URLs for mapStyles JSON user wants to compare  */
   mapStyles: [string, string];
+  /** Defines the legend for the map. mapLegend with type string is show as innerHTML. */
+  mapLegend?: string | React.ReactNode;
   /** Starting center point of the map */
   center?: [number, number];
   /** Starting zoom level of the map */
@@ -79,6 +81,7 @@ export function GeoHubCompareMaps(props: Props) {
     ariaLabel,
     styles,
     classNames,
+    mapLegend,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -165,6 +168,7 @@ export function GeoHubCompareMaps(props: Props) {
                   mapStyles={mapStyles}
                   center={center}
                   zoomLevel={zoomLevel}
+                  mapLegend={mapLegend}
                 />
               ) : null}
             </div>
