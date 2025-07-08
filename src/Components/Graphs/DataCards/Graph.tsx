@@ -76,7 +76,7 @@ export function Graph(props: Props) {
         style={{
           width: width ? `${width}px` : '100%',
           height: height ? `${height}px` : 'auto',
-          gridTemplateColumns: `repeat(auto-fit, minmax(${cardMinWidth}px, 1fr))`,
+          gridTemplateColumns: `repeat(auto-fill, minmax(${cardMinWidth}px, 1fr))`,
         }}
       >
         {data
