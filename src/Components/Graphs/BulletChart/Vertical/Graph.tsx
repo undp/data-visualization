@@ -117,9 +117,10 @@ export function Graph(props: Props) {
       ? 0
       : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
   const targetMaxValue =
-    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.size as number)) < 0
+    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number)) <
+    0
       ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
+      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.target as number));
   const qualitativeRangeMaxValue = Math.max(
     ...data.map(d => sum((d.qualitativeRange || []).filter(l => !checkIfNullOrUndefined(l))) || 0),
   );
