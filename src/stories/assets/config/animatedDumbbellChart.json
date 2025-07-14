@@ -48,7 +48,7 @@
     "prefix": "",
     "theme": "light",
     "backgroundColor": true,
-    "colors": ["#006eb5", "#5DD4F0"],
+    "colors": ["#0468B1", "#5DD4F0"],
     "colorDomain": ["Indicator 1", "Indicator 2"],
     "colorLegendTitle": "Indicators",
     "showColorScale": true,

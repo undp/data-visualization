@@ -48,7 +48,7 @@
     "prefix": "",
     "theme": "light",
     "backgroundColor": true,
-    "colors": ["#006eb5", "#5DD4F0", "#02A38A"],
+    "colors": ["#0468B1", "#5DD4F0", "#02A38A"],
     "colorDomain": ["Region A", "Region B", "Region C"],
     "colorLegendTitle": "Regions",
     "showColorScale": true,

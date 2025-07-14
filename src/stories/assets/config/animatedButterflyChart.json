@@ -43,7 +43,7 @@
     "leftMargin": 50,
     "rightMargin": 50,
     "topMargin": 64,
-    "colors": ["#006eb5", "#5DD4F0"],
+    "colors": ["#0468B1", "#5DD4F0"],
     "colorLegendTitle": "",
     "relativeHeight": 0.8,
     "tooltip": "{{label}}:<br>Indicator 01: {{leftBar}}<br>Indicator 02: {{rightBar}}",

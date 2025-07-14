@@ -17,7 +17,7 @@
     }
   ],
   "graphSettings": {
-    "colors": ["#006eb5", "#5DD4F0"],
+    "colors": ["#0468B1", "#5DD4F0"],
     "graphTitle": "Unit Chart",
     "graphDescription": "Sample Data",
     "footNote": "Footnote",

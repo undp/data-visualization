@@ -53,7 +53,7 @@
     "dataDownload": true,
     "language": "en",
     "dateFormat": "yyyy",
-    "colors": ["#006eb5", "#5DD4F0"],
+    "colors": ["#0468B1", "#5DD4F0"],
     "colorDomain": ["Indicator 1", "Indicator 2"]
   }
 }

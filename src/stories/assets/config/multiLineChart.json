@@ -39,7 +39,7 @@
     "prefix": "",
     "theme": "light",
     "backgroundColor": true,
-    "colors": ["#006eb5", "#5DD4F0", "#02A38A", "#E78625", "#E0529E"],
+    "colors": ["#0468B1", "#5DD4F0", "#02A38A", "#E78625", "#E0529E"],
     "labels": ["AFG", "ARM", "ARG", "KHM", "COG"],
     "showColorLegendAtTop": true,
     "colorLegendTitle": "Countries",

@@ -1,13 +1,13 @@
 export const Colors = {
   gray: '#D4D6D8',
-  graphMainColor: '#006EB5',
+  graphMainColor: '#0468B1',
   primaryColors: {
     'blue-100': '#B5D5F5',
     'blue-200': '#94C4F5',
     'blue-300': '#6BABEB',
     'blue-400': '#4F95DD',
     'blue-500': '#3288CE',
-    'blue-600': '#006EB5',
+    'blue-600': '#0468B1',
     'blue-700': '#1F5A95',
   },
   genderColors: {
@@ -15,7 +15,7 @@ export const Colors = {
     female: '#757AF0',
   },
   locationColors: {
-    urban: '#006eb5',
+    urban: '#0468B1',
     rural: '#5DD4F0',
   },
   alerts: {
@@ -68,7 +68,7 @@ export const Colors = {
     },
     categoricalColors: {
       colors: [
-        '#006eb5',
+        '#0468B1',
         '#5DD4F0',
         '#02A38A',
         '#E78625',
@@ -322,7 +322,7 @@ export const Colors = {
     },
     categoricalColors: {
       colors: [
-        '#006eb5',
+        '#0468B1',
         '#5DD4F0',
         '#02A38A',
         '#E78625',
