@@ -97,6 +97,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     noOfTicks: { table: { defaultValue: { summary: '5' } } },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     labelOrder: {
@@ -169,9 +179,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
     colorDomain: ['Apple', 'Oranges'],
   },
-  render: ({ labelOrder, backgroundColor, colorDomain, sortParameter, ...args }) => {
+  render: ({ labelOrder, backgroundColor, colorDomain, sortParameter, animate, ...args }) => {
     return (
       <DumbbellChart
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         labelOrder={parseValue(labelOrder)}
         colorDomain={parseValue(colorDomain, ['Apple', 'Oranges'])}
         sortParameter={

@@ -103,7 +103,7 @@ interface Props {
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animateLine?: boolean | number;
+  animate?: boolean | number;
   /** Labels for the lines  */
   labels: [string, string];
   /** Format of the date in the data object  */
@@ -171,7 +171,7 @@ export function DifferenceLineChart(props: Props) {
     graphID,
     graphDownload = false,
     dataDownload = false,
-    animateLine = false,
+    animate = false,
     language = 'en',
     minHeight = 0,
     labels,
@@ -321,7 +321,7 @@ export function DifferenceLineChart(props: Props) {
                         tooltip={tooltip}
                         onSeriesMouseOver={onSeriesMouseOver}
                         showColorLegendAtTop={showColorLegendAtTop}
-                        animateLine={animateLine}
+                        animateLine={animate}
                         rtl={language === 'he' || language === 'ar'}
                         diffAreaColors={diffAreaColors}
                         idSuffix={generateRandomString(8)}

@@ -78,6 +78,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  dimmedOpacity?: number;
 }
 
 export function AnimatedVerticalBarChart(props: Props) {
@@ -135,6 +136,7 @@ export function AnimatedVerticalBarChart(props: Props) {
     valueColor,
     styles,
     classNames,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -354,6 +356,7 @@ export function AnimatedVerticalBarChart(props: Props) {
                     valueColor={valueColor}
                     styles={styles}
                     classNames={classNames}
+                    dimmedOpacity={dimmedOpacity}
                   />
                 ) : null}
               </div>

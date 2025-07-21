@@ -111,6 +111,8 @@ interface Props {
   sortParameter?: number | 'diff';
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -197,6 +199,7 @@ export function DumbbellChart(props: Props) {
     labelOrder,
     refValues,
     filterNA,
+    animate,
   } = props;
 
   if (orientation === 'vertical')
@@ -255,6 +258,7 @@ export function DumbbellChart(props: Props) {
         classNames={classNames}
         refValues={refValues}
         filterNA={filterNA}
+        animate={animate}
       />
     );
   return (
@@ -312,6 +316,7 @@ export function DumbbellChart(props: Props) {
       labelOrder={labelOrder}
       refValues={refValues}
       filterNA={filterNA}
+      animate={animate}
     />
   );
 }

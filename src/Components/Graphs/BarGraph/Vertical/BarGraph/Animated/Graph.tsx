@@ -62,6 +62,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -102,6 +103,7 @@ export function Graph(props: Props) {
     noOfTicks,
     styles,
     classNames,
+    dimmedOpacity,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -248,12 +250,12 @@ export function Graph(props: Props) {
                     ? d.color
                       ? barColor[colorDomain.indexOf(d.color)] === selectedColor
                         ? 1
-                        : 0.3
-                      : 0.3
+                        : dimmedOpacity
+                      : dimmedOpacity
                     : highlightedDataPoints.length !== 0
                       ? highlightedDataPoints.indexOf(d.label) !== -1
                         ? 0.85
-                        : 0.3
+                        : dimmedOpacity
                       : 0.85
                 }
                 onMouseEnter={event => {
@@ -361,23 +363,24 @@ export function Graph(props: Props) {
                 ) : null}
               </motion.g>
             ))}
+            {refValues ? (
+              <>
+                {refValues.map((el, i) => (
+                  <RefLineY
+                    key={i}
+                    text={el.text}
+                    color={el.color}
+                    y={y(el.value as number)}
+                    x1={0 - leftMargin}
+                    x2={graphWidth + margin.right}
+                    classNames={el.classNames}
+                    styles={el.styles}
+                    animate={0}
+                  />
+                ))}
+              </>
+            ) : null}
           </AnimatePresence>
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineY
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  y={y(el.value as number)}
-                  x1={0 - leftMargin}
-                  x2={graphWidth + margin.right}
-                  classNames={el.classNames}
-                  styles={el.styles}
-                />
-              ))}
-            </>
-          ) : null}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

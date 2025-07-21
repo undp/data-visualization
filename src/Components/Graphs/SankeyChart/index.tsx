@@ -102,10 +102,10 @@ interface Props {
   highlightedTargetDataPoints?: (string | number)[];
   /** Opacity of the links */
   defaultLinkOpacity?: number;
-  /** Toggle the initial animation of the links between nodes */
-  animateLinks?: boolean | number;
   /** Sorting order of the nodes */
   sortNodes?: 'asc' | 'desc' | 'mostReadable' | 'none';
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -179,12 +179,12 @@ export function SankeyChart(props: Props) {
     defaultLinkOpacity = 0.3,
     sourceTitle,
     targetTitle,
-    animateLinks,
     sortNodes = 'mostReadable',
     resetSelectionOnDoubleClick = true,
     detailsOnClick,
     styles,
     classNames,
+    animate = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -372,12 +372,12 @@ export function SankeyChart(props: Props) {
                       defaultLinkOpacity={defaultLinkOpacity}
                       sourceTitle={sourceTitle}
                       targetTitle={targetTitle}
-                      animateLinks={animateLinks}
                       sortNodes={sortNodes}
                       resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
                       styles={styles}
                       classNames={classNames}
                       detailsOnClick={detailsOnClick}
+                      animate={animate}
                     />
                   ) : null}
                 </div>

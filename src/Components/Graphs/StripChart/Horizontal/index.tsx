@@ -48,7 +48,6 @@ interface Props {
   minValue?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
-  showAxis?: boolean;
   graphDownload?: boolean;
   dataDownload?: boolean;
   prefix?: string;
@@ -66,6 +65,9 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   valueColor?: string;
+  animate?: boolean | number;
+  noOfTicks?: number;
+  dimmedOpacity?: number;
 }
 
 export function HorizontalStripChart(props: Props) {
@@ -96,7 +98,6 @@ export function HorizontalStripChart(props: Props) {
     minValue,
     maxValue,
     onSeriesMouseClick,
-    showAxis = true,
     graphDownload = false,
     dataDownload = false,
     prefix = '',
@@ -114,6 +115,9 @@ export function HorizontalStripChart(props: Props) {
     styles,
     classNames,
     valueColor,
+    animate = false,
+    noOfTicks = 2,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -267,7 +271,6 @@ export function HorizontalStripChart(props: Props) {
                         minValue={minValue}
                         maxValue={maxValue}
                         onSeriesMouseClick={onSeriesMouseClick}
-                        showAxis={showAxis}
                         prefix={prefix}
                         suffix={suffix}
                         stripType={stripType}
@@ -278,6 +281,9 @@ export function HorizontalStripChart(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         valueColor={valueColor}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        noOfTicks={noOfTicks}
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>

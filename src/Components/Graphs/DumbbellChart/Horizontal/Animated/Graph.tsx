@@ -392,24 +392,25 @@ export function Graph(props: Props) {
                 ))}
               </motion.g>
             ))}
+            {refValues ? (
+              <>
+                {refValues.map((el, i) => (
+                  <RefLineX
+                    key={i}
+                    text={el.text}
+                    color={el.color}
+                    x={x(el.value as number)}
+                    y1={0 - margin.top}
+                    y2={graphHeight + margin.bottom}
+                    textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                    classNames={el.classNames}
+                    styles={el.styles}
+                    animate={0}
+                  />
+                ))}
+              </>
+            ) : null}
           </AnimatePresence>
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineX
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  x={x(el.value as number)}
-                  y1={0 - margin.top}
-                  y2={graphHeight + margin.bottom}
-                  textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-                  classNames={el.classNames}
-                  styles={el.styles}
-                />
-              ))}
-            </>
-          ) : null}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

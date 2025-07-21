@@ -87,6 +87,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     refValues: { table: { type: { detail: REF_VALUE_OBJECT } } },
     noOfTicks: { table: { defaultValue: { summary: '5' } } },
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'true' } } },
@@ -153,9 +163,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { label: '2024 Q4', position: 19 },
     ],
   },
-  render: ({ colors, highlightedDataPoints, backgroundColor, colorDomain, ...args }) => {
+  render: ({ colors, highlightedDataPoints, backgroundColor, colorDomain, animate, ...args }) => {
     return (
       <BeeSwarmChart
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         colors={parseValue(colors, colors)}
         highlightedDataPoints={parseValue(highlightedDataPoints)}
         colorDomain={parseValue(colorDomain)}

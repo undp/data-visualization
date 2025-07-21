@@ -89,6 +89,7 @@ interface Props {
   isWorldMap?: boolean;
   /** Map projection type */
   mapProjection?: MapProjectionTypes;
+  /** Extend of the allowed zoom in the map */
   zoomScaleExtend?: [number, number];
   /** Extend of the allowed panning in the map */
   zoomTranslateExtend?: [[number, number], [number, number]];
@@ -96,6 +97,8 @@ interface Props {
   showLabels?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
@@ -186,6 +189,7 @@ export function AnimatedDotDensityMap(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction = 'button',
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -402,6 +406,7 @@ export function AnimatedDotDensityMap(props: Props) {
                   classNames={classNames}
                   zoomInteraction={zoomInteraction}
                   detailsOnClick={detailsOnClick}
+                  dimmedOpacity={dimmedOpacity}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
                 />
               ) : null}

@@ -85,7 +85,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     maxDate: { control: 'text' },
 
     // Graph parameters
-    animateLine: {
+    animate: {
       control: 'text',
       table: {
         type: {
@@ -210,19 +210,19 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
     labels: ['Apples', 'Oranges'],
   },
-  render: ({ animateLine, backgroundColor, labels, highlightedLines, lineColors, ...args }) => {
+  render: ({ animate, backgroundColor, labels, highlightedLines, lineColors, ...args }) => {
     return (
       <MultiLineChart
-        animateLine={
+        animate={
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (animateLine as any) === 'false' || animateLine === false
+          (animate as any) === 'false' || animate === false
             ? false
             : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (animateLine as any) === 'true' || animateLine === true
+              (animate as any) === 'true' || animate === true
               ? true
-              : animateLine
-                ? Number(animateLine)
-                : animateLine
+              : animate
+                ? Number(animate)
+                : animate
         }
         lineColors={parseValue(lineColors)}
         labels={parseValue(labels, ['Apples', 'Oranges'])}

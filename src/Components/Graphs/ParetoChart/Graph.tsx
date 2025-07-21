@@ -12,6 +12,7 @@ import { scaleBand, scaleLinear } from 'd3-scale';
 import maxBy from 'lodash.maxby';
 import minBy from 'lodash.minby';
 import { cn, Modal } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { ClassNameObject, CurveTypes, ParetoChartDataType, StyleObject } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -55,6 +56,7 @@ interface Props {
   curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  animate: number;
 }
 interface DataFormattedType {
   id: string;
@@ -92,6 +94,7 @@ export function Graph(props: Props) {
     curveType,
     styles,
     classNames,
+    animate,
   } = props;
   const curve =
     curveType === 'linear'
@@ -281,94 +284,13 @@ export function Graph(props: Props) {
             classNames={{ axis: classNames?.xAxis?.axis }}
             styles={{ axis: styles?.xAxis?.axis }}
           />
-          {dataWithId.map((d, i) => {
-            return (
-              <g
-                className='undp-viz-g-with-hover'
-                key={i}
-                opacity={0.85}
-                onMouseEnter={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                  onSeriesMouseOver?.(d);
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      setMouseClickData(d);
-                      onSeriesMouseClick?.(d);
-                    }
-                  }
-                }}
-                onMouseMove={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  onSeriesMouseOver?.(undefined);
-                }}
-              >
-                <rect
-                  x={x(`${i}`)}
-                  y={d.bar ? (d.bar > 0 ? y1(d.bar) : y1(0)) : 0}
-                  width={x.bandwidth()}
-                  style={{ fill: barColor }}
-                  height={d.bar ? Math.abs(y1(d.bar) - y1(0)) : 0}
-                />
-                {showValues && !checkIfNullOrUndefined(d.bar) ? (
-                  <text
-                    x={(x(`${d.id}`) as number) + x.bandwidth() / 2}
-                    y={y1(d.bar || 0)}
-                    style={{
-                      fill: barColor,
-                      textAnchor: 'middle',
-                      ...(styles?.graphObjectValues || {}),
-                    }}
-                    className={cn('graph-value text-sm', classNames?.graphObjectValues)}
-                    dy={d.bar ? (d.bar >= 0 ? '-5px' : '1em') : '-5px'}
-                  >
-                    {numberFormattingFunction(d.bar, barPrefix, barSuffix)}
-                  </text>
-                ) : null}
-                {showLabels ? (
-                  <XAxesLabels
-                    value={
-                      `${d.label}`.length < truncateBy
-                        ? `${d.label}`
-                        : `${`${d.label}`.substring(0, truncateBy)}...`
-                    }
-                    y={graphHeight + 5}
-                    x={x(`${d.id}`) as number}
-                    width={x.bandwidth()}
-                    height={margin.bottom}
-                    style={styles?.xAxis?.labels}
-                    className={classNames?.xAxis?.labels}
-                    alignment='top'
-                  />
-                ) : null}
-              </g>
-            );
-          })}
-          <path
-            d={lineShape(dataWithId) as string}
-            style={{
-              stroke: lineColor,
-              fill: 'none',
-              strokeWidth: 2,
-            }}
-          />
-          {dataWithId.map((d, i) => (
-            <g key={i}>
-              {!checkIfNullOrUndefined(d.line) ? (
-                <g
+          <AnimatePresence>
+            {dataWithId.map((d, i) => {
+              return (
+                <motion.g
+                  className='undp-viz-g-with-hover'
+                  key={d.label}
+                  opacity={0.85}
                   onMouseEnter={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
@@ -398,37 +320,184 @@ export function Graph(props: Props) {
                     onSeriesMouseOver?.(undefined);
                   }}
                 >
-                  <circle
-                    cx={(x(d.id) as number) + x.bandwidth() / 2}
-                    cy={y2(d.line as number)}
-                    r={
-                      graphWidth / dataWithId.length < 5
-                        ? 0
-                        : graphWidth / dataWithId.length < 20
-                          ? 2
-                          : 4
-                    }
-                    style={{ fill: lineColor }}
+                  <motion.rect
+                    initial={{
+                      attrY: y1(0),
+                      height: 0,
+                    }}
+                    animate={{
+                      attrY: d.bar ? (d.bar > 0 ? y1(d.bar) : y1(0)) : 0,
+                      height: d.bar ? Math.abs(y1(d.bar) - y1(0)) : 0,
+                      opacity: 1,
+                    }}
+                    transition={{ duration: animate }}
+                    exit={{
+                      attrY: y1(0),
+                      height: 0,
+                      opacity: 0,
+                      transition: { duration: animate },
+                    }}
+                    x={x(`${i}`)}
+                    width={x.bandwidth()}
+                    style={{ fill: barColor }}
                   />
-                  {showValues ? (
-                    <text
+                  {showValues && !checkIfNullOrUndefined(d.bar) ? (
+                    <motion.text
                       x={(x(`${d.id}`) as number) + x.bandwidth() / 2}
-                      y={y2(d.line as number)}
+                      initial={{
+                        attrY: y1(0),
+                        opacity: 0,
+                      }}
+                      animate={{
+                        attrY: y1(d.bar || 0),
+                        opacity: 1,
+                      }}
+                      exit={{
+                        attrY: y1(0),
+                        opacity: 0,
+                        transition: { duration: animate },
+                      }}
+                      transition={{ duration: animate }}
                       style={{
-                        fill: lineColor,
+                        fill: barColor,
                         textAnchor: 'middle',
                         ...(styles?.graphObjectValues || {}),
                       }}
                       className={cn('graph-value text-sm', classNames?.graphObjectValues)}
-                      dy='-5px'
+                      dy={d.bar ? (d.bar >= 0 ? '-5px' : '1em') : '-5px'}
                     >
-                      {numberFormattingFunction(d.line, linePrefix, lineSuffix)}
-                    </text>
+                      {numberFormattingFunction(d.bar, barPrefix, barSuffix)}
+                    </motion.text>
                   ) : null}
-                </g>
-              ) : null}
-            </g>
-          ))}
+                  {showLabels ? (
+                    <XAxesLabels
+                      value={
+                        `${d.label}`.length < truncateBy
+                          ? `${d.label}`
+                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                      }
+                      y={graphHeight + 5}
+                      x={x(`${d.id}`) as number}
+                      width={x.bandwidth()}
+                      height={margin.bottom}
+                      style={styles?.xAxis?.labels}
+                      className={classNames?.xAxis?.labels}
+                      alignment='top'
+                      animate={animate}
+                    />
+                  ) : null}
+                </motion.g>
+              );
+            })}
+            <motion.path
+              d={lineShape(dataWithId) as string}
+              initial={{
+                d: lineShape(dataWithId.map(d => ({ ...d, line: 0 }))) as string,
+              }}
+              animate={{
+                d: lineShape(dataWithId) as string,
+                opacity: 1,
+              }}
+              exit={{
+                opacity: 0,
+                transition: { duration: animate },
+              }}
+              style={{
+                stroke: lineColor,
+                fill: 'none',
+                strokeWidth: 2,
+              }}
+            />
+            {dataWithId.map((d, i) => (
+              <g key={i}>
+                {!checkIfNullOrUndefined(d.line) ? (
+                  <g
+                    onMouseEnter={event => {
+                      setMouseOverData(d);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                      onSeriesMouseOver?.(d);
+                    }}
+                    onClick={() => {
+                      if (onSeriesMouseClick || detailsOnClick) {
+                        if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                          setMouseClickData(undefined);
+                          onSeriesMouseClick?.(undefined);
+                        } else {
+                          setMouseClickData(d);
+                          onSeriesMouseClick?.(d);
+                        }
+                      }
+                    }}
+                    onMouseMove={event => {
+                      setMouseOverData(d);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                    }}
+                    onMouseLeave={() => {
+                      setMouseOverData(undefined);
+                      setEventX(undefined);
+                      setEventY(undefined);
+                      onSeriesMouseOver?.(undefined);
+                    }}
+                  >
+                    <motion.circle
+                      initial={{
+                        cy: y2(0),
+                        opacity: 0,
+                      }}
+                      animate={{
+                        cy: y2(d.line as number),
+                        opacity: 1,
+                      }}
+                      exit={{
+                        cy: y2(0),
+                        opacity: 0,
+                        transition: { duration: animate },
+                      }}
+                      cx={(x(d.id) as number) + x.bandwidth() / 2}
+                      cy={y2(d.line as number)}
+                      r={
+                        graphWidth / dataWithId.length < 5
+                          ? 0
+                          : graphWidth / dataWithId.length < 20
+                            ? 2
+                            : 4
+                      }
+                      style={{ fill: lineColor }}
+                    />
+                    {showValues ? (
+                      <motion.text
+                        x={(x(`${d.id}`) as number) + x.bandwidth() / 2}
+                        initial={{
+                          y: y2(0),
+                          opacity: 0,
+                        }}
+                        animate={{
+                          y: y2(d.line as number),
+                          opacity: 1,
+                        }}
+                        exit={{
+                          y: y2(0),
+                          opacity: 0,
+                          transition: { duration: animate },
+                        }}
+                        style={{
+                          fill: lineColor,
+                          textAnchor: 'middle',
+                          ...(styles?.graphObjectValues || {}),
+                        }}
+                        className={cn('graph-value text-sm', classNames?.graphObjectValues)}
+                        dy='-5px'
+                      >
+                        {numberFormattingFunction(d.line, linePrefix, lineSuffix)}
+                      </motion.text>
+                    ) : null}
+                  </g>
+                ) : null}
+              </g>
+            ))}
+          </AnimatePresence>
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

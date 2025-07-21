@@ -93,6 +93,10 @@ interface Props {
   showLabels?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
@@ -172,6 +176,8 @@ export function DotDensityMap(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction = 'button',
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -332,6 +338,8 @@ export function DotDensityMap(props: Props) {
                   zoomInteraction={zoomInteraction}
                   detailsOnClick={detailsOnClick}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
+                  animate={animate === true ? 0.5 : animate || 0}
+                  dimmedOpacity={dimmedOpacity}
                 />
               ) : null}
             </div>

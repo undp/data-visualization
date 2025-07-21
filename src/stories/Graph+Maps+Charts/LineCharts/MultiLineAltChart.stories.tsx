@@ -95,7 +95,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     maxDate: { control: 'text' },
 
     // Graph parameters
-    animateLine: {
+    animate: {
       control: 'text',
       table: {
         type: {
@@ -229,19 +229,19 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { date: '2024', label: 'Q4', y: 9 },
     ],
   },
-  render: ({ animateLine, backgroundColor, highlightedLines, colors, ...args }) => {
+  render: ({ animate, backgroundColor, highlightedLines, colors, ...args }) => {
     return (
       <MultiLineAltChart
-        animateLine={
+        animate={
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (animateLine as any) === 'false' || animateLine === false
+          (animate as any) === 'false' || animate === false
             ? false
             : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (animateLine as any) === 'true' || animateLine === true
+              (animate as any) === 'true' || animate === true
               ? true
-              : animateLine
-                ? Number(animateLine)
-                : animateLine
+              : animate
+                ? Number(animate)
+                : animate
         }
         colors={parseValue(colors, colors)}
         highlightedLines={parseValue(highlightedLines)}

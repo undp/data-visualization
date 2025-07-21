@@ -78,8 +78,8 @@ interface Props {
   minValue?: number;
 
   // Graph Parameters
-  /** Toggle visibility of axis */
-  showAxis?: boolean;
+  /** Number of ticks on the axis */
+  noOfTicks?: number;
   /** Radius of the dots or width of the strips */
   radius?: number;
   /** Opacity of each dot or strip */
@@ -92,6 +92,10 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -150,7 +154,7 @@ export function StripChart(props: Props) {
     minValue,
     maxValue,
     onSeriesMouseClick,
-    showAxis,
+    noOfTicks,
     graphDownload,
     dataDownload,
     prefix,
@@ -169,6 +173,8 @@ export function StripChart(props: Props) {
     orientation = 'vertical',
     styles,
     classNames,
+    animate,
+    dimmedOpacity = 0.3,
   } = props;
 
   if (orientation === 'vertical')
@@ -200,7 +206,7 @@ export function StripChart(props: Props) {
         minValue={minValue}
         maxValue={maxValue}
         onSeriesMouseClick={onSeriesMouseClick}
-        showAxis={showAxis}
+        noOfTicks={noOfTicks}
         graphDownload={graphDownload}
         dataDownload={dataDownload}
         prefix={prefix}
@@ -218,6 +224,8 @@ export function StripChart(props: Props) {
         valueColor={valueColor}
         detailsOnClick={detailsOnClick}
         classNames={classNames}
+        animate={animate}
+        dimmedOpacity={dimmedOpacity}
       />
     );
   return (
@@ -248,7 +256,7 @@ export function StripChart(props: Props) {
       minValue={minValue}
       maxValue={maxValue}
       onSeriesMouseClick={onSeriesMouseClick}
-      showAxis={showAxis}
+      noOfTicks={noOfTicks}
       graphDownload={graphDownload}
       dataDownload={dataDownload}
       prefix={prefix}
@@ -266,6 +274,8 @@ export function StripChart(props: Props) {
       valueColor={valueColor}
       detailsOnClick={detailsOnClick}
       classNames={classNames}
+      animate={animate}
+      dimmedOpacity={dimmedOpacity}
     />
   );
 }

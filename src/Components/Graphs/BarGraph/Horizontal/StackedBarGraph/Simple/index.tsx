@@ -74,6 +74,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   filterNA?: boolean;
+  animate?: boolean | number;
 }
 
 export function HorizontalStackedBarGraph(props: Props) {
@@ -103,7 +104,7 @@ export function HorizontalStackedBarGraph(props: Props) {
     prefix = '',
     showLabels = true,
     relativeHeight,
-    showValues,
+    showValues = true,
     refValues,
     graphID,
     maxValue,
@@ -127,6 +128,7 @@ export function HorizontalStackedBarGraph(props: Props) {
     styles,
     classNames,
     filterNA = true,
+    animate = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -287,6 +289,8 @@ export function HorizontalStackedBarGraph(props: Props) {
                         valueColor={valueColor}
                         classNames={classNames}
                         styles={styles}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        colorDomain={colorDomain}
                       />
                     ) : null}
                   </div>

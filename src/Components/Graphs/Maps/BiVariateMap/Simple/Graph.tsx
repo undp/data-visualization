@@ -13,6 +13,7 @@ import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { scaleThreshold } from 'd3-scale';
 import { Modal, P } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import {
   BivariateMapDataType,
@@ -65,6 +66,8 @@ interface Props {
   showColorScale: boolean;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  animate: number;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -97,6 +100,8 @@ export function Graph(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction,
+    animate,
+    dimmedOpacity,
   } = props;
   const [showLegend, setShowLegend] = useState(!(width < 680));
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
@@ -217,15 +222,15 @@ export function Graph(props: Props) {
                 const index = data.findIndex(el => el.id === d.properties[mapProperty]);
                 if (index !== -1) return null;
                 return (
-                  <g
+                  <motion.g
                     key={i}
                     opacity={
                       selectedColor
-                        ? 0.3
+                        ? dimmedOpacity
                         : highlightedIds.length !== 0
                           ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
                             ? 1
-                            : 0.3
+                            : dimmedOpacity
                           : 1
                     }
                   >
@@ -274,127 +279,144 @@ export function Graph(props: Props) {
                             />
                           );
                         })}
-                  </g>
+                  </motion.g>
                 );
               })
             }
-            {data.map((d, i) => {
-              const index = mapData.features.findIndex(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (el: any) => d.id === el.properties[mapProperty],
-              );
-              const xColorCoord = !checkIfNullOrUndefined(d.x) ? xScale(d.x as number) : undefined;
-              const yColorCoord = !checkIfNullOrUndefined(d.y) ? yScale(d.y as number) : undefined;
-              const color =
-                xColorCoord !== undefined && yColorCoord !== undefined
-                  ? colors[yColorCoord][xColorCoord]
-                  : mapNoDataColor;
+            <AnimatePresence>
+              {data.map(d => {
+                const index = mapData.features.findIndex(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  (el: any) => d.id === el.properties[mapProperty],
+                );
+                const xColorCoord = !checkIfNullOrUndefined(d.x)
+                  ? xScale(d.x as number)
+                  : undefined;
+                const yColorCoord = !checkIfNullOrUndefined(d.y)
+                  ? yScale(d.y as number)
+                  : undefined;
+                const color =
+                  xColorCoord !== undefined && yColorCoord !== undefined
+                    ? colors[yColorCoord][xColorCoord]
+                    : mapNoDataColor;
 
-              return (
-                <g
-                  key={i}
-                  opacity={
-                    selectedColor
-                      ? selectedColor === color
-                        ? 1
-                        : 0.3
-                      : highlightedIds.length !== 0
-                        ? highlightedIds.indexOf(d.id) !== -1
+                return (
+                  <motion.g
+                    key={d.id}
+                    animate={{
+                      opacity: selectedColor
+                        ? selectedColor === color
                           ? 1
-                          : 0.3
-                        : 1
-                  }
-                  onMouseEnter={event => {
-                    setMouseOverData(d);
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                    onSeriesMouseOver?.(d);
-                  }}
-                  onClick={() => {
-                    if (onSeriesMouseClick || detailsOnClick) {
-                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                        setMouseClickData(undefined);
-                        onSeriesMouseClick?.(undefined);
-                      } else {
-                        setMouseClickData(d);
-                        onSeriesMouseClick?.(d);
+                          : dimmedOpacity
+                        : highlightedIds.length !== 0
+                          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            highlightedIds.indexOf((d.data as any).id) !== -1
+                            ? 1
+                            : dimmedOpacity
+                          : 1,
+                    }}
+                    initial={{ opacity: 0 }}
+                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    onMouseEnter={event => {
+                      setMouseOverData(d);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                      onSeriesMouseOver?.(d);
+                    }}
+                    onClick={() => {
+                      if (onSeriesMouseClick || detailsOnClick) {
+                        if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                          setMouseClickData(undefined);
+                          onSeriesMouseClick?.(undefined);
+                        } else {
+                          setMouseClickData(d);
+                          onSeriesMouseClick?.(d);
+                        }
                       }
-                    }
-                  }}
-                  onMouseMove={event => {
-                    setMouseOverData(d);
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                  }}
-                  onMouseLeave={() => {
-                    setMouseOverData(undefined);
-                    setEventX(undefined);
-                    setEventY(undefined);
-                    onSeriesMouseOver?.(undefined);
-                  }}
-                >
-                  {index === -1
-                    ? null
-                    : mapData.features[index].geometry.type === 'MultiPolygon'
-                      ? mapData.features[index].geometry.coordinates.map(
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (el: any, j: any) => {
-                            let masterPath = '';
-                            el.forEach((geo: number[][]) => {
-                              let path = ' M';
-                              geo.forEach((c: number[], k: number) => {
+                    }}
+                    onMouseMove={event => {
+                      setMouseOverData(d);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                    }}
+                    onMouseLeave={() => {
+                      setMouseOverData(undefined);
+                      setEventX(undefined);
+                      setEventY(undefined);
+                      onSeriesMouseOver?.(undefined);
+                    }}
+                  >
+                    {index === -1
+                      ? null
+                      : mapData.features[index].geometry.type === 'MultiPolygon'
+                        ? mapData.features[index].geometry.coordinates.map(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (el: any, j: any) => {
+                              let masterPath = '';
+                              el.forEach((geo: number[][]) => {
+                                let path = ' M';
+                                geo.forEach((c: number[], k: number) => {
+                                  const point = projection([c[0], c[1]]) as [number, number];
+                                  if (k !== geo.length - 1)
+                                    path = `${path}${point[0]} ${point[1]}L`;
+                                  else path = `${path}${point[0]} ${point[1]}`;
+                                });
+                                masterPath += path;
+                              });
+                              return (
+                                <motion.path
+                                  key={`${d.id}-${j}`}
+                                  animate={{ fill: color, opacity: 1 }}
+                                  initial={{ opacity: 0 }}
+                                  transition={{ duration: animate }}
+                                  exit={{ opacity: 0, transition: { duration: animate } }}
+                                  d={masterPath}
+                                  className={`${
+                                    color === mapNoDataColor
+                                      ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                                      : 'stroke-primary-white dark:stroke-primary-gray-650'
+                                  }`}
+                                  style={{
+                                    strokeWidth: mapBorderWidth,
+                                  }}
+                                />
+                              );
+                            },
+                          )
+                        : mapData.features[index].geometry.coordinates.map(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (el: any, j: number) => {
+                              let path = 'M';
+                              el.forEach((c: number[], k: number) => {
                                 const point = projection([c[0], c[1]]) as [number, number];
-                                if (k !== geo.length - 1) path = `${path}${point[0]} ${point[1]}L`;
+                                if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
                                 else path = `${path}${point[0]} ${point[1]}`;
                               });
-                              masterPath += path;
-                            });
-                            return (
-                              <path
-                                key={j}
-                                d={masterPath}
-                                className={`${
-                                  color === mapNoDataColor
-                                    ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                                    : 'stroke-primary-white dark:stroke-primary-gray-650'
-                                }`}
-                                style={{
-                                  strokeWidth: mapBorderWidth,
-                                  fill: color,
-                                }}
-                              />
-                            );
-                          },
-                        )
-                      : mapData.features[index].geometry.coordinates.map(
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (el: any, j: number) => {
-                            let path = 'M';
-                            el.forEach((c: number[], k: number) => {
-                              const point = projection([c[0], c[1]]) as [number, number];
-                              if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                              else path = `${path}${point[0]} ${point[1]}`;
-                            });
-                            return (
-                              <path
-                                key={j}
-                                d={path}
-                                className={`${
-                                  color === mapNoDataColor
-                                    ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                                    : 'stroke-primary-white dark:stroke-primary-gray-650'
-                                }`}
-                                style={{
-                                  strokeWidth: mapBorderWidth,
-                                  fill: color,
-                                }}
-                              />
-                            );
-                          },
-                        )}
-                </g>
-              );
-            })}
+                              return (
+                                <motion.path
+                                  key={`${d.id}-${j}`}
+                                  d={path}
+                                  animate={{ fill: color, opacity: 1 }}
+                                  initial={{ opacity: 0 }}
+                                  transition={{ duration: animate }}
+                                  exit={{ opacity: 0, transition: { duration: animate } }}
+                                  className={`${
+                                    color === mapNoDataColor
+                                      ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                                      : 'stroke-primary-white dark:stroke-primary-gray-650'
+                                  }`}
+                                  style={{
+                                    strokeWidth: mapBorderWidth,
+                                  }}
+                                />
+                              );
+                            },
+                          )}
+                  </motion.g>
+                );
+              })}
+            </AnimatePresence>
             {mouseOverData
               ? mapData.features
                   .filter(

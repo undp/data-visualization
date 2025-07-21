@@ -4,6 +4,7 @@ import max from 'lodash.max';
 import min from 'lodash.min';
 import { useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { ClassNameObject, DumbbellChartDataType, ReferenceDataType, StyleObject } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -57,6 +58,7 @@ interface Props {
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
   rtl: boolean;
+  animate: number;
 }
 
 export function Graph(props: Props) {
@@ -97,6 +99,7 @@ export function Graph(props: Props) {
     labelOrder,
     refValues,
     rtl,
+    animate,
   } = props;
   const margin = {
     top: axisTitle ? topMargin + 25 : topMargin,
@@ -207,145 +210,181 @@ export function Graph(props: Props) {
             showGridLines
             labelPos='vertical'
           />
-          {dataWithId.map((d, i) => (
-            <g
-              className='undp-viz-low-opacity undp-viz-g-with-hover'
-              key={i}
-              transform={`translate(0,${(y(`${d.id}`) as number) + y.bandwidth() / 2})`}
-            >
-              {showLabels ? (
-                <YAxesLabels
-                  value={
-                    `${d.label}`.length < truncateBy
-                      ? `${d.label}`
-                      : `${`${d.label}`.substring(0, truncateBy)}...`
-                  }
-                  y={0 - y.bandwidth() / 2}
-                  x={0 - margin.left}
-                  width={margin.left}
-                  height={y.bandwidth()}
-                  alignment='right'
-                  style={styles?.yAxis?.labels}
-                  className={classNames?.yAxis?.labels}
-                />
-              ) : null}
-              <line
-                x1={x(min(d.x) as number) + radius}
-                x2={x(max(d.x) as number) - radius}
-                y1={0}
-                y2={0}
-                style={{
-                  strokeWidth: connectorStrokeWidth,
-                  ...(styles?.dataConnectors || {}),
-                  opacity: selectedColor ? 0.3 : 1,
+          <AnimatePresence>
+            {dataWithId.map(d => (
+              <motion.g
+                className='undp-viz-low-opacity undp-viz-g-with-hover'
+                key={d.label}
+                initial={{
+                  x: 0,
+                  y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
                 }}
-                className={cn(
-                  'stroke-primary-gray-600 dark:stroke-primary-gray-300',
-                  classNames?.dataConnectors,
-                )}
-                markerEnd={
-                  arrowConnector && d.x.indexOf(min(d.x) as number) === 0 ? 'url(#arrow)' : ''
-                }
-                markerStart={
-                  arrowConnector && d.x.indexOf(min(d.x) as number) === d.x.length - 1
-                    ? 'url(#arrow)'
-                    : ''
-                }
-              />
-              {d.x.map((el, j) => (
-                <g
-                  key={j}
-                  opacity={selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1}
-                  onMouseEnter={event => {
-                    setMouseOverData({ ...d, xIndex: j });
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                    onSeriesMouseOver?.({ ...d, xIndex: j });
-                  }}
-                  onClick={() => {
-                    if (onSeriesMouseClick || detailsOnClick) {
-                      if (
-                        isEqual(mouseClickData, { ...d, xIndex: j }) &&
-                        resetSelectionOnDoubleClick
-                      ) {
-                        setMouseClickData(undefined);
-                        onSeriesMouseClick?.(undefined);
-                      } else {
-                        setMouseClickData({ ...d, xIndex: j });
-                        if (onSeriesMouseClick) onSeriesMouseClick({ ...d, xIndex: j });
-                      }
+                animate={{
+                  x: 0,
+                  y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
+                }}
+                transition={{ duration: animate }}
+                exit={{ opacity: 0, transition: { duration: animate } }}
+              >
+                {showLabels ? (
+                  <YAxesLabels
+                    value={
+                      `${d.label}`.length < truncateBy
+                        ? `${d.label}`
+                        : `${`${d.label}`.substring(0, truncateBy)}...`
                     }
+                    y={0 - y.bandwidth() / 2}
+                    x={0 - margin.left}
+                    width={margin.left}
+                    height={y.bandwidth()}
+                    alignment='right'
+                    style={styles?.yAxis?.labels}
+                    className={classNames?.yAxis?.labels}
+                    animate={animate}
+                  />
+                ) : null}
+                <motion.line
+                  y1={0}
+                  y2={0}
+                  style={{
+                    strokeWidth: connectorStrokeWidth,
+                    ...(styles?.dataConnectors || {}),
+                    opacity: selectedColor ? 0.3 : 1,
                   }}
-                  onMouseMove={event => {
-                    setMouseOverData({ ...d, xIndex: j });
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                  }}
-                  onMouseLeave={() => {
-                    setMouseOverData(undefined);
-                    setEventX(undefined);
-                    setEventY(undefined);
-                    onSeriesMouseOver?.(undefined);
-                  }}
-                >
-                  {checkIfNullOrUndefined(el) ? null : (
-                    <>
-                      <circle
-                        cx={x(el || 0)}
-                        cy={0}
-                        r={radius}
-                        opacity={checkIfNullOrUndefined(el) ? 0 : 1}
-                        style={{
-                          fill: dotColors[j],
-                          fillOpacity: 0.85,
-                          stroke: dotColors[j],
-                          strokeWidth: 1,
-                          opacity: checkIfNullOrUndefined(el) ? 0 : 1,
-                        }}
-                      />
-                      {showValues ? (
-                        <text
-                          x={x(el || 0)}
-                          y={0}
-                          style={{
-                            fill: valueColor || dotColors[j],
-                            textAnchor: 'middle',
-                            ...(styles?.graphObjectValues || {}),
-                          }}
-                          dx={0}
-                          dy={0 - radius - 3}
-                          className={cn(
-                            'graph-value text-sm font-bold',
-                            checkIfNullOrUndefined(el) ? '0opacity-0' : 'opacity-100',
-                            classNames?.graphObjectValues,
-                          )}
-                        >
-                          {numberFormattingFunction(el, prefix, suffix)}
-                        </text>
-                      ) : null}
-                    </>
+                  className={cn(
+                    'stroke-primary-gray-600 dark:stroke-primary-gray-300',
+                    classNames?.dataConnectors,
                   )}
-                </g>
-              ))}
-            </g>
-          ))}
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineX
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  x={x(el.value as number)}
-                  y1={0 - margin.top}
-                  y2={graphHeight + margin.bottom}
-                  textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-                  classNames={el.classNames}
-                  styles={el.styles}
+                  markerEnd={
+                    arrowConnector && d.x.indexOf(min(d.x) as number) === 0 ? 'url(#arrow)' : ''
+                  }
+                  markerStart={
+                    arrowConnector && d.x.indexOf(min(d.x) as number) === d.x.length - 1
+                      ? 'url(#arrow)'
+                      : ''
+                  }
+                  initial={{
+                    x1: 0,
+                    x2: 0,
+                  }}
+                  animate={{
+                    x1: x(min(d.x) as number) + radius,
+                    x2: x(max(d.x) as number) - radius,
+                  }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate }}
                 />
-              ))}
-            </>
-          ) : null}
+                {d.x.map((el, j) => (
+                  <motion.g
+                    key={j}
+                    onMouseEnter={event => {
+                      setMouseOverData({ ...d, xIndex: j });
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                      onSeriesMouseOver?.({ ...d, xIndex: j });
+                    }}
+                    onClick={() => {
+                      if (onSeriesMouseClick || detailsOnClick) {
+                        if (
+                          isEqual(mouseClickData, { ...d, xIndex: j }) &&
+                          resetSelectionOnDoubleClick
+                        ) {
+                          setMouseClickData(undefined);
+                          onSeriesMouseClick?.(undefined);
+                        } else {
+                          setMouseClickData({ ...d, xIndex: j });
+                          if (onSeriesMouseClick) onSeriesMouseClick({ ...d, xIndex: j });
+                        }
+                      }
+                    }}
+                    onMouseMove={event => {
+                      setMouseOverData({ ...d, xIndex: j });
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                    }}
+                    onMouseLeave={() => {
+                      setMouseOverData(undefined);
+                      setEventX(undefined);
+                      setEventY(undefined);
+                      onSeriesMouseOver?.(undefined);
+                    }}
+                    initial={{
+                      opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                    }}
+                    animate={{
+                      opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                    }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    transition={{ duration: animate }}
+                  >
+                    {checkIfNullOrUndefined(el) ? null : (
+                      <>
+                        <motion.circle
+                          cy={0}
+                          r={radius}
+                          style={{
+                            fill: dotColors[j],
+                            fillOpacity: 0.85,
+                            stroke: dotColors[j],
+                            strokeWidth: 1,
+                            opacity: checkIfNullOrUndefined(el) ? 0 : 1,
+                          }}
+                          initial={{ cx: x(el || 0), opacity: 0 }}
+                          animate={{
+                            cx: x(el || 0),
+                            opacity: checkIfNullOrUndefined(el) ? 0 : 1,
+                          }}
+                          exit={{ opacity: 0, transition: { duration: animate } }}
+                          transition={{ duration: animate }}
+                        />
+                        {showValues ? (
+                          <motion.text
+                            y={0}
+                            style={{
+                              fill: valueColor || dotColors[j],
+                              textAnchor: 'middle',
+                              ...(styles?.graphObjectValues || {}),
+                            }}
+                            dx={0}
+                            dy={0 - radius - 3}
+                            className={cn(
+                              'graph-value text-sm font-bold',
+                              checkIfNullOrUndefined(el) ? '0opacity-0' : 'opacity-100',
+                              classNames?.graphObjectValues,
+                            )}
+                            initial={{ x: x(el || 0), opacity: 0 }}
+                            animate={{ x: x(el || 0), opacity: 1 }}
+                            exit={{ opacity: 0, transition: { duration: animate } }}
+                            transition={{ duration: animate }}
+                          >
+                            {numberFormattingFunction(el, prefix, suffix)}
+                          </motion.text>
+                        ) : null}
+                      </>
+                    )}
+                  </motion.g>
+                ))}
+              </motion.g>
+            ))}
+            {refValues ? (
+              <>
+                {refValues.map((el, i) => (
+                  <RefLineX
+                    key={i}
+                    text={el.text}
+                    color={el.color}
+                    x={x(el.value as number)}
+                    y1={0 - margin.top}
+                    y2={graphHeight + margin.bottom}
+                    textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                    classNames={el.classNames}
+                    styles={el.styles}
+                    animate={animate}
+                  />
+                ))}
+              </>
+            ) : null}
+          </AnimatePresence>
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

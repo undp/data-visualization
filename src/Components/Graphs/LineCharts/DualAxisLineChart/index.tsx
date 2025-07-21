@@ -89,7 +89,7 @@ interface Props {
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animateLine?: boolean | number;
+  animate?: boolean | number;
   /** Enables same axis for the 2 lines */
   sameAxes?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
@@ -157,7 +157,7 @@ export function DualAxisLineChart(props: Props) {
     graphID,
     graphDownload = false,
     dataDownload = false,
-    animateLine = false,
+    animate = false,
     strokeWidth = 2,
     showDots = true,
     language = 'en',
@@ -297,7 +297,7 @@ export function DualAxisLineChart(props: Props) {
                         highlightAreaSettings={highlightAreaSettings}
                         tooltip={tooltip}
                         onSeriesMouseOver={onSeriesMouseOver}
-                        animateLine={animateLine}
+                        animateLine={animate}
                         strokeWidth={strokeWidth}
                         showDots={showDots}
                         noOfYTicks={noOfYTicks}

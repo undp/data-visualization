@@ -111,7 +111,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       options: ['asc', 'desc', 'mostReadable', 'none'],
       table: { type: { summary: "'asc' | 'desc' | 'mostReadable' | 'none'" } },
     },
-    animateLinks: {
+    animate: {
       control: 'text',
       table: {
         type: {
@@ -189,10 +189,22 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     highlightedSourceDataPoints,
     highlightedTargetDataPoints,
     backgroundColor,
+    animate,
     ...args
   }) => {
     return (
       <SankeyChart
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         sourceColors={parseValue(sourceColors, sourceColors)}
         sourceColorDomain={parseValue(sourceColorDomain)}
         targetColors={parseValue(targetColors, targetColors)}

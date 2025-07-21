@@ -106,6 +106,8 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Title for the bar axis */
   barAxisTitle?: string;
   /** Enable graph download option as png */
@@ -204,6 +206,7 @@ export function AnimatedBarGraph(props: Props) {
     orientation = 'vertical',
     styles,
     classNames,
+    dimmedOpacity,
   } = props;
 
   if (orientation === 'vertical')
@@ -262,6 +265,7 @@ export function AnimatedBarGraph(props: Props) {
         noOfTicks={noOfTicks}
         valueColor={valueColor}
         classNames={classNames}
+        dimmedOpacity={dimmedOpacity}
       />
     );
   return (
@@ -319,6 +323,7 @@ export function AnimatedBarGraph(props: Props) {
       noOfTicks={noOfTicks}
       valueColor={valueColor}
       classNames={classNames}
+      dimmedOpacity={dimmedOpacity}
     />
   );
 }

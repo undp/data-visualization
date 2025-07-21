@@ -94,6 +94,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     refValues: { table: { type: { detail: REF_VALUE_OBJECT } } },
     noOfTicks: { table: { defaultValue: { summary: '5' } } },
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'false' } } },
@@ -146,9 +156,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { label: '2024', leftBar: 19, rightBar: 9 },
     ],
   },
-  render: ({ backgroundColor, ...args }) => {
+  render: ({ backgroundColor, animate, ...args }) => {
     return (
       <ButterflyChart
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
         }

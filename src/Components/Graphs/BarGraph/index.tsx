@@ -110,12 +110,16 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Title for the bar axis */
   barAxisTitle?: string;
   /** Sorting order for data. This is overwritten by labelOrder prop. */
   sortData?: 'asc' | 'desc';
   /** Toggles if data point which are undefined or has value null are filtered out.  */
   filterNA?: boolean;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -202,6 +206,8 @@ export function SimpleBarGraph(props: Props) {
     styles,
     classNames,
     filterNA,
+    animate,
+    dimmedOpacity,
   } = props;
 
   if (orientation === 'vertical')
@@ -260,6 +266,8 @@ export function SimpleBarGraph(props: Props) {
         valueColor={valueColor}
         classNames={classNames}
         filterNA={filterNA}
+        animate={animate}
+        dimmedOpacity={dimmedOpacity}
       />
     );
   return (
@@ -317,6 +325,7 @@ export function SimpleBarGraph(props: Props) {
       valueColor={valueColor}
       classNames={classNames}
       filterNA={filterNA}
+      dimmedOpacity={dimmedOpacity}
     />
   );
 }
@@ -394,6 +403,8 @@ interface GroupedBarChartProps {
   truncateBy?: number;
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Reference values for comparison */
   refValues?: ReferenceDataType[];
   /** Number of ticks on the axis */
@@ -490,6 +501,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     styles,
     classNames,
     filterNA,
+    animate,
   } = props;
 
   if (orientation === 'vertical')
@@ -542,6 +554,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
         valueColor={valueColor}
         classNames={classNames}
         filterNA={filterNA}
+        animate={animate}
       />
     );
   return (
@@ -593,6 +606,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       valueColor={valueColor}
       classNames={classNames}
       filterNA={filterNA}
+      animate={animate}
     />
   );
 }
@@ -690,6 +704,8 @@ interface StackedBarChartProps {
   sortParameter?: number | 'total';
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -772,6 +788,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     styles,
     classNames,
     filterNA,
+    animate,
   } = props;
 
   if (orientation === 'vertical')
@@ -826,6 +843,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
         valueColor={valueColor}
         classNames={classNames}
         filterNA={filterNA}
+        animate={animate}
       />
     );
   return (
@@ -879,6 +897,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       valueColor={valueColor}
       classNames={classNames}
       filterNA={filterNA}
+      animate={animate}
     />
   );
 }

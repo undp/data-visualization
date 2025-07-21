@@ -97,6 +97,8 @@ interface Props {
   barAxisTitle?: string;
   /** Title for the line axis */
   lineAxisTitle?: string;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -173,6 +175,7 @@ export function ParetoChart(props: Props) {
     curveType = 'curve',
     styles,
     classNames,
+    animate = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -311,6 +314,7 @@ export function ParetoChart(props: Props) {
                         showValues={showValues}
                         styles={styles}
                         classNames={classNames}
+                        animate={animate === true ? 0.5 : animate || 0}
                       />
                     ) : null}
                   </div>

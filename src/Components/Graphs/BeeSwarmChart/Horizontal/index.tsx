@@ -67,6 +67,8 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   noOfTicks?: number;
+  animate?: boolean | number;
+  dimmedOpacity?: number;
 }
 
 export function HorizontalBeeSwarmChart(props: Props) {
@@ -115,6 +117,8 @@ export function HorizontalBeeSwarmChart(props: Props) {
     styles,
     classNames,
     noOfTicks,
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -282,6 +286,8 @@ export function HorizontalBeeSwarmChart(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         noOfTicks={noOfTicks || 5}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>

@@ -4,6 +4,7 @@ import maxBy from 'lodash.maxby';
 import { scaleLinear } from 'd3-scale';
 import minBy from 'lodash.minby';
 import { cn, Modal } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { ClassNameObject, SlopeChartDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -41,6 +42,8 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  animate: number;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -68,6 +71,8 @@ export function Graph(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    animate,
+    dimmedOpacity,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -150,203 +155,341 @@ export function Graph(props: Props) {
               text={axisTitles[1]}
             />
           </g>
-          {data.map((d, i) => {
-            return (
-              <g
-                key={i}
-                opacity={
-                  selectedColor
-                    ? d.color
-                      ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
-                        ? 1
-                        : 0.3
-                      : 0.3
-                    : mouseOverData
-                      ? mouseOverData.label === d.label
-                        ? 1
-                        : 0.3
-                      : highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
+          <AnimatePresence>
+            {data.map((d, i) => {
+              return (
+                <motion.g
+                  key={i}
+                  initial={{
+                    opacity: selectedColor
+                      ? d.color
+                        ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
                           ? 1
-                          : 0.5
-                        : 1
-                }
-                onMouseEnter={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                  onSeriesMouseOver?.(d);
-                }}
-                onMouseMove={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  onSeriesMouseOver?.(undefined);
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      setMouseClickData(d);
-                      onSeriesMouseClick?.(d);
-                    }
-                  }
-                }}
-              >
-                <circle
-                  cx={radius}
-                  cy={y(d.y1)}
-                  r={radius}
-                  style={{
-                    fill:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : colors[colorDomain.indexOf(`${d.color}`)],
-                    stroke:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : colors[colorDomain.indexOf(`${d.color}`)],
-                    fillOpacity: 0.6,
+                          : dimmedOpacity
+                        : dimmedOpacity
+                      : mouseOverData
+                        ? mouseOverData.label === d.label
+                          ? 1
+                          : dimmedOpacity
+                        : highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 1
+                            : dimmedOpacity
+                          : 1,
                   }}
-                />
-                {showLabels ? (
-                  <text
-                    style={{
+                  animate={{
+                    opacity: selectedColor
+                      ? d.color
+                        ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
+                          ? 1
+                          : dimmedOpacity
+                        : dimmedOpacity
+                      : mouseOverData
+                        ? mouseOverData.label === d.label
+                          ? 1
+                          : dimmedOpacity
+                        : highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 1
+                            : dimmedOpacity
+                          : 1,
+                  }}
+                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  onMouseEnter={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    onSeriesMouseOver?.(d);
+                  }}
+                  onMouseMove={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    onSeriesMouseOver?.(undefined);
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        setMouseClickData(d);
+                        onSeriesMouseClick?.(d);
+                      }
+                    }
+                  }}
+                >
+                  <motion.circle
+                    cx={radius}
+                    initial={{
+                      cy: y(d.y1),
                       fill:
                         data.filter(el => el.color).length === 0
                           ? colors[0]
                           : !d.color
                             ? Colors.gray
                             : colors[colorDomain.indexOf(`${d.color}`)],
-                      textAnchor: 'end',
-                      ...(styles?.yAxis?.labels || {}),
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      opacity: 0,
                     }}
-                    className={cn('text-xs', classNames?.yAxis?.labels)}
-                    y={y(d.y1)}
-                    x={5}
-                    dy='0.33em'
-                    dx={-3}
-                  >
-                    {d.label}
-                  </text>
-                ) : highlightedDataPoints.length !== 0 ? (
-                  highlightedDataPoints.indexOf(d.label) !== -1 ? (
-                    <text
-                      style={{
+                    animate={{
+                      cy: y(d.y1),
+                      fill:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      opacity: 1,
+                    }}
+                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    r={radius}
+                    style={{
+                      fillOpacity: 0.6,
+                    }}
+                  />
+                  {showLabels ? (
+                    <motion.text
+                      initial={{
+                        y: y(d.y1),
                         fill:
                           data.filter(el => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
                               : colors[colorDomain.indexOf(`${d.color}`)],
+                        opacity: 0,
+                      }}
+                      animate={{
+                        y: y(d.y1),
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                        opacity: 1,
+                      }}
+                      transition={{ duration: animate }}
+                      exit={{ opacity: 0, transition: { duration: animate } }}
+                      style={{
                         textAnchor: 'end',
                         ...(styles?.yAxis?.labels || {}),
                       }}
                       className={cn('text-xs', classNames?.yAxis?.labels)}
-                      y={y(d.y1)}
                       x={5}
                       dy='0.33em'
-                      dx={-3}
+                      textAnchor='end'
+                      dx={0 - radius - 3}
                     >
                       {d.label}
-                    </text>
-                  ) : null
-                ) : null}
-                <circle
-                  cx={graphWidth - radius}
-                  cy={y(d.y2)}
-                  r={radius}
-                  style={{
-                    fill:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : colors[colorDomain.indexOf(`${d.color}`)],
-                    stroke:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : colors[colorDomain.indexOf(`${d.color}`)],
-                    fillOpacity: 0.6,
-                  }}
-                />
-                {showLabels ? (
-                  <text
-                    style={{
+                    </motion.text>
+                  ) : highlightedDataPoints.length !== 0 ? (
+                    highlightedDataPoints.indexOf(d.label) !== -1 ? (
+                      <motion.text
+                        initial={{
+                          y: y(d.y1),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          opacity: 0,
+                        }}
+                        animate={{
+                          y: y(d.y1),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          opacity: 1,
+                        }}
+                        transition={{ duration: animate }}
+                        exit={{ opacity: 0, transition: { duration: animate } }}
+                        style={{
+                          textAnchor: 'end',
+                          ...(styles?.yAxis?.labels || {}),
+                        }}
+                        className={cn('text-xs', classNames?.yAxis?.labels)}
+                        x={5}
+                        dy='0.33em'
+                        dx={-3}
+                      >
+                        {d.label}
+                      </motion.text>
+                    ) : null
+                  ) : null}
+                  <motion.circle
+                    cx={graphWidth - radius}
+                    initial={{
+                      cy: y(d.y2),
                       fill:
                         data.filter(el => el.color).length === 0
                           ? colors[0]
                           : !d.color
                             ? Colors.gray
                             : colors[colorDomain.indexOf(`${d.color}`)],
-                      textAnchor: 'start',
-                      ...(styles?.yAxis?.labels || {}),
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      opacity: 0,
                     }}
-                    className={cn('text-xs', classNames?.yAxis?.labels)}
-                    y={y(d.y2)}
-                    x={graphWidth - 5}
-                    dy='0.33em'
-                    dx={3}
-                  >
-                    {d.label}
-                  </text>
-                ) : highlightedDataPoints.length !== 0 ? (
-                  highlightedDataPoints.indexOf(d.label) !== -1 ? (
-                    <text
-                      style={{
+                    animate={{
+                      cy: y(d.y2),
+                      fill:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                      opacity: 1,
+                    }}
+                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    r={radius}
+                    style={{
+                      fillOpacity: 0.6,
+                    }}
+                  />
+                  {showLabels ? (
+                    <motion.text
+                      initial={{
+                        y: y(d.y2),
                         fill:
                           data.filter(el => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
                               : colors[colorDomain.indexOf(`${d.color}`)],
+                        opacity: 0,
+                      }}
+                      animate={{
+                        y: y(d.y2),
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                        opacity: 1,
+                      }}
+                      transition={{ duration: animate }}
+                      exit={{ opacity: 0, transition: { duration: animate } }}
+                      style={{
                         textAnchor: 'start',
                         ...(styles?.yAxis?.labels || {}),
                       }}
                       className={cn('text-xs', classNames?.yAxis?.labels)}
-                      y={y(d.y2)}
                       x={graphWidth - 5}
                       dy='0.33em'
-                      dx={3}
+                      dx={radius + 3}
                     >
                       {d.label}
-                    </text>
-                  ) : null
-                ) : null}
-                <line
-                  x1={radius}
-                  x2={graphWidth - radius}
-                  y1={y(d.y1)}
-                  y2={y(d.y2)}
-                  className={classNames?.dataConnectors}
-                  style={{
-                    fill: 'none',
-                    stroke:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : colors[colorDomain.indexOf(`${d.color}`)],
-                    strokeWidth: 1,
-                    ...styles?.dataConnectors,
-                  }}
-                />
-              </g>
-            );
-          })}
+                    </motion.text>
+                  ) : highlightedDataPoints.length !== 0 ? (
+                    highlightedDataPoints.indexOf(d.label) !== -1 ? (
+                      <motion.text
+                        initial={{
+                          y: y(d.y2),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          opacity: 0,
+                        }}
+                        animate={{
+                          y: y(d.y2),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          opacity: 1,
+                        }}
+                        transition={{ duration: animate }}
+                        exit={{ opacity: 0, transition: { duration: animate } }}
+                        style={{
+                          textAnchor: 'start',
+                          ...(styles?.yAxis?.labels || {}),
+                        }}
+                        className={cn('text-xs', classNames?.yAxis?.labels)}
+                        x={graphWidth - 5}
+                        dy='0.33em'
+                        dx={3}
+                      >
+                        {d.label}
+                      </motion.text>
+                    ) : null
+                  ) : null}
+                  <motion.line
+                    x1={radius}
+                    x2={graphWidth - radius}
+                    initial={{
+                      y1: y(d.y1),
+                      y2: y(d.y1),
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                    }}
+                    animate={{
+                      y1: y(d.y1),
+                      y2: y(d.y2),
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : colors[colorDomain.indexOf(`${d.color}`)],
+                    }}
+                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    className={classNames?.dataConnectors}
+                    style={{
+                      fill: 'none',
+                      strokeWidth: 1,
+                      ...styles?.dataConnectors,
+                    }}
+                  />
+                </motion.g>
+              );
+            })}
+          </AnimatePresence>
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

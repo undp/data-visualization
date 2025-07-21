@@ -83,6 +83,7 @@ interface Props {
   yPrefix: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -129,6 +130,7 @@ export function Graph(props: Props) {
     yPrefix,
     styles,
     classNames,
+    dimmedOpacity,
   } = props;
 
   const dataFormatted = sortBy(
@@ -221,14 +223,22 @@ export function Graph(props: Props) {
         direction='ltr'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
-          <HighlightAreaForScatterPlot
-            areaSettings={highlightAreaSettings}
-            width={graphWidth}
-            height={graphHeight}
-            scaleX={x}
-            scaleY={y}
-          />
-          <CustomArea areaSettings={customHighlightAreaSettings} scaleX={x} scaleY={y} />
+          <AnimatePresence>
+            <HighlightAreaForScatterPlot
+              areaSettings={highlightAreaSettings}
+              width={graphWidth}
+              height={graphHeight}
+              scaleX={x}
+              scaleY={y}
+              animate={0}
+            />
+            <CustomArea
+              areaSettings={customHighlightAreaSettings}
+              scaleX={x}
+              scaleY={y}
+              animate={0}
+            />
+          </AnimatePresence>
           <g>
             <YTicksAndGridLines
               values={yTicks.filter(d => d !== 0)}
@@ -380,12 +390,12 @@ export function Graph(props: Props) {
                         ? d.color
                           ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
                             ? 1
-                            : 0.3
-                          : 0.3
+                            : dimmedOpacity
+                          : dimmedOpacity
                         : mouseOverData
                           ? mouseOverData.label === d.label
                             ? 1
-                            : 0.3
+                            : dimmedOpacity
                           : highlightedDataPoints.length !== 0
                             ? highlightedDataPoints.indexOf(d.label || '') !== -1
                               ? 1
@@ -512,101 +522,104 @@ export function Graph(props: Props) {
                 </g>
               );
             })}
-          </AnimatePresence>
-          {refXValues.map((el, i) => (
-            <RefLineX
-              key={i}
-              text={el.text}
-              color={el.color}
-              x={x(el.value as number)}
-              y1={0}
-              y2={graphHeight}
-              textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-              classNames={el.classNames}
-              styles={el.styles}
-            />
-          ))}
-          {refYValues.map((el, i) => (
-            <RefLineY
-              key={i}
-              text={el.text}
-              color={el.color}
-              y={y(el.value as number)}
-              x1={0}
-              x2={graphWidth}
-              classNames={el.classNames}
-              styles={el.styles}
-            />
-          ))}
-          <g>
-            {annotations.map((d, i) => {
-              const endPoints = getLineEndPoint(
-                {
-                  x: d.xCoordinate
-                    ? x(d.xCoordinate as number) + (d.xOffset || 0)
-                    : 0 + (d.xOffset || 0),
+            {refXValues.map((el, i) => (
+              <RefLineX
+                key={i}
+                text={el.text}
+                color={el.color}
+                x={x(el.value as number)}
+                y1={0}
+                y2={graphHeight}
+                textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                classNames={el.classNames}
+                styles={el.styles}
+                animate={0}
+              />
+            ))}
+            {refYValues.map((el, i) => (
+              <RefLineY
+                key={i}
+                text={el.text}
+                color={el.color}
+                y={y(el.value as number)}
+                x1={0}
+                x2={graphWidth}
+                classNames={el.classNames}
+                styles={el.styles}
+                animate={0}
+              />
+            ))}
+            <g>
+              {annotations.map((d, i) => {
+                const endPoints = getLineEndPoint(
+                  {
+                    x: d.xCoordinate
+                      ? x(d.xCoordinate as number) + (d.xOffset || 0)
+                      : 0 + (d.xOffset || 0),
+                    y: d.yCoordinate
+                      ? y(d.yCoordinate as number) + (d.yOffset || 0) - 8
+                      : 0 + (d.yOffset || 0) - 8,
+                  },
+                  {
+                    x: d.xCoordinate ? x(d.xCoordinate as number) : 0,
+                    y: d.yCoordinate ? y(d.yCoordinate as number) : 0,
+                  },
+                  checkIfNullOrUndefined(d.connectorRadius) ? 3.5 : (d.connectorRadius as number),
+                );
+                const connectorSettings = d.showConnector
+                  ? {
+                      y1: endPoints.y,
+                      x1: endPoints.x,
+                      y2: d.yCoordinate
+                        ? y(d.yCoordinate as number) + (d.yOffset || 0)
+                        : 0 + (d.yOffset || 0),
+                      x2: d.xCoordinate
+                        ? x(d.xCoordinate as number) + (d.xOffset || 0)
+                        : 0 + (d.xOffset || 0),
+                      cy: d.yCoordinate ? y(d.yCoordinate as number) : 0,
+                      cx: d.xCoordinate ? x(d.xCoordinate as number) : 0,
+                      circleRadius: checkIfNullOrUndefined(d.connectorRadius)
+                        ? 3.5
+                        : (d.connectorRadius as number),
+                      strokeWidth: d.showConnector === true ? 2 : Math.min(d.showConnector || 0, 1),
+                    }
+                  : undefined;
+                const labelSettings = {
                   y: d.yCoordinate
                     ? y(d.yCoordinate as number) + (d.yOffset || 0) - 8
                     : 0 + (d.yOffset || 0) - 8,
-                },
-                {
-                  x: d.xCoordinate ? x(d.xCoordinate as number) : 0,
-                  y: d.yCoordinate ? y(d.yCoordinate as number) : 0,
-                },
-                checkIfNullOrUndefined(d.connectorRadius) ? 3.5 : (d.connectorRadius as number),
-              );
-              const connectorSettings = d.showConnector
-                ? {
-                    y1: endPoints.y,
-                    x1: endPoints.x,
-                    y2: d.yCoordinate
-                      ? y(d.yCoordinate as number) + (d.yOffset || 0)
-                      : 0 + (d.yOffset || 0),
-                    x2: d.xCoordinate
+                  x: rtl
+                    ? 0
+                    : d.xCoordinate
                       ? x(d.xCoordinate as number) + (d.xOffset || 0)
                       : 0 + (d.xOffset || 0),
-                    cy: d.yCoordinate ? y(d.yCoordinate as number) : 0,
-                    cx: d.xCoordinate ? x(d.xCoordinate as number) : 0,
-                    circleRadius: checkIfNullOrUndefined(d.connectorRadius)
-                      ? 3.5
-                      : (d.connectorRadius as number),
-                    strokeWidth: d.showConnector === true ? 2 : Math.min(d.showConnector || 0, 1),
-                  }
-                : undefined;
-              const labelSettings = {
-                y: d.yCoordinate
-                  ? y(d.yCoordinate as number) + (d.yOffset || 0) - 8
-                  : 0 + (d.yOffset || 0) - 8,
-                x: rtl
-                  ? 0
-                  : d.xCoordinate
-                    ? x(d.xCoordinate as number) + (d.xOffset || 0)
-                    : 0 + (d.xOffset || 0),
-                width: rtl
-                  ? d.xCoordinate
-                    ? x(d.xCoordinate as number) + (d.xOffset || 0)
-                    : 0 + (d.xOffset || 0)
-                  : graphWidth -
-                    (d.xCoordinate
+                  width: rtl
+                    ? d.xCoordinate
                       ? x(d.xCoordinate as number) + (d.xOffset || 0)
-                      : 0 + (d.xOffset || 0)),
-                maxWidth: d.maxWidth,
-                fontWeight: d.fontWeight,
-                align: d.align,
-              };
-              return (
-                <Annotation
-                  key={i}
-                  color={d.color}
-                  connectorsSettings={connectorSettings}
-                  labelSettings={labelSettings}
-                  text={d.text}
-                  classNames={d.classNames}
-                  styles={d.styles}
-                />
-              );
-            })}
-          </g>
+                      : 0 + (d.xOffset || 0)
+                    : graphWidth -
+                      (d.xCoordinate
+                        ? x(d.xCoordinate as number) + (d.xOffset || 0)
+                        : 0 + (d.xOffset || 0)),
+                  maxWidth: d.maxWidth,
+                  fontWeight: d.fontWeight,
+                  align: d.align,
+                };
+                return (
+                  <Annotation
+                    key={i}
+                    color={d.color}
+                    connectorsSettings={connectorSettings}
+                    labelSettings={labelSettings}
+                    text={d.text}
+                    classNames={d.classNames}
+                    styles={d.styles}
+                    animate={0}
+                  />
+                );
+              })}
+            </g>
+          </AnimatePresence>
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

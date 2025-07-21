@@ -7,6 +7,7 @@ import { cn, H2, Modal, P } from '@undp/design-system-react';
 import max from 'lodash.max';
 import min from 'lodash.min';
 import { scaleLinear } from 'd3-scale';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { ClassNameObject, RadarChartDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -44,6 +45,8 @@ interface Props {
   fillShape: boolean;
   resetSelectionOnDoubleClick: boolean;
   highlightedLines: (string | number)[];
+  animate: number;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -74,6 +77,8 @@ export function Graph(props: Props) {
     resetSelectionOnDoubleClick,
     fillShape,
     highlightedLines,
+    animate,
+    dimmedOpacity,
   } = props;
   const curve = curveType === 'linear' ? curveLinearClosed : curveCardinalClosed;
   const margin = {
@@ -201,133 +206,172 @@ export function Graph(props: Props) {
                 </foreignObject>
               </g>
             ))}
-            {data.map((d, i) => (
-              <g
-                key={i}
-                opacity={
-                  mouseOverData
-                    ? d.label === mouseOverData.label
-                      ? 1
-                      : 0.3
-                    : selectedColor
-                      ? d.color
-                        ? lineColors[colorDomain.indexOf(d.color)] === selectedColor
-                          ? 1
-                          : 0.3
-                        : 0.3
-                      : highlightedLines.length !== 0
-                        ? d.label
-                          ? highlightedLines.indexOf(d.label) !== -1
+            <AnimatePresence>
+              {data.map((d, i) => (
+                <motion.g
+                  key={d.label || i}
+                  initial={{
+                    opacity: mouseOverData
+                      ? d.label === mouseOverData.label
+                        ? 1
+                        : dimmedOpacity
+                      : selectedColor
+                        ? d.color
+                          ? lineColors[colorDomain.indexOf(d.color)] === selectedColor
                             ? 1
+                            : dimmedOpacity
+                          : dimmedOpacity
+                        : highlightedLines.length !== 0
+                          ? d.label
+                            ? highlightedLines.indexOf(d.label) !== -1
+                              ? 1
+                              : 0.3
                             : 0.3
-                          : 0.3
-                        : 1
-                }
-                onMouseEnter={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                  onSeriesMouseOver?.(d);
-                }}
-                onMouseMove={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  onSeriesMouseOver?.(undefined);
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      setMouseClickData(d);
-                      onSeriesMouseClick?.(d);
-                    }
-                  }
-                }}
-              >
-                <path
-                  d={lineShape(d.values) || ''}
-                  style={{
-                    stroke:
-                      data.filter(el => el.color).length === 0
-                        ? lineColors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : lineColors[colorDomain.indexOf(d.color)],
-                    fill: fillShape
-                      ? data.filter(el => el.color).length === 0
-                        ? lineColors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : lineColors[colorDomain.indexOf(d.color)]
-                      : 'none',
-                    fillOpacity: 0.1,
-                    strokeWidth,
+                          : 1,
                   }}
-                />
-                <g>
-                  {d.values.map((el, j) => (
-                    <g key={j}>
-                      {!checkIfNullOrUndefined(el) ? (
-                        <>
-                          {showDots ? (
-                            <circle
-                              cx={Math.cos(angleScale(j) - Math.PI / 2) * scale(el)}
-                              cy={Math.sin(angleScale(j) - Math.PI / 2) * scale(el)}
-                              r={4}
-                              style={{
-                                fill:
-                                  data.filter(el => el.color).length === 0
-                                    ? lineColors[0]
-                                    : !d.color
-                                      ? Colors.gray
-                                      : lineColors[colorDomain.indexOf(d.color)],
-                              }}
-                            />
-                          ) : null}
-                          {showValues ? (
-                            <text
-                              cx={Math.cos(angleScale(j) - Math.PI / 2) * (scale(el) + 6)}
-                              cy={Math.sin(angleScale(j) - Math.PI / 2) * (scale(el) + 6)}
-                              style={{
-                                fill: lineColors[i],
-                                textAnchor:
-                                  Math.cos(angleScale(j) - Math.PI / 2) < 0
-                                    ? 'end'
-                                    : Math.cos(angleScale(j) - Math.PI / 2) < 0.00001
-                                      ? 'middle'
-                                      : 'start',
-                                ...(styles?.graphObjectValues || {}),
-                              }}
-                              dy={
-                                Math.sin(angleScale(j) - Math.PI / 2) < 0
-                                  ? 10
-                                  : Math.sin(angleScale(j) - Math.PI / 2) < 0.00001
-                                    ? 0
-                                    : 0
-                              }
-                              className={cn(
-                                'graph-value text-xs font-bold',
-                                classNames?.graphObjectValues,
-                              )}
-                            >
-                              {numberFormattingFunction(el)}
-                            </text>
-                          ) : null}
-                        </>
-                      ) : null}
-                    </g>
-                  ))}
-                </g>
-              </g>
-            ))}
+                  animate={{
+                    opacity: mouseOverData
+                      ? d.label === mouseOverData.label
+                        ? 1
+                        : dimmedOpacity
+                      : selectedColor
+                        ? d.color
+                          ? lineColors[colorDomain.indexOf(d.color)] === selectedColor
+                            ? 1
+                            : dimmedOpacity
+                          : dimmedOpacity
+                        : highlightedLines.length !== 0
+                          ? d.label
+                            ? highlightedLines.indexOf(d.label) !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : dimmedOpacity
+                          : 1,
+                  }}
+                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  onMouseEnter={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    onSeriesMouseOver?.(d);
+                  }}
+                  onMouseMove={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    onSeriesMouseOver?.(undefined);
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        setMouseClickData(d);
+                        onSeriesMouseClick?.(d);
+                      }
+                    }
+                  }}
+                >
+                  <motion.path
+                    d={lineShape(d.values) || ''}
+                    initial={{ d: lineShape(d.values.map(_el => 0)) || '' }}
+                    animate={{ d: lineShape(d.values) || '' }}
+                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    style={{
+                      stroke:
+                        data.filter(el => el.color).length === 0
+                          ? lineColors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : lineColors[colorDomain.indexOf(d.color)],
+                      fill: fillShape
+                        ? data.filter(el => el.color).length === 0
+                          ? lineColors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : lineColors[colorDomain.indexOf(d.color)]
+                        : 'none',
+                      fillOpacity: 0.1,
+                      strokeWidth,
+                    }}
+                  />
+                  <g>
+                    {d.values.map((el, j) => (
+                      <g key={j}>
+                        {!checkIfNullOrUndefined(el) ? (
+                          <>
+                            {showDots ? (
+                              <motion.circle
+                                cx={Math.cos(angleScale(j) - Math.PI / 2) * scale(el)}
+                                cy={Math.sin(angleScale(j) - Math.PI / 2) * scale(el)}
+                                r={4}
+                                style={{
+                                  fill:
+                                    data.filter(el => el.color).length === 0
+                                      ? lineColors[0]
+                                      : !d.color
+                                        ? Colors.gray
+                                        : lineColors[colorDomain.indexOf(d.color)],
+                                }}
+                                initial={{ cx: 0, cy: 0, opacity: 0 }}
+                                animate={{
+                                  cx: Math.cos(angleScale(j) - Math.PI / 2) * scale(el),
+                                  cy: Math.sin(angleScale(j) - Math.PI / 2) * scale(el),
+                                  opacity: 1,
+                                }}
+                                transition={{ duration: animate }}
+                                exit={{ opacity: 0, transition: { duration: animate } }}
+                              />
+                            ) : null}
+                            {showValues ? (
+                              <motion.text
+                                x={Math.cos(angleScale(j) - Math.PI / 2) * (scale(el) + 6)}
+                                y={Math.sin(angleScale(j) - Math.PI / 2) * (scale(el) + 6)}
+                                style={{
+                                  fill: lineColors[i],
+                                  textAnchor:
+                                    Math.cos(angleScale(j) - Math.PI / 2) < 0
+                                      ? 'end'
+                                      : Math.cos(angleScale(j) - Math.PI / 2) < 0.00001
+                                        ? 'middle'
+                                        : 'start',
+                                  ...(styles?.graphObjectValues || {}),
+                                }}
+                                dy={
+                                  Math.sin(angleScale(j) - Math.PI / 2) < 0
+                                    ? 10
+                                    : Math.sin(angleScale(j) - Math.PI / 2) < 0.00001
+                                      ? 0
+                                      : 0
+                                }
+                                className={cn(
+                                  'graph-value text-xs font-bold',
+                                  classNames?.graphObjectValues,
+                                )}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: animate }}
+                                exit={{ opacity: 0, transition: { duration: animate } }}
+                              >
+                                {numberFormattingFunction(el)}
+                              </motion.text>
+                            ) : null}
+                          </>
+                        ) : null}
+                      </g>
+                    ))}
+                  </g>
+                </motion.g>
+              ))}
+            </AnimatePresence>
           </g>
         </g>
       </svg>

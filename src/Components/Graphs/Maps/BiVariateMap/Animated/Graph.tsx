@@ -67,6 +67,7 @@ interface Props {
   classNames?: ClassNameObject;
   zoomInteraction: ZoomInteractionTypes;
   mapProjection: MapProjectionTypes;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -101,6 +102,7 @@ export function Graph(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction,
+    dimmedOpacity,
   } = props;
   const groupedData = Array.from(
     group(
@@ -236,11 +238,11 @@ export function Graph(props: Props) {
                     key={i}
                     opacity={
                       selectedColor
-                        ? 0.3
+                        ? dimmedOpacity
                         : highlightedIds.length !== 0
                           ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
                             ? 1
-                            : 0.3
+                            : dimmedOpacity
                           : 1
                     }
                   >
@@ -312,11 +314,11 @@ export function Graph(props: Props) {
                     selectedColor
                       ? selectedColor === color
                         ? 1
-                        : 0.3
+                        : dimmedOpacity
                       : highlightedIds.length !== 0
                         ? highlightedIds.indexOf(d.id) !== -1
                           ? 1
-                          : 0.3
+                          : dimmedOpacity
                         : 1
                   }
                   onMouseEnter={event => {

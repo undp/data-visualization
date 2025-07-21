@@ -90,6 +90,10 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -162,6 +166,8 @@ export function SlopeChart(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -323,6 +329,8 @@ export function SlopeChart(props: Props) {
                         detailsOnClick={detailsOnClick}
                         styles={styles}
                         classNames={classNames}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>

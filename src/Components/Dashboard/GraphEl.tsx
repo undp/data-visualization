@@ -158,6 +158,7 @@ function GraphEl(props: Props) {
       case 'barChart':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           orientation: settings?.orientation,
           data: graphData,
           colors: settings?.colors as string | string[] | undefined,
@@ -216,6 +217,7 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           filterNA: settings?.filterNA,
+          animate: settings?.animate,
         };
       case 'groupedBarChart':
         return {
@@ -266,6 +268,7 @@ function GraphEl(props: Props) {
           valueColor: settings?.valueColor,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'stackedBarChart':
         return {
@@ -318,10 +321,12 @@ function GraphEl(props: Props) {
           valueColor: settings?.valueColor,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'animatedBarChart':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           orientation: settings?.orientation,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
@@ -486,6 +491,7 @@ function GraphEl(props: Props) {
       case 'bulletChart':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           orientation: settings?.orientation,
           data: graphData,
           barColor: settings?.colors as string,
@@ -548,6 +554,7 @@ function GraphEl(props: Props) {
           targetStyle: settings?.targetStyle,
           targetColor: settings?.targetColor,
           measureBarWidthFactor: settings?.measureBarWidthFactor,
+          animate: settings?.animate,
         };
       case 'lineChart':
         return {
@@ -585,7 +592,7 @@ function GraphEl(props: Props) {
           dataDownload: settings?.dataDownload,
           language: settings?.language,
           minHeight: settings?.minHeight,
-          animateLine: settings?.animateLine,
+          animate: settings?.animate,
           strokeWidth: settings?.strokeWidth,
           showDots: settings?.showDots,
           customHighlightAreaSettings: settings?.customHighlightAreaSettings,
@@ -635,7 +642,7 @@ function GraphEl(props: Props) {
           dataDownload: settings?.dataDownload,
           language: settings?.language,
           minHeight: settings?.minHeight,
-          animateLine: settings?.animateLine,
+          animate: settings?.animate,
           strokeWidth: settings?.strokeWidth,
           showDots: settings?.showDots,
           customHighlightAreaSettings: settings?.customHighlightAreaSettings,
@@ -696,7 +703,7 @@ function GraphEl(props: Props) {
           dataDownload: settings?.dataDownload,
           language: settings?.language,
           minHeight: settings?.minHeight,
-          animateLine: settings?.animateLine,
+          animate: settings?.animate,
           strokeWidth: settings?.strokeWidth,
           showDots: settings?.showDots,
           colorLegendTitle: settings?.colorLegendTitle,
@@ -712,6 +719,7 @@ function GraphEl(props: Props) {
       case 'multiLineChart':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           data: graphData,
           curveType: settings?.curveType,
           lineColors: settings?.lineColors as string[] | undefined,
@@ -750,7 +758,7 @@ function GraphEl(props: Props) {
           dataDownload: settings?.dataDownload,
           language: settings?.language,
           minHeight: settings?.minHeight,
-          animateLine: settings?.animateLine,
+          animate: settings?.animate,
           strokeWidth: settings?.strokeWidth,
           showDots: settings?.showDots,
           colorLegendTitle: settings?.colorLegendTitle,
@@ -768,6 +776,7 @@ function GraphEl(props: Props) {
         return {
           theme: settings?.theme,
           data: graphData,
+          dimmedOpacity: settings?.dimmedOpacity,
           curveType: settings?.curveType,
           colors: settings?.colors as string | string[] | undefined,
           graphTitle: settings?.graphTitle,
@@ -801,7 +810,7 @@ function GraphEl(props: Props) {
           dataDownload: settings?.dataDownload,
           language: settings?.language,
           minHeight: settings?.minHeight,
-          animateLine: settings?.animateLine,
+          animate: settings?.animate,
           strokeWidth: settings?.strokeWidth,
           showDots: settings?.showDots,
           colorLegendTitle: settings?.colorLegendTitle,
@@ -859,7 +868,7 @@ function GraphEl(props: Props) {
           dataDownload: settings?.dataDownload,
           language: settings?.language,
           minHeight: settings?.minHeight,
-          animateLine: settings?.animateLine,
+          animate: settings?.animate,
           strokeWidth: settings?.strokeWidth,
           showDots: settings?.showDots,
           colorLegendTitle: settings?.colorLegendTitle,
@@ -924,6 +933,7 @@ function GraphEl(props: Props) {
       case 'choroplethMap':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           graphTitle: settings?.graphTitle,
           mapData: settings?.mapData,
@@ -971,10 +981,12 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
+          animate: settings?.animate,
         };
       case 'biVariateChoroplethMap':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           mapData: settings?.mapData,
@@ -1025,10 +1037,12 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
+          animate: settings?.animate,
         };
       case 'dotDensityMap':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           graphTitle: settings?.graphTitle,
           mapData: settings?.mapData,
@@ -1072,6 +1086,7 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
+          animate: settings?.animate,
         };
       case 'donutChart':
         return {
@@ -1119,6 +1134,7 @@ function GraphEl(props: Props) {
       case 'slopeChart':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           graphTitle: settings?.graphTitle,
@@ -1158,10 +1174,12 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'scatterPlot':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           graphTitle: settings?.graphTitle,
@@ -1226,6 +1244,7 @@ function GraphEl(props: Props) {
           yPrefix: settings?.yPrefix,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'dumbbellChart':
         return {
@@ -1282,10 +1301,12 @@ function GraphEl(props: Props) {
           valueColor: settings?.valueColor,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'treeMap':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           colors: settings?.colors as string | string[] | undefined,
@@ -1328,10 +1349,12 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'circlePacking':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           colors: settings?.colors as string | string[] | undefined,
@@ -1376,6 +1399,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'heatMap':
         return {
@@ -1422,10 +1446,12 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'stripChart':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           orientation: settings?.orientation,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
@@ -1455,7 +1481,7 @@ function GraphEl(props: Props) {
           graphID: settings?.graphID,
           maxValue: settings?.maxValue,
           minValue: settings?.minValue,
-          showAxis: settings?.showAxis,
+          noOfTicks: settings?.noOfTicks,
           graphDownload: settings?.graphDownload,
           dataDownload: settings?.dataDownload,
           prefix: settings?.prefix,
@@ -1471,10 +1497,12 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'beeSwarmChart':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           colors: settings?.colors as string | string[] | undefined,
@@ -1517,6 +1545,7 @@ function GraphEl(props: Props) {
           orientation: settings?.orientation,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'butterflyChart':
         return {
@@ -1566,6 +1595,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'histogram':
         return {
@@ -1691,6 +1721,7 @@ function GraphEl(props: Props) {
           barPrefix: settings?.barPrefix,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'dataTable':
         return {
@@ -1846,6 +1877,7 @@ function GraphEl(props: Props) {
       case 'animatedBiVariateChoroplethMap':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           mapData: settings?.mapData,
@@ -1899,6 +1931,7 @@ function GraphEl(props: Props) {
       case 'animatedChoroplethMap':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           graphTitle: settings?.graphTitle,
           mapData: settings?.mapData,
@@ -1949,6 +1982,7 @@ function GraphEl(props: Props) {
       case 'animatedDotDensityMap':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           graphTitle: settings?.graphTitle,
           mapData: settings?.mapData,
@@ -2108,6 +2142,7 @@ function GraphEl(props: Props) {
       case 'animatedScatterPlot':
         return {
           theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
           graphTitle: settings?.graphTitle,
@@ -2211,11 +2246,11 @@ function GraphEl(props: Props) {
           defaultLinkOpacity: settings?.defaultLinkOpacity,
           sourceTitle: settings?.sourceTitle,
           targetTitle: settings?.targetTitle,
-          animateLinks: settings?.animateLinks,
           sortNodes: settings?.sortNodes,
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'dataCards':
         return {
@@ -2249,6 +2284,7 @@ function GraphEl(props: Props) {
       case 'radarChart':
         return {
           graphTitle: settings?.graphTitle,
+          dimmedOpacity: settings?.dimmedOpacity,
           graphDescription: settings?.graphDescription,
           footNote: settings?.footNote,
           sources: settings?.sources,
@@ -2289,6 +2325,7 @@ function GraphEl(props: Props) {
           language: settings?.language,
           theme: settings?.theme,
           graphID: settings?.graphID,
+          animate: settings?.animate,
         };
       default:
         return {};

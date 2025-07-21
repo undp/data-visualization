@@ -83,6 +83,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   selectedColor?: string;
+  dimmedOpacity: number;
 }
 
 interface FormattedDataType {
@@ -128,6 +129,7 @@ export function Graph(props: Props) {
     selectedColor,
     classNames,
     showLabels,
+    dimmedOpacity,
   } = props;
   const curve =
     curveType === 'linear'
@@ -291,8 +293,14 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
+            animate={animateLine ? 0.5 : 0}
           />
-          <CustomArea areaSettings={customHighlightAreaSettingsFormatted} scaleX={x} scaleY={y} />
+          <CustomArea
+            areaSettings={customHighlightAreaSettingsFormatted}
+            scaleX={x}
+            scaleY={y}
+            animate={animateLine ? 0.5 : 0}
+          />
           <g>
             <YTicksAndGridLines
               values={yTicks.filter(d => d !== 0)}
@@ -374,17 +382,17 @@ export function Graph(props: Props) {
                   mouseOverData
                     ? d[0].label === mouseOverData.label
                       ? 1
-                      : 0.3
+                      : dimmedOpacity
                     : selectedColor
                       ? d[0].color
                         ? lineColors[colorDomain.indexOf(d[0].color)] === selectedColor
                           ? 1
-                          : 0.3
-                        : 0.3
+                          : dimmedOpacity
+                        : dimmedOpacity
                       : highlightedLines.length !== 0
                         ? highlightedLines.indexOf(d[0].label) !== -1
                           ? 1
-                          : 0.3
+                          : dimmedOpacity
                         : 1
                 }
               >
@@ -525,6 +533,7 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   classNames={el.classNames}
                   styles={el.styles}
+                  animate={animateLine ? 0.5 : 0}
                 />
               ))}
             </>
@@ -594,6 +603,7 @@ export function Graph(props: Props) {
                   text={d.text}
                   classNames={d.classNames}
                   styles={d.styles}
+                  animate={animateLine ? 0.5 : 0}
                 />
               );
             })}

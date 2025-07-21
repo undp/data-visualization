@@ -88,6 +88,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     minHeight: { table: { defaultValue: { summary: '0' } } },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     axisTitles: {
       control: 'text',
@@ -157,10 +167,22 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     highlightedDataPoints,
     backgroundColor,
     colorDomain,
+    animate,
     ...args
   }) => {
     return (
       <SlopeChart
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         colors={parseValue(colors, colors)}
         axisTitles={parseValue(axisTitles)}
         highlightedDataPoints={parseValue(highlightedDataPoints)}

@@ -93,6 +93,10 @@ interface Props {
   zoomTranslateExtend?: [[number, number], [number, number]];
   /** Countries or regions to be highlighted */
   highlightedIds?: string[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
@@ -175,6 +179,8 @@ export function BiVariateChoroplethMap(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction = 'button',
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -339,6 +345,8 @@ export function BiVariateChoroplethMap(props: Props) {
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
                   detailsOnClick={detailsOnClick}
                   zoomInteraction={zoomInteraction}
+                  animate={animate === true ? 0.5 : animate || 0}
+                  dimmedOpacity={dimmedOpacity}
                 />
               ) : null}
             </div>

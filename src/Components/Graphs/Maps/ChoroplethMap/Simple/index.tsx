@@ -91,6 +91,10 @@ interface Props {
   zoomTranslateExtend?: [[number, number], [number, number]];
   /** Countries or regions to be highlighted */
   highlightedIds?: string[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Scale for the colors */
   scaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Toggles if the color scaling is categorical or not */
@@ -176,6 +180,8 @@ export function ChoroplethMap(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction = 'button',
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -339,6 +345,8 @@ export function ChoroplethMap(props: Props) {
                   detailsOnClick={detailsOnClick}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
                   zoomInteraction={zoomInteraction}
+                  dimmedOpacity={dimmedOpacity}
+                  animate={animate === true ? 0.5 : animate || 0}
                 />
               ) : null}
             </div>

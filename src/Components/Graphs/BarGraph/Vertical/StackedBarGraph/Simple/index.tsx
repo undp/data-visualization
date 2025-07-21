@@ -74,6 +74,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   filterNA?: boolean;
+  animate?: boolean | number;
 }
 
 export function VerticalStackedBarGraph(props: Props) {
@@ -127,6 +128,7 @@ export function VerticalStackedBarGraph(props: Props) {
     styles,
     classNames,
     filterNA = true,
+    animate = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -279,6 +281,8 @@ export function VerticalStackedBarGraph(props: Props) {
                         valueColor={valueColor}
                         styles={styles}
                         classNames={classNames}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        colorDomain={colorDomain}
                       />
                     ) : null}
                   </div>

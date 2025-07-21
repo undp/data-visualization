@@ -45,7 +45,7 @@
     "refValues": [{ "value": 0.4, "text": "Reference", "color": "#000" }],
     "highlightAreaSettings": [{ "coordinates": [2012, 2022] }],
     "highlightAreaColor": "#EDEFF0",
-    "animateLine": true,
+    "animate": true,
     "strokeWidth": 2,
     "showDots": false,
     "tooltip": "HDI: <b>{{y}}</b>",

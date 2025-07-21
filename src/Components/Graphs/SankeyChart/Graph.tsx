@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { useEffect, useState } from 'react';
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
-import { useAnimate, useInView } from 'motion/react';
+import { AnimatePresence, motion, useAnimate, useInView } from 'motion/react';
 import { cn, Modal, P } from '@undp/design-system-react';
 
 import { ClassNameObject, NodeDataType, NodesLinkDataType, StyleObject } from '@/Types';
@@ -36,7 +36,7 @@ interface Props {
   highlightedTargetDataPoints: string[];
   sourceTitle?: string;
   targetTitle?: string;
-  animateLinks?: boolean | number;
+  animate?: boolean | number;
   sortNodes: 'asc' | 'desc' | 'mostReadable' | 'none';
   resetSelectionOnDoubleClick: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,24 +70,24 @@ export function Graph(props: Props) {
     defaultLinkOpacity,
     sourceTitle,
     targetTitle,
-    animateLinks,
+    animate,
     sortNodes,
     resetSelectionOnDoubleClick,
     detailsOnClick,
     styles,
     classNames,
   } = props;
-  const [scope, animate] = useAnimate();
+  const [scope, animatePath] = useAnimate();
   const isInView = useInView(scope);
   useEffect(() => {
     if (isInView && data) {
-      animate(
+      animatePath(
         'path',
         { pathLength: [0, 1] },
-        { duration: animateLinks === true ? 5 : animateLinks || 0 },
+        { duration: animate === true ? 5 : animate || 0 },
       );
     }
-  }, [isInView, data, animate, animateLinks]);
+  }, [isInView, data, animatePath, animate]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -348,80 +348,106 @@ export function Graph(props: Props) {
             ))}
           </defs>
           <g ref={scope}>
-            {links.map((d, i) => (
-              <g
-                className='undp-viz-g-with-hover'
-                key={i}
-                onMouseEnter={event => {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  setMouseOverData((d as any).data);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
+            <AnimatePresence>
+              {links.map((d, i) => (
+                <motion.g
+                  className='undp-viz-g-with-hover'
+                  key={`${d.source}-${d.target}`}
+                  onMouseEnter={event => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    setMouseOverData((d as any).data);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
 
-                  onSeriesMouseOver?.(d);
-                }}
-                onMouseMove={event => {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  setMouseOverData((d as any).data);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      isEqual(mouseClickData, (d as any).data) &&
-                      resetSelectionOnDoubleClick
-                    ) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      setMouseClickData((d as any).data);
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      onSeriesMouseClick?.((d as any).data);
+                    onSeriesMouseOver?.(d);
+                  }}
+                  onMouseMove={event => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    setMouseOverData((d as any).data);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        isEqual(mouseClickData, (d as any).data) &&
+                        resetSelectionOnDoubleClick
+                      ) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        setMouseClickData((d as any).data);
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onSeriesMouseClick?.((d as any).data);
+                      }
                     }
-                  }
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  onSeriesMouseOver?.(undefined);
-                }}
-                opacity={
-                  selectedNode
-                    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (d.source as any).name === selectedNode.name ||
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (d.target as any).name === selectedNode.name
-                      ? 0.85
-                      : defaultLinkOpacity
-                    : highlightedSourceDataPoints.length !== 0 ||
-                        highlightedTargetDataPoints.length !== 0
-                      ? highlightedSourceDataPoints.indexOf(
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (d.source as any).label,
-                        ) !== -1 ||
-                        highlightedTargetDataPoints.indexOf(
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (d.target as any).label,
-                        ) !== -1
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    onSeriesMouseOver?.(undefined);
+                  }}
+                  initial={{
+                    opacity: selectedNode
+                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (d.source as any).name === selectedNode.name ||
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (d.target as any).name === selectedNode.name
                         ? 0.85
                         : defaultLinkOpacity
-                      : defaultLinkOpacity
-                }
-              >
-                <path
-                  d={linkPathGenerator(d) || ''}
-                  style={{
-                    stroke: `url(#${id}-gradient-${i})`,
-                    strokeWidth: d.width,
-                    fill: 'none',
+                      : highlightedSourceDataPoints.length !== 0 ||
+                          highlightedTargetDataPoints.length !== 0
+                        ? highlightedSourceDataPoints.indexOf(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (d.source as any).label,
+                          ) !== -1 ||
+                          highlightedTargetDataPoints.indexOf(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (d.target as any).label,
+                          ) !== -1
+                          ? 0.85
+                          : defaultLinkOpacity
+                        : defaultLinkOpacity,
                   }}
-                />
-              </g>
-            ))}
+                  animate={{
+                    opacity: selectedNode
+                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (d.source as any).name === selectedNode.name ||
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (d.target as any).name === selectedNode.name
+                        ? 0.85
+                        : defaultLinkOpacity
+                      : highlightedSourceDataPoints.length !== 0 ||
+                          highlightedTargetDataPoints.length !== 0
+                        ? highlightedSourceDataPoints.indexOf(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (d.source as any).label,
+                          ) !== -1 ||
+                          highlightedTargetDataPoints.indexOf(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (d.target as any).label,
+                          ) !== -1
+                          ? 0.85
+                          : defaultLinkOpacity
+                        : defaultLinkOpacity,
+                  }}
+                  transition={{ duration: animate === true ? 0.5 : animate || 0 }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                >
+                  <path
+                    d={linkPathGenerator(d) || ''}
+                    style={{
+                      stroke: `url(#${id}-gradient-${i})`,
+                      strokeWidth: d.width,
+                      fill: 'none',
+                    }}
+                  />
+                </motion.g>
+              ))}
+            </AnimatePresence>
           </g>
         </g>
       </svg>

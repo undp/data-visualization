@@ -67,6 +67,7 @@ interface Props {
   classNames?: ClassNameObject;
   zoomInteraction: ZoomInteractionTypes;
   mapProjection: MapProjectionTypes;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -100,6 +101,7 @@ export function Graph(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction,
+    dimmedOpacity,
   } = props;
   const groupedData = Array.from(
     group(
@@ -293,12 +295,12 @@ export function Graph(props: Props) {
                       selectedColor
                         ? selectedColor === color
                           ? 1
-                          : 0.3
+                          : dimmedOpacity
                         : highlightedDataPoints.length !== 0
                           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             highlightedDataPoints.indexOf((d.data as any).id) !== -1
                             ? 1
-                            : 0.3
+                            : dimmedOpacity
                           : 1
                     }
                     onMouseEnter={event => {

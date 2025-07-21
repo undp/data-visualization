@@ -795,9 +795,8 @@ export interface GraphSettingsDataType {
   year?: number | string;
   aggregationMethod?: 'count' | 'max' | 'min' | 'average' | 'sum';
   stripType?: 'strip' | 'dot';
-  showAxis?: boolean;
   language?: Languages;
-  animateLine?: boolean | number;
+  animate?: boolean | number;
   highlightColor?: string;
   dotOpacity?: number;
   sortParameter?: number | 'diff' | 'total';
@@ -836,7 +835,6 @@ export interface GraphSettingsDataType {
   defaultLinkOpacity?: number;
   sourceTitle?: string;
   targetTitle?: string;
-  animateLinks?: boolean | number;
   sortNodes?: 'asc' | 'desc' | 'mostReadable' | 'none';
   sourceColors?: string[] | string;
   targetColors?: string[] | string;
@@ -912,4 +910,5 @@ export interface GraphSettingsDataType {
   targetColor?: 'string';
   measureBarWidthFactor?: number;
   mapLegend?: string | React.ReactNode | MapLegendDataType[];
+  dimmedOpacity?: number;
 }

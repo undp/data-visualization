@@ -1,4 +1,5 @@
 import { cn } from '@undp/design-system-react';
+import { motion } from 'motion/react';
 
 interface Props {
   value: number | string;
@@ -9,12 +10,25 @@ interface Props {
   style?: React.CSSProperties;
   className?: string;
   alignment?: 'top' | 'bottom';
+  animate: number;
 }
 
 export function XAxesLabels(props: Props) {
-  const { value, y, x, style, className, width, height, alignment = 'top' } = props;
+  const { value, y, x, style, className, width, height, alignment = 'top', animate } = props;
   return (
-    <foreignObject y={y} x={x} width={width} height={height}>
+    <motion.foreignObject
+      width={width}
+      height={height}
+      initial={{
+        x,
+        y,
+      }}
+      animate={{
+        x,
+        y,
+      }}
+      transition={{ duration: animate }}
+    >
       <div
         className={`flex flex-col items-center h-inherit ${
           alignment === 'top' ? 'justify-start' : 'justify-end'
@@ -30,6 +44,6 @@ export function XAxesLabels(props: Props) {
           {value}
         </p>
       </div>
-    </foreignObject>
+    </motion.foreignObject>
   );
 }

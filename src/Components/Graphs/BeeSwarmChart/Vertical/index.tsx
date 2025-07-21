@@ -52,6 +52,7 @@ interface Props {
   maxPositionValue?: number;
   minPositionValue?: number;
   highlightedDataPoints?: (string | number)[];
+  dimmedOpacity?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   graphDownload?: boolean;
@@ -67,6 +68,7 @@ interface Props {
   noOfTicks?: number;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  animate?: boolean | number;
 }
 
 export function VerticalBeeSwarmChart(props: Props) {
@@ -115,6 +117,8 @@ export function VerticalBeeSwarmChart(props: Props) {
     styles,
     classNames,
     noOfTicks,
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -279,6 +283,8 @@ export function VerticalBeeSwarmChart(props: Props) {
                         suffix={suffix}
                         prefix={prefix}
                         noOfTicks={noOfTicks || 5}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>

@@ -94,6 +94,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     noOfYTicks: { table: { defaultValue: { summary: '5' } } },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showLabels: { table: { defaultValue: { summary: 'false' } } },
     showColorScale: { table: { defaultValue: { summary: 'true' } } },
     showNAColor: { table: { defaultValue: { summary: 'true' } } },
@@ -227,10 +237,22 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     highlightedDataPoints,
     backgroundColor,
     colorDomain,
+    animate,
     ...args
   }) => {
     return (
       <ScatterPlot
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         colors={parseValue(colors, colors)}
         regressionLine={
           regressionLine === 'false' ? false : regressionLine === 'true' ? true : regressionLine

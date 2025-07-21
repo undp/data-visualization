@@ -143,6 +143,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     highlightedIds: {
       control: 'text',
       table: { type: { summary: 'string[]' } },
@@ -200,10 +210,22 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     centerPoint,
     zoomScaleExtend,
     zoomTranslateExtend,
+    animate,
     ...args
   }) => {
     return (
       <BiVariateChoroplethMap
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         colors={parseValue(colors)}
         highlightedIds={parseValue(highlightedIds)}
         centerPoint={parseValue(centerPoint)}

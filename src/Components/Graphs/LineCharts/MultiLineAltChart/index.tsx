@@ -101,7 +101,7 @@ interface Props {
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animateLine?: boolean | number;
+  animate?: boolean | number;
   /** Format of the date in the data object  */
   dateFormat?: string;
   /** Title for the Y-axis */
@@ -112,6 +112,8 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedLines?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Annotations on the chart */
   annotations?: AnnotationSettingsDataType[];
   /** Highlighted area(square) on the chart  */
@@ -177,7 +179,7 @@ export function MultiLineAltChart(props: Props) {
     highlightedLines = [],
     graphDownload = false,
     dataDownload = false,
-    animateLine = false,
+    animate = false,
     language = 'en',
     colorLegendTitle,
     minHeight = 0,
@@ -194,6 +196,7 @@ export function MultiLineAltChart(props: Props) {
     curveType = 'curve',
     styles,
     classNames,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -338,7 +341,7 @@ export function MultiLineAltChart(props: Props) {
                         minValue={minValue}
                         maxValue={maxValue}
                         highlightedLines={highlightedLines}
-                        animateLine={animateLine}
+                        animateLine={animate}
                         rtl={language === 'he' || language === 'ar'}
                         strokeWidth={strokeWidth}
                         showDots={showDots}
@@ -362,6 +365,7 @@ export function MultiLineAltChart(props: Props) {
                                 'color',
                               ).map(d => d.color) as string[])
                         }
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>

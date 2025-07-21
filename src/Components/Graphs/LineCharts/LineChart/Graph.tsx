@@ -286,8 +286,14 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
+            animate={animateLine ? 0.5 : 0}
           />
-          <CustomArea areaSettings={customHighlightAreaSettingsFormatted} scaleX={x} scaleY={y} />
+          <CustomArea
+            areaSettings={customHighlightAreaSettingsFormatted}
+            scaleX={x}
+            scaleY={y}
+            animate={animateLine ? 0.5 : 0}
+          />
           <g>
             <YTicksAndGridLines
               values={yTicks.filter(d => d !== 0)}
@@ -436,6 +442,7 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   classNames={el.classNames}
                   styles={el.styles}
+                  animate={animateLine ? 0.5 : 0}
                 />
               ))}
             </>
@@ -505,6 +512,7 @@ export function Graph(props: Props) {
                   text={d.text}
                   classNames={d.classNames}
                   styles={d.styles}
+                  animate={animateLine ? 0.5 : 0}
                 />
               );
             })}
@@ -523,6 +531,7 @@ export function Graph(props: Props) {
                 className={classNames?.regLine}
                 style={styles?.regLine}
                 color={typeof regressionLine === 'string' ? regressionLine : undefined}
+                animate={animateLine === true ? 0.5 : animateLine || 0}
               />
             ) : null}
           </g>

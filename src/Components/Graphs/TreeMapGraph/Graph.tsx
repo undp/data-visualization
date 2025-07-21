@@ -1,6 +1,7 @@
 import { stratify, treemap } from 'd3-hierarchy';
 import { useState } from 'react';
 import { P, Modal, cn } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { ClassNameObject, Languages, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -37,6 +38,8 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   language?: Languages;
+  animate: number;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -64,6 +67,8 @@ export function Graph(props: Props) {
     language,
     styles,
     classNames,
+    animate,
+    dimmedOpacity,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -112,159 +117,131 @@ export function Graph(props: Props) {
         direction='ltr'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {treeMapVizData.children?.map((d, i) => {
-            return (
-              <g
-                className='undp-viz-g-with-hover'
-                key={i}
-                opacity={
-                  selectedColor
-                    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (d.data as any).data.color
-                      ? colors[
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          colorDomain.indexOf((d.data as any).data.color)
-                        ] === selectedColor
-                        ? 1
-                        : 0.3
-                      : 0.3
-                    : highlightedDataPoints.length !== 0
-                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        highlightedDataPoints.indexOf((d.data as any).id) !== -1
-                        ? 0.85
-                        : 0.3
-                      : 0.85
-                }
-                transform={`translate(${d.x0},${d.y0})`}
-                onMouseEnter={event => {
+          <AnimatePresence>
+            {treeMapVizData.children?.map(d => {
+              return (
+                <motion.g
+                  className='undp-viz-g-with-hover'
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  setMouseOverData((d.data as any).data);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onSeriesMouseOver?.((d.data as any).data);
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      mouseClickData === (d.data as any).id &&
-                      resetSelectionOnDoubleClick
-                    ) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      setMouseClickData((d.data as any).id);
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      onSeriesMouseClick?.((d.data as any).data);
-                    }
-                  }
-                }}
-                onMouseMove={event => {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  setMouseOverData((d.data as any).data);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  onSeriesMouseOver?.(undefined);
-                }}
-              >
-                <rect
-                  key={i}
-                  x={0}
-                  y={0}
-                  width={d.x1 - d.x0}
-                  height={d.y1 - d.y0}
-                  style={{
-                    fill:
-                      data.filter(el => el.color).length === 0
-                        ? colors[0]
-                        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          !(d.data as any).data.color
-                          ? Colors.gray
-                          : colors[
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              colorDomain.indexOf((d.data as any).data.color)
-                            ],
+                  key={(d.data as any).id}
+                  initial={{
+                    opacity: 0,
+                    x: d.x0,
+                    y: d.y0,
                   }}
-                />
-                {d.x1 - d.x0 > 50 && d.y1 - d.y0 > 25 && (showLabels || showValues) ? (
-                  <foreignObject y={0} x={0} width={d.x1 - d.x0} height={d.y1 - d.y0}>
-                    <div
-                      className='flex flex-col gap-0.5 p-2 w-full'
-                      style={{
-                        color: getTextColorBasedOnBgColor(
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              !(d.data as any).data.color
-                              ? Colors.gray
-                              : colors[
-                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                  colorDomain.indexOf((d.data as any).data.color)
-                                ],
-                        ),
+                  animate={{
+                    opacity: selectedColor
+                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (d.data as any).data.color
+                        ? colors[
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            colorDomain.indexOf((d.data as any).data.color)
+                          ] === selectedColor
+                          ? 1
+                          : dimmedOpacity
+                        : dimmedOpacity
+                      : highlightedDataPoints.length !== 0
+                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          highlightedDataPoints.indexOf((d.data as any).id) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
+                    x: d.x0,
+                    y: d.y0,
+                  }}
+                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  onMouseEnter={event => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    setMouseOverData((d.data as any).data);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    onSeriesMouseOver?.((d.data as any).data);
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        mouseClickData === (d.data as any).id &&
+                        resetSelectionOnDoubleClick
+                      ) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        setMouseClickData((d.data as any).id);
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onSeriesMouseClick?.((d.data as any).data);
+                      }
+                    }
+                  }}
+                  onMouseMove={event => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    setMouseOverData((d.data as any).data);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    onSeriesMouseOver?.(undefined);
+                  }}
+                >
+                  <motion.rect
+                    x={0}
+                    y={0}
+                    initial={{
+                      width: 0,
+                      height: 0,
+                      fill:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            !(d.data as any).data.color
+                            ? Colors.gray
+                            : colors[
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                colorDomain.indexOf((d.data as any).data.color)
+                              ],
+                    }}
+                    animate={{
+                      width: d.x1 - d.x0,
+                      height: d.y1 - d.y0,
+                      fill:
+                        data.filter(el => el.color).length === 0
+                          ? colors[0]
+                          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            !(d.data as any).data.color
+                            ? Colors.gray
+                            : colors[
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                colorDomain.indexOf((d.data as any).data.color)
+                              ],
+                    }}
+                    exit={{
+                      width: 0,
+                      height: 0,
+                      opacity: 0,
+                      transition: { duration: animate },
+                    }}
+                    transition={{ duration: animate }}
+                  />
+                  {d.x1 - d.x0 > 50 && d.y1 - d.y0 > 25 && (showLabels || showValues) ? (
+                    <motion.g
+                      animate={{
+                        opacity: 1,
                       }}
+                      initial={{
+                        opacity: 0,
+                      }}
+                      transition={{ duration: animate }}
+                      exit={{ opacity: 0, transition: { duration: animate } }}
                     >
-                      {showLabels ? (
-                        <P
-                          marginBottom='none'
-                          size='sm'
-                          leading='none'
-                          className={cn(
-                            'w-full treemap-label',
-                            language === 'ar' || language === 'he' ? 'text-right' : 'text-left',
-                            classNames?.graphObjectValues,
-                          )}
-                          style={{
-                            WebkitLineClamp:
-                              d.y1 - d.y0 > 50
-                                ? d.y1 - d.y0 > 100
-                                  ? d.y1 - d.y0 > 150
-                                    ? undefined
-                                    : 3
-                                  : 2
-                                : 1,
-                            display: '-webkit-box',
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            color: getTextColorBasedOnBgColor(
-                              data.filter(el => el.color).length === 0
-                                ? colors[0]
-                                : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                  !(d.data as any).data.color
-                                  ? Colors.gray
-                                  : colors[
-                                      colorDomain.indexOf(
-                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        (d.data as any).data.color,
-                                      )
-                                    ],
-                            ),
-                            ...(styles?.graphObjectValues || {}),
-                          }}
-                        >
-                          {
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (d.data as any).id
-                          }
-                        </P>
-                      ) : null}
-                      {showValues ? (
-                        <P
-                          marginBottom='none'
-                          size='sm'
-                          leading='none'
-                          className={cn(
-                            'w-full font-bold treemap-value',
-                            language === 'ar' || language === 'he' ? 'text-right' : 'text-left',
-                            classNames?.graphObjectValues,
-                          )}
+                      <foreignObject y={0} x={0} width={d.x1 - d.x0} height={d.y1 - d.y0}>
+                        <div
+                          className='flex flex-col gap-0.5 p-2 w-full'
                           style={{
                             color: getTextColorBasedOnBgColor(
                               data.filter(el => el.color).length === 0
@@ -273,29 +250,99 @@ export function Graph(props: Props) {
                                   !(d.data as any).data.color
                                   ? Colors.gray
                                   : colors[
-                                      colorDomain.indexOf(
-                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                        (d.data as any).data.color,
-                                      )
+                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                      colorDomain.indexOf((d.data as any).data.color)
                                     ],
                             ),
-                            ...(styles?.graphObjectValues || {}),
                           }}
                         >
-                          {numberFormattingFunction(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (d.data as any).value,
-                            prefix,
-                            suffix,
-                          )}
-                        </P>
-                      ) : null}
-                    </div>
-                  </foreignObject>
-                ) : null}
-              </g>
-            );
-          })}
+                          {showLabels ? (
+                            <P
+                              marginBottom='none'
+                              size='sm'
+                              leading='none'
+                              className={cn(
+                                'w-full treemap-label',
+                                language === 'ar' || language === 'he' ? 'text-right' : 'text-left',
+                                classNames?.graphObjectValues,
+                              )}
+                              style={{
+                                WebkitLineClamp:
+                                  d.y1 - d.y0 > 50
+                                    ? d.y1 - d.y0 > 100
+                                      ? d.y1 - d.y0 > 150
+                                        ? undefined
+                                        : 3
+                                      : 2
+                                    : 1,
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                                color: getTextColorBasedOnBgColor(
+                                  data.filter(el => el.color).length === 0
+                                    ? colors[0]
+                                    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                      !(d.data as any).data.color
+                                      ? Colors.gray
+                                      : colors[
+                                          colorDomain.indexOf(
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            (d.data as any).data.color,
+                                          )
+                                        ],
+                                ),
+                                ...(styles?.graphObjectValues || {}),
+                              }}
+                            >
+                              {
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                (d.data as any).id
+                              }
+                            </P>
+                          ) : null}
+                          {showValues ? (
+                            <P
+                              marginBottom='none'
+                              size='sm'
+                              leading='none'
+                              className={cn(
+                                'w-full font-bold treemap-value',
+                                language === 'ar' || language === 'he' ? 'text-right' : 'text-left',
+                                classNames?.graphObjectValues,
+                              )}
+                              style={{
+                                color: getTextColorBasedOnBgColor(
+                                  data.filter(el => el.color).length === 0
+                                    ? colors[0]
+                                    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                      !(d.data as any).data.color
+                                      ? Colors.gray
+                                      : colors[
+                                          colorDomain.indexOf(
+                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            (d.data as any).data.color,
+                                          )
+                                        ],
+                                ),
+                                ...(styles?.graphObjectValues || {}),
+                              }}
+                            >
+                              {numberFormattingFunction(
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                (d.data as any).value,
+                                prefix,
+                                suffix,
+                              )}
+                            </P>
+                          ) : null}
+                        </div>
+                      </foreignObject>
+                    </motion.g>
+                  ) : null}
+                </motion.g>
+              );
+            })}
+          </AnimatePresence>
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

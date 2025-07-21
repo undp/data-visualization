@@ -87,6 +87,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     minHeight: { table: { defaultValue: { summary: '0' } } },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showColorScale: { table: { defaultValue: { summary: 'true' } } },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
@@ -145,9 +155,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
     axisLabels: ['Apples', 'Oranges', 'Mangoes', 'Grapes', 'Berries'],
   },
-  render: ({ colors, backgroundColor, colorDomain, ...args }) => {
+  render: ({ colors, backgroundColor, colorDomain, animate, ...args }) => {
     return (
       <RadarChart
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         colors={parseValue(colors, colors)}
         colorDomain={parseValue(colorDomain)}
         backgroundColor={

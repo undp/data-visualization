@@ -89,6 +89,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     minHeight: { table: { defaultValue: { summary: '0' } } },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'false' } } },
@@ -150,9 +160,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { label: '2024', size: 19 },
     ],
   },
-  render: ({ colors, highlightedDataPoints, backgroundColor, colorDomain, ...args }) => {
+  render: ({ colors, highlightedDataPoints, backgroundColor, colorDomain, animate, ...args }) => {
     return (
       <CirclePackingGraph
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         colors={parseValue(colors, colors)}
         highlightedDataPoints={parseValue(highlightedDataPoints)}
         colorDomain={parseValue(colorDomain)}

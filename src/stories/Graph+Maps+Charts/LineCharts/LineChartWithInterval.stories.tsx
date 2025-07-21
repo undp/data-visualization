@@ -91,7 +91,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     maxDate: { control: 'text' },
 
     // Graph parameters
-    animateLine: {
+    animate: {
       control: 'text',
       table: {
         type: {
@@ -225,7 +225,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
   },
   render: ({
-    animateLine,
+    animate,
     backgroundColor,
     intervalLineColors,
     colorLegendColors,
@@ -235,16 +235,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   }) => {
     return (
       <LineChartWithConfidenceInterval
-        animateLine={
+        animate={
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (animateLine as any) === 'false' || animateLine === false
+          (animate as any) === 'false' || animate === false
             ? false
             : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (animateLine as any) === 'true' || animateLine === true
+              (animate as any) === 'true' || animate === true
               ? true
-              : animateLine
-                ? Number(animateLine)
-                : animateLine
+              : animate
+                ? Number(animate)
+                : animate
         }
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor

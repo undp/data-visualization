@@ -52,7 +52,7 @@
     "showValues": false,
     "highlightAreaSettings": [{ "coordinates": [2020, 2024] }],
     "highlightAreaColor": "#EDEFF0",
-    "animateLine": false,
+    "animate": false,
     "strokeWidth": 2,
     "showDots": false,
     "tooltip": "{{y}}",

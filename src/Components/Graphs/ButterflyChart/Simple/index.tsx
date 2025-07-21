@@ -99,6 +99,8 @@ interface Props {
   leftBarTitle?: string;
   /** Title for the right bars */
   rightBarTitle?: string;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -176,6 +178,7 @@ export function ButterflyChart(props: Props) {
     styles,
     classNames,
     noOfTicks = 5,
+    animate = false,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -309,6 +312,7 @@ export function ButterflyChart(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         noOfTicks={noOfTicks}
+                        animate={animate === true ? 0.5 : animate || 0}
                       />
                     ) : null}
                   </div>

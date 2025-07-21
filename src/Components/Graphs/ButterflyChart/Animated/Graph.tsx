@@ -315,6 +315,7 @@ export function Graph(props: Props) {
                     textSide='left'
                     classNames={el.classNames}
                     styles={el.styles}
+                    animate={0}
                   />
                 ))}
               </>
@@ -441,6 +442,7 @@ export function Graph(props: Props) {
                     textSide='right'
                     classNames={el.classNames}
                     styles={el.styles}
+                    animate={0}
                   />
                 ))}
               </>
@@ -462,6 +464,7 @@ export function Graph(props: Props) {
                 alignment='center'
                 style={styles?.yAxis?.labels}
                 className={classNames?.yAxis?.labels}
+                animate={0}
               />
             ))}
           </g>

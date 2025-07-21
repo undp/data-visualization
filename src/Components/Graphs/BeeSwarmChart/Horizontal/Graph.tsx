@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import maxBy from 'lodash.maxby';
 import orderBy from 'lodash.orderby';
 import { cn, Modal, Spinner } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { BeeSwarmChartDataType, ClassNameObject, ReferenceDataType, StyleObject } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -58,7 +59,9 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  noOfTicks?: number;
+  noOfTicks: number;
+  animate: number;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -93,6 +96,8 @@ export function Graph(props: Props) {
     styles,
     classNames,
     noOfTicks,
+    animate,
+    dimmedOpacity,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -223,131 +228,164 @@ export function Graph(props: Props) {
                 />
               </>
             ) : null}
-            {finalData.map((d, i) => (
-              <g
-                className='undp-viz-g-with-hover'
-                key={i}
-                opacity={
-                  selectedColor
-                    ? d.color
-                      ? circleColors[colorDomain.indexOf(d.color)] === selectedColor
-                        ? 1
-                        : 0.3
-                      : 0.3
-                    : highlightedDataPoints.length !== 0
-                      ? highlightedDataPoints.indexOf(d.label) !== -1
-                        ? 0.85
-                        : 0.3
-                      : 0.85
-                }
-                transform={`translate(${d.x},${d.y})`}
-                onMouseEnter={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                  onSeriesMouseOver?.(d);
-                }}
-                onMouseMove={event => {
-                  setMouseOverData(d);
-                  setEventY(event.clientY);
-                  setEventX(event.clientX);
-                }}
-                onClick={() => {
-                  if (onSeriesMouseClick || detailsOnClick) {
-                    if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                      setMouseClickData(undefined);
-                      onSeriesMouseClick?.(undefined);
-                    } else {
-                      setMouseClickData(d);
-                      onSeriesMouseClick?.(d);
-                    }
-                  }
-                }}
-                onMouseLeave={() => {
-                  setMouseOverData(undefined);
-                  setEventX(undefined);
-                  setEventY(undefined);
-                  onSeriesMouseOver?.(undefined);
-                }}
-              >
-                <circle
-                  cx={0}
-                  cy={0}
-                  r={radiusScale ? radiusScale(d.radius || 0) : radius}
-                  style={{
-                    fill:
-                      data.filter(el => el.color).length === 0
-                        ? circleColors[0]
-                        : !d.color
-                          ? Colors.gray
-                          : circleColors[colorDomain.indexOf(d.color)],
+            <AnimatePresence>
+              {finalData.map(d => (
+                <motion.g
+                  className='undp-viz-g-with-hover'
+                  key={d.label}
+                  transform={`translate(${d.x},${d.y})`}
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: selectedColor
+                      ? d.color
+                        ? circleColors[colorDomain.indexOf(d.color)] === selectedColor
+                          ? 1
+                          : dimmedOpacity
+                        : dimmedOpacity
+                      : highlightedDataPoints.length !== 0
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
                   }}
-                />
-                {(radiusScale ? radiusScale(d.radius || 0) : radius) > 10 && showLabels ? (
-                  <foreignObject
-                    y={0 - (radiusScale ? radiusScale(d.radius || 0) : radius)}
-                    x={0 - (radiusScale ? radiusScale(d.radius || 0) : radius)}
-                    width={2 * (radiusScale ? radiusScale(d.radius || 0) : radius)}
-                    height={2 * (radiusScale ? radiusScale(d.radius || 0) : radius)}
-                  >
-                    <div className='flex flex-col gap-0.5 justify-center items-center h-inherit py-0 px-1.5'>
-                      {showLabels ? (
-                        <p
-                          className={cn(
-                            'text-center leading-none m-0',
-                            classNames?.graphObjectValues,
-                          )}
-                          style={{
-                            fontSize: `${Math.min(
-                              Math.max(
-                                Math.round((radiusScale ? radiusScale(d.radius || 0) : radius) / 4),
-                                10,
-                              ),
-                              Math.max(
-                                Math.round(
-                                  ((radiusScale ? radiusScale(d.radius || 0) : radius) * 12) /
-                                    `${d.label}`.length,
-                                ),
-                                10,
-                              ),
-                              20,
-                            )}px`,
-                            color: getTextColorBasedOnBgColor(
-                              data.filter(el => el.color).length === 0
-                                ? circleColors[0]
-                                : !d.color
-                                  ? Colors.gray
-                                  : circleColors[colorDomain.indexOf(d.color)],
-                            ),
-                            hyphens: 'auto',
-                            ...(styles?.graphObjectValues || {}),
-                          }}
-                        >
-                          {d.label}
-                        </p>
-                      ) : null}
-                    </div>
-                  </foreignObject>
-                ) : null}
-              </g>
-            ))}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineX
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    x={x(el.value as number)}
-                    y1={0 - margin.top}
-                    y2={graphHeight + margin.bottom}
-                    textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-                    classNames={el.classNames}
-                    styles={el.styles}
+                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  onMouseEnter={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    onSeriesMouseOver?.(d);
+                  }}
+                  onMouseMove={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        setMouseClickData(d);
+                        onSeriesMouseClick?.(d);
+                      }
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    onSeriesMouseOver?.(undefined);
+                  }}
+                >
+                  <motion.circle
+                    cx={0}
+                    cy={0}
+                    r={radiusScale ? radiusScale(d.radius || 0) : radius}
+                    animate={{
+                      fill:
+                        data.filter(el => el.color).length === 0
+                          ? circleColors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : circleColors[colorDomain.indexOf(d.color)],
+                      opacity: 1,
+                      radius: 0,
+                    }}
+                    initial={{
+                      fill:
+                        data.filter(el => el.color).length === 0
+                          ? circleColors[0]
+                          : !d.color
+                            ? Colors.gray
+                            : circleColors[colorDomain.indexOf(d.color)],
+                      opacity: 0,
+                      radius: radiusScale ? radiusScale(d.radius || 0) : radius,
+                    }}
+                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, radius: 0, transition: { duration: animate } }}
                   />
-                ))}
-              </>
-            ) : null}
+                  {(radiusScale ? radiusScale(d.radius || 0) : radius) > 10 && showLabels ? (
+                    <motion.g
+                      animate={{
+                        opacity: 1,
+                      }}
+                      initial={{
+                        opacity: 0,
+                      }}
+                      transition={{ duration: animate }}
+                      exit={{ opacity: 0, transition: { duration: animate } }}
+                    >
+                      <foreignObject
+                        y={0 - (radiusScale ? radiusScale(d.radius || 0) : radius)}
+                        x={0 - (radiusScale ? radiusScale(d.radius || 0) : radius)}
+                        width={2 * (radiusScale ? radiusScale(d.radius || 0) : radius)}
+                        height={2 * (radiusScale ? radiusScale(d.radius || 0) : radius)}
+                      >
+                        <div className='flex flex-col gap-0.5 justify-center items-center h-inherit py-0 px-1.5'>
+                          {showLabels ? (
+                            <p
+                              className={cn(
+                                'text-center leading-none m-0',
+                                classNames?.graphObjectValues,
+                              )}
+                              style={{
+                                fontSize: `${Math.min(
+                                  Math.max(
+                                    Math.round(
+                                      (radiusScale ? radiusScale(d.radius || 0) : radius) / 4,
+                                    ),
+                                    10,
+                                  ),
+                                  Math.max(
+                                    Math.round(
+                                      ((radiusScale ? radiusScale(d.radius || 0) : radius) * 12) /
+                                        `${d.label}`.length,
+                                    ),
+                                    10,
+                                  ),
+                                  20,
+                                )}px`,
+                                color: getTextColorBasedOnBgColor(
+                                  data.filter(el => el.color).length === 0
+                                    ? circleColors[0]
+                                    : !d.color
+                                      ? Colors.gray
+                                      : circleColors[colorDomain.indexOf(d.color)],
+                                ),
+                                hyphens: 'auto',
+                                ...(styles?.graphObjectValues || {}),
+                              }}
+                            >
+                              {d.label}
+                            </p>
+                          ) : null}
+                        </div>
+                      </foreignObject>
+                    </motion.g>
+                  ) : null}
+                </motion.g>
+              ))}
+              {refValues ? (
+                <>
+                  {refValues.map((el, i) => (
+                    <RefLineX
+                      key={i}
+                      text={el.text}
+                      color={el.color}
+                      x={x(el.value as number)}
+                      y1={0 - margin.top}
+                      y2={graphHeight + margin.bottom}
+                      textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                      classNames={el.classNames}
+                      styles={el.styles}
+                      animate={animate}
+                    />
+                  ))}
+                </>
+              ) : null}
+            </AnimatePresence>
           </g>
         </svg>
       ) : (

@@ -14,6 +14,7 @@ import maxBy from 'lodash.maxby';
 import { Modal, P } from '@undp/design-system-react';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
+import { AnimatePresence, motion } from 'motion/react';
 
 import {
   ClassNameObject,
@@ -61,6 +62,8 @@ interface Props {
   classNames?: ClassNameObject;
   zoomInteraction: ZoomInteractionTypes;
   mapProjection: MapProjectionTypes;
+  animate: number;
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -92,6 +95,8 @@ export function Graph(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction,
+    animate,
+    dimmedOpacity,
   } = props;
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   const [showLegend, setShowLegend] = useState(!(width < 680));
@@ -262,95 +267,128 @@ export function Graph(props: Props) {
                 );
               })
             }
-            {data.map((d, i) => {
-              const color =
-                data.filter(el => el.color).length === 0
-                  ? colors[0]
-                  : !d.color
-                    ? Colors.gray
-                    : colors[colorDomain.indexOf(`${d.color}`)];
-              return (
-                <g
-                  key={i}
-                  opacity={
-                    selectedColor
-                      ? selectedColor === color
-                        ? 1
-                        : 0.3
-                      : highlightedDataPoints.length !== 0
-                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          highlightedDataPoints.indexOf((d.data as any).id) !== -1
+            <AnimatePresence>
+              {data.map(d => {
+                const color =
+                  data.filter(el => el.color).length === 0
+                    ? colors[0]
+                    : !d.color
+                      ? Colors.gray
+                      : colors[colorDomain.indexOf(`${d.color}`)];
+                return (
+                  <motion.g
+                    key={d.label || `${d.lat}-${d.long}`}
+                    animate={{
+                      opacity: selectedColor
+                        ? selectedColor === color
                           ? 1
-                          : 0.3
-                        : 1
-                  }
-                  onMouseEnter={event => {
-                    setMouseOverData(d);
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                    onSeriesMouseOver?.(d);
-                  }}
-                  onMouseMove={event => {
-                    setMouseOverData(d);
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                  }}
-                  onMouseLeave={() => {
-                    setMouseOverData(undefined);
-                    setEventX(undefined);
-                    setEventY(undefined);
-                    onSeriesMouseOver?.(undefined);
-                  }}
-                  onClick={() => {
-                    if (onSeriesMouseClick || detailsOnClick) {
-                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                        setMouseClickData(undefined);
-                        onSeriesMouseClick?.(undefined);
-                      } else {
-                        setMouseClickData(d);
-                        onSeriesMouseClick?.(d);
-                      }
-                    }
-                  }}
-                  transform={`translate(${
-                    (projection([d.long, d.lat]) as [number, number])[0]
-                  },${(projection([d.long, d.lat]) as [number, number])[1]})`}
-                >
-                  <circle
-                    cx={0}
-                    cy={0}
-                    r={!radiusScale ? radius : radiusScale(d.radius || 0)}
-                    style={{
-                      fill:
-                        data.filter(el => el.color).length === 0
-                          ? colors[0]
-                          : !d.color
-                            ? Colors.gray
-                            : colors[colorDomain.indexOf(`${d.color}`)],
-                      stroke:
-                        data.filter(el => el.color).length === 0
-                          ? colors[0]
-                          : !d.color
-                            ? Colors.gray
-                            : colors[colorDomain.indexOf(`${d.color}`)],
-                      fillOpacity: 0.8,
+                          : dimmedOpacity
+                        : highlightedDataPoints.length !== 0
+                          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            highlightedDataPoints.indexOf((d.data as any).id) !== -1
+                            ? 1
+                            : dimmedOpacity
+                          : 1,
                     }}
-                  />
-                  {showLabels && d.label ? (
-                    <text
-                      x={!radiusScale ? radius : radiusScale(d.radius || 0)}
-                      y={0}
-                      className='fill-primary-gray-600 dark:fill-primary-gray-300 text-sm'
-                      style={{ textAnchor: 'start' }}
-                      dx={4}
-                      dy={5}
-                    >
-                      {d.label}
-                    </text>
-                  ) : null}
-                </g>
-              );
-            })}
+                    initial={{ opacity: 0 }}
+                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    onMouseEnter={event => {
+                      setMouseOverData(d);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                      onSeriesMouseOver?.(d);
+                    }}
+                    onMouseMove={event => {
+                      setMouseOverData(d);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                    }}
+                    onMouseLeave={() => {
+                      setMouseOverData(undefined);
+                      setEventX(undefined);
+                      setEventY(undefined);
+                      onSeriesMouseOver?.(undefined);
+                    }}
+                    onClick={() => {
+                      if (onSeriesMouseClick || detailsOnClick) {
+                        if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                          setMouseClickData(undefined);
+                          onSeriesMouseClick?.(undefined);
+                        } else {
+                          setMouseClickData(d);
+                          onSeriesMouseClick?.(d);
+                        }
+                      }
+                    }}
+                    transform={`translate(${
+                      (projection([d.long, d.lat]) as [number, number])[0]
+                    },${(projection([d.long, d.lat]) as [number, number])[1]})`}
+                  >
+                    <motion.circle
+                      cx={0}
+                      cy={0}
+                      animate={{
+                        r: !radiusScale ? radius : radiusScale(d.radius || 0),
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                        stroke:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                      }}
+                      initial={{
+                        r: 0,
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                        stroke:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                      }}
+                      transition={{ duration: animate }}
+                      exit={{ r: 0, transition: { duration: animate } }}
+                      style={{
+                        fillOpacity: 0.8,
+                      }}
+                    />
+                    {showLabels && d.label ? (
+                      <motion.text
+                        animate={{
+                          opacity: 1,
+                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                        }}
+                        initial={{
+                          opacity: 0,
+                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                        }}
+                        transition={{ duration: animate }}
+                        exit={{ opacity: 0, transition: { duration: animate } }}
+                        y={0}
+                        className='fill-primary-gray-600 dark:fill-primary-gray-300 text-sm'
+                        style={{ textAnchor: 'start' }}
+                        dx={4}
+                        dy={5}
+                      >
+                        {d.label}
+                      </motion.text>
+                    ) : null}
+                  </motion.g>
+                );
+              })}
+            </AnimatePresence>
           </g>
         </svg>
         {data.filter(el => el.color).length === 0 || showColorScale === false ? null : (

@@ -95,6 +95,8 @@ interface Props {
   zoomTranslateExtend?: [[number, number], [number, number]];
   /** Countries or regions to be highlighted */
   highlightedIds?: string[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Scale for the colors */
   scaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Toggles if the color scaling is categorical or not */
@@ -191,6 +193,7 @@ export function AnimatedChoroplethMap(props: Props) {
     classNames,
     mapProjection,
     zoomInteraction = 'button',
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -412,6 +415,7 @@ export function AnimatedChoroplethMap(props: Props) {
                   detailsOnClick={detailsOnClick}
                   zoomInteraction={zoomInteraction}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
+                  dimmedOpacity={dimmedOpacity}
                 />
               ) : null}
             </div>

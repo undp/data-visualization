@@ -205,7 +205,7 @@ export function Graph(props: Props) {
           <AnimatePresence>
             {groupedData[indx].values.map((d, i) => {
               return (
-                <motion.g key={i} transform={`translate(${0},${y(`${i}`)})`}>
+                <g key={i} transform={`translate(${0},${y(`${i}`)})`}>
                   {d.size.map((el, j) => (
                     <motion.g
                       className='undp-viz-g-with-hover'
@@ -290,11 +290,30 @@ export function Graph(props: Props) {
                       height={y.bandwidth()}
                       style={styles?.yAxis?.labels}
                       className={classNames?.yAxis?.labels}
+                      animate={0}
                     />
                   ) : null}
-                </motion.g>
+                </g>
               );
             })}
+            {refValues ? (
+              <>
+                {refValues.map((el, i) => (
+                  <RefLineX
+                    key={i}
+                    text={el.text}
+                    color={el.color}
+                    x={x(el.value as number)}
+                    y1={0 - margin.top}
+                    y2={graphHeight + margin.bottom}
+                    textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                    classNames={el.classNames}
+                    styles={el.styles}
+                    animate={0}
+                  />
+                ))}
+              </>
+            ) : null}
           </AnimatePresence>
           <Axis
             x1={x(xMinValue < 0 ? 0 : xMinValue)}
@@ -304,23 +323,6 @@ export function Graph(props: Props) {
             classNames={{ axis: classNames?.yAxis?.axis }}
             styles={{ axis: styles?.yAxis?.axis }}
           />
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineX
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  x={x(el.value as number)}
-                  y1={0 - margin.top}
-                  y2={graphHeight + margin.bottom}
-                  textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-                  classNames={el.classNames}
-                  styles={el.styles}
-                />
-              ))}
-            </>
-          ) : null}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

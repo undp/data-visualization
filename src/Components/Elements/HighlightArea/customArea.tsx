@@ -1,5 +1,6 @@
 import { NumberValue } from 'd3-scale';
 import { cn } from '@undp/design-system-react';
+import { motion } from 'motion/react';
 
 import { getPathFromPoints } from '@/Utils/getPathFromPoints';
 
@@ -14,14 +15,23 @@ interface Props {
   }[];
   scaleX: (value: Date | NumberValue) => number;
   scaleY: (value: Date | NumberValue) => number;
+  animate: number;
 }
-
 export function CustomArea(props: Props) {
-  const { areaSettings, scaleX, scaleY } = props;
+  const { areaSettings, scaleX, scaleY, animate } = props;
   return (
     <>
-      {areaSettings.map((d, i) => (
-        <g key={i}>
+      {areaSettings.map(d => (
+        <motion.g
+          key={d.coordinates
+            .map(item => (item instanceof Date ? item.toISOString() : item.toString()))
+            .join('~')}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+          }}
+          transition={{ duration: animate }}
+        >
           {d.coordinates.length !== 4 ? (
             <path
               d={getPathFromPoints(
@@ -59,7 +69,7 @@ export function CustomArea(props: Props) {
               )}
             />
           )}
-        </g>
+        </motion.g>
       ))}
     </>
   );

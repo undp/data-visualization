@@ -1,4 +1,5 @@
 import { cn } from '@undp/design-system-react';
+import { motion } from 'motion/react';
 
 interface RefLineYProps {
   text?: string;
@@ -14,13 +15,19 @@ interface RefLineYProps {
     line?: React.CSSProperties;
     text?: React.CSSProperties;
   };
+  animate: number;
 }
 
 export function RefLineY(props: RefLineYProps) {
-  const { text, x1, x2, y, classNames, styles, color } = props;
+  const { text, x1, x2, y, classNames, styles, color, animate } = props;
   if (!text) return null;
   return (
-    <g>
+    <motion.g
+      key={`${x1}-${x2}-${y}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: animate }}
+    >
       <line
         className={cn(
           'undp-ref-line',
@@ -53,7 +60,7 @@ export function RefLineY(props: RefLineYProps) {
       >
         {text}
       </text>
-    </g>
+    </motion.g>
   );
 }
 
@@ -72,13 +79,19 @@ interface RefLineXProps {
     line?: React.CSSProperties;
     text?: React.CSSProperties;
   };
+  animate: number;
 }
 
 export function RefLineX(props: RefLineXProps) {
-  const { text, y1, y2, x, classNames, styles, color, textSide } = props;
+  const { text, y1, y2, x, classNames, styles, color, textSide, animate } = props;
   if (!text) return null;
   return (
-    <g>
+    <motion.g
+      key={`${y1}-${y2}-${x}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: animate }}
+    >
       <line
         className={cn(
           'undp-ref-line',
@@ -112,6 +125,6 @@ export function RefLineX(props: RefLineXProps) {
       >
         {text}
       </text>
-    </g>
+    </motion.g>
   );
 }

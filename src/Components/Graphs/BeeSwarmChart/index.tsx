@@ -85,8 +85,12 @@ interface Props {
   showColorScale?: boolean;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
+  /** Toggles if the ref lines and colors animates in when loaded.  */
+  animate?: boolean | number;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Maximum radius of the circles  */
   radius?: number;
   /** Enable graph download option as png */
@@ -164,6 +168,8 @@ export function BeeSwarmChart(props: Props) {
     orientation = 'vertical',
     styles,
     classNames,
+    animate,
+    dimmedOpacity,
   } = props;
 
   if (orientation === 'vertical')
@@ -211,6 +217,8 @@ export function BeeSwarmChart(props: Props) {
         detailsOnClick={detailsOnClick}
         classNames={classNames}
         noOfTicks={noOfTicks}
+        animate={animate}
+        dimmedOpacity={dimmedOpacity}
       />
     );
   return (
@@ -257,6 +265,8 @@ export function BeeSwarmChart(props: Props) {
       detailsOnClick={detailsOnClick}
       classNames={classNames}
       noOfTicks={noOfTicks}
+      animate={animate}
+      dimmedOpacity={dimmedOpacity}
     />
   );
 }

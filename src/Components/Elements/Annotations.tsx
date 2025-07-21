@@ -1,4 +1,5 @@
 import { cn } from '@undp/design-system-react';
+import { motion } from 'motion/react';
 
 interface Props {
   color?: string;
@@ -29,12 +30,13 @@ interface Props {
     connector?: React.CSSProperties;
     text?: React.CSSProperties;
   };
+  animate: number;
 }
 
 export function Annotation(props: Props) {
-  const { connectorsSettings, text, color, labelSettings, classNames, styles } = props;
+  const { connectorsSettings, text, color, labelSettings, classNames, styles, animate } = props;
   return (
-    <g>
+    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: animate }}>
       {connectorsSettings ? (
         <>
           <circle
@@ -102,6 +104,6 @@ export function Annotation(props: Props) {
           {text}
         </p>
       </foreignObject>
-    </g>
+    </motion.g>
   );
 }

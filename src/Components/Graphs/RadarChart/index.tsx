@@ -94,6 +94,10 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedLines?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Labels for the axes  */
   axisLabels: (string | number)[];
   /** Curve type for the line */
@@ -174,6 +178,8 @@ export function RadarChart(props: Props) {
     maxValue,
     fillShape = false,
     resetSelectionOnDoubleClick = true,
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
@@ -354,6 +360,8 @@ export function RadarChart(props: Props) {
                           fillShape={fillShape}
                           highlightedLines={highlightedLines}
                           resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                          animate={animate === true ? 0.5 : animate || 0}
+                          dimmedOpacity={dimmedOpacity}
                         />
                       ) : null}
                     </div>

@@ -80,6 +80,8 @@ interface Props {
   targetStyle?: 'background' | 'line';
   qualitativeRangeColors?: string[];
   measureBarWidthFactor?: number;
+  animate?: boolean | number;
+  dimmedOpacity?: number;
 }
 
 export function VerticalBulletChart(props: Props) {
@@ -140,6 +142,8 @@ export function VerticalBulletChart(props: Props) {
     filterNA = true,
     targetStyle = 'line',
     measureBarWidthFactor = 0.4,
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -305,7 +309,9 @@ export function VerticalBulletChart(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         targetStyle={targetStyle}
+                        dimmedOpacity={dimmedOpacity}
                         measureBarWidthFactor={measureBarWidthFactor}
+                        animate={animate === true ? 0.5 : animate || 0}
                       />
                     ) : null}
                   </div>

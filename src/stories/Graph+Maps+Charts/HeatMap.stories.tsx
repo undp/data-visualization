@@ -85,6 +85,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     truncateBy: { table: { defaultValue: { summary: '999' } } },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showColumnLabels: { table: { defaultValue: { summary: 'true' } } },
     showRowLabels: { table: { defaultValue: { summary: 'true' } } },
     showValues: { table: { defaultValue: { summary: 'true' } } },
@@ -164,9 +174,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
     colorDomain: [2, 4, 6, 8],
   },
-  render: ({ colors, colorDomain, backgroundColor, ...args }) => {
+  render: ({ colors, colorDomain, backgroundColor, animate, ...args }) => {
     return (
       <HeatMap
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         colors={parseValue(colors, colors)}
         colorDomain={parseValue(colorDomain, [2, 4, 6, 8])}
         backgroundColor={

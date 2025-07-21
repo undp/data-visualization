@@ -3,6 +3,7 @@ import { scaleLinear, scaleBand, scaleOrdinal, scaleThreshold } from 'd3-scale';
 import { useState } from 'react';
 import uniqBy from 'lodash.uniqby';
 import { cn, Modal } from '@undp/design-system-react';
+import { motion } from 'motion/react';
 
 import { ClassNameObject, HeatMapDataType, ScaleDataType, StyleObject } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -43,6 +44,7 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  animate: number;
 }
 
 export function Graph(props: Props) {
@@ -72,6 +74,7 @@ export function Graph(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    animate,
   } = props;
   const margin = {
     top: topMargin,
@@ -126,6 +129,7 @@ export function Graph(props: Props) {
                   style={styles?.xAxis?.labels}
                   className={classNames?.xAxis?.labels}
                   alignment='bottom'
+                  animate={0}
                 />
               ))
             : null}
@@ -145,6 +149,7 @@ export function Graph(props: Props) {
                   alignment='right'
                   style={styles?.yAxis?.labels}
                   className={classNames?.yAxis?.labels}
+                  animate={0}
                 />
               ))
             : null}
@@ -152,9 +157,9 @@ export function Graph(props: Props) {
         <g transform={`translate(${margin.left},${margin.top})`}>
           {rows.map((d, i) => (
             <g key={i} transform={`translate(0,${y(d)})`}>
-              {columns.map((el, j) => (
+              {columns.map(el => (
                 <rect
-                  key={j}
+                  key={`${d}-${el}`}
                   x={x(el)}
                   y={0}
                   width={barWidth}
@@ -174,7 +179,7 @@ export function Graph(props: Props) {
                 : noDataColor;
               return (
                 <g
-                  key={i}
+                  key={`${d.column}-${d.row}`}
                   transform={`translate(${x(d.column)},${y(d.row)})`}
                   onMouseEnter={event => {
                     setMouseOverData(d);
@@ -206,33 +211,51 @@ export function Graph(props: Props) {
                   }}
                   opacity={selectedColor ? (selectedColor === color ? 1 : 0.3) : 1}
                 >
-                  <rect
+                  <motion.rect
                     x={0}
                     y={0}
                     width={barWidth}
                     height={barHeight}
-                    style={{ fill: color }}
                     className='stroke-1 stroke-primary-white dark:stroke-primary-gray-700'
+                    initial={{
+                      fill: color,
+                    }}
+                    animate={{
+                      fill: color,
+                    }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    transition={{ duration: animate }}
                   />
                   {showValues && !checkIfNullOrUndefined(d.value) ? (
-                    <foreignObject key={i} y={0} x={0} width={barWidth} height={barHeight}>
-                      <div className='flex flex-col justify-center items-center h-inherit p-1'>
-                        <p
-                          className={cn(
-                            'text-xs text-center m-0 leading-[1.25] graph-value',
-                            classNames?.graphObjectValues,
-                          )}
-                          style={{
-                            color: getTextColorBasedOnBgColor(color),
-                            ...(styles?.graphObjectValues || {}),
-                          }}
-                        >
-                          {typeof d.value === 'string'
-                            ? `${prefix} ${d.value} ${suffix}`
-                            : numberFormattingFunction(d.value, prefix, suffix)}
-                        </p>
-                      </div>
-                    </foreignObject>
+                    <motion.g
+                      animate={{
+                        opacity: 1,
+                      }}
+                      initial={{
+                        opacity: 0,
+                      }}
+                      transition={{ duration: animate }}
+                      exit={{ opacity: 0, transition: { duration: animate } }}
+                    >
+                      <foreignObject key={i} y={0} x={0} width={barWidth} height={barHeight}>
+                        <div className='flex flex-col justify-center items-center h-inherit p-1'>
+                          <p
+                            className={cn(
+                              'text-xs text-center m-0 leading-[1.25] graph-value',
+                              classNames?.graphObjectValues,
+                            )}
+                            style={{
+                              color: getTextColorBasedOnBgColor(color),
+                              ...(styles?.graphObjectValues || {}),
+                            }}
+                          >
+                            {typeof d.value === 'string'
+                              ? `${prefix} ${d.value} ${suffix}`
+                              : numberFormattingFunction(d.value, prefix, suffix)}
+                          </p>
+                        </div>
+                      </foreignObject>
+                    </motion.g>
                   ) : null}
                 </g>
               );

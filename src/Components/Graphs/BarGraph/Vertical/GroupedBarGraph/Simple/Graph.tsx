@@ -4,6 +4,7 @@ import max from 'lodash.max';
 import min from 'lodash.min';
 import { useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { ReferenceDataType, GroupedBarGraphDataType, StyleObject, ClassNameObject } from '@/Types';
@@ -52,6 +53,8 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  animate: number;
+  colorDomain: string[];
 }
 
 export function Graph(props: Props) {
@@ -87,6 +90,8 @@ export function Graph(props: Props) {
     noOfTicks,
     styles,
     classNames,
+    animate,
+    colorDomain,
   } = props;
   const margin = {
     top: topMargin,
@@ -190,107 +195,146 @@ export function Graph(props: Props) {
             text={barAxisTitle}
             rotate90
           />
-          {dataWithId.map((d, i) =>
-            !checkIfNullOrUndefined(x(d.id)) ? (
-              <g key={i} transform={`translate(${x(`${d.id}`)},0)`}>
-                {d.size.map((el, j) => (
-                  <g
-                    className='undp-viz-g-with-hover'
-                    key={j}
-                    opacity={selectedColor ? (barColors[j] === selectedColor ? 1 : 0.3) : 0.85}
-                    onMouseEnter={event => {
-                      setMouseOverData({ ...d, sizeIndex: j });
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                      onSeriesMouseOver?.({ ...d, sizeIndex: j });
-                    }}
-                    onMouseMove={event => {
-                      setMouseOverData({ ...d, sizeIndex: j });
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                    }}
-                    onMouseLeave={() => {
-                      setMouseOverData(undefined);
-                      setEventX(undefined);
-                      setEventY(undefined);
-                      onSeriesMouseOver?.(undefined);
-                    }}
-                    onClick={() => {
-                      if (onSeriesMouseClick || detailsOnClick) {
-                        if (
-                          isEqual(mouseClickData, { ...d, sizeIndex: j }) &&
-                          resetSelectionOnDoubleClick
-                        ) {
-                          setMouseClickData(undefined);
-                          onSeriesMouseClick?.(undefined);
-                        } else {
-                          setMouseClickData({ ...d, sizeIndex: j });
-                          if (onSeriesMouseClick) onSeriesMouseClick({ ...d, sizeIndex: j });
+          <AnimatePresence>
+            {dataWithId.map(d =>
+              !checkIfNullOrUndefined(x(d.id)) ? (
+                <motion.g
+                  key={d.label}
+                  initial={{
+                    x: x(`${d.id}`),
+                    y: 0,
+                  }}
+                  animate={{
+                    x: x(`${d.id}`),
+                    y: 0,
+                  }}
+                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                >
+                  {d.size.map((el, j) => (
+                    <motion.g
+                      className='undp-viz-g-with-hover'
+                      key={`${d.label}-${colorDomain[j] || j}`}
+                      opacity={selectedColor ? (barColors[j] === selectedColor ? 1 : 0.3) : 0.85}
+                      onMouseEnter={event => {
+                        setMouseOverData({ ...d, sizeIndex: j });
+                        setEventY(event.clientY);
+                        setEventX(event.clientX);
+                        onSeriesMouseOver?.({ ...d, sizeIndex: j });
+                      }}
+                      onMouseMove={event => {
+                        setMouseOverData({ ...d, sizeIndex: j });
+                        setEventY(event.clientY);
+                        setEventX(event.clientX);
+                      }}
+                      onMouseLeave={() => {
+                        setMouseOverData(undefined);
+                        setEventX(undefined);
+                        setEventY(undefined);
+                        onSeriesMouseOver?.(undefined);
+                      }}
+                      onClick={() => {
+                        if (onSeriesMouseClick || detailsOnClick) {
+                          if (
+                            isEqual(mouseClickData, { ...d, sizeIndex: j }) &&
+                            resetSelectionOnDoubleClick
+                          ) {
+                            setMouseClickData(undefined);
+                            onSeriesMouseClick?.(undefined);
+                          } else {
+                            setMouseClickData({ ...d, sizeIndex: j });
+                            if (onSeriesMouseClick) onSeriesMouseClick({ ...d, sizeIndex: j });
+                          }
                         }
-                      }
-                    }}
-                  >
-                    {!checkIfNullOrUndefined(el) ? (
-                      <rect
+                      }}
+                    >
+                      <motion.rect
                         x={subBarScale(`${j}`)}
-                        y={(el as number) > 0 ? y(el as number) : y(0)}
                         width={subBarScale.bandwidth()}
-                        style={{ fill: barColors[j] }}
-                        height={Math.abs(y(el as number) - y(0))}
-                      />
-                    ) : null}
-                    {showValues ? (
-                      <text
-                        x={(subBarScale(`${j}`) as number) + subBarScale.bandwidth() / 2}
-                        y={y(el || 0)}
-                        style={{
-                          fill: valueColor || barColors[j],
-                          textAnchor: 'middle',
-                          ...(styles?.graphObjectValues || {}),
+                        initial={{
+                          height: 0,
+                          y: y(0),
+                          fill: barColors[j],
                         }}
-                        className={cn('graph-value text-sm', classNames?.graphObjectValues)}
-                        dy={el ? (el >= 0 ? '-5px' : '1em') : '-5px'}
-                      >
-                        {numberFormattingFunction(el, prefix, suffix)}
-                      </text>
-                    ) : null}
-                  </g>
-                ))}
-                {showLabels ? (
-                  <XAxesLabels
-                    value={
-                      `${d.label}`.length < truncateBy
-                        ? `${d.label}`
-                        : `${`${d.label}`.substring(0, truncateBy)}...`
-                    }
-                    y={y(0) + 5}
-                    x={0}
-                    width={x.bandwidth()}
-                    height={margin.bottom}
-                    style={styles?.xAxis?.labels}
-                    className={classNames?.xAxis?.labels}
-                    alignment='top'
+                        animate={{
+                          height: !checkIfNullOrUndefined(el)
+                            ? Math.abs(y(el as number) - y(0))
+                            : 0,
+                          y: !checkIfNullOrUndefined(el)
+                            ? (el as number) > 0
+                              ? y(el as number)
+                              : y(0)
+                            : y(0),
+                          fill: barColors[j],
+                        }}
+                        exit={{
+                          height: 0,
+                          y: y(0),
+                          transition: { duration: animate },
+                        }}
+                        transition={{ duration: animate }}
+                      />
+                      {showValues ? (
+                        <motion.text
+                          x={(subBarScale(`${j}`) as number) + subBarScale.bandwidth() / 2}
+                          style={{
+                            fill: valueColor || barColors[j],
+                            textAnchor: 'middle',
+                            ...(styles?.graphObjectValues || {}),
+                          }}
+                          className={cn('graph-value text-sm', classNames?.graphObjectValues)}
+                          dy={el ? (el >= 0 ? '-5px' : '1em') : '-5px'}
+                          initial={{ y: y(0), opacity: 0 }}
+                          animate={{ y: y(el || 0), opacity: 1 }}
+                          transition={{ duration: animate }}
+                          exit={{
+                            opacity: 0,
+                            transition: { duration: animate },
+                          }}
+                        >
+                          {numberFormattingFunction(el, prefix, suffix)}
+                        </motion.text>
+                      ) : null}
+                    </motion.g>
+                  ))}
+                  {showLabels ? (
+                    <XAxesLabels
+                      value={
+                        `${d.label}`.length < truncateBy
+                          ? `${d.label}`
+                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                      }
+                      y={y(0) + 5}
+                      x={0}
+                      width={x.bandwidth()}
+                      height={margin.bottom}
+                      style={styles?.xAxis?.labels}
+                      className={classNames?.xAxis?.labels}
+                      alignment='top'
+                      animate={animate}
+                    />
+                  ) : null}
+                </motion.g>
+              ) : null,
+            )}
+            {refValues ? (
+              <>
+                {refValues.map((el, i) => (
+                  <RefLineY
+                    key={i}
+                    text={el.text}
+                    color={el.color}
+                    y={y(el.value as number)}
+                    x1={0 - leftMargin}
+                    x2={graphWidth + margin.right}
+                    classNames={el.classNames}
+                    styles={el.styles}
+                    animate={animate}
                   />
-                ) : null}
-              </g>
-            ) : null,
-          )}
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineY
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  y={y(el.value as number)}
-                  x1={0 - leftMargin}
-                  x2={graphWidth + margin.right}
-                  classNames={el.classNames}
-                  styles={el.styles}
-                />
-              ))}
-            </>
-          ) : null}
+                ))}
+              </>
+            ) : null}
+          </AnimatePresence>
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

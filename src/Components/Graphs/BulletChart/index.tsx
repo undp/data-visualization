@@ -111,12 +111,16 @@ interface Props {
   showColorScale?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Title for the bar axis */
   barAxisTitle?: string;
   /** Sorting order for data. This is overwritten by labelOrder prop. */
   sortData?: 'asc' | 'desc';
   /** Toggles if data point which are undefined or has value null are filtered out.  */
   filterNA?: boolean;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -206,6 +210,8 @@ export function BulletChart(props: Props) {
     targetColor,
     qualitativeRangeColors,
     measureBarWidthFactor,
+    animate,
+    dimmedOpacity,
   } = props;
 
   if (orientation === 'vertical')
@@ -267,6 +273,8 @@ export function BulletChart(props: Props) {
         targetColor={targetColor}
         measureBarWidthFactor={measureBarWidthFactor}
         qualitativeRangeColors={qualitativeRangeColors}
+        animate={animate}
+        dimmedOpacity={dimmedOpacity}
       />
     );
   return (
@@ -327,6 +335,8 @@ export function BulletChart(props: Props) {
       targetColor={targetColor}
       measureBarWidthFactor={measureBarWidthFactor}
       qualitativeRangeColors={qualitativeRangeColors}
+      animate={animate}
+      dimmedOpacity={dimmedOpacity}
     />
   );
 }

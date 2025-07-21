@@ -5,6 +5,7 @@ import { scaleSqrt } from 'd3-scale';
 import maxBy from 'lodash.maxby';
 import { extent } from 'd3-array';
 import { cn, Modal, Spinner } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -44,6 +45,8 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  animate: number;
+  dimmedOpacity: number;
 }
 
 interface TreeMapDataTypeForBubbleChart extends TreeMapDataType {
@@ -79,6 +82,8 @@ export const Graph = memo((props: Props) => {
     detailsOnClick,
     styles,
     classNames,
+    animate,
+    dimmedOpacity,
   } = props;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -249,14 +254,14 @@ export const Graph = memo((props: Props) => {
         ? d.color
           ? colors[colorDomain.indexOf(d.color)] === selectedColor
             ? 1
-            : 0.3
-          : 0.3
+            : dimmedOpacity
+          : dimmedOpacity
         : highlightedDataPoints.length !== 0
           ? highlightedDataPoints.indexOf(d.label) !== -1
             ? 0.85
-            : 0.3
+            : dimmedOpacity
           : 0.85,
-    [selectedColor, colors, colorDomain, highlightedDataPoints],
+    [selectedColor, dimmedOpacity, colors, colorDomain, highlightedDataPoints],
   );
 
   // Render loading state
@@ -283,82 +288,125 @@ export const Graph = memo((props: Props) => {
           direction='ltr'
         >
           <g transform={`translate(${margin.left},${margin.top})`}>
-            {finalData.map((d, i) => {
-              const circleColor = getCircleColor(d);
-              const opacity = getOpacity(d);
-              const bubbleRadius = radiusScale ? radiusScale(d.size || 0) : radius;
-              const showLabel = bubbleRadius > 20 && (showLabels || showValues);
+            <AnimatePresence>
+              {finalData.map(d => {
+                const circleColor = getCircleColor(d);
+                const opacity = getOpacity(d);
+                const bubbleRadius = radiusScale ? radiusScale(d.size || 0) : radius;
+                const showLabel = bubbleRadius > 20 && (showLabels || showValues);
 
-              return (
-                <g
-                  className='undp-viz-g-with-hover'
-                  key={i}
-                  opacity={opacity}
-                  transform={`translate(${d.x},${d.y})`}
-                  onMouseEnter={event => handleMouseEnter(event, d)}
-                  onMouseMove={event => handleMouseMove(event, d)}
-                  onClick={() => handleClick(d)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <circle cx={0} cy={0} r={bubbleRadius} style={{ fill: circleColor }} />
-                  {showLabel && (
-                    <foreignObject
-                      y={0 - bubbleRadius}
-                      x={0 - bubbleRadius}
-                      width={2 * bubbleRadius}
-                      height={2 * bubbleRadius}
-                    >
-                      <div className='flex flex-col justify-center items-center h-full py-0 px-3'>
-                        {showLabels && (
-                          <p
-                            className={cn(
-                              'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
-                              classNames?.graphObjectValues,
+                return (
+                  <motion.g
+                    className='undp-viz-g-with-hover'
+                    key={d.label}
+                    transform={`translate(${d.x},${d.y})`}
+                    onMouseEnter={event => handleMouseEnter(event, d)}
+                    onMouseMove={event => handleMouseMove(event, d)}
+                    onClick={() => handleClick(d)}
+                    onMouseLeave={handleMouseLeave}
+                    initial={{
+                      opacity: 0,
+                    }}
+                    animate={{
+                      opacity,
+                    }}
+                    transition={{ duration: animate }}
+                  >
+                    <motion.circle
+                      cx={0}
+                      cy={0}
+                      r={bubbleRadius}
+                      initial={{
+                        fill: circleColor,
+                        r: 0,
+                        opacity: 0,
+                      }}
+                      animate={{
+                        fill: circleColor,
+                        r: bubbleRadius,
+                        opacity: 1,
+                      }}
+                      exit={{
+                        fill: circleColor,
+                        r: 0,
+                        opacity: 0,
+                        transition: { duration: animate },
+                      }}
+                      transition={{ duration: animate }}
+                    />
+                    {showLabel && (
+                      <motion.g
+                        animate={{
+                          opacity: 1,
+                        }}
+                        initial={{
+                          opacity: 0,
+                        }}
+                        transition={{ duration: animate }}
+                        exit={{ opacity: 0, transition: { duration: animate } }}
+                      >
+                        <foreignObject
+                          y={0 - bubbleRadius}
+                          x={0 - bubbleRadius}
+                          width={2 * bubbleRadius}
+                          height={2 * bubbleRadius}
+                        >
+                          <div className='flex flex-col justify-center items-center h-full py-0 px-3'>
+                            {showLabels && (
+                              <p
+                                className={cn(
+                                  'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
+                                  classNames?.graphObjectValues,
+                                )}
+                                style={{
+                                  fontSize: `${Math.min(
+                                    Math.max(Math.round(bubbleRadius / 4), 12),
+                                    Math.max(
+                                      Math.round((bubbleRadius * 12) / `${d.label}`.length),
+                                      12,
+                                    ),
+                                    14,
+                                  )}px`,
+                                  WebkitLineClamp:
+                                    bubbleRadius * 2 < 60
+                                      ? 1
+                                      : bubbleRadius * 2 < 75
+                                        ? 2
+                                        : bubbleRadius * 2 < 100
+                                          ? 3
+                                          : undefined,
+                                  display: '-webkit-box',
+                                  WebkitBoxOrient: 'vertical',
+                                  color: getTextColorBasedOnBgColor(circleColor),
+                                  hyphens: 'auto',
+                                  ...(styles?.graphObjectValues || {}),
+                                }}
+                              >
+                                {d.label}
+                              </p>
                             )}
-                            style={{
-                              fontSize: `${Math.min(
-                                Math.max(Math.round(bubbleRadius / 4), 12),
-                                Math.max(Math.round((bubbleRadius * 12) / `${d.label}`.length), 12),
-                                14,
-                              )}px`,
-                              WebkitLineClamp:
-                                bubbleRadius * 2 < 60
-                                  ? 1
-                                  : bubbleRadius * 2 < 75
-                                    ? 2
-                                    : bubbleRadius * 2 < 100
-                                      ? 3
-                                      : undefined,
-                              display: '-webkit-box',
-                              WebkitBoxOrient: 'vertical',
-                              color: getTextColorBasedOnBgColor(circleColor),
-                              hyphens: 'auto',
-                              ...(styles?.graphObjectValues || {}),
-                            }}
-                          >
-                            {d.label}
-                          </p>
-                        )}
-                        {showValues && (
-                          <p
-                            className='text-center font-bold leading-[1.25] w-full m-0 circle-packing-value'
-                            style={{
-                              fontSize: `${Math.min(
-                                Math.max(Math.round(bubbleRadius / 4), 14),
-                                14,
-                              )}px`,
-                              color: getTextColorBasedOnBgColor(circleColor),
-                            }}
-                          >
-                            {numberFormattingFunction(d.size, prefix, suffix)}
-                          </p>
-                        )}
-                      </div>
-                    </foreignObject>
-                  )}
-                </g>
-              );
-            })}
+                            {showValues && (
+                              <p
+                                className='text-center font-bold leading-[1.25] w-full m-0 circle-packing-value'
+                                style={{
+                                  fontSize: `${Math.min(
+                                    Math.max(Math.round(bubbleRadius / 4), 14),
+                                    14,
+                                  )}px`,
+                                  color: getTextColorBasedOnBgColor(circleColor),
+                                }}
+                              >
+                                {numberFormattingFunction(d.size, prefix, suffix)}
+                              </p>
+                            )}
+                          </div>
+                        </foreignObject>
+                      </motion.g>
+                    )}
+                  </motion.g>
+                );
+              })}
+            </AnimatePresence>
           </g>
         </svg>
         {mouseOverData && tooltip && eventX && eventY && (

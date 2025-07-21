@@ -4,6 +4,7 @@ import max from 'lodash.max';
 import min from 'lodash.min';
 import { useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { ClassNameObject, DumbbellChartDataType, ReferenceDataType, StyleObject } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -56,6 +57,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
+  animate: number;
 }
 
 export function Graph(props: Props) {
@@ -95,6 +97,7 @@ export function Graph(props: Props) {
     classNames,
     labelOrder,
     refValues,
+    animate,
   } = props;
   const margin = {
     top: topMargin,
@@ -215,139 +218,179 @@ export function Graph(props: Props) {
             text={axisTitle}
             rotate90
           />
-          {dataWithId.map((d, i) => (
-            <g
-              className='undp-viz-low-opacity undp-viz-g-with-hover'
-              key={i}
-              transform={`translate(${(x(`${d.id}`) as number) + x.bandwidth() / 2},0)`}
-            >
-              {showLabels ? (
-                <XAxesLabels
-                  value={
-                    `${d.label}`.length < truncateBy
-                      ? `${d.label}`
-                      : `${`${d.label}`.substring(0, truncateBy)}...`
-                  }
-                  y={graphHeight + 5}
-                  x={0 - x.bandwidth() / 2}
-                  width={x.bandwidth()}
-                  height={margin.bottom}
-                  style={styles?.xAxis?.labels}
-                  className={classNames?.xAxis?.labels}
-                  alignment='top'
-                />
-              ) : null}
-              <line
-                y1={y(min(d.x) as number) - radius}
-                y2={y(max(d.x) as number) + radius}
-                x1={0}
-                x2={0}
-                style={{
-                  strokeWidth: connectorStrokeWidth,
-                  ...(styles?.dataConnectors || {}),
-                  opacity: selectedColor ? 0.3 : 1,
+          <AnimatePresence>
+            {dataWithId.map(d => (
+              <motion.g
+                className='undp-viz-low-opacity undp-viz-g-with-hover'
+                key={d.label}
+                initial={{
+                  x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
+                  y: 0,
                 }}
-                className={cn(
-                  'stroke-primary-gray-600 dark:stroke-primary-gray-300',
-                  classNames?.dataConnectors,
-                )}
-                markerEnd={
-                  arrowConnector && d.x.indexOf(min(d.x) as number) === 0 ? 'url(#arrow)' : ''
-                }
-                markerStart={
-                  arrowConnector && d.x.indexOf(min(d.x) as number) === d.x.length - 1
-                    ? 'url(#arrow)'
-                    : ''
-                }
-              />
-              {d.x.map((el, j) => (
-                <g
-                  key={j}
-                  opacity={selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1}
-                  onMouseEnter={event => {
-                    setMouseOverData({ ...d, xIndex: j });
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                    onSeriesMouseOver?.({ ...d, xIndex: j });
-                  }}
-                  onClick={() => {
-                    if (onSeriesMouseClick || detailsOnClick) {
-                      if (
-                        isEqual(mouseClickData, { ...d, xIndex: j }) &&
-                        resetSelectionOnDoubleClick
-                      ) {
-                        setMouseClickData(undefined);
-                        onSeriesMouseClick?.(undefined);
-                      } else {
-                        setMouseClickData({ ...d, xIndex: j });
-                        if (onSeriesMouseClick) onSeriesMouseClick({ ...d, xIndex: j });
-                      }
+                animate={{
+                  x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
+                  y: 0,
+                }}
+                transition={{ duration: animate }}
+                exit={{ opacity: 0, transition: { duration: animate } }}
+              >
+                {showLabels ? (
+                  <XAxesLabels
+                    value={
+                      `${d.label}`.length < truncateBy
+                        ? `${d.label}`
+                        : `${`${d.label}`.substring(0, truncateBy)}...`
                     }
-                  }}
-                  onMouseMove={event => {
-                    setMouseOverData({ ...d, xIndex: j });
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                  }}
-                  onMouseLeave={() => {
-                    setMouseOverData(undefined);
-                    setEventX(undefined);
-                    setEventY(undefined);
-                    onSeriesMouseOver?.(undefined);
-                  }}
-                >
-                  <circle
-                    cy={y(el || 0)}
-                    cx={0}
-                    r={radius}
-                    style={{
-                      fill: dotColors[j],
-                      fillOpacity: 0.85,
-                      stroke: dotColors[j],
-                      strokeWidth: 1,
-                      opacity: checkIfNullOrUndefined(el) ? 0 : 1,
-                    }}
+                    y={graphHeight + 5}
+                    x={0 - x.bandwidth() / 2}
+                    width={x.bandwidth()}
+                    height={margin.bottom}
+                    style={styles?.xAxis?.labels}
+                    className={classNames?.xAxis?.labels}
+                    alignment='top'
+                    animate={animate}
                   />
-                  {showValues ? (
-                    <text
-                      y={y(el || 0)}
-                      x={0}
-                      style={{
-                        fill: valueColor || dotColors[j],
-                        textAnchor: 'start',
-                        ...(styles?.graphObjectValues || {}),
-                      }}
-                      className={cn(
-                        'graph-value text-sm font-bold',
-                        checkIfNullOrUndefined(el) ? 'opacity-0' : 'opacity-100',
-                        classNames?.graphObjectValues,
-                      )}
-                      dx={radius + 3}
-                      dy='0.33em'
-                    >
-                      {numberFormattingFunction(el, prefix, suffix)}
-                    </text>
-                  ) : null}
-                </g>
-              ))}
-            </g>
-          ))}
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineY
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  y={y(el.value as number)}
-                  x1={0 - leftMargin}
-                  x2={graphWidth + margin.right}
-                  classNames={el.classNames}
-                  styles={el.styles}
+                ) : null}
+                <motion.line
+                  x1={0}
+                  x2={0}
+                  style={{
+                    strokeWidth: connectorStrokeWidth,
+                    ...(styles?.dataConnectors || {}),
+                    opacity: selectedColor ? 0.3 : 1,
+                  }}
+                  className={cn(
+                    'stroke-primary-gray-600 dark:stroke-primary-gray-300',
+                    classNames?.dataConnectors,
+                  )}
+                  markerEnd={
+                    arrowConnector && d.x.indexOf(min(d.x) as number) === 0 ? 'url(#arrow)' : ''
+                  }
+                  markerStart={
+                    arrowConnector && d.x.indexOf(min(d.x) as number) === d.x.length - 1
+                      ? 'url(#arrow)'
+                      : ''
+                  }
+                  initial={{
+                    y1: 0,
+                    y2: 0,
+                  }}
+                  animate={{
+                    y1: y(min(d.x) as number) + radius,
+                    y2: y(max(d.x) as number) - radius,
+                  }}
+                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate }}
                 />
-              ))}
-            </>
-          ) : null}
+                {d.x.map((el, j) => (
+                  <motion.g
+                    key={j}
+                    onMouseEnter={event => {
+                      setMouseOverData({ ...d, xIndex: j });
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                      onSeriesMouseOver?.({ ...d, xIndex: j });
+                    }}
+                    onClick={() => {
+                      if (onSeriesMouseClick || detailsOnClick) {
+                        if (
+                          isEqual(mouseClickData, { ...d, xIndex: j }) &&
+                          resetSelectionOnDoubleClick
+                        ) {
+                          setMouseClickData(undefined);
+                          onSeriesMouseClick?.(undefined);
+                        } else {
+                          setMouseClickData({ ...d, xIndex: j });
+                          if (onSeriesMouseClick) onSeriesMouseClick({ ...d, xIndex: j });
+                        }
+                      }
+                    }}
+                    onMouseMove={event => {
+                      setMouseOverData({ ...d, xIndex: j });
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                    }}
+                    onMouseLeave={() => {
+                      setMouseOverData(undefined);
+                      setEventX(undefined);
+                      setEventY(undefined);
+                      onSeriesMouseOver?.(undefined);
+                    }}
+                    initial={{
+                      opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                    }}
+                    animate={{
+                      opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                    }}
+                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    transition={{ duration: animate }}
+                  >
+                    {checkIfNullOrUndefined(el) ? null : (
+                      <>
+                        <motion.circle
+                          cx={0}
+                          r={radius}
+                          style={{
+                            fill: dotColors[j],
+                            fillOpacity: 0.85,
+                            stroke: dotColors[j],
+                            strokeWidth: 1,
+                          }}
+                          initial={{ cy: y(el || 0), opacity: 0 }}
+                          animate={{
+                            cy: y(el || 0),
+                            opacity: checkIfNullOrUndefined(el) ? 0 : 1,
+                          }}
+                          exit={{ opacity: 0, transition: { duration: animate } }}
+                          transition={{ duration: animate }}
+                        />
+                        {showValues ? (
+                          <motion.text
+                            x={0}
+                            style={{
+                              fill: valueColor || dotColors[j],
+                              textAnchor: 'start',
+                              ...(styles?.graphObjectValues || {}),
+                            }}
+                            className={cn(
+                              'graph-value text-sm font-bold',
+                              checkIfNullOrUndefined(el) ? 'opacity-0' : 'opacity-100',
+                              classNames?.graphObjectValues,
+                            )}
+                            dx={radius + 3}
+                            dy='0.33em'
+                            initial={{ y: y(el || 0), opacity: 0 }}
+                            animate={{ y: y(el || 0), opacity: 1 }}
+                            exit={{ opacity: 0, transition: { duration: animate } }}
+                            transition={{ duration: animate }}
+                          >
+                            {numberFormattingFunction(el, prefix, suffix)}
+                          </motion.text>
+                        ) : null}
+                      </>
+                    )}
+                  </motion.g>
+                ))}
+              </motion.g>
+            ))}
+            {refValues ? (
+              <>
+                {refValues.map((el, i) => (
+                  <RefLineY
+                    key={i}
+                    text={el.text}
+                    color={el.color}
+                    y={y(el.value as number)}
+                    x1={0 - leftMargin}
+                    x2={graphWidth + margin.right}
+                    classNames={el.classNames}
+                    styles={el.styles}
+                    animate={animate}
+                  />
+                ))}
+              </>
+            ) : null}
+          </AnimatePresence>
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

@@ -94,6 +94,8 @@ interface Props {
   showColorScale?: boolean;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | number;
   /** Domain for the colors in the cell.  */
   colorDomain: number[] | string[];
   /** Enable graph download option as png */
@@ -170,6 +172,7 @@ export function HeatMap(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    animate = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -380,6 +383,7 @@ export function HeatMap(props: Props) {
                         detailsOnClick={detailsOnClick}
                         styles={styles}
                         classNames={classNames}
+                        animate={animate === true ? 0.5 : animate || 0}
                       />
                     ) : null}
                   </div>

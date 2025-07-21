@@ -81,6 +81,8 @@ interface Props {
   targetStyle?: 'background' | 'line';
   qualitativeRangeColors?: string[];
   measureBarWidthFactor?: number;
+  animate?: boolean | number;
+  dimmedOpacity?: number;
 }
 
 export function HorizontalBulletChart(props: Props) {
@@ -141,6 +143,8 @@ export function HorizontalBulletChart(props: Props) {
     targetColor = Colors.light.grays['gray-700'],
     qualitativeRangeColors,
     measureBarWidthFactor = 0.4,
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -309,6 +313,8 @@ export function HorizontalBulletChart(props: Props) {
                           qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10
                         }
                         measureBarWidthFactor={measureBarWidthFactor}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>

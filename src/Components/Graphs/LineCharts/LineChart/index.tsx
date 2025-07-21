@@ -95,7 +95,7 @@ interface Props {
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animateLine?: boolean | number;
+  animate?: boolean | number;
   /** Format of the date in the data object  */
   dateFormat?: string;
   /** Title for the Y-axis */
@@ -164,7 +164,7 @@ export function SimpleLineChart(props: Props) {
     minDate,
     graphDownload = false,
     dataDownload = false,
-    animateLine = false,
+    animate = false,
     language = 'en',
     refValues = [],
     minHeight = 0,
@@ -298,7 +298,7 @@ export function SimpleLineChart(props: Props) {
                     refValues={refValues}
                     minValue={minValue}
                     maxValue={maxValue}
-                    animateLine={animateLine}
+                    animateLine={animate}
                     rtl={language === 'he' || language === 'ar'}
                     strokeWidth={strokeWidth}
                     showDots={showDots}

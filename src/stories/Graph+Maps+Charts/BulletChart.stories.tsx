@@ -125,6 +125,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     noOfTicks: { table: { defaultValue: { summary: '5' } } },
 
     // Graph parameters
+    animate: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+          detail:
+            'If the type is number then it uses the number as the time in seconds for animation.',
+        },
+      },
+    },
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     filterNA: { table: { defaultValue: { summary: 'true' } } },
@@ -203,9 +213,27 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { label: '2024 Q4', size: 19, target: 5, qualitativeRange: [1, 2, 3] },
     ],
   },
-  render: ({ labelOrder, highlightedDataPoints, backgroundColor, colorDomain, ...args }) => {
+  render: ({
+    labelOrder,
+    highlightedDataPoints,
+    backgroundColor,
+    colorDomain,
+    animate,
+    ...args
+  }) => {
     return (
       <BulletChart
+        animate={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (animate as any) === 'false' || animate === false
+            ? false
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (animate as any) === 'true' || animate === true
+              ? true
+              : animate
+                ? Number(animate)
+                : animate
+        }
         labelOrder={parseValue(labelOrder)}
         highlightedDataPoints={parseValue(highlightedDataPoints)}
         colorDomain={parseValue(colorDomain)}

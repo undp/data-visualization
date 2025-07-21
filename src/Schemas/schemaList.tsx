@@ -581,6 +581,7 @@ export const statCardDataSchema = {
 export const sankeyChartSettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -661,7 +662,6 @@ export const sankeyChartSettingsSchema = {
     sourceTitle: { type: 'string' },
     targetTitle: { type: 'string' },
     fillContainer: { type: 'boolean' },
-    animateLinks: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     sourceColors: { oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }] },
     targetColors: { oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }] },
     sourceColorDomain: {
@@ -678,6 +678,8 @@ export const sankeyChartSettingsSchema = {
 export const simpleBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -807,6 +809,7 @@ export const simpleBarChartSettingsSchema = {
 export const groupedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -927,6 +930,7 @@ export const groupedBarChartSettingsSchema = {
 export const stackedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -1049,6 +1053,7 @@ export const stackedBarChartSettingsSchema = {
 export const animatedSimpleBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -1412,6 +1417,8 @@ export const animatedStackedBarChartSettingsSchema = {
 export const beeSwarmChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -1523,6 +1530,7 @@ export const beeSwarmChartSettingsSchema = {
 export const butterflyChartSettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -1740,6 +1748,8 @@ export const animatedButterflyChartSettingsSchema = {
 export const circlePackingSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -2021,6 +2031,8 @@ export const dataCardListSettingsSchema = {
 export const radarChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -2216,6 +2228,7 @@ export const donutChartSettingsSchema = {
 export const dumbbellChartSettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -2466,6 +2479,7 @@ export const animatedDumbbellChartSettingsSchema = {
 export const heatMapSettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -2767,7 +2781,7 @@ export const dualAxisLineChartSettingsSchema = {
         'custom',
       ],
     },
-    animateLine: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     strokeWidth: { type: 'number' },
     showDots: { type: 'boolean' },
     colorLegendTitle: { type: 'string' },
@@ -2968,7 +2982,7 @@ export const lineChartSettingsSchema = {
         'custom',
       ],
     },
-    animateLine: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     strokeWidth: { type: 'number' },
     showDots: { type: 'boolean' },
     noOfYTicks: { type: 'number' },
@@ -3152,7 +3166,7 @@ export const lineChartWithConfidenceIntervalSettingsSchema = {
         'custom',
       ],
     },
-    animateLine: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     strokeWidth: { type: 'number' },
     showDots: { type: 'boolean' },
     showIntervalDots: { type: 'boolean' },
@@ -3373,7 +3387,7 @@ export const differenceLineChartSettingsSchema = {
       type: 'string',
       enum: ['light', 'dark'],
     },
-    animateLine: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     strokeWidth: { type: 'number' },
     showDots: { type: 'boolean' },
     colorLegendTitle: { type: 'string' },
@@ -3388,6 +3402,7 @@ export const differenceLineChartSettingsSchema = {
 export const multiLineChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     curveType: {
@@ -3571,7 +3586,7 @@ export const multiLineChartSettingsSchema = {
       type: 'string',
       enum: ['light', 'dark'],
     },
-    animateLine: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     strokeWidth: { type: 'number' },
     showDots: { type: 'boolean' },
     colorLegendTitle: { type: 'string' },
@@ -3586,6 +3601,7 @@ export const multiLineChartSettingsSchema = {
 export const multiLineAltChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     curveType: {
@@ -3760,7 +3776,7 @@ export const multiLineAltChartSettingsSchema = {
       type: 'string',
       enum: ['light', 'dark'],
     },
-    animateLine: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     strokeWidth: { type: 'number' },
     showDots: { type: 'boolean' },
     colorLegendTitle: { type: 'string' },
@@ -3844,6 +3860,8 @@ export const sparkLineSettingsSchema = {
 export const choroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -3967,6 +3985,8 @@ export const choroplethMapSettingsSchema = {
 export const biVariateChoroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -4086,6 +4106,8 @@ export const biVariateChoroplethMapSettingsSchema = {
 export const dotDensityMapSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -4204,6 +4226,7 @@ export const dotDensityMapSettingsSchema = {
 export const animatedChoroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -4330,6 +4353,7 @@ export const animatedChoroplethMapSettingsSchema = {
 export const animatedBiVariateChoroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -4452,6 +4476,7 @@ export const animatedBiVariateChoroplethMapSettingsSchema = {
 export const animatedDotDensityMapSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -4818,6 +4843,7 @@ export const geoHubMapWithLayerSelectionSettingsSchema = {
 export const paretoChartSettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -4899,6 +4925,8 @@ export const paretoChartSettingsSchema = {
 export const scatterPlotSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -5128,6 +5156,7 @@ export const scatterPlotSettingsSchema = {
 export const animatedScatterPlotSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -5359,6 +5388,8 @@ export const animatedScatterPlotSettingsSchema = {
 export const slopeChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -5713,6 +5744,8 @@ export const statCardSettingsSchema = {
 export const stripChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -5770,7 +5803,7 @@ export const stripChartSettingsSchema = {
     graphID: { type: 'string' },
     maxValue: { type: 'number' },
     minValue: { type: 'number' },
-    showAxis: { type: 'boolean' },
+    noOfTicks: { type: 'number' },
     graphDownload: { type: 'boolean' },
     dataDownload: { type: 'boolean' },
     prefix: { type: 'string' },
@@ -5813,6 +5846,8 @@ export const stripChartSettingsSchema = {
 export const treeMapSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -5967,6 +6002,8 @@ export const unitChartSettingsSchema = {
 export const bulletChartSettingsSchema = {
   type: 'object',
   properties: {
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -6107,6 +6144,7 @@ export const bulletChartSettingsSchema = {
 export const SettingsSchema = {
   type: 'object',
   properties: {
+    animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     curveType: {
@@ -6163,9 +6201,6 @@ export const SettingsSchema = {
     mapProjection: {
       type: 'string',
       enum: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
-    },
-    animateLine: {
-      oneOf: [{ type: 'number' }, { type: 'boolean' }],
     },
     annotations: {
       type: 'array',
@@ -6610,7 +6645,7 @@ export const SettingsSchema = {
       enum: ['categorical', 'linear', 'threshold'],
     },
     showAntarctica: { type: 'boolean' },
-    showAxis: { type: 'boolean' },
+    noOfTicks: { type: 'boolean' },
     showColorLegendAtTop: { type: 'boolean' },
     showColumnLabels: { type: 'boolean' },
     showLabels: { type: 'boolean' },
@@ -6702,9 +6737,6 @@ export const SettingsSchema = {
       type: 'number',
       minimum: 0,
       maximum: 1,
-    },
-    animateLinks: {
-      oneOf: [{ type: 'number' }, { type: 'boolean' }],
     },
     sourceColors: {
       oneOf: [
@@ -6806,7 +6838,6 @@ export const SettingsSchema = {
     valueColor: { type: 'string' },
     labelColor: { type: 'string' },
     noOfYTicks: { type: 'number' },
-    noOfTicks: { type: 'number' },
     zoomInteraction: {
       type: 'string',
       enum: ['scroll', 'ctrlScroll', 'button', 'noZoom'],
@@ -6887,5 +6918,6 @@ export const SettingsSchema = {
       maximum: 1,
     },
     mapLegend: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
   },
 };

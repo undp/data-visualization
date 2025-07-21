@@ -250,6 +250,7 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
+            animate={animateLine === true ? 0.5 : animateLine || 0}
           />
           <g>
             {y1Ticks.map((d, i) => (

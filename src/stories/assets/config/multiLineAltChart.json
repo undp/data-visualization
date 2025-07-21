@@ -57,7 +57,7 @@
     "refValues": [{ "value": 16, "text": "Reference", "color": "#000" }],
     "highlightAreaSettings": [{ "coordinates": [2012, 2022] }],
     "highlightAreaColor": "#EDEFF0",
-    "animateLine": false,
+    "animate": false,
     "strokeWidth": 2,
     "showDots": false,
     "tooltip": "Country A: {{y.[0]}}<br>Country B: {{y.[1]}}<br><...>",

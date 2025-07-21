@@ -57,6 +57,7 @@ interface Props {
   refValues?: ReferenceDataType[];
   graphID?: string;
   highlightedDataPoints?: (string | number)[];
+  dimmedOpacity?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   graphDownload?: boolean;
@@ -78,6 +79,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   filterNA?: boolean;
+  animate?: boolean | number;
 }
 
 export function HorizontalBarGraph(props: Props) {
@@ -135,6 +137,8 @@ export function HorizontalBarGraph(props: Props) {
     styles,
     classNames,
     filterNA = true,
+    animate = false,
+    dimmedOpacity = 0.3,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -320,6 +324,8 @@ export function HorizontalBarGraph(props: Props) {
                         valueColor={valueColor}
                         classNames={classNames}
                         styles={styles}
+                        animate={animate === true ? 0.5 : animate || 0}
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>

@@ -113,6 +113,8 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Title for the x-axis */
   xAxisTitle?: string;
   /** Title for the y-axis */
@@ -223,6 +225,7 @@ export function AnimatedScatterPlot(props: Props) {
     yPrefix = '',
     styles,
     classNames,
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -452,6 +455,7 @@ export function AnimatedScatterPlot(props: Props) {
                     yPrefix={yPrefix}
                     styles={styles}
                     classNames={classNames}
+                    dimmedOpacity={dimmedOpacity}
                   />
                 ) : null}
               </div>
