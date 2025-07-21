@@ -532,9 +532,7 @@ export function Graph(props: Props) {
                         <g transform='translate(0,125)'>
                           {xDomain.map((el, j) => (
                             <text key={j} y={10} x={(j + 1) * 25} fontSize={10} textAnchor='middle'>
-                              {typeof el === 'string' || el < 1
-                                ? el
-                                : numberFormattingFunction(el, '', '')}
+                              {typeof el === 'string' ? el : numberFormattingFunction(el)}
                             </text>
                           ))}
                         </g>
@@ -552,9 +550,7 @@ export function Graph(props: Props) {
                               fontSize={10}
                               textAnchor='middle'
                             >
-                              {typeof el === 'string' || el < 1
-                                ? el
-                                : numberFormattingFunction(el, '', '')}
+                              {typeof el === 'string' ? el : numberFormattingFunction(el)}
                             </text>
                           </g>
                         ))}

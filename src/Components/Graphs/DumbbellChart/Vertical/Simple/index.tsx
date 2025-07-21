@@ -78,6 +78,7 @@ interface Props {
   refValues?: ReferenceDataType[];
   filterNA?: boolean;
   animate?: boolean | number;
+  precision?: number;
 }
 
 export function VerticalDumbbellChart(props: Props) {
@@ -136,6 +137,7 @@ export function VerticalDumbbellChart(props: Props) {
     refValues,
     filterNA = true,
     animate = false,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -307,6 +309,7 @@ export function VerticalDumbbellChart(props: Props) {
                         labelOrder={labelOrder}
                         refValues={refValues}
                         animate={animate === true ? 0.5 : animate || 0}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

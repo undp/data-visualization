@@ -129,6 +129,8 @@ interface Props {
   regressionLine?: boolean | string;
   /** Curve type for the line */
   curveType?: CurveTypes;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -208,6 +210,7 @@ export function LineChartWithConfidenceInterval(props: Props) {
     curveType = 'curve',
     styles,
     classNames,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -357,6 +360,7 @@ export function LineChartWithConfidenceInterval(props: Props) {
                         curveType={curveType}
                         styles={styles}
                         classNames={classNames}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

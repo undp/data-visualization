@@ -79,6 +79,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   dimmedOpacity?: number;
+  precision?: number;
 }
 
 export function AnimatedHorizontalBarChart(props: Props) {
@@ -137,6 +138,7 @@ export function AnimatedHorizontalBarChart(props: Props) {
     styles,
     classNames,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -359,6 +361,7 @@ export function AnimatedHorizontalBarChart(props: Props) {
                     styles={styles}
                     classNames={classNames}
                     dimmedOpacity={dimmedOpacity}
+                    precision={precision}
                   />
                 ) : null}
               </div>

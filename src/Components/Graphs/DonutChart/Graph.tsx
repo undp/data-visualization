@@ -29,6 +29,7 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -47,6 +48,7 @@ export function Graph(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    precision,
   } = props;
   const pieData = pie()
     .sort(null)
@@ -86,6 +88,7 @@ export function Graph(props: Props) {
                       : data.findIndex(d => d.label === mainText.label) !== -1
                         ? numberFormattingFunction(
                             data[data.findIndex(d => d.label === mainText.label)].size,
+                            precision,
                             mainText.prefix,
                             mainText.suffix,
                           )

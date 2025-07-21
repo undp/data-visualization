@@ -119,6 +119,8 @@ interface Props {
   customHighlightAreaSettings?: CustomHighlightAreaSettingsDataType[];
   /** Curve type for the line */
   curveType?: CurveTypes;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -193,6 +195,7 @@ export function MultiLineChart(props: Props) {
     styles,
     classNames,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -334,6 +337,7 @@ export function MultiLineChart(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         dimmedOpacity={dimmedOpacity}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

@@ -581,6 +581,7 @@ export const statCardDataSchema = {
 export const sankeyChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
@@ -678,6 +679,7 @@ export const sankeyChartSettingsSchema = {
 export const simpleBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -809,6 +811,7 @@ export const simpleBarChartSettingsSchema = {
 export const groupedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
@@ -930,6 +933,7 @@ export const groupedBarChartSettingsSchema = {
 export const stackedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
@@ -1053,6 +1057,7 @@ export const stackedBarChartSettingsSchema = {
 export const animatedSimpleBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     styles: { type: 'object' },
@@ -1177,6 +1182,7 @@ export const animatedSimpleBarChartSettingsSchema = {
 export const animatedGroupedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     orientation: {
@@ -1296,6 +1302,7 @@ export const animatedGroupedBarChartSettingsSchema = {
 export const animatedStackedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     orientation: {
@@ -1417,6 +1424,7 @@ export const animatedStackedBarChartSettingsSchema = {
 export const beeSwarmChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -1530,6 +1538,7 @@ export const beeSwarmChartSettingsSchema = {
 export const butterflyChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -1638,6 +1647,7 @@ export const butterflyChartSettingsSchema = {
 export const animatedButterflyChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -1748,6 +1758,7 @@ export const animatedButterflyChartSettingsSchema = {
 export const circlePackingSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -1839,6 +1850,7 @@ export const circlePackingSettingsSchema = {
 export const dataTableSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     graphTitle: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -2031,6 +2043,7 @@ export const dataCardListSettingsSchema = {
 export const radarChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -2134,6 +2147,7 @@ export const radarChartSettingsSchema = {
 export const donutChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -2228,6 +2242,7 @@ export const donutChartSettingsSchema = {
 export const dumbbellChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -2355,6 +2370,7 @@ export const dumbbellChartSettingsSchema = {
 export const animatedDumbbellChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -2479,6 +2495,7 @@ export const animatedDumbbellChartSettingsSchema = {
 export const heatMapSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -2572,6 +2589,7 @@ export const heatMapSettingsSchema = {
 export const histogramSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     ariaLabel: { type: 'string' },
@@ -2690,6 +2708,7 @@ export const histogramSettingsSchema = {
 export const dualAxisLineChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     ariaLabel: { type: 'string' },
@@ -2811,6 +2830,7 @@ export const dualAxisLineChartSettingsSchema = {
 export const lineChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     curveType: {
@@ -2995,6 +3015,7 @@ export const lineChartSettingsSchema = {
 export const lineChartWithConfidenceIntervalSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     curveType: {
@@ -3199,6 +3220,7 @@ export const lineChartWithConfidenceIntervalSettingsSchema = {
 export const differenceLineChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     curveType: {
@@ -3402,6 +3424,7 @@ export const differenceLineChartSettingsSchema = {
 export const multiLineChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -3601,6 +3624,7 @@ export const multiLineChartSettingsSchema = {
 export const multiLineAltChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -4843,6 +4867,7 @@ export const geoHubMapWithLayerSelectionSettingsSchema = {
 export const paretoChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -4925,6 +4950,7 @@ export const paretoChartSettingsSchema = {
 export const scatterPlotSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -5156,6 +5182,7 @@ export const scatterPlotSettingsSchema = {
 export const animatedScatterPlotSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -5483,6 +5510,7 @@ export const slopeChartSettingsSchema = {
 export const stackedAreaChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     colors: {
@@ -5672,6 +5700,7 @@ export const stackedAreaChartSettingsSchema = {
 export const statCardSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     year: { oneOf: [{ type: 'number' }, { type: 'string' }] },
@@ -5744,6 +5773,7 @@ export const statCardSettingsSchema = {
 export const stripChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -5846,6 +5876,7 @@ export const stripChartSettingsSchema = {
 export const treeMapSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -5935,6 +5966,7 @@ export const treeMapSettingsSchema = {
 export const unitChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     totalNoOfDots: { type: 'number' },
@@ -6002,6 +6034,7 @@ export const unitChartSettingsSchema = {
 export const bulletChartSettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -6144,6 +6177,7 @@ export const bulletChartSettingsSchema = {
 export const SettingsSchema = {
   type: 'object',
   properties: {
+    precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
     classNames: { type: 'object' },

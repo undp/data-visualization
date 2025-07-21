@@ -105,6 +105,8 @@ interface Props {
   axisTitle?: string;
   /** Sorting order for data. If this is a number then data is sorted by value at that index x array in the data props. If this is diff then data is sorted by the difference of the last and first element in the x array in the data props. This is overwritten by labelOrder prop */
   sortParameter?: number | 'diff';
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -199,6 +201,7 @@ export function AnimatedDumbbellChart(props: Props) {
     refValues,
     styles,
     classNames,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -257,6 +260,7 @@ export function AnimatedDumbbellChart(props: Props) {
         refValues={refValues}
         valueColor={valueColor}
         classNames={classNames}
+        precision={precision}
       />
     );
   return (
@@ -314,6 +318,7 @@ export function AnimatedDumbbellChart(props: Props) {
       refValues={refValues}
       valueColor={valueColor}
       classNames={classNames}
+      precision={precision}
     />
   );
 }

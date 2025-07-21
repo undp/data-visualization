@@ -80,6 +80,7 @@ interface Props {
   filterNA?: boolean;
   animate?: boolean | number;
   dimmedOpacity?: number;
+  precision?: number;
 }
 
 export function VerticalBarGraph(props: Props) {
@@ -139,6 +140,7 @@ export function VerticalBarGraph(props: Props) {
     filterNA = true,
     animate = false,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -324,6 +326,7 @@ export function VerticalBarGraph(props: Props) {
                         classNames={classNames}
                         animate={animate === true ? 0.5 : animate || 0}
                         dimmedOpacity={dimmedOpacity}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

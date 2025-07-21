@@ -103,6 +103,8 @@ interface Props {
   leftBarTitle?: string;
   /** Title for the right bars */
   rightBarTitle?: string;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -191,6 +193,7 @@ export function AnimatedButterflyChart(props: Props) {
     styles,
     classNames,
     noOfTicks = 5,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -380,6 +383,7 @@ export function AnimatedButterflyChart(props: Props) {
                     styles={styles}
                     classNames={classNames}
                     noOfTicks={noOfTicks}
+                    precision={precision}
                   />
                 ) : null}
               </div>

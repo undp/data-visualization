@@ -62,6 +62,7 @@ interface Props {
   noOfTicks: number;
   animate: number;
   dimmedOpacity: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -98,6 +99,7 @@ export function Graph(props: Props) {
     noOfTicks,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -192,7 +194,12 @@ export function Graph(props: Props) {
                   x2={x(xMinValue < 0 ? 0 : xMinValue)}
                   y1={0 - margin.top}
                   y2={graphHeight + margin.bottom}
-                  label={numberFormattingFunction(xMinValue < 0 ? 0 : xMinValue, prefix, suffix)}
+                  label={numberFormattingFunction(
+                    xMinValue < 0 ? 0 : xMinValue,
+                    precision,
+                    prefix,
+                    suffix,
+                  )}
                   labelPos={{
                     x: x(xMinValue < 0 ? 0 : xMinValue),
                     y: 0 - topMargin,
@@ -225,6 +232,7 @@ export function Graph(props: Props) {
                   prefix={prefix}
                   labelType='secondary'
                   showGridLines
+                  precision={precision}
                 />
               </>
             ) : null}

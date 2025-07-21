@@ -68,6 +68,8 @@ interface Props {
   showStrokeForWhiteDots?: boolean;
   /** Toggle visibility of color scale */
   showColorScale?: boolean;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -111,6 +113,7 @@ export function UnitChart(props: Props) {
     ariaLabel,
     styles,
     classNames,
+    precision = 2,
   } = props;
   const totalValue = sum(data.map(d => d.value));
   const graphParentDiv = useRef<HTMLDivElement>(null);
@@ -218,7 +221,9 @@ export function UnitChart(props: Props) {
                             className='text-primary-gray-700 dark:text-primary-gray-100'
                           >
                             {d.label}:{' '}
-                            <span className='font-bold'>{numberFormattingFunction(d.value)}</span>
+                            <span className='font-bold'>
+                              {numberFormattingFunction(d.value, precision)}
+                            </span>
                           </P>
                         </div>
                       ))}

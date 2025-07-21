@@ -82,6 +82,7 @@ interface Props {
   measureBarWidthFactor?: number;
   animate?: boolean | number;
   dimmedOpacity?: number;
+  precision?: number;
 }
 
 export function VerticalBulletChart(props: Props) {
@@ -144,6 +145,7 @@ export function VerticalBulletChart(props: Props) {
     measureBarWidthFactor = 0.4,
     animate = false,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -312,6 +314,7 @@ export function VerticalBulletChart(props: Props) {
                         dimmedOpacity={dimmedOpacity}
                         measureBarWidthFactor={measureBarWidthFactor}
                         animate={animate === true ? 0.5 : animate || 0}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

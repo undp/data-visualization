@@ -80,6 +80,7 @@ interface Props {
   classNames?: ClassNameObject;
   filterNA?: boolean;
   animate?: boolean | number;
+  precision?: number;
 }
 
 export function HorizontalBarGraph(props: Props) {
@@ -139,6 +140,7 @@ export function HorizontalBarGraph(props: Props) {
     filterNA = true,
     animate = false,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -326,6 +328,7 @@ export function HorizontalBarGraph(props: Props) {
                         styles={styles}
                         animate={animate === true ? 0.5 : animate || 0}
                         dimmedOpacity={dimmedOpacity}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

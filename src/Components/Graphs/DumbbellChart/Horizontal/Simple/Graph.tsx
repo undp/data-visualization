@@ -59,6 +59,7 @@ interface Props {
   refValues?: ReferenceDataType[];
   rtl: boolean;
   animate: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -100,6 +101,7 @@ export function Graph(props: Props) {
     refValues,
     rtl,
     animate,
+    precision,
   } = props;
   const margin = {
     top: axisTitle ? topMargin + 25 : topMargin,
@@ -191,6 +193,7 @@ export function Graph(props: Props) {
               prefix={prefix}
               labelType='secondary'
               showGridLines
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -209,6 +212,7 @@ export function Graph(props: Props) {
             labelType='secondary'
             showGridLines
             labelPos='vertical'
+            precision={precision}
           />
           <AnimatePresence>
             {dataWithId.map(d => (
@@ -357,7 +361,7 @@ export function Graph(props: Props) {
                             exit={{ opacity: 0, transition: { duration: animate } }}
                             transition={{ duration: animate }}
                           >
-                            {numberFormattingFunction(el, prefix, suffix)}
+                            {numberFormattingFunction(el, precision, prefix, suffix)}
                           </motion.text>
                         ) : null}
                       </>

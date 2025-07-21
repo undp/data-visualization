@@ -78,6 +78,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
+  precision?: number;
 }
 
 export function AnimatedHorizontalDumbbellChart(props: Props) {
@@ -135,6 +136,7 @@ export function AnimatedHorizontalDumbbellChart(props: Props) {
     styles,
     classNames,
     refValues,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -335,6 +337,7 @@ export function AnimatedHorizontalDumbbellChart(props: Props) {
                     classNames={classNames}
                     refValues={refValues}
                     rtl={language === 'he' || language === 'ar'}
+                    precision={precision}
                   />
                 ) : null}
               </div>

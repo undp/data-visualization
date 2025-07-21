@@ -96,6 +96,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -167,6 +169,7 @@ export function Histogram(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    precision,
   } = props;
 
   const [dataFormatted, setDataFormatted] = useState<TreeMapDataType[]>([]);
@@ -227,6 +230,7 @@ export function Histogram(props: Props) {
         detailsOnClick={detailsOnClick}
         styles={styles}
         classNames={classNames}
+        precision={precision}
       />
     );
   if (graphType === 'treeMap')
@@ -263,6 +267,7 @@ export function Histogram(props: Props) {
         detailsOnClick={detailsOnClick}
         styles={styles}
         classNames={classNames}
+        precision={precision}
       />
     );
   if (graphType === 'donutChart')
@@ -292,6 +297,7 @@ export function Histogram(props: Props) {
         detailsOnClick={detailsOnClick}
         styles={styles}
         classNames={classNames}
+        precision={precision}
       />
     );
   return (
@@ -335,6 +341,7 @@ export function Histogram(props: Props) {
       detailsOnClick={detailsOnClick}
       styles={styles}
       classNames={classNames}
+      precision={precision}
     />
   );
 }

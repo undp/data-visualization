@@ -66,6 +66,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -105,6 +106,7 @@ export function Graph(props: Props) {
     noOfTicks,
     styles,
     classNames,
+    precision,
   } = props;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -207,6 +209,7 @@ export function Graph(props: Props) {
               prefix={prefix}
               labelType='secondary'
               showGridLines
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -309,13 +312,16 @@ export function Graph(props: Props) {
                               x(el || 0) / 2,
                             attrY: (y(d.id) || 0) + y.bandwidth() / 2,
                             opacity:
-                              el && x(el) / numberFormattingFunction(el, prefix, suffix).length > 12
+                              el &&
+                              x(el) /
+                                numberFormattingFunction(el, precision, prefix, suffix).length >
+                                12
                                 ? 1
                                 : 0,
                           }}
                           transition={{ duration: 0.5 }}
                         >
-                          {numberFormattingFunction(el, prefix, suffix)}
+                          {numberFormattingFunction(el, precision, prefix, suffix)}
                         </motion.text>
                       ) : null}
                     </motion.g>
@@ -342,6 +348,7 @@ export function Graph(props: Props) {
                     >
                       {numberFormattingFunction(
                         sum(d.size.filter(element => element)),
+                        precision,
                         prefix,
                         suffix,
                       )}

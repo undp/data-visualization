@@ -541,7 +541,7 @@ export function Graph(props: Props) {
                               className='fill-primary-gray-700 dark:fill-primary-gray-300 text-xs'
                               style={{ textAnchor: 'middle' }}
                             >
-                              {numberFormattingFunction(d as number, '', '')}
+                              {numberFormattingFunction(d as number)}
                             </text>
                           </g>
                         ))}

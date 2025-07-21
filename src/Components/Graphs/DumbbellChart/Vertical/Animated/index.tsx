@@ -78,6 +78,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
+  precision?: number;
 }
 
 export function AnimatedVerticalDumbbellChart(props: Props) {
@@ -135,6 +136,7 @@ export function AnimatedVerticalDumbbellChart(props: Props) {
     styles,
     classNames,
     refValues,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -334,6 +336,7 @@ export function AnimatedVerticalDumbbellChart(props: Props) {
                     styles={styles}
                     classNames={classNames}
                     refValues={refValues}
+                    precision={precision}
                   />
                 ) : null}
               </div>

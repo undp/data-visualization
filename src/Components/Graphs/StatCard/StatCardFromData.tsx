@@ -64,6 +64,8 @@ interface Props {
   countOnly?: (string | number)[];
   /** Method for aggregating the data to show as a single number in the card. If the data type of value in data object is string then only count is applicable. */
   aggregationMethod?: 'count' | 'max' | 'min' | 'average' | 'sum';
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
 
   // Configuration and Options
   /** Language setting  */
@@ -99,6 +101,7 @@ export function StatCardFromData(props: Props) {
     layout = 'primary',
     styles,
     classNames,
+    precision = 2,
   } = props;
 
   return (
@@ -178,21 +181,29 @@ export function StatCardFromData(props: Props) {
                       ? data.filter(d => countOnly.indexOf(d.value) !== -1).length
                       : data.length
                     : aggregationMethod === 'sum'
-                      ? numberFormattingFunction(sum(data.map(d => d.value)), prefix, suffix)
+                      ? numberFormattingFunction(
+                          sum(data.map(d => d.value)),
+                          precision,
+                          prefix,
+                          suffix,
+                        )
                       : aggregationMethod === 'average'
                         ? numberFormattingFunction(
                             parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
+                            precision,
                             prefix,
                             suffix,
                           )
                         : aggregationMethod === 'max'
                           ? numberFormattingFunction(
                               maxBy(data, d => d.value)?.value as number | undefined,
+                              precision,
                               prefix,
                               suffix,
                             )
                           : numberFormattingFunction(
                               minBy(data, d => d.value)?.value as number | undefined,
+                              precision,
                               prefix,
                               suffix,
                             )}{' '}
@@ -245,21 +256,29 @@ export function StatCardFromData(props: Props) {
                     ? data.filter(d => countOnly.indexOf(d.value) !== -1).length
                     : data.length
                   : aggregationMethod === 'sum'
-                    ? numberFormattingFunction(sum(data.map(d => d.value)), prefix, suffix)
+                    ? numberFormattingFunction(
+                        sum(data.map(d => d.value)),
+                        precision,
+                        prefix,
+                        suffix,
+                      )
                     : aggregationMethod === 'average'
                       ? numberFormattingFunction(
                           parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
+                          precision,
                           prefix,
                           suffix,
                         )
                       : aggregationMethod === 'max'
                         ? numberFormattingFunction(
                             maxBy(data, d => d.value)?.value as number | undefined,
+                            precision,
                             prefix,
                             suffix,
                           )
                         : numberFormattingFunction(
                             minBy(data, d => d.value)?.value as number | undefined,
+                            precision,
                             prefix,
                             suffix,
                           )}{' '}

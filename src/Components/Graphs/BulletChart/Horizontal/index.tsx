@@ -83,6 +83,7 @@ interface Props {
   measureBarWidthFactor?: number;
   animate?: boolean | number;
   dimmedOpacity?: number;
+  precision?: number;
 }
 
 export function HorizontalBulletChart(props: Props) {
@@ -145,6 +146,7 @@ export function HorizontalBulletChart(props: Props) {
     measureBarWidthFactor = 0.4,
     animate = false,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -315,6 +317,7 @@ export function HorizontalBulletChart(props: Props) {
                         measureBarWidthFactor={measureBarWidthFactor}
                         animate={animate === true ? 0.5 : animate || 0}
                         dimmedOpacity={dimmedOpacity}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

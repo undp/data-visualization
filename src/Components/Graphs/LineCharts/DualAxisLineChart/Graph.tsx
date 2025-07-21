@@ -62,6 +62,7 @@ interface Props {
   curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  precision: number;
 }
 
 interface FormattedDataType {
@@ -99,6 +100,7 @@ export function Graph(props: Props) {
     curveType,
     styles,
     classNames,
+    precision,
   } = props;
   const curve =
     curveType === 'linear'
@@ -278,7 +280,7 @@ export function Graph(props: Props) {
                     ...(styles?.yAxis?.labels || {}),
                   }}
                 >
-                  {numberFormattingFunction(d, linePrefixes[0], lineSuffixes[0])}
+                  {numberFormattingFunction(d, precision, linePrefixes[0], lineSuffixes[0])}
                 </text>
               </g>
             ))}
@@ -326,7 +328,7 @@ export function Graph(props: Props) {
                   }}
                   className={cn('text-xs', classNames?.yAxis?.labels)}
                 >
-                  {numberFormattingFunction(d, linePrefixes[1], lineSuffixes[1])}
+                  {numberFormattingFunction(d, precision, linePrefixes[1], lineSuffixes[1])}
                 </text>
               </g>
             ))}
@@ -374,6 +376,7 @@ export function Graph(props: Props) {
               }}
               labelType='primary'
               showGridLines
+              precision={precision}
             />
           </g>
           <g ref={scope}>
@@ -459,7 +462,12 @@ export function Graph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.y1, linePrefixes[0], lineSuffixes[0])}
+                        {numberFormattingFunction(
+                          d.y1,
+                          precision,
+                          linePrefixes[0],
+                          lineSuffixes[0],
+                        )}
                       </text>
                     ) : null}
                   </g>
@@ -501,7 +509,12 @@ export function Graph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.y2, linePrefixes[1], lineSuffixes[1])}
+                        {numberFormattingFunction(
+                          d.y2,
+                          precision,
+                          linePrefixes[1],
+                          lineSuffixes[1],
+                        )}
                       </text>
                     ) : null}
                   </g>

@@ -47,6 +47,7 @@ interface Props {
   classNames?: ClassNameObject;
   noOfTicks: number;
   animate: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -79,6 +80,7 @@ export function Graph(props: Props) {
     classNames,
     noOfTicks,
     animate,
+    precision,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -179,6 +181,7 @@ export function Graph(props: Props) {
                 labelType='secondary'
                 showGridLines
                 leftLabel
+                precision={precision}
               />
             ) : null}
             <AnimatePresence>
@@ -268,7 +271,7 @@ export function Graph(props: Props) {
                         }}
                         transition={{ duration: animate }}
                       >
-                        {numberFormattingFunction(d.rightBar, prefix, suffix)}
+                        {numberFormattingFunction(d.rightBar, precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </motion.g>
@@ -321,6 +324,7 @@ export function Graph(props: Props) {
                 prefix={prefix}
                 labelType='secondary'
                 showGridLines
+                precision={precision}
               />
             ) : null}
             <AnimatePresence>
@@ -410,7 +414,7 @@ export function Graph(props: Props) {
                         }}
                         transition={{ duration: animate }}
                       >
-                        {numberFormattingFunction(d.rightBar, prefix, suffix)}
+                        {numberFormattingFunction(d.rightBar, precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </motion.g>

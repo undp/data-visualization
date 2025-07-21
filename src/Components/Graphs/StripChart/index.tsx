@@ -96,6 +96,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | number;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -175,6 +177,7 @@ export function StripChart(props: Props) {
     classNames,
     animate,
     dimmedOpacity = 0.3,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -226,6 +229,7 @@ export function StripChart(props: Props) {
         classNames={classNames}
         animate={animate}
         dimmedOpacity={dimmedOpacity}
+        precision={precision}
       />
     );
   return (
@@ -276,6 +280,7 @@ export function StripChart(props: Props) {
       classNames={classNames}
       animate={animate}
       dimmedOpacity={dimmedOpacity}
+      precision={precision}
     />
   );
 }

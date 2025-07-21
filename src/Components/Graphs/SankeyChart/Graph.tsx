@@ -43,6 +43,7 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -76,6 +77,7 @@ export function Graph(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    precision,
   } = props;
   const [scope, animatePath] = useAnimate();
   const isInView = useInView(scope);
@@ -232,7 +234,7 @@ export function Graph(props: Props) {
                               ...styles?.graphObjectValues,
                             }}
                           >
-                            {numberFormattingFunction(d.value, prefix, suffix)}
+                            {numberFormattingFunction(d.value, precision, prefix, suffix)}
                           </P>
                         ) : null}
                       </div>
@@ -310,7 +312,7 @@ export function Graph(props: Props) {
                               ...styles?.graphObjectValues,
                             }}
                           >
-                            {numberFormattingFunction(d.value, prefix, suffix)}
+                            {numberFormattingFunction(d.value, precision, prefix, suffix)}
                           </P>
                         ) : null}
                       </div>

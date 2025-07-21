@@ -93,6 +93,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Maximum radius of the circles  */
   radius?: number;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -170,6 +172,7 @@ export function BeeSwarmChart(props: Props) {
     classNames,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -219,6 +222,7 @@ export function BeeSwarmChart(props: Props) {
         noOfTicks={noOfTicks}
         animate={animate}
         dimmedOpacity={dimmedOpacity}
+        precision={precision}
       />
     );
   return (
@@ -267,6 +271,7 @@ export function BeeSwarmChart(props: Props) {
       noOfTicks={noOfTicks}
       animate={animate}
       dimmedOpacity={dimmedOpacity}
+      precision={precision}
     />
   );
 }

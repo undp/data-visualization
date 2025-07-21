@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import isEqual from 'fast-deep-equal';
-import { pie, arc, lineRadial, curveLinearClosed, curveCardinalClosed } from 'd3-shape';
+import { lineRadial, curveLinearClosed, curveCardinalClosed } from 'd3-shape';
 import { useState } from 'react';
-import { cn, H2, Modal, P } from '@undp/design-system-react';
+import { cn, Modal } from '@undp/design-system-react';
 import max from 'lodash.max';
 import min from 'lodash.min';
 import { scaleLinear } from 'd3-scale';
@@ -47,6 +46,7 @@ interface Props {
   highlightedLines: (string | number)[];
   animate: number;
   dimmedOpacity: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -79,6 +79,7 @@ export function Graph(props: Props) {
     highlightedLines,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
   const curve = curveType === 'linear' ? curveLinearClosed : curveCardinalClosed;
   const margin = {
@@ -114,7 +115,7 @@ export function Graph(props: Props) {
   const scale = scaleLinear().domain([minVal, maxVal]).range([0, radiusWithoutMargin]).nice();
   const ticksArray = scale.ticks(noOfTicks);
   const lineShape = lineRadial<number>()
-    .radius((d, i) => scale(d))
+    .radius(d => scale(d))
     .angle((_, i) => angleScale(i))
     .curve(curve);
   return (
@@ -200,7 +201,7 @@ export function Graph(props: Props) {
                       )}
                       style={styles?.xAxis?.labels}
                     >
-                      {d}
+                      {numberFormattingFunction(d, precision)}
                     </p>
                   </div>
                 </foreignObject>
@@ -361,7 +362,7 @@ export function Graph(props: Props) {
                                 transition={{ duration: animate }}
                                 exit={{ opacity: 0, transition: { duration: animate } }}
                               >
-                                {numberFormattingFunction(el)}
+                                {numberFormattingFunction(el, precision)}
                               </motion.text>
                             ) : null}
                           </>

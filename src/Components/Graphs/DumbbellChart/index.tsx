@@ -113,6 +113,8 @@ interface Props {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | number;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -200,6 +202,7 @@ export function DumbbellChart(props: Props) {
     refValues,
     filterNA,
     animate,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -259,6 +262,7 @@ export function DumbbellChart(props: Props) {
         refValues={refValues}
         filterNA={filterNA}
         animate={animate}
+        precision={precision}
       />
     );
   return (
@@ -317,6 +321,7 @@ export function DumbbellChart(props: Props) {
       refValues={refValues}
       filterNA={filterNA}
       animate={animate}
+      precision={precision}
     />
   );
 }

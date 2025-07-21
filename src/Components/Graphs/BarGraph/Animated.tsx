@@ -110,6 +110,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Title for the bar axis */
   barAxisTitle?: string;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -207,6 +209,7 @@ export function AnimatedBarGraph(props: Props) {
     styles,
     classNames,
     dimmedOpacity,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -266,6 +269,7 @@ export function AnimatedBarGraph(props: Props) {
         valueColor={valueColor}
         classNames={classNames}
         dimmedOpacity={dimmedOpacity}
+        precision={precision}
       />
     );
   return (
@@ -324,6 +328,7 @@ export function AnimatedBarGraph(props: Props) {
       valueColor={valueColor}
       classNames={classNames}
       dimmedOpacity={dimmedOpacity}
+      precision={precision}
     />
   );
 }
@@ -413,6 +418,8 @@ interface GroupedBarChartProps {
   showTicks?: boolean;
   /** Title for the bar axis */
   barAxisTitle?: string;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -502,6 +509,7 @@ export function AnimatedGroupedBarGraph(props: GroupedBarChartProps) {
     orientation = 'vertical',
     styles,
     classNames,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -555,6 +563,7 @@ export function AnimatedGroupedBarGraph(props: GroupedBarChartProps) {
         noOfTicks={noOfTicks}
         valueColor={valueColor}
         classNames={classNames}
+        precision={precision}
       />
     );
   return (
@@ -607,6 +616,7 @@ export function AnimatedGroupedBarGraph(props: GroupedBarChartProps) {
       noOfTicks={noOfTicks}
       valueColor={valueColor}
       classNames={classNames}
+      precision={precision}
     />
   );
 }
@@ -698,6 +708,8 @@ interface StackedBarChartProps {
   barAxisTitle?: string;
   /** Parameter to sort the data. If a number is provided, it refers to the index of the size array to determine which value to sort by. If set to total, it sorts by the sum of all the values. */
   sortParameter?: number | 'total';
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -791,6 +803,7 @@ export function AnimatedStackedBarGraph(props: StackedBarChartProps) {
     orientation = 'vertical',
     styles,
     classNames,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -846,6 +859,7 @@ export function AnimatedStackedBarGraph(props: StackedBarChartProps) {
         noOfTicks={noOfTicks}
         valueColor={valueColor}
         classNames={classNames}
+        precision={precision}
       />
     );
   return (
@@ -900,6 +914,7 @@ export function AnimatedStackedBarGraph(props: StackedBarChartProps) {
       noOfTicks={noOfTicks}
       valueColor={valueColor}
       classNames={classNames}
+      precision={precision}
     />
   );
 }

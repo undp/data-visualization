@@ -98,6 +98,8 @@ interface Props {
   animate?: boolean | number;
   /** Domain for the colors in the cell.  */
   colorDomain: number[] | string[];
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -173,6 +175,7 @@ export function HeatMap(props: Props) {
     styles,
     classNames,
     animate = false,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -384,6 +387,7 @@ export function HeatMap(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         animate={animate === true ? 0.5 : animate || 0}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

@@ -73,6 +73,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  precision?: number;
 }
 
 export function AnimatedHorizontalGroupedBarGraph(props: Props) {
@@ -125,6 +126,7 @@ export function AnimatedHorizontalGroupedBarGraph(props: Props) {
     valueColor,
     styles,
     classNames,
+    precision = 2,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -315,6 +317,7 @@ export function AnimatedHorizontalGroupedBarGraph(props: Props) {
                     valueColor={valueColor}
                     styles={styles}
                     classNames={classNames}
+                    precision={precision}
                   />
                 ) : null}
               </div>

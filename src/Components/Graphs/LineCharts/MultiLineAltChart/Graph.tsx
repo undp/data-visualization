@@ -84,6 +84,7 @@ interface Props {
   classNames?: ClassNameObject;
   selectedColor?: string;
   dimmedOpacity: number;
+  precision: number;
 }
 
 interface FormattedDataType {
@@ -130,6 +131,7 @@ export function Graph(props: Props) {
     classNames,
     showLabels,
     dimmedOpacity,
+    precision,
   } = props;
   const curve =
     curveType === 'linear'
@@ -320,13 +322,19 @@ export function Graph(props: Props) {
               labelType='secondary'
               showGridLines
               labelPos='vertical'
+              precision={precision}
             />
             <Axis
               y1={y(minParam < 0 ? 0 : minParam)}
               y2={y(minParam < 0 ? 0 : minParam)}
               x1={0 - leftMargin}
               x2={graphWidth + margin.right}
-              label={numberFormattingFunction(minParam < 0 ? 0 : minParam, prefix, suffix)}
+              label={numberFormattingFunction(
+                minParam < 0 ? 0 : minParam,
+                precision,
+                prefix,
+                suffix,
+              )}
               labelPos={{
                 x: 0 - leftMargin,
                 y: y(minParam < 0 ? 0 : minParam),
@@ -372,6 +380,7 @@ export function Graph(props: Props) {
               prefix={prefix}
               labelType='primary'
               showGridLines
+              precision={precision}
             />
           </g>
           <g ref={scope}>
@@ -486,7 +495,7 @@ export function Graph(props: Props) {
                   ...(styles?.graphObjectValues || {}),
                 }}
               >
-                {numberFormattingFunction(mouseOverData.y, prefix, suffix)}
+                {numberFormattingFunction(mouseOverData.y, precision, prefix, suffix)}
               </text>
             ) : null}
           </g>

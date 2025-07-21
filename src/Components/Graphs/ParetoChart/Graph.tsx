@@ -57,6 +57,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   animate: number;
+  precision: number;
 }
 interface DataFormattedType {
   id: string;
@@ -95,6 +96,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     animate,
+    precision,
   } = props;
   const curve =
     curveType === 'linear'
@@ -203,7 +205,7 @@ export function Graph(props: Props) {
                     ...(styles?.yAxis?.labels || {}),
                   }}
                 >
-                  {numberFormattingFunction(d, barPrefix, barSuffix)}
+                  {numberFormattingFunction(d, precision, barPrefix, barSuffix)}
                 </text>
               </g>
             ))}
@@ -253,7 +255,7 @@ export function Graph(props: Props) {
                   }}
                   className={cn('text-xs', classNames?.yAxis?.labels)}
                 >
-                  {numberFormattingFunction(d, linePrefix, lineSuffix)}
+                  {numberFormattingFunction(d, precision, linePrefix, lineSuffix)}
                 </text>
               </g>
             ))}
@@ -366,7 +368,7 @@ export function Graph(props: Props) {
                       className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                       dy={d.bar ? (d.bar >= 0 ? '-5px' : '1em') : '-5px'}
                     >
-                      {numberFormattingFunction(d.bar, barPrefix, barSuffix)}
+                      {numberFormattingFunction(d.bar, precision, barPrefix, barSuffix)}
                     </motion.text>
                   ) : null}
                   {showLabels ? (
@@ -490,7 +492,7 @@ export function Graph(props: Props) {
                         className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                         dy='-5px'
                       >
-                        {numberFormattingFunction(d.line, linePrefix, lineSuffix)}
+                        {numberFormattingFunction(d.line, precision, linePrefix, lineSuffix)}
                       </motion.text>
                     ) : null}
                   </g>

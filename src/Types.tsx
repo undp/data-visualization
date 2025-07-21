@@ -911,4 +911,5 @@ export interface GraphSettingsDataType {
   measureBarWidthFactor?: number;
   mapLegend?: string | React.ReactNode | MapLegendDataType[];
   dimmedOpacity?: number;
+  precision?: number;
 }

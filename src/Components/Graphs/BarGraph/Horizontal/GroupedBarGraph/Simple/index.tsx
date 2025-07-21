@@ -70,6 +70,7 @@ interface Props {
   classNames?: ClassNameObject;
   filterNA?: boolean;
   animate?: boolean | number;
+  precision?: number;
 }
 
 export function HorizontalGroupedBarGraph(props: Props) {
@@ -122,6 +123,7 @@ export function HorizontalGroupedBarGraph(props: Props) {
     classNames,
     filterNA = true,
     animate = false,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -262,6 +264,7 @@ export function HorizontalGroupedBarGraph(props: Props) {
                         classNames={classNames}
                         colorDomain={colorDomain}
                         animate={animate === true ? 0.5 : animate || 0}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

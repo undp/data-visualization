@@ -55,6 +55,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: number;
   colorDomain: string[];
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -92,6 +93,7 @@ export function Graph(props: Props) {
     classNames,
     animate,
     colorDomain,
+    precision,
   } = props;
   const margin = {
     top: topMargin,
@@ -144,7 +146,7 @@ export function Graph(props: Props) {
             y2={y(0)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(0, prefix, suffix)}
+            label={numberFormattingFunction(0, precision, prefix, suffix)}
             labelPos={{
               x: 0 - leftMargin,
               y: y(0),
@@ -176,6 +178,7 @@ export function Graph(props: Props) {
               labelType='secondary'
               showGridLines
               labelPos='vertical'
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -292,7 +295,7 @@ export function Graph(props: Props) {
                           transition={{ duration: animate }}
                           exit={{ opacity: 0, transition: { duration: animate } }}
                         >
-                          {numberFormattingFunction(el, prefix, suffix)}
+                          {numberFormattingFunction(el, precision, prefix, suffix)}
                         </motion.text>
                       ) : null}
                     </motion.g>
@@ -346,6 +349,7 @@ export function Graph(props: Props) {
                     >
                       {numberFormattingFunction(
                         sum(d.size.filter(element => element)),
+                        precision,
                         prefix,
                         suffix,
                       )}

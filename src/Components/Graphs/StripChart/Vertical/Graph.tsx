@@ -47,6 +47,7 @@ interface Props {
   animate: number;
   noOfTicks: number;
   dimmedOpacity: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -81,6 +82,7 @@ export function Graph(props: Props) {
     valueColor,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -297,7 +299,7 @@ export function Graph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.position, prefix, suffix)}
+                        {numberFormattingFunction(d.position, precision, prefix, suffix)}
                       </motion.text>
                     ) : null
                   ) : null}
@@ -318,7 +320,7 @@ export function Graph(props: Props) {
                     classNames?.yAxis?.labels,
                   )}
                 >
-                  {numberFormattingFunction(y.invert(0), prefix, suffix)}
+                  {numberFormattingFunction(y.invert(0), precision, prefix, suffix)}
                 </text>
                 <text
                   y={graphHeight}
@@ -332,7 +334,7 @@ export function Graph(props: Props) {
                     classNames?.yAxis?.labels,
                   )}
                 >
-                  {numberFormattingFunction(y.invert(graphHeight), prefix, suffix)}
+                  {numberFormattingFunction(y.invert(graphHeight), precision, prefix, suffix)}
                 </text>
               </>
             ) : (
@@ -350,7 +352,7 @@ export function Graph(props: Props) {
                     classNames?.yAxis?.labels,
                   )}
                 >
-                  {numberFormattingFunction(tick, prefix, suffix)}
+                  {numberFormattingFunction(tick, precision, prefix, suffix)}
                 </text>
               ))
             )}

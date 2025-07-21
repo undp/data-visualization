@@ -56,6 +56,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: number;
   colorDomain: string[];
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -94,6 +95,7 @@ export function Graph(props: Props) {
     classNames,
     animate,
     colorDomain,
+    precision,
   } = props;
   const margin = {
     top: barAxisTitle ? topMargin + 25 : topMargin,
@@ -167,6 +169,7 @@ export function Graph(props: Props) {
               prefix={prefix}
               labelType='secondary'
               showGridLines
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -274,7 +277,7 @@ export function Graph(props: Props) {
                             transition: { duration: animate },
                           }}
                         >
-                          {numberFormattingFunction(el, prefix, suffix)}
+                          {numberFormattingFunction(el, precision, prefix, suffix)}
                         </motion.text>
                       ) : null}
                     </motion.g>

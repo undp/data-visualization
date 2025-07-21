@@ -78,6 +78,7 @@ interface Props {
   refValues?: ReferenceDataType[];
   filterNA?: boolean;
   animate?: boolean | number;
+  precision?: number;
 }
 
 export function HorizontalDumbbellChart(props: Props) {
@@ -136,6 +137,7 @@ export function HorizontalDumbbellChart(props: Props) {
     refValues,
     filterNA = true,
     animate = false,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -312,6 +314,7 @@ export function HorizontalDumbbellChart(props: Props) {
                         refValues={refValues}
                         rtl={language === 'he' || language === 'ar'}
                         animate={animate === true ? 0.5 : animate || 0}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

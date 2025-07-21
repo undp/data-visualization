@@ -43,6 +43,8 @@ interface Props {
   prefix?: string;
   /** Suffix for values */
   suffix?: string;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Main text */
   value: number | string;
   /** Sub text next to main text */
@@ -80,6 +82,7 @@ export function BasicStatCard(props: Props) {
     layout = 'primary',
     styles,
     classNames,
+    precision,
   } = props;
   return (
     <div
@@ -154,7 +157,7 @@ export function BasicStatCard(props: Props) {
                 >
                   {typeof value === 'string'
                     ? `${prefix}${value}${suffix}`
-                    : numberFormattingFunction(value, prefix, suffix)}{' '}
+                    : numberFormattingFunction(value, precision, prefix, suffix)}{' '}
                   {year ? (
                     <span
                       className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'
@@ -200,7 +203,7 @@ export function BasicStatCard(props: Props) {
               >
                 {typeof value === 'string'
                   ? `${prefix}${value}${suffix}`
-                  : numberFormattingFunction(value, prefix, suffix)}{' '}
+                  : numberFormattingFunction(value, precision, prefix, suffix)}{' '}
                 {year ? (
                   <span
                     className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'

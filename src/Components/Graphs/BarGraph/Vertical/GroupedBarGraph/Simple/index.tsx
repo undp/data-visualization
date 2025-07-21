@@ -70,6 +70,7 @@ interface Props {
   classNames?: ClassNameObject;
   filterNA?: boolean;
   animate?: boolean | number;
+  precision?: number;
 }
 
 export function VerticalGroupedBarGraph(props: Props) {
@@ -122,6 +123,7 @@ export function VerticalGroupedBarGraph(props: Props) {
     classNames,
     filterNA = true,
     animate = false,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -260,6 +262,7 @@ export function VerticalGroupedBarGraph(props: Props) {
                         classNames={classNames}
                         animate={animate === true ? 0.5 : animate || 0}
                         colorDomain={colorDomain}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

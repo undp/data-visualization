@@ -120,6 +120,8 @@ interface Props {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | number;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -208,6 +210,7 @@ export function SimpleBarGraph(props: Props) {
     filterNA,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -268,6 +271,7 @@ export function SimpleBarGraph(props: Props) {
         filterNA={filterNA}
         animate={animate}
         dimmedOpacity={dimmedOpacity}
+        precision={precision}
       />
     );
   return (
@@ -326,6 +330,7 @@ export function SimpleBarGraph(props: Props) {
       classNames={classNames}
       filterNA={filterNA}
       dimmedOpacity={dimmedOpacity}
+      precision={precision}
     />
   );
 }
@@ -421,6 +426,8 @@ interface GroupedBarChartProps {
   showTicks?: boolean;
   /** Title for the bar axis */
   barAxisTitle?: string;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -502,6 +509,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     classNames,
     filterNA,
     animate,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -555,6 +563,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
         classNames={classNames}
         filterNA={filterNA}
         animate={animate}
+        precision={precision}
       />
     );
   return (
@@ -607,6 +616,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       classNames={classNames}
       filterNA={filterNA}
       animate={animate}
+      precision={precision}
     />
   );
 }
@@ -706,6 +716,8 @@ interface StackedBarChartProps {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | number;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -789,6 +801,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     classNames,
     filterNA,
     animate,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -844,6 +857,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
         classNames={classNames}
         filterNA={filterNA}
         animate={animate}
+        precision={precision}
       />
     );
   return (
@@ -898,6 +912,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       classNames={classNames}
       filterNA={filterNA}
       animate={animate}
+      precision={precision}
     />
   );
 }

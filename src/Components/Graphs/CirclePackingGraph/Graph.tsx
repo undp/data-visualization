@@ -47,6 +47,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: number;
   dimmedOpacity: number;
+  precision: number;
 }
 
 interface TreeMapDataTypeForBubbleChart extends TreeMapDataType {
@@ -84,6 +85,7 @@ export const Graph = memo((props: Props) => {
     classNames,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -396,7 +398,7 @@ export const Graph = memo((props: Props) => {
                                   color: getTextColorBasedOnBgColor(circleColor),
                                 }}
                               >
-                                {numberFormattingFunction(d.size, prefix, suffix)}
+                                {numberFormattingFunction(d.size, precision, prefix, suffix)}
                               </p>
                             )}
                           </div>

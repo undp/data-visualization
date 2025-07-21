@@ -121,6 +121,8 @@ interface Props {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | number;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -212,6 +214,7 @@ export function BulletChart(props: Props) {
     measureBarWidthFactor,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
 
   if (orientation === 'vertical')
@@ -275,6 +278,7 @@ export function BulletChart(props: Props) {
         qualitativeRangeColors={qualitativeRangeColors}
         animate={animate}
         dimmedOpacity={dimmedOpacity}
+        precision={precision}
       />
     );
   return (
@@ -337,6 +341,7 @@ export function BulletChart(props: Props) {
       qualitativeRangeColors={qualitativeRangeColors}
       animate={animate}
       dimmedOpacity={dimmedOpacity}
+      precision={precision}
     />
   );
 }

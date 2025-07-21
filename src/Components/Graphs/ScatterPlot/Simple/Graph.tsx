@@ -82,6 +82,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: number;
   dimmedOpacity: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -129,6 +130,7 @@ export function Graph(props: Props) {
     classNames,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -243,13 +245,19 @@ export function Graph(props: Props) {
               labelType='secondary'
               showGridLines
               labelPos='side'
+              precision={precision}
             />
             <Axis
               y1={y(yMinVal < 0 ? 0 : yMinVal)}
               y2={y(yMinVal < 0 ? 0 : yMinVal)}
               x1={0 - leftMargin}
               x2={graphWidth + margin.right}
-              label={numberFormattingFunction(yMinVal < 0 ? 0 : yMinVal, yPrefix, ySuffix)}
+              label={numberFormattingFunction(
+                yMinVal < 0 ? 0 : yMinVal,
+                precision,
+                yPrefix,
+                ySuffix,
+              )}
               labelPos={{
                 x: 0,
                 y: y(yMinVal < 0 ? 0 : yMinVal),
@@ -292,13 +300,19 @@ export function Graph(props: Props) {
               prefix={xPrefix}
               labelType='primary'
               showGridLines
+              precision={precision}
             />
             <Axis
               x1={x(xMinVal < 0 ? 0 : xMinVal)}
               x2={x(xMinVal < 0 ? 0 : xMinVal)}
               y1={0}
               y2={graphHeight}
-              label={numberFormattingFunction(xMinVal < 0 ? 0 : xMinVal, xPrefix, xSuffix)}
+              label={numberFormattingFunction(
+                xMinVal < 0 ? 0 : xMinVal,
+                precision,
+                xPrefix,
+                xSuffix,
+              )}
               labelPos={{
                 x: x(xMinVal < 0 ? 0 : xMinVal),
                 y: graphHeight,

@@ -62,6 +62,8 @@ interface Props {
   // Graph Parameters
   /** Column settings for each column shown in the table. */
   columnData: DataTableColumnDataType[];
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
 
@@ -105,6 +107,7 @@ export function DataTable(props: Props) {
     styles,
     classNames,
     minWidth,
+    precision = 2,
   } = props;
   const [columnSortBy, setColumnSortBy] = useState<string | undefined>(undefined);
 
@@ -376,6 +379,7 @@ export function DataTable(props: Props) {
                                     >
                                       {numberFormattingFunction(
                                         d[el.columnId],
+                                        precision,
                                         el.prefix,
                                         el.suffix,
                                       )}

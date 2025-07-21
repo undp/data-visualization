@@ -47,6 +47,7 @@ interface Props {
   animate: number;
   noOfTicks: number;
   dimmedOpacity: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -81,6 +82,7 @@ export function Graph(props: Props) {
     animate,
     noOfTicks,
     dimmedOpacity,
+    precision,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -296,7 +298,7 @@ export function Graph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.position, prefix, suffix)}
+                        {numberFormattingFunction(d.position, precision, prefix, suffix)}
                       </motion.text>
                     ) : null
                   ) : null}
@@ -318,7 +320,7 @@ export function Graph(props: Props) {
                   )}
                   dy='1em'
                 >
-                  {numberFormattingFunction(x.invert(0), prefix, suffix)}
+                  {numberFormattingFunction(x.invert(0), precision, prefix, suffix)}
                 </text>
                 <text
                   x={graphWidth}
@@ -333,7 +335,7 @@ export function Graph(props: Props) {
                   )}
                   dy='1em'
                 >
-                  {numberFormattingFunction(x.invert(graphWidth), prefix, suffix)}
+                  {numberFormattingFunction(x.invert(graphWidth), precision, prefix, suffix)}
                 </text>
               </>
             ) : (
@@ -352,7 +354,7 @@ export function Graph(props: Props) {
                   )}
                   dy='1em'
                 >
-                  {numberFormattingFunction(tick, prefix, suffix)}
+                  {numberFormattingFunction(tick, precision, prefix, suffix)}
                 </text>
               ))
             )}

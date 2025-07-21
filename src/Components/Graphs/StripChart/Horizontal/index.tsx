@@ -68,6 +68,7 @@ interface Props {
   animate?: boolean | number;
   noOfTicks?: number;
   dimmedOpacity?: number;
+  precision?: number;
 }
 
 export function HorizontalStripChart(props: Props) {
@@ -118,6 +119,7 @@ export function HorizontalStripChart(props: Props) {
     animate = false,
     noOfTicks = 2,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -284,6 +286,7 @@ export function HorizontalStripChart(props: Props) {
                         animate={animate === true ? 0.5 : animate || 0}
                         noOfTicks={noOfTicks}
                         dimmedOpacity={dimmedOpacity}
+                        precision={precision}
                       />
                     ) : null}
                   </div>

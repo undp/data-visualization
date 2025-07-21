@@ -14,6 +14,7 @@ interface Props {
   labelType: 'primary' | 'secondary';
   showGridLines: boolean;
   labelPos: 'side' | 'vertical';
+  precision: number;
 }
 
 export function YTicksAndGridLines(props: Props) {
@@ -29,6 +30,7 @@ export function YTicksAndGridLines(props: Props) {
     labelType,
     showGridLines,
     labelPos = 'vertical',
+    precision,
   } = props;
   if (!values && !showGridLines) return null;
   return (
@@ -65,7 +67,7 @@ export function YTicksAndGridLines(props: Props) {
                 classNames?.labels,
               )}
             >
-              {numberFormattingFunction(values[i], prefix, suffix)}
+              {numberFormattingFunction(values[i], precision, prefix, suffix)}
             </text>
           ) : null}
         </g>

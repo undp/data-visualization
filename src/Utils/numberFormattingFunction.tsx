@@ -8,6 +8,7 @@ import { checkIfNullOrUndefined } from './checkIfNullOrUndefined';
  * - If `value` is `null` or `undefined`, returns `"NA"`.
  *
  * @param value - The number to format.
+ * @param precision - Optional no of digits after decimal.
  * @param prefix - Optional string to prepend.
  * @param suffix - Optional string to append.
  * @returns A formatted string.
@@ -21,6 +22,7 @@ import { checkIfNullOrUndefined } from './checkIfNullOrUndefined';
 
 export function numberFormattingFunction(
   value: number | undefined | null,
+  precision?: number,
   prefix?: string,
   suffix?: string,
 ) {
@@ -29,7 +31,7 @@ export function numberFormattingFunction(
     const tier = Math.floor(Math.log10(Math.abs(num)) / 3);
     if (tier === 0) return num.toString();
     const scaled = num / 10 ** (tier * 3);
-    const formatted = scaled.toFixed(2).replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1'); // Remove trailing ".0"
+    const formatted = scaled.toFixed(precision || 2).replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1'); // Remove trailing ".0"
     return formatted + suffixes[tier];
   };
   if (checkIfNullOrUndefined(value)) return 'NA';
@@ -41,7 +43,7 @@ export function numberFormattingFunction(
     return `${prefix || ''}${value}${suffix || ''}`;
   return `${prefix || ''}${
     Math.abs(value as number) < 1000
-      ? (value as number).toFixed(2).replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
+      ? (value as number).toFixed(precision || 2).replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
       : formatNumberToReadableString(value as number)
   }${suffix || ''}`;
 }

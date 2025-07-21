@@ -58,6 +58,7 @@ interface Props {
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
   animate: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -98,6 +99,7 @@ export function Graph(props: Props) {
     labelOrder,
     refValues,
     animate,
+    precision,
   } = props;
   const margin = {
     top: topMargin,
@@ -176,7 +178,12 @@ export function Graph(props: Props) {
             y2={y(yMinValue < 0 ? 0 : yMinValue)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(yMinValue < 0 ? 0 : yMinValue, prefix, suffix)}
+            label={numberFormattingFunction(
+              yMinValue < 0 ? 0 : yMinValue,
+              precision,
+              prefix,
+              suffix,
+            )}
             labelPos={{
               x: 0 - leftMargin,
               dx: 0,
@@ -208,6 +215,7 @@ export function Graph(props: Props) {
               labelType='secondary'
               showGridLines
               labelPos='vertical'
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -364,7 +372,7 @@ export function Graph(props: Props) {
                             exit={{ opacity: 0, transition: { duration: animate } }}
                             transition={{ duration: animate }}
                           >
-                            {numberFormattingFunction(el, prefix, suffix)}
+                            {numberFormattingFunction(el, precision, prefix, suffix)}
                           </motion.text>
                         ) : null}
                       </>

@@ -31,10 +31,10 @@ export function LinearColorLegend(props: Props) {
         />
         <div className='flex justify-between w-full min-w-[360px]'>
           <P marginBottom='none' size='sm'>
-            {numberFormattingFunction(colorDomain[0], '', '')}
+            {numberFormattingFunction(colorDomain[0], 2, '', '')}
           </P>
           <P marginBottom='none' size='sm'>
-            {numberFormattingFunction(colorDomain[1], '', '')}
+            {numberFormattingFunction(colorDomain[1], 2, '', '')}
           </P>
         </div>
       </div>

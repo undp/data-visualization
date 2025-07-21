@@ -59,6 +59,7 @@ interface Props {
   measureBarWidthFactor: number;
   animate: number;
   dimmedOpacity: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -101,6 +102,7 @@ export function Graph(props: Props) {
     measureBarWidthFactor,
     animate,
     dimmedOpacity,
+    precision,
   } = props;
   const margin = {
     top: topMargin,
@@ -188,7 +190,12 @@ export function Graph(props: Props) {
             y2={y(xMinValue < 0 ? 0 : xMinValue)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(xMinValue < 0 ? 0 : xMinValue, prefix, suffix)}
+            label={numberFormattingFunction(
+              xMinValue < 0 ? 0 : xMinValue,
+              precision,
+              prefix,
+              suffix,
+            )}
             labelPos={{
               x: 0 - leftMargin,
               dx: 0,
@@ -220,6 +227,7 @@ export function Graph(props: Props) {
               labelType='secondary'
               showGridLines
               labelPos='vertical'
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -447,7 +455,7 @@ export function Graph(props: Props) {
                       exit={{ opacity: 0, transition: { duration: animate } }}
                       transition={{ duration: animate }}
                     >
-                      {numberFormattingFunction(d.size, prefix, suffix)}
+                      {numberFormattingFunction(d.size, precision, prefix, suffix)}
                     </motion.text>
                   ) : null}
                 </motion.g>

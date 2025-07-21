@@ -106,6 +106,8 @@ interface Props {
   sortNodes?: 'asc' | 'desc' | 'mostReadable' | 'none';
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | number;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -185,6 +187,7 @@ export function SankeyChart(props: Props) {
     styles,
     classNames,
     animate = false,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -378,6 +381,7 @@ export function SankeyChart(props: Props) {
                       classNames={classNames}
                       detailsOnClick={detailsOnClick}
                       animate={animate}
+                      precision={precision}
                     />
                   ) : null}
                 </div>

@@ -56,6 +56,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: number;
   colorDomain: string[];
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -94,6 +95,7 @@ export function Graph(props: Props) {
     classNames,
     animate,
     colorDomain,
+    precision,
   } = props;
   const margin = {
     top: barAxisTitle ? topMargin + 25 : topMargin,
@@ -161,6 +163,7 @@ export function Graph(props: Props) {
               prefix={prefix}
               labelType='secondary'
               showGridLines
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -260,7 +263,9 @@ export function Graph(props: Props) {
                             x(j === 0 ? 0 : sum(d.size.filter((element, k) => k < j && element))) +
                             x(el || 0) / 2,
                           opacity:
-                            el && x(el) / numberFormattingFunction(el, prefix, suffix).length > 12
+                            el &&
+                            x(el) / numberFormattingFunction(el, precision, prefix, suffix).length >
+                              12
                               ? 1
                               : 0,
                           fill: getTextColorBasedOnBgColor(barColors[j]),
@@ -271,7 +276,7 @@ export function Graph(props: Props) {
                         }}
                         transition={{ duration: animate }}
                       >
-                        {numberFormattingFunction(el, prefix, suffix)}
+                        {numberFormattingFunction(el, precision, prefix, suffix)}
                       </motion.text>
                     </motion.g>
                   ))}
@@ -322,6 +327,7 @@ export function Graph(props: Props) {
                     >
                       {numberFormattingFunction(
                         sum(d.size.filter(element => element)),
+                        precision,
                         prefix,
                         suffix,
                       )}

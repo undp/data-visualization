@@ -58,6 +58,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   noOfTicks: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -91,6 +92,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     noOfTicks,
+    precision,
   } = props;
 
   const dataFormatted = sortBy(
@@ -213,6 +215,7 @@ export function Graph(props: Props) {
                 labelType='secondary'
                 showGridLines
                 leftLabel
+                precision={precision}
               />
             ) : null}
             <AnimatePresence>
@@ -287,7 +290,7 @@ export function Graph(props: Props) {
                         transition={{ duration: 0.5 }}
                         className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                       >
-                        {numberFormattingFunction(d.leftBar, prefix, suffix)}
+                        {numberFormattingFunction(d.leftBar, precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </motion.g>
@@ -340,6 +343,7 @@ export function Graph(props: Props) {
                 prefix={prefix}
                 labelType='secondary'
                 showGridLines
+                precision={precision}
               />
             ) : null}
             <AnimatePresence>
@@ -414,7 +418,7 @@ export function Graph(props: Props) {
                         }}
                         transition={{ duration: 0.5 }}
                       >
-                        {numberFormattingFunction(d.rightBar, prefix, suffix)}
+                        {numberFormattingFunction(d.rightBar, precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </motion.g>

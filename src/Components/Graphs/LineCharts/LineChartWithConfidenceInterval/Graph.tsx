@@ -82,6 +82,7 @@ interface Props {
   curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  precision: number;
 }
 interface FormattedDataType {
   y: number;
@@ -131,6 +132,7 @@ export function Graph(props: Props) {
     curveType,
     styles,
     classNames,
+    precision,
   } = props;
   const curve =
     curveType === 'linear'
@@ -358,13 +360,19 @@ export function Graph(props: Props) {
               labelType='secondary'
               showGridLines
               labelPos='vertical'
+              precision={precision}
             />
             <Axis
               y1={y(minParam < 0 ? 0 : minParam)}
               y2={y(minParam < 0 ? 0 : minParam)}
               x1={0 - leftMargin}
               x2={graphWidth + margin.right}
-              label={numberFormattingFunction(minParam < 0 ? 0 : minParam, prefix, suffix)}
+              label={numberFormattingFunction(
+                minParam < 0 ? 0 : minParam,
+                precision,
+                prefix,
+                suffix,
+              )}
               labelPos={{
                 x: 0 - leftMargin,
                 y: y(minParam < 0 ? 0 : minParam),
@@ -519,7 +527,7 @@ export function Graph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.y, prefix, suffix)}
+                        {numberFormattingFunction(d.y, precision, prefix, suffix)}
                       </text>
                     ) : null}
                     {showIntervalValues ? (
@@ -535,7 +543,7 @@ export function Graph(props: Props) {
                           }}
                           className={cn('text-xs font-bold', classNames?.graphObjectValues)}
                         >
-                          {numberFormattingFunction(d.yMin, prefix, suffix)}
+                          {numberFormattingFunction(d.yMin, precision, prefix, suffix)}
                         </text>
                         <text
                           x={x(d.date)}
@@ -548,7 +556,7 @@ export function Graph(props: Props) {
                           }}
                           className={cn('text-xs font-bold', classNames?.graphObjectValues)}
                         >
-                          {numberFormattingFunction(d.yMax, prefix, suffix)}
+                          {numberFormattingFunction(d.yMax, precision, prefix, suffix)}
                         </text>
                       </g>
                     ) : null}

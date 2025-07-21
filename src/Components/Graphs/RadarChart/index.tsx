@@ -104,6 +104,8 @@ interface Props {
   curveType?: 'linear' | 'curve';
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -180,6 +182,7 @@ export function RadarChart(props: Props) {
     resetSelectionOnDoubleClick = true,
     animate = false,
     dimmedOpacity = 0.3,
+    precision = 2,
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
@@ -362,6 +365,7 @@ export function RadarChart(props: Props) {
                           resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
                           animate={animate === true ? 0.5 : animate || 0}
                           dimmedOpacity={dimmedOpacity}
+                          precision={precision}
                         />
                       ) : null}
                     </div>

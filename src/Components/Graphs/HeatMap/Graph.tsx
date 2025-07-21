@@ -45,6 +45,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   animate: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -75,6 +76,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     animate,
+    precision,
   } = props;
   const margin = {
     top: topMargin,
@@ -251,7 +253,7 @@ export function Graph(props: Props) {
                           >
                             {typeof d.value === 'string'
                               ? `${prefix} ${d.value} ${suffix}`
-                              : numberFormattingFunction(d.value, prefix, suffix)}
+                              : numberFormattingFunction(d.value, precision, prefix, suffix)}
                           </p>
                         </div>
                       </foreignObject>

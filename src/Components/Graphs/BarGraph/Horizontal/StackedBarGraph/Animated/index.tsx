@@ -75,6 +75,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  precision?: number;
 }
 
 export function AnimatedHorizontalStackedBarChart(props: Props) {
@@ -129,6 +130,7 @@ export function AnimatedHorizontalStackedBarChart(props: Props) {
     valueColor,
     styles,
     classNames,
+    precision = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -322,6 +324,7 @@ export function AnimatedHorizontalStackedBarChart(props: Props) {
                     valueColor={valueColor}
                     styles={styles}
                     classNames={classNames}
+                    precision={precision}
                   />
                 ) : null}
               </div>

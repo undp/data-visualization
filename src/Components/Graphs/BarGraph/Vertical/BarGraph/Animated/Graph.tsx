@@ -63,6 +63,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   dimmedOpacity: number;
+  precision: number;
 }
 
 export function Graph(props: Props) {
@@ -104,6 +105,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     dimmedOpacity,
+    precision,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -197,7 +199,12 @@ export function Graph(props: Props) {
             y2={y(xMinValue < 0 ? 0 : xMinValue)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(xMinValue < 0 ? 0 : xMinValue, prefix, suffix)}
+            label={numberFormattingFunction(
+              xMinValue < 0 ? 0 : xMinValue,
+              precision,
+              prefix,
+              suffix,
+            )}
             labelPos={{
               x: 0 - leftMargin,
               y: xMaxValue < 0 ? -15 : y(xMinValue < 0 ? 0 : xMinValue),
@@ -229,6 +236,7 @@ export function Graph(props: Props) {
               labelType='secondary'
               showGridLines
               labelPos='vertical'
+              precision={precision}
             />
           ) : null}
           <AxisTitle
@@ -358,7 +366,7 @@ export function Graph(props: Props) {
                     dy={d.size ? (d.size >= 0 ? '-5px' : '1em') : '-5px'}
                     transition={{ duration: 0.5 }}
                   >
-                    {numberFormattingFunction(d.size, prefix, suffix)}
+                    {numberFormattingFunction(d.size, precision, prefix, suffix)}
                   </motion.text>
                 ) : null}
               </motion.g>

@@ -84,6 +84,8 @@ interface Props {
   mainText?: string | { label: string; suffix?: string; prefix?: string };
   /** Small text at the center of the donut chart */
   subNote?: string;
+  /** Specifies the number of decimal places to display in the value. */
+  precision?: number;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -153,6 +155,7 @@ export function DonutChart(props: Props) {
     detailsOnClick,
     styles,
     classNames,
+    precision = 2,
   } = props;
 
   const [donutRadius, setDonutRadius] = useState(0);
@@ -290,7 +293,7 @@ export function DonutChart(props: Props) {
                             >
                               {d.label}:{' '}
                               <span className='font-bold' style={{ fontSize: 'inherit' }}>
-                                {numberFormattingFunction(d.size, prefix, suffix)}
+                                {numberFormattingFunction(d.size, precision, prefix, suffix)}
                               </span>
                             </P>
                           </div>
@@ -343,6 +346,7 @@ export function DonutChart(props: Props) {
                           resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
                           styles={styles}
                           detailsOnClick={detailsOnClick}
+                          precision={precision}
                         />
                       ) : null}
                     </div>
