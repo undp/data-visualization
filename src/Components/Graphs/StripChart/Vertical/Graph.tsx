@@ -341,7 +341,7 @@ export function Graph(props: Props) {
               ticks.map((tick, i) => (
                 <text
                   key={i}
-                  y={graphHeight}
+                  y={y(tick)}
                   x={graphWidth / 2 + radius + 5}
                   style={{
                     textAnchor: 'end',

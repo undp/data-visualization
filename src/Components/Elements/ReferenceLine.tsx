@@ -91,6 +91,7 @@ export function RefLineX(props: RefLineXProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: animate }}
+      exit={{ opacity: 0, transition: { duration: animate } }}
     >
       <line
         className={cn(

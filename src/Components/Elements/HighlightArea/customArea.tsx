@@ -31,6 +31,7 @@ export function CustomArea(props: Props) {
             opacity: 1,
           }}
           transition={{ duration: animate }}
+          exit={{ opacity: 0, transition: { duration: animate } }}
         >
           {d.coordinates.length !== 4 ? (
             <path

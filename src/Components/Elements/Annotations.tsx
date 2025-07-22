@@ -36,7 +36,12 @@ interface Props {
 export function Annotation(props: Props) {
   const { connectorsSettings, text, color, labelSettings, classNames, styles, animate } = props;
   return (
-    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: animate }}>
+    <motion.g
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: animate } }}
+      transition={{ duration: animate }}
+    >
       {connectorsSettings ? (
         <>
           <circle
