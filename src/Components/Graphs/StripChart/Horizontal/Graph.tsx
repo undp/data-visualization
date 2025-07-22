@@ -11,6 +11,7 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Colors } from '@/Components/ColorPalette';
 import { string2HTML } from '@/Utils/string2HTML';
+import { getTickPositions } from '@/Utils/getTickPosition';
 
 interface Props {
   data: StripChartDataType[];
@@ -116,7 +117,7 @@ export function Graph(props: Props) {
       ? 0
       : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
   const x = scaleLinear().domain([xMinValue, xMaxValue]).range([0, graphWidth]).nice();
-  const ticks = x.ticks(noOfTicks);
+  const ticks = getTickPositions(noOfTicks, graphWidth);
   return (
     <>
       <svg
@@ -305,59 +306,24 @@ export function Graph(props: Props) {
                 </motion.g>
               );
             })}
-            {noOfTicks === 2 ? (
-              <>
-                <text
-                  x={0}
-                  y={graphHeight / 2 + radius}
-                  style={{
-                    textAnchor: 'start',
-                    ...(styles?.xAxis?.labels || {}),
-                  }}
-                  className={cn(
-                    'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
-                    classNames?.xAxis?.labels,
-                  )}
-                  dy='1em'
-                >
-                  {numberFormattingFunction(x.invert(0), precision, prefix, suffix)}
-                </text>
-                <text
-                  x={graphWidth}
-                  y={graphHeight / 2 + radius}
-                  style={{
-                    textAnchor: 'end',
-                    ...(styles?.xAxis?.labels || {}),
-                  }}
-                  className={cn(
-                    'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
-                    classNames?.xAxis?.labels,
-                  )}
-                  dy='1em'
-                >
-                  {numberFormattingFunction(x.invert(graphWidth), precision, prefix, suffix)}
-                </text>
-              </>
-            ) : (
-              ticks.map((tick, i) => (
-                <text
-                  key={i}
-                  x={x(tick)}
-                  y={graphHeight / 2 + radius}
-                  style={{
-                    textAnchor: 'end',
-                    ...(styles?.xAxis?.labels || {}),
-                  }}
-                  className={cn(
-                    'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
-                    classNames?.xAxis?.labels,
-                  )}
-                  dy='1em'
-                >
-                  {numberFormattingFunction(tick, precision, prefix, suffix)}
-                </text>
-              ))
-            )}
+            {ticks.map((tick, i) => (
+              <text
+                key={i}
+                x={tick}
+                y={graphHeight / 2 + radius}
+                style={{
+                  textAnchor: i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle',
+                  ...(styles?.xAxis?.labels || {}),
+                }}
+                className={cn(
+                  'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
+                  classNames?.xAxis?.labels,
+                )}
+                dy='1em'
+              >
+                {numberFormattingFunction(x.invert(tick), precision, prefix, suffix)}
+              </text>
+            ))}
           </AnimatePresence>
         </g>
       </svg>
