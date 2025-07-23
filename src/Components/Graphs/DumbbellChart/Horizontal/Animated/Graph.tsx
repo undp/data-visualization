@@ -12,6 +12,7 @@ import { cn, Modal } from '@undp/design-system-react';
 
 import {
   ClassNameObject,
+  CustomLayerDataType,
   DumbbellChartWithDateDataType,
   ReferenceDataType,
   StyleObject,
@@ -69,6 +70,7 @@ interface Props {
   refValues?: ReferenceDataType[];
   rtl: boolean;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -112,6 +114,7 @@ export function Graph(props: Props) {
     refValues,
     rtl,
     precision,
+    customLayers,
   } = props;
   const dataFormatted = sortBy(
     data.map(d => ({
@@ -253,6 +256,7 @@ export function Graph(props: Props) {
             className={classNames?.xAxis?.title}
             text={axisTitle}
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {groupedData[indx].values.map((d, i) => (
               <motion.g className='undp-viz-low-opacity undp-viz-g-with-hover' key={i}>
@@ -414,6 +418,7 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

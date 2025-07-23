@@ -13,6 +13,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -76,6 +77,7 @@ interface Props {
   filterNA?: boolean;
   animate?: boolean | number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function HorizontalStackedBarGraph(props: Props) {
@@ -131,6 +133,7 @@ export function HorizontalStackedBarGraph(props: Props) {
     filterNA = true,
     animate = false,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -294,6 +297,7 @@ export function HorizontalStackedBarGraph(props: Props) {
                         animate={animate === true ? 0.5 : animate || 0}
                         colorDomain={colorDomain}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

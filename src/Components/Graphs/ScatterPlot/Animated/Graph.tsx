@@ -19,6 +19,7 @@ import {
   ClassNameObject,
   HighlightAreaSettingsForScatterPlotDataType,
   CustomHighlightAreaSettingsForScatterPlotDataType,
+  CustomLayerDataType,
 } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -85,6 +86,7 @@ interface Props {
   classNames?: ClassNameObject;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -133,6 +135,7 @@ export function Graph(props: Props) {
     classNames,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
 
   const dataFormatted = sortBy(
@@ -354,6 +357,7 @@ export function Graph(props: Props) {
               text={xAxisTitle}
             />
           </g>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {groupedData[indx].values.map((d, i) => {
               return (
@@ -634,6 +638,7 @@ export function Graph(props: Props) {
               })}
             </g>
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

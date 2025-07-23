@@ -11,6 +11,7 @@ interface Props {
 export function GraphTitle(props: Props) {
   const { text, isDashboard, style, className } = props;
   if (typeof text === 'string') {
+    if (text.trim() === '') return null;
     if (isDashboard)
       return (
         <H5

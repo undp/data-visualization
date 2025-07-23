@@ -5,7 +5,13 @@ import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { BarGraphDataType, ClassNameObject, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  BarGraphDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Colors } from '@/Components/ColorPalette';
@@ -58,6 +64,7 @@ interface Props {
   animate: number;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -99,6 +106,7 @@ export function Graph(props: Props) {
     dimmedOpacity,
     animate,
     precision,
+    customLayers,
   } = props;
   const margin = {
     top: topMargin,
@@ -207,6 +215,7 @@ export function Graph(props: Props) {
             text={barAxisTitle}
             rotate90
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {dataWithId.map((d, _i) =>
               !checkIfNullOrUndefined(x(d.id)) ? (
@@ -388,6 +397,7 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

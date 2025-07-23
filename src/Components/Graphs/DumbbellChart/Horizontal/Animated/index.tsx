@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   ReferenceDataType,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -79,6 +80,7 @@ interface Props {
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function AnimatedHorizontalDumbbellChart(props: Props) {
@@ -137,6 +139,7 @@ export function AnimatedHorizontalDumbbellChart(props: Props) {
     classNames,
     refValues,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -338,6 +341,7 @@ export function AnimatedHorizontalDumbbellChart(props: Props) {
                     refValues={refValues}
                     rtl={language === 'he' || language === 'ar'}
                     precision={precision}
+                    customLayers={customLayers}
                   />
                 ) : null}
               </div>

@@ -6,7 +6,13 @@ import { useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, DumbbellChartDataType, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  CustomLayerDataType,
+  DumbbellChartDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -59,6 +65,7 @@ interface Props {
   refValues?: ReferenceDataType[];
   animate: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -100,6 +107,7 @@ export function Graph(props: Props) {
     refValues,
     animate,
     precision,
+    customLayers,
   } = props;
   const margin = {
     top: topMargin,
@@ -226,6 +234,7 @@ export function Graph(props: Props) {
             text={axisTitle}
             rotate90
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {dataWithId.map(d => (
               <motion.g
@@ -399,6 +408,7 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

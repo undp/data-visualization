@@ -20,6 +20,7 @@ import { cn } from '@undp/design-system-react';
 import {
   ClassNameObject,
   CurveTypes,
+  CustomLayerDataType,
   DualAxisLineChartDataType,
   HighlightAreaSettingsDataType,
   StyleObject,
@@ -63,6 +64,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 interface FormattedDataType {
@@ -101,6 +103,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     precision,
+    customLayers,
   } = props;
   const curve =
     curveType === 'linear'
@@ -379,6 +382,7 @@ export function Graph(props: Props) {
               precision={precision}
             />
           </g>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g ref={scope}>
             <path
               d={
@@ -522,6 +526,7 @@ export function Graph(props: Props) {
               </g>
             ))}
           </g>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           <rect
             ref={MouseoverRectRef}
             style={{

@@ -17,6 +17,7 @@ import {
   ScaleDataType,
   ZoomInteractionTypes,
   MapProjectionTypes,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -107,6 +108,8 @@ interface Props {
   mapProperty?: string;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
   showAntarctica?: boolean;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -155,7 +158,7 @@ export function AnimatedChoroplethMap(props: Props) {
     graphDescription,
     height,
     width,
-    footNote,
+    footNote = 'The designations employed and the presentation of material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations or UNDP concerning the legal status of any country, territory, city or area or its authorities, or concerning the delimitation of its frontiers or boundaries.',
     colorDomain,
     colorLegendTitle,
     scaleType = 'threshold',
@@ -194,6 +197,7 @@ export function AnimatedChoroplethMap(props: Props) {
     mapProjection,
     zoomInteraction = 'button',
     dimmedOpacity = 0.3,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -416,6 +420,7 @@ export function AnimatedChoroplethMap(props: Props) {
                   zoomInteraction={zoomInteraction}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
                   dimmedOpacity={dimmedOpacity}
+                  customLayers={customLayers}
                 />
               ) : null}
             </div>

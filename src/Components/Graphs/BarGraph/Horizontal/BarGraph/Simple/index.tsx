@@ -12,6 +12,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -81,6 +82,7 @@ interface Props {
   filterNA?: boolean;
   animate?: boolean | number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function HorizontalBarGraph(props: Props) {
@@ -141,6 +143,7 @@ export function HorizontalBarGraph(props: Props) {
     animate = false,
     dimmedOpacity = 0.3,
     precision = 2,
+    customLayers = [],
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -329,6 +332,7 @@ export function HorizontalBarGraph(props: Props) {
                         animate={animate === true ? 0.5 : animate || 0}
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

@@ -4,7 +4,13 @@ import { scaleBand, scaleLinear } from 'd3-scale';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ButterflyChartDataType, ClassNameObject, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  ButterflyChartDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -48,6 +54,7 @@ interface Props {
   noOfTicks: number;
   animate: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -81,6 +88,7 @@ export function Graph(props: Props) {
     noOfTicks,
     animate,
     precision,
+    customLayers,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -161,6 +169,7 @@ export function Graph(props: Props) {
         direction='ltr'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g transform={`translate(${0},${0})`}>
             {showTicks ? (
               <XTicksAndGridLines
@@ -500,6 +509,7 @@ export function Graph(props: Props) {
               {axisTitles[1]}
             </text>
           </g>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

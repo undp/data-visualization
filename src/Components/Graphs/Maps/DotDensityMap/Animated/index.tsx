@@ -18,6 +18,7 @@ import {
   ClassNameObject,
   ZoomInteractionTypes,
   MapProjectionTypes,
+  CustomLayerDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { Pause, Play } from '@/Components/Icons';
@@ -103,6 +104,8 @@ interface Props {
   showColorScale?: boolean;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
   showAntarctica?: boolean;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -151,7 +154,7 @@ export function AnimatedDotDensityMap(props: Props) {
     graphDescription,
     height,
     width,
-    footNote,
+    footNote = 'The designations employed and the presentation of material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations or UNDP concerning the legal status of any country, territory, city or area or its authorities, or concerning the delimitation of its frontiers or boundaries.',
     colorLegendTitle,
     colorDomain,
     radius = 5,
@@ -190,6 +193,7 @@ export function AnimatedDotDensityMap(props: Props) {
     mapProjection,
     zoomInteraction = 'button',
     dimmedOpacity = 0.3,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -408,6 +412,7 @@ export function AnimatedDotDensityMap(props: Props) {
                   detailsOnClick={detailsOnClick}
                   dimmedOpacity={dimmedOpacity}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
+                  customLayers={customLayers}
                 />
               ) : null}
             </div>

@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { parseValue } from '../assets/parseValue';
 import {
   CLASS_NAME_OBJECT,
+  CUSTOM_LAYERS_OBJECT,
   LANGUAGE_OPTIONS,
   SOURCE_OBJECT,
   STYLE_OBJECT,
@@ -39,6 +40,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       table: {
         type: {
           summary: 'string | React.ReactNode',
+        },
+      },
+    },
+    customLayers: {
+      table: {
+        type: {
+          summary: 'CustomLayersDataType[]',
+          detail: CUSTOM_LAYERS_OBJECT,
         },
       },
     },

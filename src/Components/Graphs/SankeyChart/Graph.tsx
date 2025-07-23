@@ -4,7 +4,13 @@ import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
 import { AnimatePresence, motion, useAnimate, useInView } from 'motion/react';
 import { cn, Modal, P } from '@undp/design-system-react';
 
-import { ClassNameObject, NodeDataType, NodesLinkDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  CustomLayerDataType,
+  NodeDataType,
+  NodesLinkDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { string2HTML } from '@/Utils/string2HTML';
@@ -44,6 +50,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -78,6 +85,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     precision,
+    customLayers,
   } = props;
   const [scope, animatePath] = useAnimate();
   const isInView = useInView(scope);
@@ -164,6 +172,7 @@ export function Graph(props: Props) {
           </text>
         ) : null}
         <g transform={`translate(${margin.left},${margin.top})`}>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           {nodes
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .filter((d: any) => d.type === 'source')
@@ -451,6 +460,7 @@ export function Graph(props: Props) {
               ))}
             </AnimatePresence>
           </g>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

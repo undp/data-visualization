@@ -77,6 +77,7 @@ export function GeoHubSingleMap(props: Props) {
                     },
                   ]),
                 },
+          attributionControl: true,
         };
         if (center) {
           mapObj.center = center;

@@ -12,6 +12,7 @@ import { scaleBand, scaleLinear } from 'd3-scale';
 
 import {
   ClassNameObject,
+  CustomLayerDataType,
   GroupedBarGraphWithDateDataType,
   ReferenceDataType,
   StyleObject,
@@ -66,6 +67,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -104,6 +106,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     precision,
+    customLayers,
   } = props;
 
   const dataFormatted = sortBy(
@@ -205,6 +208,7 @@ export function Graph(props: Props) {
             className={classNames?.xAxis?.title}
             text={barAxisTitle}
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {groupedData[indx].values.map((d, i) => {
               return (
@@ -326,6 +330,7 @@ export function Graph(props: Props) {
             classNames={{ axis: classNames?.yAxis?.axis }}
             styles={{ axis: styles?.yAxis?.axis }}
           />
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

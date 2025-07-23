@@ -10,6 +10,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -94,6 +95,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -168,6 +171,7 @@ export function SlopeChart(props: Props) {
     classNames,
     animate = false,
     dimmedOpacity = 0.3,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -331,6 +335,7 @@ export function SlopeChart(props: Props) {
                         classNames={classNames}
                         animate={animate === true ? 0.5 : animate || 0}
                         dimmedOpacity={dimmedOpacity}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

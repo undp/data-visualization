@@ -9,7 +9,8 @@ interface Props {
 
 export function GraphDescription(props: Props) {
   const { text, style, className } = props;
-  if (typeof text === 'string')
+  if (typeof text === 'string') {
+    if (text.trim() === '') return null;
     return (
       <P
         size='sm'
@@ -21,6 +22,7 @@ export function GraphDescription(props: Props) {
         {text}
       </P>
     );
+  }
 
   if (React.isValidElement(text))
     return (

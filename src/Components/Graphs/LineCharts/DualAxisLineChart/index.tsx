@@ -14,6 +14,7 @@ import {
   ClassNameObject,
   HighlightAreaSettingsDataType,
   CurveTypes,
+  CustomLayerDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -104,6 +105,8 @@ interface Props {
   curveType?: CurveTypes;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -175,6 +178,7 @@ export function DualAxisLineChart(props: Props) {
     styles,
     classNames,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -312,6 +316,7 @@ export function DualAxisLineChart(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

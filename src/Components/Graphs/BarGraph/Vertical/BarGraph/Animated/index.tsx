@@ -13,6 +13,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -80,6 +81,7 @@ interface Props {
   classNames?: ClassNameObject;
   dimmedOpacity?: number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function AnimatedVerticalBarChart(props: Props) {
@@ -139,6 +141,7 @@ export function AnimatedVerticalBarChart(props: Props) {
     classNames,
     dimmedOpacity = 0.3,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -360,6 +363,7 @@ export function AnimatedVerticalBarChart(props: Props) {
                     classNames={classNames}
                     dimmedOpacity={dimmedOpacity}
                     precision={precision}
+                    customLayers={customLayers}
                   />
                 ) : null}
               </div>

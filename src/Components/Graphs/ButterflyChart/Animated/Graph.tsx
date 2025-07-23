@@ -11,6 +11,7 @@ import { cn, Modal } from '@undp/design-system-react';
 import {
   ButterflyChartWithDateDataType,
   ClassNameObject,
+  CustomLayerDataType,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -59,6 +60,7 @@ interface Props {
   classNames?: ClassNameObject;
   noOfTicks: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -93,6 +95,7 @@ export function Graph(props: Props) {
     classNames,
     noOfTicks,
     precision,
+    customLayers,
   } = props;
 
   const dataFormatted = sortBy(
@@ -195,6 +198,7 @@ export function Graph(props: Props) {
         direction='ltr'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}s
           <g transform={`translate(${0},${0})`}>
             {showTicks ? (
               <XTicksAndGridLines
@@ -472,7 +476,6 @@ export function Graph(props: Props) {
               />
             ))}
           </g>
-
           <g transform={`translate(${0},${graphHeight})`}>
             <text
               style={{
@@ -503,6 +506,7 @@ export function Graph(props: Props) {
               {axisTitles[1]}
             </text>
           </g>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

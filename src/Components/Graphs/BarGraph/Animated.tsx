@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   GroupedBarGraphWithDateDataType,
+  CustomLayerDataType,
 } from '@/Types';
 
 interface Props {
@@ -112,6 +113,8 @@ interface Props {
   barAxisTitle?: string;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -210,6 +213,7 @@ export function AnimatedBarGraph(props: Props) {
     classNames,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
 
   if (orientation === 'vertical')
@@ -270,6 +274,7 @@ export function AnimatedBarGraph(props: Props) {
         classNames={classNames}
         dimmedOpacity={dimmedOpacity}
         precision={precision}
+        customLayers={customLayers}
       />
     );
   return (
@@ -329,6 +334,7 @@ export function AnimatedBarGraph(props: Props) {
       classNames={classNames}
       dimmedOpacity={dimmedOpacity}
       precision={precision}
+      customLayers={customLayers}
     />
   );
 }
@@ -420,6 +426,8 @@ interface GroupedBarChartProps {
   barAxisTitle?: string;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -510,6 +518,7 @@ export function AnimatedGroupedBarGraph(props: GroupedBarChartProps) {
     styles,
     classNames,
     precision,
+    customLayers,
   } = props;
 
   if (orientation === 'vertical')
@@ -564,6 +573,7 @@ export function AnimatedGroupedBarGraph(props: GroupedBarChartProps) {
         valueColor={valueColor}
         classNames={classNames}
         precision={precision}
+        customLayers={customLayers}
       />
     );
   return (
@@ -617,6 +627,7 @@ export function AnimatedGroupedBarGraph(props: GroupedBarChartProps) {
       valueColor={valueColor}
       classNames={classNames}
       precision={precision}
+      customLayers={customLayers}
     />
   );
 }
@@ -710,6 +721,8 @@ interface StackedBarChartProps {
   sortParameter?: number | 'total';
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -804,6 +817,7 @@ export function AnimatedStackedBarGraph(props: StackedBarChartProps) {
     styles,
     classNames,
     precision,
+    customLayers,
   } = props;
 
   if (orientation === 'vertical')
@@ -860,6 +874,7 @@ export function AnimatedStackedBarGraph(props: StackedBarChartProps) {
         valueColor={valueColor}
         classNames={classNames}
         precision={precision}
+        customLayers={customLayers}
       />
     );
   return (
@@ -915,6 +930,7 @@ export function AnimatedStackedBarGraph(props: StackedBarChartProps) {
       valueColor={valueColor}
       classNames={classNames}
       precision={precision}
+      customLayers={customLayers}
     />
   );
 }

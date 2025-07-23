@@ -9,7 +9,13 @@ import orderBy from 'lodash.orderby';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn, Modal } from '@undp/design-system-react';
 
-import { BarGraphWithDateDataType, ClassNameObject, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  BarGraphWithDateDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -66,6 +72,7 @@ interface Props {
   classNames?: ClassNameObject;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -109,6 +116,7 @@ export function Graph(props: Props) {
     classNames,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -215,6 +223,7 @@ export function Graph(props: Props) {
             className={classNames?.xAxis?.title}
             text={barAxisTitle}
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {groupedData[indx].values.map(d => (
               <motion.g
@@ -370,6 +379,7 @@ export function Graph(props: Props) {
             classNames={{ axis: classNames?.yAxis?.axis }}
             styles={{ axis: styles?.yAxis?.axis }}
           />
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

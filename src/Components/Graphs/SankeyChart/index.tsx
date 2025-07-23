@@ -9,6 +9,7 @@ import { Graph } from './Graph';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import {
   ClassNameObject,
+  CustomLayerDataType,
   Languages,
   NodesLinkDataType,
   SankeyDataType,
@@ -108,6 +109,8 @@ interface Props {
   animate?: boolean | number;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -188,6 +191,7 @@ export function SankeyChart(props: Props) {
     classNames,
     animate = false,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -382,6 +386,7 @@ export function SankeyChart(props: Props) {
                       detailsOnClick={detailsOnClick}
                       animate={animate}
                       precision={precision}
+                      customLayers={customLayers}
                     />
                   ) : null}
                 </div>

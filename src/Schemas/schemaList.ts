@@ -581,6 +581,22 @@ export const statCardDataSchema = {
 export const sankeyChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -679,6 +695,22 @@ export const sankeyChartSettingsSchema = {
 export const simpleBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
@@ -811,6 +843,22 @@ export const simpleBarChartSettingsSchema = {
 export const groupedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -933,6 +981,22 @@ export const groupedBarChartSettingsSchema = {
 export const stackedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -1057,6 +1121,22 @@ export const stackedBarChartSettingsSchema = {
 export const animatedSimpleBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -1182,6 +1262,22 @@ export const animatedSimpleBarChartSettingsSchema = {
 export const animatedGroupedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -1302,6 +1398,22 @@ export const animatedGroupedBarChartSettingsSchema = {
 export const animatedStackedBarChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -1424,6 +1536,22 @@ export const animatedStackedBarChartSettingsSchema = {
 export const beeSwarmChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
@@ -1538,6 +1666,22 @@ export const beeSwarmChartSettingsSchema = {
 export const butterflyChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -1647,6 +1791,22 @@ export const butterflyChartSettingsSchema = {
 export const animatedButterflyChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -2043,6 +2203,22 @@ export const dataCardListSettingsSchema = {
 export const radarChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
@@ -2242,6 +2418,22 @@ export const donutChartSettingsSchema = {
 export const dumbbellChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -2370,6 +2562,22 @@ export const dumbbellChartSettingsSchema = {
 export const animatedDumbbellChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -2708,6 +2916,22 @@ export const histogramSettingsSchema = {
 export const dualAxisLineChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -2830,6 +3054,22 @@ export const dualAxisLineChartSettingsSchema = {
 export const lineChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -3015,6 +3255,22 @@ export const lineChartSettingsSchema = {
 export const lineChartWithConfidenceIntervalSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -3220,6 +3476,22 @@ export const lineChartWithConfidenceIntervalSettingsSchema = {
 export const differenceLineChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -3424,6 +3696,22 @@ export const differenceLineChartSettingsSchema = {
 export const multiLineChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
@@ -3624,6 +3912,22 @@ export const multiLineChartSettingsSchema = {
 export const multiLineAltChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
@@ -3814,6 +4118,22 @@ export const multiLineAltChartSettingsSchema = {
 export const sparkLineSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     curveType: {
@@ -3884,6 +4204,22 @@ export const sparkLineSettingsSchema = {
 export const choroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -4009,6 +4345,22 @@ export const choroplethMapSettingsSchema = {
 export const biVariateChoroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -4130,6 +4482,22 @@ export const biVariateChoroplethMapSettingsSchema = {
 export const dotDensityMapSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -4250,6 +4618,22 @@ export const dotDensityMapSettingsSchema = {
 export const animatedChoroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -4377,6 +4761,22 @@ export const animatedChoroplethMapSettingsSchema = {
 export const animatedBiVariateChoroplethMapSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -4500,6 +4900,22 @@ export const animatedBiVariateChoroplethMapSettingsSchema = {
 export const animatedDotDensityMapSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -4867,6 +5283,22 @@ export const geoHubMapWithLayerSelectionSettingsSchema = {
 export const paretoChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -4950,6 +5382,22 @@ export const paretoChartSettingsSchema = {
 export const scatterPlotSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
@@ -5182,6 +5630,22 @@ export const scatterPlotSettingsSchema = {
 export const animatedScatterPlotSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     styles: { type: 'object' },
@@ -5415,6 +5879,22 @@ export const animatedScatterPlotSettingsSchema = {
 export const slopeChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
     styles: { type: 'object' },
@@ -5510,6 +5990,22 @@ export const slopeChartSettingsSchema = {
 export const stackedAreaChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
@@ -5773,6 +6269,22 @@ export const statCardSettingsSchema = {
 export const stripChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
@@ -6034,6 +6546,22 @@ export const unitChartSettingsSchema = {
 export const bulletChartSettingsSchema = {
   type: 'object',
   properties: {
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
     precision: { type: 'number' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
@@ -6953,5 +7481,21 @@ export const SettingsSchema = {
     },
     mapLegend: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    customLayers: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          position: {
+            type: 'string',
+            enum: ['before', 'after'],
+          },
+          layer: {
+            type: 'object',
+          },
+        },
+        required: ['layer', 'position'],
+      },
+    },
   },
 };

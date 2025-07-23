@@ -11,6 +11,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -106,6 +107,8 @@ interface Props {
   resetSelectionOnDoubleClick?: boolean;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -183,6 +186,7 @@ export function RadarChart(props: Props) {
     animate = false,
     dimmedOpacity = 0.3,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
@@ -366,6 +370,7 @@ export function RadarChart(props: Props) {
                           animate={animate === true ? 0.5 : animate || 0}
                           dimmedOpacity={dimmedOpacity}
                           precision={precision}
+                          customLayers={customLayers}
                         />
                       ) : null}
                     </div>

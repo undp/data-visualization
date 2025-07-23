@@ -17,7 +17,13 @@ import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
 import { cn } from '@undp/design-system-react';
 
-import { ClassNameObject, CurveTypes, LineChartDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  CurveTypes,
+  CustomLayerDataType,
+  LineChartDataType,
+  StyleObject,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 
@@ -41,6 +47,7 @@ interface Props {
   curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  customLayers: CustomLayerDataType[];
 }
 
 interface FormattedDataType {
@@ -67,6 +74,7 @@ export function Graph(props: Props) {
     curveType,
     styles,
     classNames,
+    customLayers,
   } = props;
   const curve =
     curveType === 'linear'
@@ -167,6 +175,7 @@ export function Graph(props: Props) {
           </linearGradient>
         ) : null}
         <g transform={`translate(${margin.left},${margin.top})`}>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g>
             <text
               className={cn(
@@ -225,6 +234,7 @@ export function Graph(props: Props) {
               />
             ) : null}
           </g>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           <rect
             ref={MouseoverRectRef}
             style={{

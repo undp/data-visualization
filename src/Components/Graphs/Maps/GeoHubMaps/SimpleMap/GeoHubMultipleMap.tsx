@@ -80,6 +80,7 @@ export function GeoHubMultipleMap(props: Props) {
                     },
                   ]),
                 },
+          attributionControl: true,
         };
         if (center) {
           mapObj.center = center;

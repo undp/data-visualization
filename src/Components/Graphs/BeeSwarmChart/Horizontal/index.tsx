@@ -11,6 +11,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -70,6 +71,7 @@ interface Props {
   animate?: boolean | number;
   dimmedOpacity?: number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function HorizontalBeeSwarmChart(props: Props) {
@@ -121,6 +123,7 @@ export function HorizontalBeeSwarmChart(props: Props) {
     animate = false,
     dimmedOpacity = 0.3,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -291,6 +294,7 @@ export function HorizontalBeeSwarmChart(props: Props) {
                         animate={animate === true ? 0.5 : animate || 0}
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

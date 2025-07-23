@@ -10,6 +10,7 @@ import {
   StyleObject,
   ClassNameObject,
   CurveTypes,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -76,6 +77,8 @@ interface Props {
   area?: boolean;
   /** Curve type for the line */
   curveType?: CurveTypes;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -131,6 +134,7 @@ export function SparkLine(props: Props) {
     curveType = 'curve',
     styles,
     classNames,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -244,6 +248,7 @@ export function SparkLine(props: Props) {
                   curveType={curveType}
                   styles={styles}
                   classNames={classNames}
+                  customLayers={customLayers}
                 />
               ) : null}
             </div>

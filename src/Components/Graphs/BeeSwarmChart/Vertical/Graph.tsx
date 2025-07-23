@@ -7,7 +7,13 @@ import orderBy from 'lodash.orderby';
 import { cn, Modal, Spinner } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { BeeSwarmChartDataType, ClassNameObject, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  BeeSwarmChartDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -62,6 +68,7 @@ interface Props {
   animate: number;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -98,6 +105,7 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -235,6 +243,7 @@ export function Graph(props: Props) {
                 />
               </>
             ) : null}
+            {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
             <AnimatePresence>
               {finalData.map(d => (
                 <motion.g
@@ -394,6 +403,7 @@ export function Graph(props: Props) {
                 </>
               ) : null}
             </AnimatePresence>
+            {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           </g>
         </svg>
       ) : (

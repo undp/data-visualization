@@ -157,6 +157,7 @@ function GraphEl(props: Props) {
     switch (graphType) {
       case 'barChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -222,6 +223,7 @@ function GraphEl(props: Props) {
         };
       case 'groupedBarChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
@@ -274,6 +276,7 @@ function GraphEl(props: Props) {
         };
       case 'stackedBarChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
@@ -328,6 +331,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedBarChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -389,6 +393,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedGroupedBarChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
@@ -442,6 +447,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedStackedBarChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
@@ -496,6 +502,7 @@ function GraphEl(props: Props) {
         };
       case 'bulletChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -565,6 +572,7 @@ function GraphEl(props: Props) {
         };
       case 'lineChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           curveType: settings?.curveType,
@@ -616,6 +624,7 @@ function GraphEl(props: Props) {
         };
       case 'lineChartWithConfidenceInterval':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
@@ -676,6 +685,7 @@ function GraphEl(props: Props) {
         };
       case 'dualAxisLineChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
@@ -728,6 +738,7 @@ function GraphEl(props: Props) {
         };
       case 'multiLineChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -785,6 +796,7 @@ function GraphEl(props: Props) {
         };
       case 'multiLineAltChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
@@ -840,6 +852,7 @@ function GraphEl(props: Props) {
         };
       case 'differenceLineChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
@@ -897,6 +910,7 @@ function GraphEl(props: Props) {
         };
       case 'stackedAreaChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
@@ -946,6 +960,7 @@ function GraphEl(props: Props) {
         };
       case 'choroplethMap':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -999,6 +1014,7 @@ function GraphEl(props: Props) {
         };
       case 'biVariateChoroplethMap':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1055,6 +1071,7 @@ function GraphEl(props: Props) {
         };
       case 'dotDensityMap':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1148,6 +1165,7 @@ function GraphEl(props: Props) {
         };
       case 'slopeChart':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1193,6 +1211,7 @@ function GraphEl(props: Props) {
         };
       case 'scatterPlot':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1264,6 +1283,7 @@ function GraphEl(props: Props) {
         };
       case 'dumbbellChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
@@ -1470,6 +1490,7 @@ function GraphEl(props: Props) {
         };
       case 'stripChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1522,6 +1543,7 @@ function GraphEl(props: Props) {
         };
       case 'beeSwarmChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1571,6 +1593,7 @@ function GraphEl(props: Props) {
         };
       case 'butterflyChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1665,6 +1688,7 @@ function GraphEl(props: Props) {
         };
       case 'sparkLine':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           data: graphData,
           curveType: settings?.curveType,
@@ -1698,6 +1722,7 @@ function GraphEl(props: Props) {
         };
       case 'paretoChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1904,6 +1929,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedBiVariateChoroplethMap':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1958,6 +1984,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedChoroplethMap':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -2009,6 +2036,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedDotDensityMap':
         return {
+          customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -2060,6 +2088,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedButterflyChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -2113,6 +2142,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedDumbbellChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
@@ -2171,6 +2201,7 @@ function GraphEl(props: Props) {
         };
       case 'animatedScatterPlot':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -2237,6 +2268,7 @@ function GraphEl(props: Props) {
         };
       case 'sankeyChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -2315,6 +2347,7 @@ function GraphEl(props: Props) {
         };
       case 'radarChart':
         return {
+          customLayers: settings?.customLayers,
           precision: settings?.precision,
           graphTitle: settings?.graphTitle,
           dimmedOpacity: settings?.dimmedOpacity,

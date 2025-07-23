@@ -8,6 +8,7 @@ import {
   Languages,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 
 interface Props {
@@ -123,6 +124,8 @@ interface Props {
   animate?: boolean | number;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */

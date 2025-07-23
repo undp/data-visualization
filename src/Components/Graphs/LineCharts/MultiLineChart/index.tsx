@@ -14,6 +14,7 @@ import {
   ClassNameObject,
   HighlightAreaSettingsDataType,
   CurveTypes,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -121,6 +122,8 @@ interface Props {
   curveType?: CurveTypes;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -196,6 +199,7 @@ export function MultiLineChart(props: Props) {
     classNames,
     dimmedOpacity = 0.3,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -338,6 +342,7 @@ export function MultiLineChart(props: Props) {
                         classNames={classNames}
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

@@ -8,7 +8,7 @@ import min from 'lodash.min';
 import { scaleLinear } from 'd3-scale';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, RadarChartDataType, StyleObject } from '@/Types';
+import { ClassNameObject, CustomLayerDataType, RadarChartDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { Colors } from '@/Components/ColorPalette';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -47,6 +47,7 @@ interface Props {
   animate: number;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -80,6 +81,7 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
   const curve = curveType === 'linear' ? curveLinearClosed : curveCardinalClosed;
   const margin = {
@@ -127,6 +129,7 @@ export function Graph(props: Props) {
         direction='ltr'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g transform={`translate(${radiusWithoutMargin},${radiusWithoutMargin})`}>
             {axisLabels.map((d, i) => (
               <g key={i}>
@@ -374,6 +377,7 @@ export function Graph(props: Props) {
               ))}
             </AnimatePresence>
           </g>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

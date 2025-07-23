@@ -18,6 +18,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import {
   ClassNameObject,
+  CustomLayerDataType,
   DotDensityMapDataType,
   MapProjectionTypes,
   StyleObject,
@@ -64,6 +65,7 @@ interface Props {
   mapProjection: MapProjectionTypes;
   animate: number;
   dimmedOpacity: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -97,6 +99,7 @@ export function Graph(props: Props) {
     zoomInteraction,
     animate,
     dimmedOpacity,
+    customLayers,
   } = props;
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   const [showLegend, setShowLegend] = useState(!(width < 680));
@@ -213,6 +216,7 @@ export function Graph(props: Props) {
           direction='ltr'
         >
           <g ref={mapG}>
+            {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
             {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               mapData.features.map((d: any, i: number) => {
@@ -284,8 +288,7 @@ export function Graph(props: Props) {
                           ? 1
                           : dimmedOpacity
                         : highlightedDataPoints.length !== 0
-                          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            highlightedDataPoints.indexOf((d.data as any).id) !== -1
+                          ? highlightedDataPoints.indexOf(d.label || '') !== -1
                             ? 1
                             : dimmedOpacity
                           : 1,
@@ -389,6 +392,7 @@ export function Graph(props: Props) {
                 );
               })}
             </AnimatePresence>
+            {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           </g>
         </svg>
         {data.filter(el => el.color).length === 0 || showColorScale === false ? null : (

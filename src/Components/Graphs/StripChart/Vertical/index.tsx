@@ -10,6 +10,7 @@ import {
   StripChartDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -69,6 +70,7 @@ interface Props {
   noOfTicks?: number;
   dimmedOpacity?: number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function VerticalStripChart(props: Props) {
@@ -120,6 +122,7 @@ export function VerticalStripChart(props: Props) {
     noOfTicks = 2,
     dimmedOpacity = 0.3,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -284,6 +287,7 @@ export function VerticalStripChart(props: Props) {
                         noOfTicks={noOfTicks}
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

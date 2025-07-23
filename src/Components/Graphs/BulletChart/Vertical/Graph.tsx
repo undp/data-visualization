@@ -6,7 +6,13 @@ import sum from 'lodash.sum';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { BulletChartDataType, ClassNameObject, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  BulletChartDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { string2HTML } from '@/Utils/string2HTML';
@@ -60,6 +66,7 @@ interface Props {
   animate: number;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -103,6 +110,7 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
   const margin = {
     top: topMargin,
@@ -238,6 +246,7 @@ export function Graph(props: Props) {
             text={barAxisTitle}
             rotate90
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {dataWithId.map(d =>
               !checkIfNullOrUndefined(x(d.id)) ? (
@@ -479,6 +488,7 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

@@ -11,6 +11,7 @@ import {
   Languages,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -83,6 +84,7 @@ interface Props {
   animate?: boolean | number;
   dimmedOpacity?: number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function VerticalBulletChart(props: Props) {
@@ -146,6 +148,7 @@ export function VerticalBulletChart(props: Props) {
     animate = false,
     dimmedOpacity = 0.3,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -315,6 +318,7 @@ export function VerticalBulletChart(props: Props) {
                         measureBarWidthFactor={measureBarWidthFactor}
                         animate={animate === true ? 0.5 : animate || 0}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

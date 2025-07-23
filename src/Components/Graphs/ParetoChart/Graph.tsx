@@ -14,7 +14,13 @@ import minBy from 'lodash.minby';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, CurveTypes, ParetoChartDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  CurveTypes,
+  CustomLayerDataType,
+  ParetoChartDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { string2HTML } from '@/Utils/string2HTML';
@@ -58,6 +64,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 interface DataFormattedType {
   id: string;
@@ -97,6 +104,7 @@ export function Graph(props: Props) {
     classNames,
     animate,
     precision,
+    customLayers,
   } = props;
   const curve =
     curveType === 'linear'
@@ -286,6 +294,7 @@ export function Graph(props: Props) {
             classNames={{ axis: classNames?.xAxis?.axis }}
             styles={{ axis: styles?.xAxis?.axis }}
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {dataWithId.map((d, i) => {
               return (
@@ -500,6 +509,7 @@ export function Graph(props: Props) {
               </g>
             ))}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

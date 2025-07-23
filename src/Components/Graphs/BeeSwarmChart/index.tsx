@@ -8,6 +8,7 @@ import {
   BeeSwarmChartDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 
 interface Props {
@@ -95,6 +96,8 @@ interface Props {
   radius?: number;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -173,6 +176,7 @@ export function BeeSwarmChart(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
 
   if (orientation === 'vertical')
@@ -223,6 +227,7 @@ export function BeeSwarmChart(props: Props) {
         animate={animate}
         dimmedOpacity={dimmedOpacity}
         precision={precision}
+        customLayers={customLayers}
       />
     );
   return (
@@ -272,6 +277,7 @@ export function BeeSwarmChart(props: Props) {
       animate={animate}
       dimmedOpacity={dimmedOpacity}
       precision={precision}
+      customLayers={customLayers}
     />
   );
 }

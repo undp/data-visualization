@@ -13,6 +13,7 @@ import {
   Languages,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -74,6 +75,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function AnimatedVerticalGroupedBarGraph(props: Props) {
@@ -127,6 +129,7 @@ export function AnimatedVerticalGroupedBarGraph(props: Props) {
     styles,
     classNames,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -318,6 +321,7 @@ export function AnimatedVerticalGroupedBarGraph(props: Props) {
                     styles={styles}
                     classNames={classNames}
                     precision={precision}
+                    customLayers={customLayers}
                   />
                 ) : null}
               </div>

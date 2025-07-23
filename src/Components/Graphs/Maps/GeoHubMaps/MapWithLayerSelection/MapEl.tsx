@@ -84,6 +84,7 @@ export function MapEl(props: Props) {
               },
             ]),
           },
+          attributionControl: true,
         };
         if (center) {
           mapObj.center = center;

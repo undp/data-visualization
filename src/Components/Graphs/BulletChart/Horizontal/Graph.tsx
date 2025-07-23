@@ -5,7 +5,13 @@ import { cn, Modal } from '@undp/design-system-react';
 import sum from 'lodash.sum';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { BulletChartDataType, ClassNameObject, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  BulletChartDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -61,6 +67,7 @@ interface Props {
   animate: number;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -105,6 +112,7 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -225,6 +233,7 @@ export function Graph(props: Props) {
             classNames={{ axis: classNames?.yAxis?.axis }}
             styles={{ axis: styles?.yAxis?.axis }}
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {dataWithId.map(d =>
               !checkIfNullOrUndefined(y(d.id)) ? (
@@ -456,6 +465,7 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

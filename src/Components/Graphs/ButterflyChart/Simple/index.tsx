@@ -13,6 +13,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -103,6 +104,8 @@ interface Props {
   animate?: boolean | number;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
+  customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -182,6 +185,7 @@ export function ButterflyChart(props: Props) {
     noOfTicks = 5,
     animate = false,
     precision = 2,
+    customLayers = [],
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -317,6 +321,7 @@ export function ButterflyChart(props: Props) {
                         noOfTicks={noOfTicks}
                         animate={animate === true ? 0.5 : animate || 0}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

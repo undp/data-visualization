@@ -13,6 +13,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -76,6 +77,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function AnimatedVerticalStackedBarChart(props: Props) {
@@ -131,6 +133,7 @@ export function AnimatedVerticalStackedBarChart(props: Props) {
     styles,
     classNames,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -323,6 +326,7 @@ export function AnimatedVerticalStackedBarChart(props: Props) {
                     styles={styles}
                     classNames={classNames}
                     precision={precision}
+                    customLayers={customLayers}
                   />
                 ) : null}
               </div>

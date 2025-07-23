@@ -10,6 +10,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  CustomLayerDataType,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -71,6 +72,7 @@ interface Props {
   filterNA?: boolean;
   animate?: boolean | number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
 
 export function HorizontalGroupedBarGraph(props: Props) {
@@ -124,6 +126,7 @@ export function HorizontalGroupedBarGraph(props: Props) {
     filterNA = true,
     animate = false,
     precision = 2,
+    customLayers = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -265,6 +268,7 @@ export function HorizontalGroupedBarGraph(props: Props) {
                         colorDomain={colorDomain}
                         animate={animate === true ? 0.5 : animate || 0}
                         precision={precision}
+                        customLayers={customLayers}
                       />
                     ) : null}
                   </div>

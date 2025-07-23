@@ -5,7 +5,7 @@ import sortBy from 'lodash.sortby';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, StripChartDataType, StyleObject } from '@/Types';
+import { ClassNameObject, CustomLayerDataType, StripChartDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -49,6 +49,7 @@ interface Props {
   noOfTicks: number;
   dimmedOpacity: number;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -84,6 +85,7 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    customLayers,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -127,6 +129,7 @@ export function Graph(props: Props) {
         direction='ltr'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {sortedData.map(d => {
               return (
@@ -325,6 +328,7 @@ export function Graph(props: Props) {
               </text>
             ))}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

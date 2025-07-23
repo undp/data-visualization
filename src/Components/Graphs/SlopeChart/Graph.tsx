@@ -6,7 +6,7 @@ import minBy from 'lodash.minby';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, SlopeChartDataType, StyleObject } from '@/Types';
+import { ClassNameObject, CustomLayerDataType, SlopeChartDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Colors } from '@/Components/ColorPalette';
@@ -44,6 +44,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: number;
   dimmedOpacity: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -73,6 +74,7 @@ export function Graph(props: Props) {
     classNames,
     animate,
     dimmedOpacity,
+    customLayers,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -155,6 +157,7 @@ export function Graph(props: Props) {
               text={axisTitles[1]}
             />
           </g>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {data.map((d, i) => {
               return (
@@ -490,6 +493,7 @@ export function Graph(props: Props) {
               );
             })}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

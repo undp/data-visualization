@@ -6,7 +6,13 @@ import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { ClassNameObject, GroupedBarGraphDataType, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  CustomLayerDataType,
+  GroupedBarGraphDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
@@ -56,6 +62,7 @@ interface Props {
   animate: number;
   colorDomain: string[];
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -94,6 +101,7 @@ export function Graph(props: Props) {
     animate,
     colorDomain,
     precision,
+    customLayers,
   } = props;
   const margin = {
     top: topMargin,
@@ -189,6 +197,7 @@ export function Graph(props: Props) {
             text={barAxisTitle}
             rotate90
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {dataWithId.map(d =>
               !checkIfNullOrUndefined(x(d.id)) ? (
@@ -376,6 +385,7 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

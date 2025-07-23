@@ -6,7 +6,13 @@ import min from 'lodash.min';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, GroupedBarGraphDataType, ReferenceDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  CustomLayerDataType,
+  GroupedBarGraphDataType,
+  ReferenceDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -57,6 +63,7 @@ interface Props {
   animate: number;
   colorDomain: string[];
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 
 export function Graph(props: Props) {
@@ -96,6 +103,7 @@ export function Graph(props: Props) {
     animate,
     colorDomain,
     precision,
+    customLayers,
   } = props;
   const margin = {
     top: barAxisTitle ? topMargin + 25 : topMargin,
@@ -179,6 +187,7 @@ export function Graph(props: Props) {
             className={classNames?.xAxis?.title}
             text={barAxisTitle}
           />
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {dataWithId.map(d =>
               !checkIfNullOrUndefined(y(d.id)) ? (
@@ -328,6 +337,7 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
       </svg>
       {mouseOverData && tooltip && eventX && eventY ? (

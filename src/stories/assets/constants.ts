@@ -70,6 +70,11 @@ export const SOURCE_OBJECT = `{
   link?: string; 
 }`;
 
+export const CUSTOM_LAYERS_OBJECT = `{
+  position: 'before' | 'after'; 
+  layer: React.ReactNode; 
+}`;
+
 export const ANNOTATION_OBJECT = `{
   text: string;
   maxWidth?: number;

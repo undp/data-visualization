@@ -22,6 +22,7 @@ import {
   ClassNameObject,
   CurveTypes,
   CustomHighlightAreaSettingsDataType,
+  CustomLayerDataType,
   HighlightAreaSettingsDataType,
   LineChartWithConfidenceIntervalDataType,
   ReferenceDataType,
@@ -83,6 +84,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   precision: number;
+  customLayers: CustomLayerDataType[];
 }
 interface FormattedDataType {
   y: number;
@@ -133,6 +135,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     precision,
+    customLayers,
   } = props;
   const curve =
     curveType === 'linear'
@@ -412,6 +415,7 @@ export function Graph(props: Props) {
               </g>
             ))}
           </g>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g>
             <g ref={scope}>
               <path
@@ -670,6 +674,7 @@ export function Graph(props: Props) {
               />
             ) : null}
           </g>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           <rect
             ref={MouseoverRectRef}
             style={{

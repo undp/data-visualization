@@ -75,6 +75,11 @@ export type MapProjectionTypes =
   | 'orthographic'
   | 'albersUSA';
 
+export interface CustomLayerDataType {
+  position: 'before' | 'after';
+  layer: React.ReactNode;
+}
+
 export interface SourcesDataType {
   source: string;
   link?: string;
@@ -912,4 +917,5 @@ export interface GraphSettingsDataType {
   mapLegend?: string | React.ReactNode | MapLegendDataType[];
   dimmedOpacity?: number;
   precision?: number;
+  customLayers?: CustomLayerDataType[];
 }
