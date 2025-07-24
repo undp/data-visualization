@@ -14,10 +14,11 @@ import { format, parse } from 'date-fns';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
-import { useAnimate, useInView } from 'motion/react';
+import { motion } from 'motion/react';
 import { cn } from '@undp/design-system-react';
 
 import {
+  AnimateDataType,
   ClassNameObject,
   CurveTypes,
   CustomLayerDataType,
@@ -52,7 +53,7 @@ interface Props {
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
-  animateLine: boolean | number;
+  animate: AnimateDataType;
   strokeWidth: number;
   showDots: boolean;
   noOfYTicks: number;
@@ -91,7 +92,7 @@ export function Graph(props: Props) {
     tooltip,
     highlightAreaSettings,
     onSeriesMouseOver,
-    animateLine,
+    animate,
     strokeWidth,
     showDots,
     noOfYTicks,
@@ -115,9 +116,6 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  const [scope, animate] = useAnimate();
-  const [labelScope, labelAnimate] = useAnimate();
-  const isInView = useInView(scope);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -224,23 +222,6 @@ export function Graph(props: Props) {
     select(MouseoverRectRef.current).on('mousemove', mousemove).on('mouseout', mouseout);
   }, [x, dataFormatted, onSeriesMouseOver]);
 
-  useEffect(() => {
-    if (isInView && data.length > 0) {
-      animate(
-        'path',
-        { pathLength: [0, 1] },
-        { duration: animateLine === true ? 5 : animateLine || 0 },
-      );
-      labelAnimate(
-        labelScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-    }
-  }, [isInView, data, animate, animateLine, labelAnimate, labelScope]);
   return (
     <>
       <svg
@@ -255,7 +236,7 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
-            animate={animateLine === true ? 0.5 : animateLine || 0}
+            animate={animate}
           />
           <g>
             {y1Ticks.map((d, i) => (
@@ -383,22 +364,38 @@ export function Graph(props: Props) {
             />
           </g>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-          <g ref={scope}>
-            <path
-              d={
-                lineShape1(
-                  dataFormatted.filter(
-                    (el): el is FormattedDataType => !checkIfNullOrUndefined(el.y1),
-                  ),
-                ) || ''
-              }
+          <g>
+            <motion.path
               style={{
                 stroke: lineColors[0],
                 strokeWidth,
                 fill: 'none',
               }}
+              initial={{
+                pathLength: 0,
+                d:
+                  lineShape1(
+                    dataFormatted.filter(
+                      (el): el is FormattedDataType => !checkIfNullOrUndefined(el.y1),
+                    ),
+                  ) || '',
+                opacity: 1,
+              }}
+              whileInView={{
+                pathLength: 1,
+                d:
+                  lineShape1(
+                    dataFormatted.filter(
+                      (el): el is FormattedDataType => !checkIfNullOrUndefined(el.y1),
+                    ),
+                  ) || '',
+                opacity: 1,
+              }}
+              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+              transition={{ duration: animate.duration }}
+              viewport={{ once: animate.once, amount: animate.amount }}
             />
-            <path
+            <motion.path
               d={
                 lineShape2(
                   dataFormatted.filter(
@@ -411,6 +408,29 @@ export function Graph(props: Props) {
                 strokeWidth,
                 fill: 'none',
               }}
+              initial={{
+                pathLength: 0,
+                d:
+                  lineShape2(
+                    dataFormatted.filter(
+                      (el): el is FormattedDataType => !checkIfNullOrUndefined(el.y2),
+                    ),
+                  ) || '',
+                opacity: 1,
+              }}
+              whileInView={{
+                pathLength: 1,
+                d:
+                  lineShape2(
+                    dataFormatted.filter(
+                      (el): el is FormattedDataType => !checkIfNullOrUndefined(el.y2),
+                    ),
+                  ) || '',
+                opacity: 1,
+              }}
+              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+              transition={{ duration: animate.duration }}
+              viewport={{ once: animate.once, amount: animate.amount }}
             />
             {mouseOverData ? (
               <line
@@ -426,13 +446,13 @@ export function Graph(props: Props) {
               />
             ) : null}
           </g>
-          <g ref={labelScope}>
+          <g>
             {dataFormatted.map((d, i) => (
-              <g key={i}>
+              <motion.g key={i}>
                 {!checkIfNullOrUndefined(d.y1) ? (
-                  <g>
+                  <>
                     {showDots ? (
-                      <circle
+                      <motion.circle
                         cx={x(d.date)}
                         cy={y1(d.y1 as number)}
                         r={
@@ -443,10 +463,15 @@ export function Graph(props: Props) {
                               : 4
                         }
                         style={{ fill: lineColors[0] }}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       />
                     ) : null}
                     {showValues ? (
-                      <text
+                      <motion.text
                         x={x(d.date)}
                         y={y1(d.y1 as number)}
                         dy={
@@ -465,6 +490,11 @@ export function Graph(props: Props) {
                           'graph-value graph-value-line-1 text-xs font-bold',
                           classNames?.graphObjectValues,
                         )}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       >
                         {numberFormattingFunction(
                           d.y1,
@@ -472,14 +502,14 @@ export function Graph(props: Props) {
                           linePrefixes[0],
                           lineSuffixes[0],
                         )}
-                      </text>
+                      </motion.text>
                     ) : null}
-                  </g>
+                  </>
                 ) : null}
                 {!checkIfNullOrUndefined(d.y2) ? (
-                  <g>
+                  <>
                     {showDots ? (
-                      <circle
+                      <motion.circle
                         cx={x(d.date)}
                         cy={y2(d.y2 as number)}
                         r={
@@ -490,10 +520,15 @@ export function Graph(props: Props) {
                               : 4
                         }
                         style={{ fill: lineColors[1] }}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       />
                     ) : null}
                     {showValues ? (
-                      <text
+                      <motion.text
                         x={x(d.date)}
                         y={y2(d.y2 as number)}
                         dy={
@@ -512,6 +547,11 @@ export function Graph(props: Props) {
                           'graph-value graph-value-line-2 text-xs font-bold',
                           classNames?.graphObjectValues,
                         )}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       >
                         {numberFormattingFunction(
                           d.y2,
@@ -519,11 +559,11 @@ export function Graph(props: Props) {
                           linePrefixes[1],
                           lineSuffixes[1],
                         )}
-                      </text>
+                      </motion.text>
                     ) : null}
-                  </g>
+                  </>
                 ) : null}
-              </g>
+              </motion.g>
             ))}
           </g>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}

@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import {
+  AnimateDataType,
   BarGraphDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -61,7 +62,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -235,7 +236,7 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  animate={{
+                  whileInView={{
                     opacity: selectedColor
                       ? d.color
                         ? barColor[colorDomain.indexOf(d.color)] === selectedColor
@@ -248,8 +249,9 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
@@ -293,7 +295,7 @@ export function Graph(props: Props) {
                               ? Colors.gray
                               : barColor[colorDomain.indexOf(d.color)],
                       }}
-                      animate={{
+                      whileInView={{
                         height: d.size ? Math.abs(y(d.size) - y(0)) : 0,
                         y: d.size ? (d.size > 0 ? y(d.size) : y(0)) : y(0),
                         x: x(`${d.id}`),
@@ -304,11 +306,12 @@ export function Graph(props: Props) {
                               ? Colors.gray
                               : barColor[colorDomain.indexOf(d.color)],
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                       exit={{
                         height: 0,
                         y: y(0),
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
                     />
                   ) : null}
@@ -345,7 +348,7 @@ export function Graph(props: Props) {
                       dy={d.size ? (d.size >= 0 ? '-5px' : '1em') : '-5px'}
                       initial={{
                         x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
-                        y: y(d.size || 0),
+                        y: y(0),
                         opacity: 0,
                         fill: valueColor
                           ? valueColor
@@ -355,7 +358,7 @@ export function Graph(props: Props) {
                               ? Colors.gray
                               : barColor[colorDomain.indexOf(d.color)],
                       }}
-                      animate={{
+                      whileInView={{
                         x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
                         y: y(d.size || 0),
                         fill: valueColor
@@ -367,10 +370,11 @@ export function Graph(props: Props) {
                               : barColor[colorDomain.indexOf(d.color)],
                         opacity: 1,
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                       exit={{
                         opacity: 0,
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
                     >
                       {numberFormattingFunction(d.size, precision, prefix, suffix)}

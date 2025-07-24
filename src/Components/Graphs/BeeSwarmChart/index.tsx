@@ -9,6 +9,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 
 interface Props {
@@ -87,7 +88,7 @@ interface Props {
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
   /** Toggles if the ref lines and colors animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */

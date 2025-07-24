@@ -1,6 +1,8 @@
 import { cn } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
+import { AnimateDataType } from '@/Types';
+
 interface Props {
   color?: string;
   y1: number;
@@ -9,7 +11,7 @@ interface Props {
   x2: number;
   className?: string;
   style?: React.CSSProperties;
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function RegressionLine(props: Props) {
@@ -38,14 +40,15 @@ export function RegressionLine(props: Props) {
             x1: x1,
             x2: x1,
           }}
-          animate={{
+          whileInView={{
             y1: y1,
             y2: y2,
             x1: x1,
             x2: x2,
           }}
-          transition={{ duration: animate }}
-          exit={{ opacity: 0, transition: { duration: animate } }}
+          transition={{ duration: animate.duration }}
+          viewport={{ once: animate.once, amount: animate.amount }}
+          exit={{ opacity: 0, transition: { duration: animate.duration } }}
         />
       </AnimatePresence>
     </g>

@@ -8,6 +8,7 @@ import { cn, Modal, Spinner } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   BeeSwarmChartDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -65,7 +66,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   noOfTicks: number;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -253,7 +254,7 @@ export function Graph(props: Props) {
                   initial={{
                     opacity: 0,
                   }}
-                  animate={{
+                  whileInView={{
                     opacity: selectedColor
                       ? d.color
                         ? circleColors[colorDomain.indexOf(d.color)] === selectedColor
@@ -266,8 +267,9 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
@@ -301,7 +303,7 @@ export function Graph(props: Props) {
                     cx={0}
                     cy={0}
                     r={radiusScale ? radiusScale(d.radius || 0) : radius}
-                    animate={{
+                    whileInView={{
                       fill:
                         data.filter(el => el.color).length === 0
                           ? circleColors[0]
@@ -321,19 +323,21 @@ export function Graph(props: Props) {
                       opacity: 0,
                       radius: radiusScale ? radiusScale(d.radius || 0) : radius,
                     }}
-                    transition={{ duration: animate }}
-                    exit={{ opacity: 0, radius: 0, transition: { duration: animate } }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
+                    exit={{ opacity: 0, radius: 0, transition: { duration: animate.duration } }}
                   />
                   {(radiusScale ? radiusScale(d.radius || 0) : radius) > 10 && showLabels ? (
                     <motion.g
-                      animate={{
+                      whileInView={{
                         opacity: 1,
                       }}
                       initial={{
                         opacity: 0,
                       }}
-                      transition={{ duration: animate }}
-                      exit={{ opacity: 0, transition: { duration: animate } }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     >
                       <foreignObject
                         y={0 - (radiusScale ? radiusScale(d.radius || 0) : radius)}

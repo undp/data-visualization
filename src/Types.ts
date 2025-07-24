@@ -176,6 +176,12 @@ export interface BulletChartDataType {
   data?: object;
 }
 
+export interface AnimateDataType {
+  duration: number;
+  once: boolean;
+  amount: 'some' | 'all' | number;
+}
+
 export interface BarGraphWithDateDataType extends BarGraphDataType {
   date: string | number;
 }
@@ -801,7 +807,7 @@ export interface GraphSettingsDataType {
   aggregationMethod?: 'count' | 'max' | 'min' | 'average' | 'sum';
   stripType?: 'strip' | 'dot';
   language?: Languages;
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   highlightColor?: string;
   dotOpacity?: number;
   sortParameter?: number | 'diff' | 'total';

@@ -5,6 +5,7 @@ import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   BarGraphDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -62,7 +63,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -212,7 +213,7 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  animate={{
+                  whileInView={{
                     opacity: selectedColor
                       ? d.color
                         ? barColor[colorDomain.indexOf(d.color)] === selectedColor
@@ -225,8 +226,9 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
@@ -269,7 +271,7 @@ export function Graph(props: Props) {
                               ? Colors.gray
                               : barColor[colorDomain.indexOf(d.color)],
                       }}
-                      animate={{
+                      whileInView={{
                         width: d.size >= 0 ? x(d.size) - x(0) : x(0) - x(d.size),
                         x: d.size >= 0 ? x(0) : x(d.size),
                         y: y(`${d.id}`),
@@ -280,11 +282,12 @@ export function Graph(props: Props) {
                               ? Colors.gray
                               : barColor[colorDomain.indexOf(d.color)],
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                       exit={{
                         width: 0,
                         x: x(0),
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
                       height={y.bandwidth()}
                     />
@@ -333,7 +336,7 @@ export function Graph(props: Props) {
                               ? Colors.gray
                               : barColor[colorDomain.indexOf(d.color)],
                       }}
-                      animate={{
+                      whileInView={{
                         x: d.size ? x(d.size) : x(0),
                         opacity: 1,
                         y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
@@ -345,10 +348,11 @@ export function Graph(props: Props) {
                               ? Colors.gray
                               : barColor[colorDomain.indexOf(d.color)],
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                       exit={{
                         opacity: 0,
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
                     >
                       {numberFormattingFunction(d.size, precision, prefix, suffix)}

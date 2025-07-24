@@ -14,6 +14,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -101,7 +102,7 @@ interface Props {
   /** Title for the right bars */
   rightBarTitle?: string;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -319,7 +320,11 @@ export function ButterflyChart(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         noOfTicks={noOfTicks}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         precision={precision}
                         customLayers={customLayers}
                       />

@@ -1,6 +1,8 @@
 import { cn } from '@undp/design-system-react';
 import { motion } from 'motion/react';
 
+import { AnimateDataType } from '@/Types';
+
 interface Props {
   value: number | string;
   y: number;
@@ -10,7 +12,7 @@ interface Props {
   style?: React.CSSProperties;
   className?: string;
   alignment?: 'left' | 'right' | 'center';
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function YAxesLabels(props: Props) {
@@ -23,11 +25,12 @@ export function YAxesLabels(props: Props) {
         x,
         y,
       }}
-      animate={{
+      whileInView={{
         x,
         y,
       }}
-      transition={{ duration: animate }}
+      transition={{ duration: animate.duration }}
+      viewport={{ once: animate.once, amount: animate.amount }}
     >
       <div className='flex flex-col justify-center h-inherit'>
         <p

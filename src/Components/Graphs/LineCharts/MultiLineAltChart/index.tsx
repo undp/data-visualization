@@ -16,6 +16,7 @@ import {
   HighlightAreaSettingsDataType,
   CurveTypes,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -102,7 +103,7 @@ interface Props {
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Format of the date in the data object  */
   dateFormat?: string;
   /** Title for the Y-axis */
@@ -348,7 +349,11 @@ export function MultiLineAltChart(props: Props) {
                         minValue={minValue}
                         maxValue={maxValue}
                         highlightedLines={highlightedLines}
-                        animateLine={animate}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         rtl={language === 'he' || language === 'ar'}
                         strokeWidth={strokeWidth}
                         showDots={showDots}

@@ -15,6 +15,7 @@ import {
   HighlightAreaSettingsDataType,
   CurveTypes,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -90,7 +91,7 @@ interface Props {
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Enables same axis for the 2 lines */
   sameAxes?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
@@ -304,7 +305,11 @@ export function DualAxisLineChart(props: Props) {
                         highlightAreaSettings={highlightAreaSettings}
                         tooltip={tooltip}
                         onSeriesMouseOver={onSeriesMouseOver}
-                        animateLine={animate}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         strokeWidth={strokeWidth}
                         showDots={showDots}
                         noOfYTicks={noOfYTicks}

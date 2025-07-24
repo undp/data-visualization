@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import {
+  AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   GroupedBarGraphDataType,
@@ -59,7 +60,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   colorDomain: string[];
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -205,9 +206,10 @@ export function Graph(props: Props) {
                   className='undp-viz-low-opacity undp-viz-g-with-hover'
                   key={d.label}
                   initial={{ x: x(`${d.id}`), y: 0 }}
-                  animate={{ x: x(`${d.id}`), y: 0 }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  whileInView={{ x: x(`${d.id}`), y: 0 }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 >
                   {d.size.map((el, j) => (
                     <motion.g
@@ -253,7 +255,7 @@ export function Graph(props: Props) {
                           fill: barColors[j],
                           y: y(0),
                         }}
-                        animate={{
+                        whileInView={{
                           height: Math.abs(
                             y(sum(d.size.filter((element, k) => k <= j && element))) -
                               y(sum(d.size.filter((element, k) => k < j && element))),
@@ -261,11 +263,12 @@ export function Graph(props: Props) {
                           y: y(sum(d.size.filter((element, k) => k <= j && element))),
                           fill: barColors[j],
                         }}
-                        transition={{ duration: animate }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                         exit={{
                           height: 0,
                           y: y(0),
-                          transition: { duration: animate },
+                          transition: { duration: animate.duration },
                         }}
                       />
                       {showValues ? (
@@ -283,7 +286,7 @@ export function Graph(props: Props) {
                             opacity: 0,
                             fill: getTextColorBasedOnBgColor(barColors[j]),
                           }}
-                          animate={{
+                          whileInView={{
                             y:
                               y(sum(d.size.filter((element, k) => k <= j && element))) +
                               Math.abs(
@@ -301,8 +304,9 @@ export function Graph(props: Props) {
                                 : 0,
                             fill: getTextColorBasedOnBgColor(barColors[j]),
                           }}
-                          transition={{ duration: animate }}
-                          exit={{ opacity: 0, transition: { duration: animate } }}
+                          transition={{ duration: animate.duration }}
+                          viewport={{ once: animate.once, amount: animate.amount }}
+                          exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         >
                           {numberFormattingFunction(el, precision, prefix, suffix)}
                         </motion.text>
@@ -346,15 +350,16 @@ export function Graph(props: Props) {
                         y: y(0),
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         y: y(sum(d.size.map(el => el || 0))),
                         opacity: 1,
                       }}
                       exit={{
                         opacity: 0,
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     >
                       {numberFormattingFunction(
                         sum(d.size.filter(element => element)),

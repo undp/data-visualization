@@ -5,7 +5,14 @@ import { cn } from '@undp/design-system-react';
 import { Graph } from './Graph';
 
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { TreeMapDataType, SourcesDataType, Languages, StyleObject, ClassNameObject } from '@/Types';
+import {
+  TreeMapDataType,
+  SourcesDataType,
+  Languages,
+  StyleObject,
+  ClassNameObject,
+  AnimateDataType,
+} from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
@@ -84,7 +91,7 @@ interface Props {
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Enable graph download option as png */
@@ -316,7 +323,11 @@ export function TreeMapGraph(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         language={language}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                       />

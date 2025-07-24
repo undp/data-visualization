@@ -1,10 +1,11 @@
 import isEqual from 'fast-deep-equal';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
-import { AnimatePresence, motion, useAnimate, useInView } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { cn, Modal, P } from '@undp/design-system-react';
 
 import {
+  AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   NodeDataType,
@@ -42,7 +43,7 @@ interface Props {
   highlightedTargetDataPoints: string[];
   sourceTitle?: string;
   targetTitle?: string;
-  animate?: boolean | number;
+  animate: AnimateDataType;
   sortNodes: 'asc' | 'desc' | 'mostReadable' | 'none';
   resetSelectionOnDoubleClick: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,17 +88,6 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
-  const [scope, animatePath] = useAnimate();
-  const isInView = useInView(scope);
-  useEffect(() => {
-    if (isInView && data) {
-      animatePath(
-        'path',
-        { pathLength: [0, 1] },
-        { duration: animate === true ? 5 : animate || 0 },
-      );
-    }
-  }, [isInView, data, animatePath, animate]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -358,7 +348,7 @@ export function Graph(props: Props) {
               </linearGradient>
             ))}
           </defs>
-          <g ref={scope}>
+          <g>
             <AnimatePresence>
               {links.map((d, i) => (
                 <motion.g
@@ -423,7 +413,7 @@ export function Graph(props: Props) {
                           : defaultLinkOpacity
                         : defaultLinkOpacity,
                   }}
-                  animate={{
+                  whileInView={{
                     opacity: selectedNode
                       ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         (d.source as any).name === selectedNode.name ||
@@ -445,16 +435,29 @@ export function Graph(props: Props) {
                           : defaultLinkOpacity
                         : defaultLinkOpacity,
                   }}
-                  transition={{ duration: animate === true ? 0.5 : animate || 0 }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 >
-                  <path
+                  <motion.path
+                    key={`${d.source}-${d.target}`}
                     d={linkPathGenerator(d) || ''}
                     style={{
                       stroke: `url(#${id}-gradient-${i})`,
                       strokeWidth: d.width,
                       fill: 'none',
                     }}
+                    initial={{
+                      pathLength: 0,
+                      opacity: 1,
+                    }}
+                    whileInView={{
+                      pathLength: 1,
+                      opacity: 1,
+                    }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                   />
                 </motion.g>
               ))}

@@ -7,6 +7,7 @@ import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   GroupedBarGraphDataType,
@@ -60,7 +61,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   colorDomain: string[];
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -197,12 +198,13 @@ export function Graph(props: Props) {
                     x: 0,
                     y: y(`${d.id}`),
                   }}
-                  animate={{
+                  whileInView={{
                     x: 0,
                     y: y(`${d.id}`),
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 >
                   {d.size.map((el, j) => (
                     <motion.g
@@ -249,7 +251,7 @@ export function Graph(props: Props) {
                             x: x(0),
                             fill: barColors[j],
                           }}
-                          animate={{
+                          whileInView={{
                             width: !checkIfNullOrUndefined(el)
                               ? (el as number) >= 0
                                 ? x(el as number) - x(0)
@@ -261,10 +263,11 @@ export function Graph(props: Props) {
                           exit={{
                             width: 0,
                             x: x(0),
-                            transition: { duration: animate },
+                            transition: { duration: animate.duration },
                           }}
                           height={subBarScale.bandwidth()}
-                          transition={{ duration: animate }}
+                          transition={{ duration: animate.duration }}
+                          viewport={{ once: animate.once, amount: animate.amount }}
                         />
                       ) : null}
                       {showValues ? (
@@ -279,11 +282,12 @@ export function Graph(props: Props) {
                           dx={el ? (el < 0 ? -5 : 5) : 5}
                           dy='0.33em'
                           initial={{ x: x(0), opacity: 0 }}
-                          animate={{ x: x(el || 0), opacity: 1 }}
-                          transition={{ duration: animate }}
+                          whileInView={{ x: x(el || 0), opacity: 1 }}
+                          transition={{ duration: animate.duration }}
+                          viewport={{ once: animate.once, amount: animate.amount }}
                           exit={{
                             opacity: 0,
-                            transition: { duration: animate },
+                            transition: { duration: animate.duration },
                           }}
                         >
                           {numberFormattingFunction(el, precision, prefix, suffix)}

@@ -7,6 +7,7 @@ import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   DumbbellChartDataType,
@@ -64,7 +65,7 @@ interface Props {
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
   rtl: boolean;
-  animate: number;
+  animate: AnimateDataType;
   precision: number;
   customLayers: CustomLayerDataType[];
 }
@@ -232,12 +233,13 @@ export function Graph(props: Props) {
                   x: 0,
                   y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
                 }}
-                animate={{
+                whileInView={{
                   x: 0,
                   y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
                 }}
-                transition={{ duration: animate }}
-                exit={{ opacity: 0, transition: { duration: animate } }}
+                transition={{ duration: animate.duration }}
+                viewport={{ once: animate.once, amount: animate.amount }}
+                exit={{ opacity: 0, transition: { duration: animate.duration } }}
               >
                 {showLabels ? (
                   <YAxesLabels
@@ -280,12 +282,13 @@ export function Graph(props: Props) {
                     x1: 0,
                     x2: 0,
                   }}
-                  animate={{
+                  whileInView={{
                     x1: x(min(d.x) as number) + radius,
                     x2: x(max(d.x) as number) - radius,
                   }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
-                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
                 />
                 {d.x.map((el, j) => (
                   <motion.g
@@ -324,11 +327,12 @@ export function Graph(props: Props) {
                     initial={{
                       opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
                     }}
-                    animate={{
+                    whileInView={{
                       opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
                     }}
-                    exit={{ opacity: 0, transition: { duration: animate } }}
-                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                   >
                     {checkIfNullOrUndefined(el) ? null : (
                       <>
@@ -343,12 +347,13 @@ export function Graph(props: Props) {
                             opacity: checkIfNullOrUndefined(el) ? 0 : 1,
                           }}
                           initial={{ cx: x(el || 0), opacity: 0 }}
-                          animate={{
+                          whileInView={{
                             cx: x(el || 0),
                             opacity: checkIfNullOrUndefined(el) ? 0 : 1,
                           }}
-                          exit={{ opacity: 0, transition: { duration: animate } }}
-                          transition={{ duration: animate }}
+                          exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                          transition={{ duration: animate.duration }}
+                          viewport={{ once: animate.once, amount: animate.amount }}
                         />
                         {showValues ? (
                           <motion.text
@@ -366,9 +371,10 @@ export function Graph(props: Props) {
                               classNames?.graphObjectValues,
                             )}
                             initial={{ x: x(el || 0), opacity: 0 }}
-                            animate={{ x: x(el || 0), opacity: 1 }}
-                            exit={{ opacity: 0, transition: { duration: animate } }}
-                            transition={{ duration: animate }}
+                            whileInView={{ x: x(el || 0), opacity: 1 }}
+                            exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                            transition={{ duration: animate.duration }}
+                            viewport={{ once: animate.once, amount: animate.amount }}
                           >
                             {numberFormattingFunction(el, precision, prefix, suffix)}
                           </motion.text>

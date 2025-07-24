@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -59,7 +60,7 @@ interface Props {
   valueColor?: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   colorDomain: string[];
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -221,12 +222,13 @@ export function Graph(props: Props) {
                     x: x(`${d.id}`),
                     y: 0,
                   }}
-                  animate={{
+                  whileInView={{
                     x: x(`${d.id}`),
                     y: 0,
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 >
                   {d.size.map((el, j) => (
                     <motion.g
@@ -273,7 +275,7 @@ export function Graph(props: Props) {
                           y: y(0),
                           fill: barColors[j],
                         }}
-                        animate={{
+                        whileInView={{
                           height: !checkIfNullOrUndefined(el)
                             ? Math.abs(y(el as number) - y(0))
                             : 0,
@@ -287,9 +289,10 @@ export function Graph(props: Props) {
                         exit={{
                           height: 0,
                           y: y(0),
-                          transition: { duration: animate },
+                          transition: { duration: animate.duration },
                         }}
-                        transition={{ duration: animate }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       />
                       {showValues ? (
                         <motion.text
@@ -302,11 +305,12 @@ export function Graph(props: Props) {
                           className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                           dy={el ? (el >= 0 ? '-5px' : '1em') : '-5px'}
                           initial={{ y: y(0), opacity: 0 }}
-                          animate={{ y: y(el || 0), opacity: 1 }}
-                          transition={{ duration: animate }}
+                          whileInView={{ y: y(el || 0), opacity: 1 }}
+                          transition={{ duration: animate.duration }}
+                          viewport={{ once: animate.once, amount: animate.amount }}
                           exit={{
                             opacity: 0,
-                            transition: { duration: animate },
+                            transition: { duration: animate.duration },
                           }}
                         >
                           {numberFormattingFunction(el, precision, prefix, suffix)}

@@ -12,6 +12,7 @@ import {
   ClassNameObject,
   ReferenceDataType,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -78,7 +79,7 @@ interface Props {
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
   filterNA?: boolean;
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   precision?: number;
   customLayers?: CustomLayerDataType[];
 }
@@ -311,7 +312,11 @@ export function VerticalDumbbellChart(props: Props) {
                         classNames={classNames}
                         labelOrder={labelOrder}
                         refValues={refValues}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         precision={precision}
                         customLayers={customLayers}
                       />

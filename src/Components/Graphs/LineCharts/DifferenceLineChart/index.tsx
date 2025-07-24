@@ -18,6 +18,7 @@ import {
   HighlightAreaSettingsDataType,
   CurveTypes,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { generateRandomString } from '@/Utils/generateRandomString';
@@ -104,7 +105,7 @@ interface Props {
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Labels for the lines  */
   labels: [string, string];
   /** Format of the date in the data object  */
@@ -328,7 +329,11 @@ export function DifferenceLineChart(props: Props) {
                         tooltip={tooltip}
                         onSeriesMouseOver={onSeriesMouseOver}
                         showColorLegendAtTop={showColorLegendAtTop}
-                        animateLine={animate}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         rtl={language === 'he' || language === 'ar'}
                         diffAreaColors={diffAreaColors}
                         idSuffix={generateRandomString(8)}

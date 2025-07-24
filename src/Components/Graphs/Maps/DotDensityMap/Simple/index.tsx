@@ -17,6 +17,7 @@ import {
   ZoomInteractionTypes,
   MapProjectionTypes,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
@@ -97,7 +98,7 @@ interface Props {
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
@@ -342,7 +343,11 @@ export function DotDensityMap(props: Props) {
                   zoomInteraction={zoomInteraction}
                   detailsOnClick={detailsOnClick}
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
-                  animate={animate === true ? 0.5 : animate || 0}
+                  animate={
+                    animate === true
+                      ? { duration: 0.5, once: true, amount: 0.5 }
+                      : animate || { duration: 0, once: true, amount: 0 }
+                  }
                   dimmedOpacity={dimmedOpacity}
                   customLayers={customLayers}
                 />

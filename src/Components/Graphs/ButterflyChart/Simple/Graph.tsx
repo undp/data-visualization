@@ -5,6 +5,7 @@ import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   ButterflyChartDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -52,7 +53,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   noOfTicks: number;
-  animate: number;
+  animate: AnimateDataType;
   precision: number;
   customLayers: CustomLayerDataType[];
 }
@@ -238,18 +239,19 @@ export function Graph(props: Props) {
                           x: xLeftBar(0),
                           width: 0,
                         }}
-                        animate={{
+                        whileInView={{
                           x: d.leftBar < 0 ? xLeftBar(0) : xLeftBar(d.leftBar),
                           width:
                             d.leftBar < 0
                               ? xLeftBar(d.leftBar) - xLeftBar(0)
                               : xLeftBar(0) - xLeftBar(d.leftBar),
                         }}
-                        transition={{ duration: animate }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                         exit={{
                           x: xLeftBar(0),
                           width: 0,
-                          transition: { duration: animate },
+                          transition: { duration: animate.duration },
                         }}
                       />
                     ) : null}
@@ -268,7 +270,7 @@ export function Graph(props: Props) {
                           x: xLeftBar(0),
                           opacity: 0,
                         }}
-                        animate={{
+                        whileInView={{
                           x: d.leftBar
                             ? xLeftBar(d.leftBar)
                             : xLeftBar(xMinValueLeftBar < 0 ? 0 : xMinValueLeftBar),
@@ -276,9 +278,10 @@ export function Graph(props: Props) {
                         }}
                         exit={{
                           opacity: 0,
-                          transition: { duration: animate },
+                          transition: { duration: animate.duration },
                         }}
-                        transition={{ duration: animate }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       >
                         {numberFormattingFunction(d.rightBar, precision, prefix, suffix)}
                       </motion.text>
@@ -381,7 +384,7 @@ export function Graph(props: Props) {
                           x: xRightBar(0),
                           width: 0,
                         }}
-                        animate={{
+                        whileInView={{
                           x: d.rightBar >= 0 ? xRightBar(0) : xRightBar(d.rightBar),
                           width:
                             d.rightBar >= 0
@@ -391,9 +394,10 @@ export function Graph(props: Props) {
                         exit={{
                           x: xRightBar(0),
                           width: 0,
-                          transition: { duration: animate },
+                          transition: { duration: animate.duration },
                         }}
-                        transition={{ duration: animate }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       />
                     ) : null}
                     {showValues ? (
@@ -411,7 +415,7 @@ export function Graph(props: Props) {
                           x: xRightBar(0),
                           opacity: 0,
                         }}
-                        animate={{
+                        whileInView={{
                           x: d.rightBar
                             ? xRightBar(d.rightBar)
                             : xRightBar(xMinValueRightBar < 0 ? 0 : xMinValueRightBar),
@@ -419,9 +423,10 @@ export function Graph(props: Props) {
                         }}
                         exit={{
                           opacity: 0,
-                          transition: { duration: animate },
+                          transition: { duration: animate.duration },
                         }}
-                        transition={{ duration: animate }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       >
                         {numberFormattingFunction(d.rightBar, precision, prefix, suffix)}
                       </motion.text>

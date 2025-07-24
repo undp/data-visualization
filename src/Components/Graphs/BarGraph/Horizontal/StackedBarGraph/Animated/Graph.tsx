@@ -374,7 +374,7 @@ export function Graph(props: Props) {
                     textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
                     classNames={el.classNames}
                     styles={el.styles}
-                    animate={0}
+                    animate={{ duration: 0, once: true, amount: 0 }}
                   />
                 ))}
               </>

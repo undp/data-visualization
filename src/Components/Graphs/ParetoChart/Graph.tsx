@@ -15,6 +15,7 @@ import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   ClassNameObject,
   CurveTypes,
   CustomLayerDataType,
@@ -62,7 +63,7 @@ interface Props {
   curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   precision: number;
   customLayers: CustomLayerDataType[];
 }
@@ -336,17 +337,18 @@ export function Graph(props: Props) {
                       attrY: y1(0),
                       height: 0,
                     }}
-                    animate={{
+                    whileInView={{
                       attrY: d.bar ? (d.bar > 0 ? y1(d.bar) : y1(0)) : 0,
                       height: d.bar ? Math.abs(y1(d.bar) - y1(0)) : 0,
                       opacity: 1,
                     }}
-                    transition={{ duration: animate }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                     exit={{
                       attrY: y1(0),
                       height: 0,
                       opacity: 0,
-                      transition: { duration: animate },
+                      transition: { duration: animate.duration },
                     }}
                     x={x(`${i}`)}
                     width={x.bandwidth()}
@@ -359,16 +361,17 @@ export function Graph(props: Props) {
                         attrY: y1(0),
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         attrY: y1(d.bar || 0),
                         opacity: 1,
                       }}
                       exit={{
                         attrY: y1(0),
                         opacity: 0,
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                       style={{
                         fill: barColor,
                         textAnchor: 'middle',
@@ -405,13 +408,13 @@ export function Graph(props: Props) {
               initial={{
                 d: lineShape(dataWithId.map(d => ({ ...d, line: 0 }))) as string,
               }}
-              animate={{
+              whileInView={{
                 d: lineShape(dataWithId) as string,
                 opacity: 1,
               }}
               exit={{
                 opacity: 0,
-                transition: { duration: animate },
+                transition: { duration: animate.duration },
               }}
               style={{
                 stroke: lineColor,
@@ -457,14 +460,14 @@ export function Graph(props: Props) {
                         cy: y2(0),
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         cy: y2(d.line as number),
                         opacity: 1,
                       }}
                       exit={{
                         cy: y2(0),
                         opacity: 0,
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
                       cx={(x(d.id) as number) + x.bandwidth() / 2}
                       cy={y2(d.line as number)}
@@ -484,14 +487,14 @@ export function Graph(props: Props) {
                           y: y2(0),
                           opacity: 0,
                         }}
-                        animate={{
+                        whileInView={{
                           y: y2(d.line as number),
                           opacity: 1,
                         }}
                         exit={{
                           y: y2(0),
                           opacity: 0,
-                          transition: { duration: animate },
+                          transition: { duration: animate.duration },
                         }}
                         style={{
                           fill: lineColor,

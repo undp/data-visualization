@@ -12,6 +12,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -82,7 +83,7 @@ interface Props {
   targetStyle?: 'background' | 'line';
   qualitativeRangeColors?: string[];
   measureBarWidthFactor?: number;
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   dimmedOpacity?: number;
   precision?: number;
   customLayers?: CustomLayerDataType[];
@@ -318,7 +319,11 @@ export function HorizontalBulletChart(props: Props) {
                           qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10
                         }
                         measureBarWidthFactor={measureBarWidthFactor}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                         customLayers={customLayers}

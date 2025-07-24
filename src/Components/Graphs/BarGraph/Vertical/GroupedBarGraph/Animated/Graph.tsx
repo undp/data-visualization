@@ -322,7 +322,7 @@ export function Graph(props: Props) {
                       style={styles?.xAxis?.labels}
                       className={classNames?.xAxis?.labels}
                       alignment='top'
-                      animate={0}
+                      animate={{ duration: 0, once: true, amount: 0 }}
                     />
                   ) : null}
                 </motion.g>
@@ -340,7 +340,7 @@ export function Graph(props: Props) {
                     x2={graphWidth + margin.right}
                     classNames={el.classNames}
                     styles={el.styles}
-                    animate={0}
+                    animate={{ duration: 0, once: true, amount: 0 }}
                   />
                 ))}
               </>

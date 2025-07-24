@@ -6,6 +6,7 @@ import sum from 'lodash.sum';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   BulletChartDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -64,7 +65,7 @@ interface Props {
   targetStyle: 'background' | 'line';
   qualitativeRangeColors: string[];
   measureBarWidthFactor: number;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -278,7 +279,7 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  animate={{
+                  whileInView={{
                     x: 0,
                     y: y(`${d.id}`),
                     opacity:
@@ -288,8 +289,9 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
-                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
                 >
                   {d.qualitativeRange
                     ? d.qualitativeRange.map((el, j) => (
@@ -300,7 +302,7 @@ export function Graph(props: Props) {
                             width: 0,
                             fill: qualitativeRangeColors[j],
                           }}
-                          animate={{
+                          whileInView={{
                             x: x(
                               j === 0
                                 ? 0
@@ -316,9 +318,10 @@ export function Graph(props: Props) {
                           exit={{
                             width: 0,
                             x: x(0),
-                            transition: { duration: animate },
+                            transition: { duration: animate.duration },
                           }}
-                          transition={{ duration: animate }}
+                          transition={{ duration: animate.duration }}
+                          viewport={{ once: animate.once, amount: animate.amount }}
                           y={0}
                           height={y.bandwidth()}
                         />
@@ -336,16 +339,17 @@ export function Graph(props: Props) {
                         x: x(0),
                         width: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         x: d.target >= 0 ? x(0) : x(d.target),
                         width: d.target >= 0 ? x(d.target) - x(0) : x(0) - x(d.target),
                       }}
                       exit={{
                         width: 0,
                         x: x(0),
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     />
                   ) : null}
                   {d.size ? (
@@ -359,16 +363,17 @@ export function Graph(props: Props) {
                         x: x(0),
                         width: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         x: d.size >= 0 ? x(0) : x(d.size),
                         width: d.size >= 0 ? x(d.size) - x(0) : x(0) - x(d.size),
                       }}
                       exit={{
                         width: 0,
                         x: x(0),
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     />
                   ) : null}
                   {d.target && targetStyle === 'line' ? (
@@ -383,16 +388,17 @@ export function Graph(props: Props) {
                         x: x(0),
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         x: x(d.target) - 1,
                         opacity: 1,
                       }}
                       exit={{
                         opacity: 0,
                         x: x(0),
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     />
                   ) : null}
                   {showLabels ? (
@@ -433,12 +439,13 @@ export function Graph(props: Props) {
                         x: x(0),
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         x: d.size ? x(d.size) : x(0),
                         opacity: 1,
                       }}
-                      exit={{ opacity: 0, transition: { duration: animate } }}
-                      transition={{ duration: animate }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     >
                       {numberFormattingFunction(d.size, precision, prefix, suffix)}
                     </motion.text>

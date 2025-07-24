@@ -212,10 +212,10 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
-            animate={0.5}
+            animate={{ duration: 0.5, once: true, amount: 0.5 }}
           />
           <CustomArea
-            animate={0.5}
+            animate={{ duration: 0.5, once: true, amount: 0.5 }}
             areaSettings={customHighlightAreaSettingsFormatted}
             scaleX={x}
             scaleY={y}
@@ -339,7 +339,7 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   classNames={el.classNames}
                   styles={el.styles}
-                  animate={0.5}
+                  animate={{ duration: 0, once: true, amount: 0 }}
                 />
               ))}
             </>
@@ -409,7 +409,7 @@ export function Graph(props: Props) {
                   text={d.text}
                   classNames={d.classNames}
                   styles={d.styles}
-                  animate={0.5}
+                  animate={{ duration: 0.5, once: true, amount: 0.5 }}
                 />
               );
             })}

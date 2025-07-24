@@ -14,10 +14,11 @@ import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
 import min from 'lodash.min';
 import max from 'lodash.max';
-import { useAnimate, useInView } from 'motion/react';
 import { cn } from '@undp/design-system-react';
+import { motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   AnnotationSettingsDataType,
   ClassNameObject,
   CurveTypes,
@@ -68,7 +69,7 @@ interface Props {
   maxValue?: number;
   minValue?: number;
   highlightedLines: (string | number)[];
-  animateLine: boolean | number;
+  animate: AnimateDataType;
   rtl: boolean;
   strokeWidth: number;
   showDots: boolean;
@@ -115,7 +116,7 @@ export function Graph(props: Props) {
     minValue,
     maxValue,
     highlightedLines,
-    animateLine,
+    animate,
     rtl,
     strokeWidth,
     showDots,
@@ -142,9 +143,6 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  const [scope, animate] = useAnimate();
-  const [annotationsScope, annotationsAnimate] = useAnimate();
-  const isInView = useInView(scope);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -241,53 +239,6 @@ export function Graph(props: Props) {
     select(MouseoverRectRef.current).on('mousemove', mousemove).on('mouseout', mouseout);
     onSeriesMouseOver?.(undefined);
   }, [x, dataFormatted, onSeriesMouseOver]);
-
-  useEffect(() => {
-    if (isInView && data.length > 0) {
-      animate(
-        'path',
-        { pathLength: [0, 1] },
-        { duration: animateLine === true ? 5 : animateLine || 0 },
-      );
-      if (showDots) {
-        animate(
-          'circle',
-          { opacity: [0, 1] },
-          {
-            delay: animateLine === true ? 5 : animateLine || 0,
-            duration: animateLine === true ? 0.5 : animateLine || 0,
-          },
-        );
-      }
-      if (!showColorLegendAtTop) {
-        animate(
-          'text',
-          { opacity: [0, 1] },
-          {
-            delay: animateLine === true ? 5 : animateLine || 0,
-            duration: animateLine === true ? 0.5 : animateLine || 0,
-          },
-        );
-      }
-      annotationsAnimate(
-        annotationsScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-    }
-  }, [
-    isInView,
-    showColorLegendAtTop,
-    data,
-    animate,
-    animateLine,
-    showDots,
-    annotationsAnimate,
-    annotationsScope,
-  ]);
   return (
     <>
       <svg
@@ -302,13 +253,13 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
-            animate={animateLine ? 0.5 : 0}
+            animate={animate}
           />
           <CustomArea
             areaSettings={customHighlightAreaSettingsFormatted}
             scaleX={x}
             scaleY={y}
-            animate={animateLine ? 0.5 : 0}
+            animate={animate}
           />
           <g>
             <YTicksAndGridLines
@@ -391,86 +342,125 @@ export function Graph(props: Props) {
             />
           </g>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-          <g ref={scope}>
+          <g>
             {dataArray.map((d, i) => (
-              <g
-                key={i}
-                opacity={
-                  highlightedLines.length !== 0
-                    ? highlightedLines.indexOf(labels[i]) !== -1
-                      ? 1
-                      : dimmedOpacity
-                    : 1
-                }
+              <motion.g
+                key={labels[i]}
+                initial={{
+                  opacity:
+                    highlightedLines.length !== 0
+                      ? highlightedLines.indexOf(labels[i]) !== -1
+                        ? 1
+                        : dimmedOpacity
+                      : 1,
+                }}
+                whileInView={{
+                  opacity:
+                    highlightedLines.length !== 0
+                      ? highlightedLines.indexOf(labels[i]) !== -1
+                        ? 1
+                        : dimmedOpacity
+                      : 1,
+                }}
+                exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                transition={{ duration: animate.duration }}
+                viewport={{ once: animate.once, amount: animate.amount }}
               >
-                <path
-                  key={i}
-                  d={
-                    lineShape(
-                      d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
-                    ) || ''
-                  }
+                <motion.path
                   style={{
-                    stroke: lineColors[i],
                     fill: 'none',
                     strokeWidth,
                   }}
+                  initial={{
+                    pathLength: 0,
+                    d:
+                      lineShape(
+                        d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
+                      ) || '',
+                    opacity: 1,
+                    stroke: lineColors[i],
+                  }}
+                  whileInView={{
+                    pathLength: 1,
+                    d:
+                      lineShape(
+                        d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
+                      ) || '',
+                    opacity: 1,
+                    stroke: lineColors[i],
+                  }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
                 />
-                <g>
-                  {d.map((el, j) => (
-                    <g key={j}>
-                      {!checkIfNullOrUndefined(el.y) ? (
-                        <g>
-                          {showDots ? (
-                            <circle
-                              cx={x(el.date)}
-                              cy={y(el.y as number)}
-                              r={
-                                graphWidth / dataFormatted.length < 5
-                                  ? 0
-                                  : graphWidth / dataFormatted.length < 20
-                                    ? 2
-                                    : 4
-                              }
-                              style={{ fill: lineColors[i] }}
-                            />
-                          ) : null}
-                          {showValues ? (
-                            <text
-                              x={x(el.date)}
-                              y={y(el.y as number)}
-                              dy={-8}
-                              style={{
-                                fill: lineColors[i],
-                                textAnchor: 'middle',
-                                ...(styles?.graphObjectValues || {}),
-                              }}
-                              className={cn(
-                                'graph-value text-xs font-bold',
-                                classNames?.graphObjectValues,
-                              )}
-                            >
-                              {numberFormattingFunction(el.y, precision, prefix, suffix)}
-                            </text>
-                          ) : null}
-                        </g>
-                      ) : null}
-                    </g>
-                  ))}
-                </g>
+                {d.map((el, j) => (
+                  <g key={j}>
+                    {!checkIfNullOrUndefined(el.y) ? (
+                      <>
+                        {showDots ? (
+                          <motion.circle
+                            cx={x(el.date)}
+                            cy={y(el.y as number)}
+                            r={
+                              graphWidth / dataFormatted.length < 5
+                                ? 0
+                                : graphWidth / dataFormatted.length < 20
+                                  ? 2
+                                  : 4
+                            }
+                            style={{ fill: lineColors[i] }}
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                            transition={{ duration: 0.5, delay: animate.duration }}
+                            viewport={{ once: animate.once, amount: animate.amount }}
+                          />
+                        ) : null}
+                        {showValues ? (
+                          <motion.text
+                            x={x(el.date)}
+                            y={y(el.y as number)}
+                            dy={-8}
+                            style={{
+                              fill: lineColors[i],
+                              textAnchor: 'middle',
+                              ...(styles?.graphObjectValues || {}),
+                            }}
+                            className={cn(
+                              'graph-value text-xs font-bold',
+                              classNames?.graphObjectValues,
+                            )}
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                            transition={{ duration: 0.5, delay: animate.duration }}
+                            viewport={{ once: animate.once, amount: animate.amount }}
+                          >
+                            {numberFormattingFunction(el.y, precision, prefix, suffix)}
+                          </motion.text>
+                        ) : null}
+                      </>
+                    ) : null}
+                  </g>
+                ))}
                 {showColorLegendAtTop ? null : (
-                  <text
+                  <motion.text
                     style={{ fill: lineColors[i] }}
                     className='text-xs'
                     x={x(d[d.length - 1].date)}
                     y={y(d[d.length - 1].y as number)}
                     dx={5}
                     dy={4}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    transition={{ duration: 0.5, delay: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                   >
                     {labels[i]}
-                  </text>
+                  </motion.text>
                 )}
-              </g>
+              </motion.g>
             ))}
             {mouseOverData ? (
               <line
@@ -498,12 +488,12 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   classNames={el.classNames}
                   styles={el.styles}
-                  animate={animateLine ? 0.5 : 0}
+                  animate={animate}
                 />
               ))}
             </>
           ) : null}
-          <g ref={annotationsScope}>
+          <g>
             {annotations.map((d, i) => {
               const endPoints = getLineEndPoint(
                 {
@@ -568,7 +558,7 @@ export function Graph(props: Props) {
                   text={d.text}
                   classNames={d.classNames}
                   styles={d.styles}
-                  animate={animateLine ? 0.5 : 0}
+                  animate={animate}
                 />
               );
             })}

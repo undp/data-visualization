@@ -8,6 +8,7 @@ import { Graph } from './Graph';
 
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import {
+  AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   Languages,
@@ -106,7 +107,7 @@ interface Props {
   /** Sorting order of the nodes */
   sortNodes?: 'asc' | 'desc' | 'mostReadable' | 'none';
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -384,7 +385,11 @@ export function SankeyChart(props: Props) {
                       styles={styles}
                       classNames={classNames}
                       detailsOnClick={detailsOnClick}
-                      animate={animate}
+                      animate={
+                        animate === true
+                          ? { duration: 0.5, once: true, amount: 0.5 }
+                          : animate || { duration: 0, once: true, amount: 0 }
+                      }
                       precision={precision}
                       customLayers={customLayers}
                     />

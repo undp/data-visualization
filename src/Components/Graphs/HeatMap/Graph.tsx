@@ -5,7 +5,13 @@ import uniqBy from 'lodash.uniqby';
 import { cn, Modal } from '@undp/design-system-react';
 import { motion } from 'motion/react';
 
-import { ClassNameObject, HeatMapDataType, ScaleDataType, StyleObject } from '@/Types';
+import {
+  AnimateDataType,
+  ClassNameObject,
+  HeatMapDataType,
+  ScaleDataType,
+  StyleObject,
+} from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
@@ -44,7 +50,7 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   precision: number;
 }
 
@@ -131,7 +137,7 @@ export function Graph(props: Props) {
                   style={styles?.xAxis?.labels}
                   className={classNames?.xAxis?.labels}
                   alignment='bottom'
-                  animate={0}
+                  animate={{ duration: 0, once: true, amount: 0 }}
                 />
               ))
             : null}
@@ -151,7 +157,7 @@ export function Graph(props: Props) {
                   alignment='right'
                   style={styles?.yAxis?.labels}
                   className={classNames?.yAxis?.labels}
-                  animate={0}
+                  animate={{ duration: 0, once: true, amount: 0 }}
                 />
               ))
             : null}
@@ -222,22 +228,24 @@ export function Graph(props: Props) {
                     initial={{
                       fill: color,
                     }}
-                    animate={{
+                    whileInView={{
                       fill: color,
                     }}
-                    exit={{ opacity: 0, transition: { duration: animate } }}
-                    transition={{ duration: animate }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                   />
                   {showValues && !checkIfNullOrUndefined(d.value) ? (
                     <motion.g
-                      animate={{
+                      whileInView={{
                         opacity: 1,
                       }}
                       initial={{
                         opacity: 0,
                       }}
-                      transition={{ duration: animate }}
-                      exit={{ opacity: 0, transition: { duration: animate } }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     >
                       <foreignObject key={i} y={0} x={0} width={barWidth} height={barHeight}>
                         <div className='flex flex-col justify-center items-center h-inherit p-1'>

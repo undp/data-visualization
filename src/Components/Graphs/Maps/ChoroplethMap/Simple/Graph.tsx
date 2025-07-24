@@ -16,6 +16,7 @@ import centroid from '@turf/centroid';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   ChoroplethMapDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -63,7 +64,7 @@ interface Props {
   classNames?: ClassNameObject;
   zoomInteraction: ZoomInteractionTypes;
   mapProjection: MapProjectionTypes;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   customLayers: CustomLayerDataType[];
 }
@@ -292,7 +293,7 @@ export function Graph(props: Props) {
                 return (
                   <motion.g
                     key={d.id}
-                    animate={{
+                    whileInView={{
                       opacity: selectedColor
                         ? selectedColor === color
                           ? 1
@@ -304,8 +305,9 @@ export function Graph(props: Props) {
                           : 1,
                     }}
                     initial={{ opacity: 0 }}
-                    transition={{ duration: animate }}
-                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     onMouseEnter={event => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
@@ -356,10 +358,11 @@ export function Graph(props: Props) {
                                 <motion.path
                                   key={`${d.id}-${j}`}
                                   d={masterPath}
-                                  animate={{ fill: color, opacity: 1 }}
+                                  whileInView={{ fill: color, opacity: 1 }}
                                   initial={{ opacity: 0 }}
-                                  transition={{ duration: animate }}
-                                  exit={{ opacity: 0, transition: { duration: animate } }}
+                                  transition={{ duration: animate.duration }}
+                                  viewport={{ once: animate.once, amount: animate.amount }}
+                                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                                   style={{
                                     stroke: mapBorderColor,
                                     strokeWidth: mapBorderWidth,
@@ -381,10 +384,11 @@ export function Graph(props: Props) {
                                 <motion.path
                                   key={`${d.id}-${j}`}
                                   d={path}
-                                  animate={{ fill: color, opacity: 1 }}
+                                  whileInView={{ fill: color, opacity: 1 }}
                                   initial={{ opacity: 0 }}
-                                  transition={{ duration: animate }}
-                                  exit={{ opacity: 0, transition: { duration: animate } }}
+                                  transition={{ duration: animate.duration }}
+                                  viewport={{ once: animate.once, amount: animate.amount }}
+                                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                                   style={{
                                     stroke: mapBorderColor,
                                     strokeWidth: mapBorderWidth,

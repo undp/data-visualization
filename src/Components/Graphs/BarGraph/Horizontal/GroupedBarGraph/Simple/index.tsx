@@ -11,6 +11,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -70,7 +71,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   filterNA?: boolean;
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   precision?: number;
   customLayers?: CustomLayerDataType[];
 }
@@ -266,7 +267,11 @@ export function HorizontalGroupedBarGraph(props: Props) {
                         styles={styles}
                         classNames={classNames}
                         colorDomain={colorDomain}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         precision={precision}
                         customLayers={customLayers}
                       />

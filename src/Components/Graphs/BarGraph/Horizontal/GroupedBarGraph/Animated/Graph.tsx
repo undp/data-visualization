@@ -297,7 +297,7 @@ export function Graph(props: Props) {
                       height={y.bandwidth()}
                       style={styles?.yAxis?.labels}
                       className={classNames?.yAxis?.labels}
-                      animate={0}
+                      animate={{ duration: 0, once: true, amount: 0 }}
                     />
                   ) : null}
                 </g>
@@ -316,7 +316,7 @@ export function Graph(props: Props) {
                     textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
                     classNames={el.classNames}
                     styles={el.styles}
-                    animate={0}
+                    animate={{ duration: 0, once: true, amount: 0 }}
                   />
                 ))}
               </>

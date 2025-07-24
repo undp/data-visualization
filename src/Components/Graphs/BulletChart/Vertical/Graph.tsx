@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import {
+  AnimateDataType,
   BulletChartDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -63,7 +64,7 @@ interface Props {
   targetStyle: 'background' | 'line';
   qualitativeRangeColors: string[];
   measureBarWidthFactor: number;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -291,7 +292,7 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  animate={{
+                  whileInView={{
                     x: x(`${d.id}`),
                     y: 0,
                     opacity:
@@ -301,8 +302,9 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : 0.85,
                   }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
-                  transition={{ duration: animate }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
                 >
                   {d.qualitativeRange
                     ? d.qualitativeRange.map((_el, j) => (
@@ -314,7 +316,7 @@ export function Graph(props: Props) {
                             y: y(0),
                             fill: qualitativeRangeColors[j],
                           }}
-                          animate={{
+                          whileInView={{
                             height: Math.abs(
                               y(
                                 sum(
@@ -343,9 +345,10 @@ export function Graph(props: Props) {
                           exit={{
                             height: 0,
                             y: y(0),
-                            transition: { duration: animate },
+                            transition: { duration: animate.duration },
                           }}
-                          transition={{ duration: animate }}
+                          transition={{ duration: animate.duration }}
+                          viewport={{ once: animate.once, amount: animate.amount }}
                           width={x.bandwidth()}
                         />
                       ))
@@ -361,16 +364,17 @@ export function Graph(props: Props) {
                         height: 0,
                         y: y(0),
                       }}
-                      animate={{
+                      whileInView={{
                         height: Math.abs(y(d.target) - y(0)),
                         y: d.target > 0 ? y(d.target) : y(0),
                       }}
                       exit={{
                         height: 0,
                         y: y(0),
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     />
                   ) : null}
                   {d.size ? (
@@ -384,16 +388,17 @@ export function Graph(props: Props) {
                         height: 0,
                         y: y(0),
                       }}
-                      animate={{
+                      whileInView={{
                         height: Math.abs(y(d.size) - y(0)),
                         y: d.size > 0 ? y(d.size) : y(0),
                       }}
                       exit={{
                         height: 0,
                         y: y(0),
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     />
                   ) : null}
                   {d.target && targetStyle === 'line' ? (
@@ -407,16 +412,17 @@ export function Graph(props: Props) {
                         y: y(0),
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         y: y(d.target) - 1,
                         opacity: 1,
                       }}
                       exit={{
                         y: y(0),
                         opacity: 0,
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                       height={2}
                     />
                   ) : null}
@@ -457,12 +463,13 @@ export function Graph(props: Props) {
                         y: y(0),
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         y: y(d.size || 0),
                         opacity: 1,
                       }}
-                      exit={{ opacity: 0, transition: { duration: animate } }}
-                      transition={{ duration: animate }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     >
                       {numberFormattingFunction(d.size, precision, prefix, suffix)}
                     </motion.text>

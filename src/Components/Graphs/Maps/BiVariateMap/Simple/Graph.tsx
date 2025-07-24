@@ -16,6 +16,7 @@ import { Modal, P } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   BivariateMapDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -67,7 +68,7 @@ interface Props {
   showColorScale: boolean;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   customLayers: CustomLayerDataType[];
 }
@@ -307,7 +308,7 @@ export function Graph(props: Props) {
                 return (
                   <motion.g
                     key={d.id}
-                    animate={{
+                    whileInView={{
                       opacity: selectedColor
                         ? selectedColor === color
                           ? 1
@@ -319,8 +320,9 @@ export function Graph(props: Props) {
                           : 1,
                     }}
                     initial={{ opacity: 0 }}
-                    transition={{ duration: animate }}
-                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     onMouseEnter={event => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
@@ -370,10 +372,11 @@ export function Graph(props: Props) {
                               return (
                                 <motion.path
                                   key={`${d.id}-${j}`}
-                                  animate={{ fill: color, opacity: 1 }}
+                                  whileInView={{ fill: color, opacity: 1 }}
                                   initial={{ opacity: 0 }}
-                                  transition={{ duration: animate }}
-                                  exit={{ opacity: 0, transition: { duration: animate } }}
+                                  transition={{ duration: animate.duration }}
+                                  viewport={{ once: animate.once, amount: animate.amount }}
+                                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                                   d={masterPath}
                                   className={`${
                                     color === mapNoDataColor
@@ -400,10 +403,11 @@ export function Graph(props: Props) {
                                 <motion.path
                                   key={`${d.id}-${j}`}
                                   d={path}
-                                  animate={{ fill: color, opacity: 1 }}
+                                  whileInView={{ fill: color, opacity: 1 }}
                                   initial={{ opacity: 0 }}
-                                  transition={{ duration: animate }}
-                                  exit={{ opacity: 0, transition: { duration: animate } }}
+                                  transition={{ duration: animate.duration }}
+                                  viewport={{ once: animate.once, amount: animate.amount }}
+                                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                                   className={`${
                                     color === mapNoDataColor
                                       ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'

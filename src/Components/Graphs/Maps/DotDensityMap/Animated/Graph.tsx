@@ -339,7 +339,7 @@ export function Graph(props: Props) {
                       cx={(projection([d.long, d.lat]) as [number, number])[0]}
                       cy={(projection([d.long, d.lat]) as [number, number])[1]}
                       style={{ fillOpacity: 0.8 }}
-                      animate={{
+                      whileInView={{
                         r: !radiusScale ? radius : radiusScale(d.radius || 0),
                         fill:
                           data.filter(el => el.color).length === 0
@@ -369,7 +369,7 @@ export function Graph(props: Props) {
                         style={{ textAnchor: 'start' }}
                         dx={4}
                         dy={5}
-                        animate={{ opacity: 1 }}
+                        whileInView={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                       >
                         {d.label}

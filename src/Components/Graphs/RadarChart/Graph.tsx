@@ -8,7 +8,13 @@ import min from 'lodash.min';
 import { scaleLinear } from 'd3-scale';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, CustomLayerDataType, RadarChartDataType, StyleObject } from '@/Types';
+import {
+  AnimateDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  RadarChartDataType,
+  StyleObject,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { Colors } from '@/Components/ColorPalette';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -44,7 +50,7 @@ interface Props {
   fillShape: boolean;
   resetSelectionOnDoubleClick: boolean;
   highlightedLines: (string | number)[];
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
@@ -233,7 +239,7 @@ export function Graph(props: Props) {
                             : 0.3
                           : 1,
                   }}
-                  animate={{
+                  whileInView={{
                     opacity: mouseOverData
                       ? d.label === mouseOverData.label
                         ? 1
@@ -252,8 +258,9 @@ export function Graph(props: Props) {
                             : dimmedOpacity
                           : 1,
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
@@ -286,9 +293,10 @@ export function Graph(props: Props) {
                   <motion.path
                     d={lineShape(d.values) || ''}
                     initial={{ d: lineShape(d.values.map(_el => 0)) || '' }}
-                    animate={{ d: lineShape(d.values) || '' }}
-                    transition={{ duration: animate }}
-                    exit={{ opacity: 0, transition: { duration: animate } }}
+                    whileInView={{ d: lineShape(d.values) || '' }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     style={{
                       stroke:
                         data.filter(el => el.color).length === 0
@@ -326,13 +334,14 @@ export function Graph(props: Props) {
                                         : lineColors[colorDomain.indexOf(d.color)],
                                 }}
                                 initial={{ cx: 0, cy: 0, opacity: 0 }}
-                                animate={{
+                                whileInView={{
                                   cx: Math.cos(angleScale(j) - Math.PI / 2) * scale(el),
                                   cy: Math.sin(angleScale(j) - Math.PI / 2) * scale(el),
                                   opacity: 1,
                                 }}
-                                transition={{ duration: animate }}
-                                exit={{ opacity: 0, transition: { duration: animate } }}
+                                transition={{ duration: animate.duration }}
+                                viewport={{ once: animate.once, amount: animate.amount }}
+                                exit={{ opacity: 0, transition: { duration: animate.duration } }}
                               />
                             ) : null}
                             {showValues ? (
@@ -361,9 +370,10 @@ export function Graph(props: Props) {
                                   classNames?.graphObjectValues,
                                 )}
                                 initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: animate }}
-                                exit={{ opacity: 0, transition: { duration: animate } }}
+                                whileInView={{ opacity: 1 }}
+                                transition={{ duration: animate.duration }}
+                                viewport={{ once: animate.once, amount: animate.amount }}
+                                exit={{ opacity: 0, transition: { duration: animate.duration } }}
                               >
                                 {numberFormattingFunction(el, precision)}
                               </motion.text>

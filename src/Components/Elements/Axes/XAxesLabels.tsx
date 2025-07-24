@@ -1,6 +1,8 @@
 import { cn } from '@undp/design-system-react';
 import { motion } from 'motion/react';
 
+import { AnimateDataType } from '@/Types';
+
 interface Props {
   value: number | string;
   y: number;
@@ -10,7 +12,7 @@ interface Props {
   style?: React.CSSProperties;
   className?: string;
   alignment?: 'top' | 'bottom';
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function XAxesLabels(props: Props) {
@@ -23,11 +25,12 @@ export function XAxesLabels(props: Props) {
         x,
         y,
       }}
-      animate={{
+      whileInView={{
         x,
         y,
       }}
-      transition={{ duration: animate }}
+      transition={{ duration: animate.duration }}
+      viewport={{ once: animate.once, amount: animate.amount }}
     >
       <div
         className={`flex flex-col items-center h-inherit ${

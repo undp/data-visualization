@@ -11,6 +11,7 @@ import {
 } from '../../assets/constants';
 
 import { SimpleLineChart } from '@/index';
+import { parseValue } from '@/stories/assets/parseValue';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof SimpleLineChart>;
 
@@ -97,9 +98,9 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: {
         type: {
-          summary: 'boolean | number',
+          summary: 'boolean | {duration: number; once: boolean; amount: `some` | `all` | number}',
           detail:
-            'If the type is number then it uses the number as the time in seconds for animation.',
+            'duration defines the time of the animation. once defines if the animation is triggered every time the element is in the view port. amount defines the amount of an element that should enter the viewport to be considered "entered". Either "some", "all" or a number between 0 and 1. ',
         },
       },
     },
@@ -235,7 +236,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
               (animate as any) === 'true' || animate === true
               ? true
               : animate
-                ? Number(animate)
+                ? parseValue(animate)
                 : animate
         }
         regressionLine={

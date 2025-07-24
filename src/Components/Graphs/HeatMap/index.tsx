@@ -11,6 +11,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
@@ -95,7 +96,7 @@ interface Props {
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Domain for the colors in the cell.  */
   colorDomain: number[] | string[];
   /** Specifies the number of decimal places to display in the value. */
@@ -386,7 +387,11 @@ export function HeatMap(props: Props) {
                         detailsOnClick={detailsOnClick}
                         styles={styles}
                         classNames={classNames}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         precision={precision}
                       />
                     ) : null}

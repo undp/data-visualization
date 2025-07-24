@@ -2,6 +2,7 @@ import { NumberValue } from 'd3-scale';
 import { motion } from 'motion/react';
 
 import { Colors } from '@/Components/ColorPalette';
+import { AnimateDataType } from '@/Types';
 
 interface Props {
   areaSettings: {
@@ -14,7 +15,7 @@ interface Props {
   width: number;
   height: number;
   scale: (value: Date | NumberValue) => number;
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function HighlightArea(props: Props) {
@@ -39,15 +40,16 @@ export function HighlightArea(props: Props) {
                   x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
                   opacity: 1,
                 }}
-                animate={{
+                whileInView={{
                   width: d.coordinates[1]
                     ? scale(d.coordinates[1]) - (d.coordinates[0] ? scale(d.coordinates[0]) : 0)
                     : width - (d.coordinates[0] ? scale(d.coordinates[0]) : 0),
                   x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
                   opacity: 1,
                 }}
-                transition={{ duration: animate }}
-                exit={{ opacity: 0, width: 0, transition: { duration: animate } }}
+                transition={{ duration: animate.duration }}
+                viewport={{ once: animate.once, amount: animate.amount }}
+                exit={{ opacity: 0, width: 0, transition: { duration: animate.duration } }}
               />
             </motion.g>
           )}
@@ -69,7 +71,7 @@ interface ScatterPlotProps {
   height: number;
   scaleX: (value: Date | NumberValue) => number;
   scaleY: (value: Date | NumberValue) => number;
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
@@ -93,7 +95,7 @@ export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
                   y: d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0,
                   height: 0,
                 }}
-                animate={{
+                whileInView={{
                   x: d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0,
                   width: d.coordinates[1]
                     ? scaleX(d.coordinates[1] as number) -
@@ -107,8 +109,14 @@ export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
                       : height -
                         (d.coordinates[3] ? height - scaleY(d.coordinates[3] as number) : 0),
                 }}
-                exit={{ opacity: 0, width: 0, height: 0, transition: { duration: animate } }}
-                transition={{ duration: animate }}
+                exit={{
+                  opacity: 0,
+                  width: 0,
+                  height: 0,
+                  transition: { duration: animate.duration },
+                }}
+                transition={{ duration: animate.duration }}
+                viewport={{ once: animate.once, amount: animate.amount }}
               />
             </motion.g>
           )}

@@ -1,6 +1,8 @@
 import { cn } from '@undp/design-system-react';
 import { motion } from 'motion/react';
 
+import { AnimateDataType } from '@/Types';
+
 interface Props {
   color?: string;
   connectorsSettings?: {
@@ -30,7 +32,7 @@ interface Props {
     connector?: React.CSSProperties;
     text?: React.CSSProperties;
   };
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function Annotation(props: Props) {
@@ -38,9 +40,10 @@ export function Annotation(props: Props) {
   return (
     <motion.g
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: animate } }}
-      transition={{ duration: animate }}
+      whileInView={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+      transition={{ duration: animate.duration }}
+      viewport={{ once: animate.once, amount: animate.amount }}
     >
       {connectorsSettings ? (
         <>

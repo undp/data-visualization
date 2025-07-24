@@ -5,7 +5,13 @@ import sortBy from 'lodash.sortby';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, CustomLayerDataType, StripChartDataType, StyleObject } from '@/Types';
+import {
+  AnimateDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  StripChartDataType,
+  StyleObject,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -45,7 +51,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   valueColor?: string;
-  animate: number;
+  animate: AnimateDataType;
   noOfTicks: number;
   dimmedOpacity: number;
   precision: number;
@@ -141,7 +147,7 @@ export function Graph(props: Props) {
                     x: graphWidth / 2,
                     y: y(0),
                   }}
-                  animate={{
+                  whileInView={{
                     x: graphWidth / 2,
                     y: y(d.position),
                     opacity: selectedColor
@@ -156,8 +162,9 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : dotOpacity,
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
@@ -207,7 +214,7 @@ export function Graph(props: Props) {
                                 ? Colors.gray
                                 : colors[colorDomain.indexOf(d.color)],
                       }}
-                      animate={{
+                      whileInView={{
                         fill:
                           highlightColor && highlightedDataPoints
                             ? highlightedDataPoints.indexOf(d.label) !== -1
@@ -223,8 +230,9 @@ export function Graph(props: Props) {
                                 ? Colors.gray
                                 : colors[colorDomain.indexOf(d.color)],
                       }}
-                      transition={{ duration: animate }}
-                      exit={{ opacity: 0, transition: { duration: animate } }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       r={radius}
                     />
                   ) : (
@@ -249,7 +257,7 @@ export function Graph(props: Props) {
                                 ? Colors.gray
                                 : colors[colorDomain.indexOf(d.color)],
                       }}
-                      animate={{
+                      whileInView={{
                         fill:
                           highlightColor && highlightedDataPoints
                             ? highlightedDataPoints.indexOf(d.label) !== -1
@@ -265,8 +273,9 @@ export function Graph(props: Props) {
                                 ? Colors.gray
                                 : colors[colorDomain.indexOf(d.color)],
                       }}
-                      transition={{ duration: animate }}
-                      exit={{ opacity: 0, transition: { duration: animate } }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     />
                   )}
                   {highlightedDataPoints.length !== 0 ? (
@@ -276,9 +285,10 @@ export function Graph(props: Props) {
                         dy='0.33em'
                         x={0 + radius + 3}
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: animate }}
-                        exit={{ opacity: 0, transition: { duration: animate } }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         style={{
                           fill:
                             valueColor ||

@@ -3,6 +3,7 @@ import { cn } from '@undp/design-system-react';
 import { motion } from 'motion/react';
 
 import { getPathFromPoints } from '@/Utils/getPathFromPoints';
+import { AnimateDataType } from '@/Types';
 
 interface Props {
   areaSettings: {
@@ -15,7 +16,7 @@ interface Props {
   }[];
   scaleX: (value: Date | NumberValue) => number;
   scaleY: (value: Date | NumberValue) => number;
-  animate: number;
+  animate: AnimateDataType;
 }
 export function CustomArea(props: Props) {
   const { areaSettings, scaleX, scaleY, animate } = props;
@@ -27,11 +28,12 @@ export function CustomArea(props: Props) {
             .map(item => (item instanceof Date ? item.toISOString() : item.toString()))
             .join('~')}
           initial={{ opacity: 0 }}
-          animate={{
+          whileInView={{
             opacity: 1,
           }}
-          transition={{ duration: animate }}
-          exit={{ opacity: 0, transition: { duration: animate } }}
+          transition={{ duration: animate.duration }}
+          viewport={{ once: animate.once, amount: animate.amount }}
+          exit={{ opacity: 0, transition: { duration: animate.duration } }}
         >
           {d.coordinates.length !== 4 ? (
             <path

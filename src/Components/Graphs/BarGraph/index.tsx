@@ -14,6 +14,7 @@ import {
   ClassNameObject,
   GroupedBarGraphDataType,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 
 interface Props {
@@ -120,7 +121,7 @@ interface Props {
   /** Toggles if data point which are undefined or has value null are filtered out.  */
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -415,7 +416,7 @@ interface GroupedBarChartProps {
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Reference values for comparison */
   refValues?: ReferenceDataType[];
   /** Number of ticks on the axis */
@@ -726,7 +727,7 @@ interface StackedBarChartProps {
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */

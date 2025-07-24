@@ -15,6 +15,7 @@ import {
   CustomHighlightAreaSettingsForScatterPlotDataType,
   HighlightAreaSettingsForScatterPlotDataType,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -129,7 +130,7 @@ interface Props {
   /** Color of the labels */
   labelColor?: string;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -403,7 +404,11 @@ export function ScatterPlot(props: Props) {
                         yPrefix={yPrefix}
                         styles={styles}
                         classNames={classNames}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                         customLayers={customLayers}

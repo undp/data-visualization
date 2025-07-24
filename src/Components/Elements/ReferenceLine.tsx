@@ -1,6 +1,8 @@
 import { cn } from '@undp/design-system-react';
 import { motion } from 'motion/react';
 
+import { AnimateDataType } from '@/Types';
+
 interface RefLineYProps {
   text?: string;
   color?: string;
@@ -15,7 +17,7 @@ interface RefLineYProps {
     line?: React.CSSProperties;
     text?: React.CSSProperties;
   };
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function RefLineY(props: RefLineYProps) {
@@ -25,8 +27,9 @@ export function RefLineY(props: RefLineYProps) {
     <motion.g
       key={`${x1}-${x2}-${y}`}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: animate }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: animate.duration }}
+      viewport={{ once: animate.once, amount: animate.amount }}
     >
       <line
         className={cn(
@@ -79,7 +82,7 @@ interface RefLineXProps {
     line?: React.CSSProperties;
     text?: React.CSSProperties;
   };
-  animate: number;
+  animate: AnimateDataType;
 }
 
 export function RefLineX(props: RefLineXProps) {
@@ -89,9 +92,10 @@ export function RefLineX(props: RefLineXProps) {
     <motion.g
       key={`${y1}-${y2}-${x}`}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: animate }}
-      exit={{ opacity: 0, transition: { duration: animate } }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: animate.duration }}
+      viewport={{ once: animate.once, amount: animate.amount }}
+      exit={{ opacity: 0, transition: { duration: animate.duration } }}
     >
       <line
         className={cn(

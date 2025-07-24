@@ -15,6 +15,7 @@ import {
   MapProjectionTypes,
   ZoomInteractionTypes,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -95,7 +96,7 @@ interface Props {
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Scale for the colors */
   scaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Toggles if the color scaling is categorical or not */
@@ -350,7 +351,11 @@ export function ChoroplethMap(props: Props) {
                   mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
                   zoomInteraction={zoomInteraction}
                   dimmedOpacity={dimmedOpacity}
-                  animate={animate === true ? 0.5 : animate || 0}
+                  animate={
+                    animate === true
+                      ? { duration: 0.5, once: true, amount: 0.5 }
+                      : animate || { duration: 0, once: true, amount: 0 }
+                  }
                   customLayers={customLayers}
                 />
               ) : null}

@@ -14,11 +14,12 @@ import { format, parse } from 'date-fns';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
-import { useAnimate, useInView } from 'motion/react';
 import { linearRegression } from 'simple-statistics';
 import { cn } from '@undp/design-system-react';
+import { motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   AnnotationSettingsDataType,
   ClassNameObject,
   CurveTypes,
@@ -65,7 +66,7 @@ interface Props {
   highlightAreaSettings: HighlightAreaSettingsDataType[];
   maxValue?: number;
   minValue?: number;
-  animateLine: boolean | number;
+  animate: AnimateDataType;
   rtl: boolean;
   strokeWidth: number;
   showDots: boolean;
@@ -109,7 +110,7 @@ export function Graph(props: Props) {
     refValues,
     minValue,
     maxValue,
-    animateLine,
+    animate,
     rtl,
     strokeWidth,
     showDots,
@@ -136,11 +137,6 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  const [scope, animate] = useAnimate();
-  const [labelScope, labelAnimate] = useAnimate();
-  const [annotationsScope, annotationsAnimate] = useAnimate();
-  const [regLineScope, regLineAnimate] = useAnimate();
-  const isInView = useInView(scope);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -227,51 +223,6 @@ export function Graph(props: Props) {
     };
     select(MouseoverRectRef.current).on('mousemove', mousemove).on('mouseout', mouseout);
   }, [x, dataFormatted, onSeriesMouseOver]);
-  useEffect(() => {
-    if (isInView && data.length > 0) {
-      animate(
-        scope.current,
-        { pathLength: [0, 1] },
-        { duration: animateLine === true ? 5 : animateLine || 0 },
-      );
-      labelAnimate(
-        labelScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-      annotationsAnimate(
-        annotationsScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-      regLineAnimate(
-        regLineScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-    }
-  }, [
-    isInView,
-    data,
-    animate,
-    scope,
-    animateLine,
-    labelAnimate,
-    labelScope,
-    annotationsAnimate,
-    annotationsScope,
-    regLineAnimate,
-    regLineScope,
-  ]);
   const regressionLineParam = linearRegression(
     dataFormatted
       .filter(d => !checkIfNullOrUndefined(d.date) && !checkIfNullOrUndefined(d.y))
@@ -291,13 +242,13 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
-            animate={animateLine ? 0.5 : 0}
+            animate={animate}
           />
           <CustomArea
             areaSettings={customHighlightAreaSettingsFormatted}
             scaleX={x}
             scaleY={y}
-            animate={animateLine ? 0.5 : 0}
+            animate={animate}
           />
           <g>
             <YTicksAndGridLines
@@ -379,14 +330,25 @@ export function Graph(props: Props) {
           />
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g>
-            <path
-              d={lineShape(dataFormatted) || ''}
+            <motion.path
               style={{
                 stroke: lineColor,
                 fill: 'none',
                 strokeWidth,
               }}
-              ref={scope}
+              initial={{
+                pathLength: 0,
+                d: lineShape(dataFormatted) || '',
+                opacity: 1,
+              }}
+              whileInView={{
+                pathLength: 1,
+                d: lineShape(dataFormatted) || '',
+                opacity: 1,
+              }}
+              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+              transition={{ duration: animate.duration }}
+              viewport={{ once: animate.once, amount: animate.amount }}
             />
             {mouseOverData ? (
               <line
@@ -402,13 +364,13 @@ export function Graph(props: Props) {
               />
             ) : null}
           </g>
-          <g ref={labelScope}>
+          <g>
             {dataFormatted.map((d, i) => (
-              <g key={i}>
+              <motion.g key={i}>
                 {!checkIfNullOrUndefined(d.y) ? (
-                  <g>
+                  <>
                     {showDots ? (
-                      <circle
+                      <motion.circle
                         cx={x(d.date)}
                         cy={y(d.y as number)}
                         r={
@@ -419,10 +381,15 @@ export function Graph(props: Props) {
                               : 4
                         }
                         style={{ fill: lineColor }}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       />
                     ) : null}
                     {showValues ? (
-                      <text
+                      <motion.text
                         x={x(d.date)}
                         y={y(d.y)}
                         dy={-8}
@@ -434,13 +401,18 @@ export function Graph(props: Props) {
                           'graph-value text-xs font-bold',
                           classNames?.graphObjectValues,
                         )}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       >
                         {numberFormattingFunction(d.y, precision, prefix, suffix)}
-                      </text>
+                      </motion.text>
                     ) : null}
-                  </g>
+                  </>
                 ) : null}
-              </g>
+              </motion.g>
             ))}
           </g>
           {refValues ? (
@@ -455,12 +427,12 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   classNames={el.classNames}
                   styles={el.styles}
-                  animate={animateLine ? 0.5 : 0}
+                  animate={animate}
                 />
               ))}
             </>
           ) : null}
-          <g ref={annotationsScope}>
+          <g>
             {annotations.map((d, i) => {
               const endPoints = getLineEndPoint(
                 {
@@ -525,12 +497,12 @@ export function Graph(props: Props) {
                   text={d.text}
                   classNames={d.classNames}
                   styles={d.styles}
-                  animate={animateLine ? 0.5 : 0}
+                  animate={animate}
                 />
               );
             })}
           </g>
-          <g ref={regLineScope}>
+          <g>
             {regressionLine ? (
               <RegressionLine
                 x1={
@@ -544,7 +516,7 @@ export function Graph(props: Props) {
                 className={classNames?.regLine}
                 style={styles?.regLine}
                 color={typeof regressionLine === 'string' ? regressionLine : undefined}
-                animate={animateLine === true ? 0.5 : animateLine || 0}
+                animate={animate}
               />
             ) : null}
           </g>

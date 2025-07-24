@@ -17,6 +17,7 @@ import {
   HighlightAreaSettingsDataType,
   CurveTypes,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { ColorLegend } from '@/Components/Elements/ColorLegend';
@@ -115,7 +116,7 @@ interface Props {
   /** Opacity of the interval area */
   intervalAreaOpacity?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   /** Format of the date in the data object  */
   dateFormat?: string;
   /** Title for the Y-axis */
@@ -344,7 +345,11 @@ export function LineChartWithConfidenceInterval(props: Props) {
                         refValues={refValues}
                         minValue={minValue}
                         maxValue={maxValue}
-                        animateLine={animate}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         rtl={language === 'he' || language === 'ar'}
                         strokeWidth={strokeWidth}
                         showDots={showDots}

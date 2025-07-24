@@ -14,12 +14,13 @@ import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
 import min from 'lodash.min';
 import max from 'lodash.max';
-import { useAnimate, useInView } from 'motion/react';
 import { cn } from '@undp/design-system-react';
 import uniqBy from 'lodash.uniqby';
 import { Delaunay } from 'd3-delaunay';
+import { motion } from 'motion/react';
 
 import {
+  AnimateDataType,
   AnnotationSettingsDataType,
   ClassNameObject,
   CurveTypes,
@@ -68,7 +69,7 @@ interface Props {
   maxValue?: number;
   minValue?: number;
   highlightedLines: (string | number)[];
-  animateLine: boolean | number;
+  animate: AnimateDataType;
   rtl: boolean;
   strokeWidth: number;
   showLabels: boolean;
@@ -116,7 +117,7 @@ export function Graph(props: Props) {
     minValue,
     maxValue,
     highlightedLines,
-    animateLine,
+    animate,
     rtl,
     strokeWidth,
     showDots,
@@ -164,9 +165,6 @@ export function Graph(props: Props) {
     ),
     d => d.date,
   ).map(d => d.date);
-  const [scope, animate] = useAnimate();
-  const [annotationsScope, annotationsAnimate] = useAnimate();
-  const isInView = useInView(scope);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -257,33 +255,6 @@ export function Graph(props: Props) {
     onSeriesMouseOver?.(undefined);
   }, [x, dataFormatted, onSeriesMouseOver]);
 
-  useEffect(() => {
-    if (isInView && data.length > 0) {
-      animate(
-        'path',
-        { pathLength: [0, 1] },
-        { duration: animateLine === true ? 5 : animateLine || 0 },
-      );
-      if (showDots) {
-        animate(
-          'circle',
-          { opacity: [0, 1] },
-          {
-            delay: animateLine === true ? 5 : animateLine || 0,
-            duration: animateLine === true ? 0.5 : animateLine || 0,
-          },
-        );
-      }
-      annotationsAnimate(
-        annotationsScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-    }
-  }, [isInView, data, animate, animateLine, showDots, annotationsAnimate, annotationsScope]);
   return (
     <>
       <svg
@@ -298,13 +269,13 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
-            animate={animateLine ? 0.5 : 0}
+            animate={animate}
           />
           <CustomArea
             areaSettings={customHighlightAreaSettingsFormatted}
             scaleX={x}
             scaleY={y}
-            animate={animateLine ? 0.5 : 0}
+            animate={animate}
           />
           <g>
             <YTicksAndGridLines
@@ -387,12 +358,12 @@ export function Graph(props: Props) {
             />
           </g>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-          <g ref={scope}>
-            {lineArray.map((d, i) => (
-              <g
-                key={i}
-                opacity={
-                  mouseOverData
+          <motion.g>
+            {lineArray.map(d => (
+              <motion.g
+                key={d[0].label}
+                initial={{
+                  opacity: mouseOverData
                     ? d[0].label === mouseOverData.label
                       ? 1
                       : dimmedOpacity
@@ -406,23 +377,36 @@ export function Graph(props: Props) {
                         ? highlightedLines.indexOf(d[0].label) !== -1
                           ? 1
                           : dimmedOpacity
-                        : 1
-                }
+                        : 1,
+                }}
+                whileInView={{
+                  opacity: mouseOverData
+                    ? d[0].label === mouseOverData.label
+                      ? 1
+                      : dimmedOpacity
+                    : selectedColor
+                      ? d[0].color
+                        ? lineColors[colorDomain.indexOf(d[0].color)] === selectedColor
+                          ? 1
+                          : dimmedOpacity
+                        : dimmedOpacity
+                      : highlightedLines.length !== 0
+                        ? highlightedLines.indexOf(d[0].label) !== -1
+                          ? 1
+                          : dimmedOpacity
+                        : 1,
+                }}
+                exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                transition={{ duration: animate.duration }}
+                viewport={{ once: animate.once, amount: animate.amount }}
               >
-                <path
-                  key={i}
+                <motion.path
                   d={
                     lineShape(
                       d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
                     ) || ''
                   }
                   style={{
-                    stroke:
-                      data.filter(el => el.color).length === 0
-                        ? lineColors[0]
-                        : !d[0].color
-                          ? Colors.gray
-                          : lineColors[colorDomain.indexOf(d[0].color)],
                     fill: 'none',
                     strokeWidth: mouseOverData
                       ? d[0].label === mouseOverData.label
@@ -434,36 +418,78 @@ export function Graph(props: Props) {
                           : strokeWidth
                         : strokeWidth,
                   }}
+                  initial={{
+                    pathLength: 0,
+                    d:
+                      lineShape(
+                        d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
+                      ) || '',
+                    opacity: 1,
+                    stroke:
+                      data.filter(el => el.color).length === 0
+                        ? lineColors[0]
+                        : !d[0].color
+                          ? Colors.gray
+                          : lineColors[colorDomain.indexOf(d[0].color)],
+                  }}
+                  whileInView={{
+                    pathLength: 1,
+                    d:
+                      lineShape(
+                        d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
+                      ) || '',
+                    opacity: 1,
+                    stroke:
+                      data.filter(el => el.color).length === 0
+                        ? lineColors[0]
+                        : !d[0].color
+                          ? Colors.gray
+                          : lineColors[colorDomain.indexOf(d[0].color)],
+                  }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
                 />
-                <g>
-                  {d.map((el, j) => (
-                    <g key={j}>
-                      {!checkIfNullOrUndefined(el.y) ? (
-                        <g>
-                          {showDots ? (
-                            <circle
-                              cx={x(el.date)}
-                              cy={y(el.y as number)}
-                              r={graphWidth / d.length < 5 ? 0 : graphWidth / d.length < 20 ? 2 : 4}
-                              style={{
-                                fill:
-                                  data.filter(el => el.color).length === 0
-                                    ? lineColors[0]
-                                    : !d[0].color
-                                      ? Colors.gray
-                                      : lineColors[colorDomain.indexOf(d[0].color)],
-                              }}
-                            />
-                          ) : null}
-                        </g>
-                      ) : null}
-                    </g>
-                  ))}
-                </g>
+                {d.map((el, j) => (
+                  <motion.g key={j}>
+                    {!checkIfNullOrUndefined(el.y) ? (
+                      <>
+                        {showDots ? (
+                          <motion.circle
+                            cx={x(el.date)}
+                            cy={y(el.y as number)}
+                            r={graphWidth / d.length < 5 ? 0 : graphWidth / d.length < 20 ? 2 : 4}
+                            initial={{
+                              opacity: 0,
+                              fill:
+                                data.filter(el => el.color).length === 0
+                                  ? lineColors[0]
+                                  : !d[0].color
+                                    ? Colors.gray
+                                    : lineColors[colorDomain.indexOf(d[0].color)],
+                            }}
+                            whileInView={{
+                              opacity: 1,
+                              fill:
+                                data.filter(el => el.color).length === 0
+                                  ? lineColors[0]
+                                  : !d[0].color
+                                    ? Colors.gray
+                                    : lineColors[colorDomain.indexOf(d[0].color)],
+                            }}
+                            exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                            transition={{ duration: 0.5, delay: animate.duration }}
+                            viewport={{ once: animate.once, amount: animate.amount }}
+                          />
+                        ) : null}
+                      </>
+                    ) : null}
+                  </motion.g>
+                ))}
                 {(highlightedLines.indexOf(d[0].label) !== -1 ||
                   mouseOverData?.label === d[0].label) &&
                 showLabels ? (
-                  <text
+                  <motion.text
                     style={{
                       fill:
                         data.filter(el => el.color).length === 0
@@ -477,11 +503,16 @@ export function Graph(props: Props) {
                     y={y(d[d.length - 1].y as number)}
                     dx={5}
                     dy={4}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    transition={{ duration: 0.5, delay: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                   >
                     {d[0].label}
-                  </text>
+                  </motion.text>
                 ) : null}
-              </g>
+              </motion.g>
             ))}
             {mouseOverData ? (
               <text
@@ -502,7 +533,7 @@ export function Graph(props: Props) {
                 {numberFormattingFunction(mouseOverData.y, precision, prefix, suffix)}
               </text>
             ) : null}
-          </g>
+          </motion.g>
           {dataFormatted
             .filter(d => !checkIfNullOrUndefined(d.y))
             .map((d, i) => {
@@ -546,12 +577,12 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   classNames={el.classNames}
                   styles={el.styles}
-                  animate={animateLine ? 0.5 : 0}
+                  animate={animate}
                 />
               ))}
             </>
           ) : null}
-          <g ref={annotationsScope}>
+          <g>
             {annotations.map((d, i) => {
               const endPoints = getLineEndPoint(
                 {
@@ -616,7 +647,7 @@ export function Graph(props: Props) {
                   text={d.text}
                   classNames={d.classNames}
                   styles={d.styles}
-                  animate={animateLine ? 0.5 : 0}
+                  animate={animate}
                 />
               );
             })}

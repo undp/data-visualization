@@ -15,10 +15,11 @@ import { format, parse } from 'date-fns';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
-import { useAnimate, useInView } from 'motion/react';
+import { motion } from 'motion/react';
 import { cn } from '@undp/design-system-react';
 
 import {
+  AnimateDataType,
   AnnotationSettingsDataType,
   ClassNameObject,
   CurveTypes,
@@ -62,7 +63,7 @@ interface Props {
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
-  animateLine: boolean | number;
+  animate: AnimateDataType;
   rtl: boolean;
   colorDomain: [string, string];
   showColorLegendAtTop?: boolean;
@@ -109,7 +110,7 @@ export function Graph(props: Props) {
     tooltip,
     highlightAreaSettings,
     onSeriesMouseOver,
-    animateLine,
+    animate,
     rtl,
     showColorLegendAtTop,
     colorDomain,
@@ -142,10 +143,6 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  const [scope, animate] = useAnimate();
-  const [areaScope, areaAnimate] = useAnimate();
-  const [annotationsScope, annotationsAnimate] = useAnimate();
-  const isInView = useInView(scope);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -267,63 +264,6 @@ export function Graph(props: Props) {
     };
     select(MouseoverRectRef.current).on('mousemove', mousemove).on('mouseout', mouseout);
   }, [x, dataFormatted, onSeriesMouseOver]);
-
-  useEffect(() => {
-    if (isInView && data.length > 0) {
-      animate(
-        'path',
-        { pathLength: [0, 1] },
-        { duration: animateLine === true ? 5 : animateLine || 0 },
-      );
-      if (showDots) {
-        animate(
-          'circle',
-          { opacity: [0, 1] },
-          {
-            delay: animateLine === true ? 5 : animateLine || 0,
-            duration: animateLine === true ? 0.5 : animateLine || 0,
-          },
-        );
-      }
-      if (!showColorLegendAtTop) {
-        animate(
-          'text',
-          { opacity: [0, 1] },
-          {
-            delay: animateLine === true ? 5 : animateLine || 0,
-            duration: animateLine === true ? 0.5 : animateLine || 0,
-          },
-        );
-      }
-      areaAnimate(
-        areaScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-      annotationsAnimate(
-        annotationsScope.current,
-        { opacity: [0, 1] },
-        {
-          delay: animateLine === true ? 5 : animateLine || 0,
-          duration: animateLine === true ? 0.5 : animateLine || 0,
-        },
-      );
-    }
-  }, [
-    isInView,
-    showColorLegendAtTop,
-    data,
-    animate,
-    animateLine,
-    showDots,
-    areaAnimate,
-    areaScope,
-    annotationsAnimate,
-    annotationsScope,
-  ]);
   return (
     <>
       <svg
@@ -352,13 +292,13 @@ export function Graph(props: Props) {
             width={graphWidth}
             height={graphHeight}
             scale={x}
-            animate={animateLine === true ? 0.5 : animateLine || 0}
+            animate={animate}
           />
           <CustomArea
             areaSettings={customHighlightAreaSettingsFormatted}
             scaleX={x}
             scaleY={y}
-            animate={animateLine === true ? 0.5 : animateLine || 0}
+            animate={animate}
           />
           <g>
             <g>
@@ -441,57 +381,88 @@ export function Graph(props: Props) {
             precision={precision}
           />
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-          <g ref={areaScope}>
-            <path
-              d={mainGraphArea(dataFormatted) || ''}
+          <g>
+            <motion.path
               clipPath={`url(#below${idSuffix})`}
-              style={{ fill: diffAreaColors[1] }}
-            />
-            <path
               d={mainGraphArea(dataFormatted) || ''}
+              style={{ fill: diffAreaColors[1] }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+              transition={{ duration: 0.5, delay: animate.duration }}
+              viewport={{ once: animate.once, amount: animate.amount }}
+            />
+            <motion.path
               clipPath={`url(#above${idSuffix})`}
+              d={mainGraphArea(dataFormatted) || ''}
               style={{ fill: diffAreaColors[0] }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+              transition={{ duration: 0.5, delay: animate.duration }}
+              viewport={{ once: animate.once, amount: animate.amount }}
             />
           </g>
-          <g ref={scope}>
-            <path
+          <g>
+            <motion.path
               d={lineShape1(dataFormatted) || ''}
               style={{
                 fill: 'none',
                 stroke: lineColors[0],
                 strokeWidth,
               }}
+              initial={{ pathLength: 0, d: lineShape1(dataFormatted) || '', opacity: 1 }}
+              whileInView={{ pathLength: 1, d: lineShape1(dataFormatted) || '', opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+              transition={{ duration: animate.duration }}
+              viewport={{ once: animate.once, amount: animate.amount }}
             />
-            <path
-              d={lineShape2(dataFormatted) || ''}
+            <motion.path
               style={{
                 fill: 'none',
                 stroke: lineColors[1],
                 strokeWidth,
               }}
+              initial={{ pathLength: 0, d: lineShape2(dataFormatted) || '', opacity: 1 }}
+              whileInView={{ pathLength: 1, d: lineShape2(dataFormatted) || '', opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+              transition={{ duration: animate.duration }}
+              viewport={{ once: animate.once, amount: animate.amount }}
             />
             {showColorLegendAtTop ? null : (
               <g>
-                <text
+                <motion.text
+                  key={colorDomain[0]}
                   style={{ fill: lineColors[0] }}
                   className='text-xs'
                   x={x(dataFormatted[dataFormatted.length - 1].date)}
                   y={y(dataFormatted[dataFormatted.length - 1].y1 as number)}
                   dx={5}
                   dy={4}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  transition={{ duration: 0.5, delay: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
                 >
                   {colorDomain[0]}
-                </text>
-                <text
+                </motion.text>
+                <motion.text
+                  key={colorDomain[1]}
                   style={{ fill: lineColors[1] }}
                   className='text-xs'
                   x={x(dataFormatted[dataFormatted.length - 1].date)}
                   y={y(dataFormatted[dataFormatted.length - 1].y2 as number)}
                   dx={5}
                   dy={4}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  transition={{ duration: 0.5, delay: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
                 >
                   {colorDomain[1]}
-                </text>
+                </motion.text>
               </g>
             )}
             {mouseOverData ? (
@@ -508,11 +479,11 @@ export function Graph(props: Props) {
               />
             ) : null}
             {dataFormatted.map((d, i) => (
-              <g key={i}>
+              <motion.g key={i}>
                 {!checkIfNullOrUndefined(d.y1) ? (
-                  <g>
+                  <>
                     {showDots ? (
-                      <circle
+                      <motion.circle
                         cx={x(d.date)}
                         cy={y(d.y1)}
                         r={
@@ -523,10 +494,15 @@ export function Graph(props: Props) {
                               : 4
                         }
                         style={{ fill: lineColors[0] }}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       />
                     ) : null}
                     {showValues ? (
-                      <text
+                      <motion.text
                         x={x(d.date)}
                         y={y(d.y1)}
                         dy={d.y2 < d.y1 ? -8 : '1em'}
@@ -539,16 +515,21 @@ export function Graph(props: Props) {
                           'graph-value graph-value-line-1 text-xs font-bold',
                           classNames?.graphObjectValues,
                         )}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       >
                         {numberFormattingFunction(d.y1, precision, prefix, suffix)}
-                      </text>
+                      </motion.text>
                     ) : null}
-                  </g>
+                  </>
                 ) : null}
                 {d.y2 !== undefined ? (
-                  <g>
+                  <>
                     {showDots ? (
-                      <circle
+                      <motion.circle
                         cx={x(d.date)}
                         cy={y(d.y2)}
                         r={
@@ -559,10 +540,15 @@ export function Graph(props: Props) {
                               : 4
                         }
                         style={{ fill: lineColors[1] }}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       />
                     ) : null}
                     {showValues ? (
-                      <text
+                      <motion.text
                         x={x(d.date)}
                         y={y(d.y2)}
                         dy={d.y2 > d.y1 ? -8 : '1em'}
@@ -575,13 +561,18 @@ export function Graph(props: Props) {
                           'graph-value graph-value-line-2 text-xs font-bold',
                           classNames?.graphObjectValues,
                         )}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        transition={{ duration: 0.5, delay: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
                       >
                         {numberFormattingFunction(d.y2, precision, prefix, suffix)}
-                      </text>
+                      </motion.text>
                     ) : null}
-                  </g>
+                  </>
                 ) : null}
-              </g>
+              </motion.g>
             ))}
           </g>
           {refValues ? (
@@ -596,12 +587,12 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   classNames={el.classNames}
                   styles={el.styles}
-                  animate={animateLine === true ? 0.5 : animateLine || 0}
+                  animate={animate}
                 />
               ))}
             </>
           ) : null}
-          <g ref={annotationsScope}>
+          <g>
             {annotations.map((d, i) => {
               const endPoints = getLineEndPoint(
                 {
@@ -666,7 +657,7 @@ export function Graph(props: Props) {
                   text={d.text}
                   classNames={d.classNames}
                   styles={d.styles}
-                  animate={animateLine === true ? 0.5 : animateLine || 0}
+                  animate={animate}
                 />
               );
             })}

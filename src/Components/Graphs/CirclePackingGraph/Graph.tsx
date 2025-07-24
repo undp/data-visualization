@@ -7,7 +7,7 @@ import { extent } from 'd3-array';
 import { cn, Modal, Spinner } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
+import { AnimateDataType, ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
@@ -45,7 +45,7 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
 }
@@ -309,10 +309,11 @@ export const Graph = memo((props: Props) => {
                     initial={{
                       opacity: 0,
                     }}
-                    animate={{
+                    whileInView={{
                       opacity,
                     }}
-                    transition={{ duration: animate }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                   >
                     <motion.circle
                       cx={0}
@@ -323,7 +324,7 @@ export const Graph = memo((props: Props) => {
                         r: 0,
                         opacity: 0,
                       }}
-                      animate={{
+                      whileInView={{
                         fill: circleColor,
                         r: bubbleRadius,
                         opacity: 1,
@@ -332,20 +333,22 @@ export const Graph = memo((props: Props) => {
                         fill: circleColor,
                         r: 0,
                         opacity: 0,
-                        transition: { duration: animate },
+                        transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
                     />
                     {showLabel && (
                       <motion.g
-                        animate={{
+                        whileInView={{
                           opacity: 1,
                         }}
                         initial={{
                           opacity: 0,
                         }}
-                        transition={{ duration: animate }}
-                        exit={{ opacity: 0, transition: { duration: animate } }}
+                        transition={{ duration: animate.duration }}
+                        viewport={{ once: animate.once, amount: animate.amount }}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       >
                         <foreignObject
                           y={0 - bubbleRadius}

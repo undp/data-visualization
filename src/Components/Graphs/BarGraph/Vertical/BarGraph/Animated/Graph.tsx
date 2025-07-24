@@ -392,7 +392,7 @@ export function Graph(props: Props) {
                     x2={graphWidth + margin.right}
                     classNames={el.classNames}
                     styles={el.styles}
-                    animate={0}
+                    animate={{ duration: 0, once: true, amount: 0 }}
                   />
                 ))}
               </>

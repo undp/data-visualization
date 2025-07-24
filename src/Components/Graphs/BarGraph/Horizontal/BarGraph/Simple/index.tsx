@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -80,7 +81,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   filterNA?: boolean;
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   precision?: number;
   customLayers?: CustomLayerDataType[];
 }
@@ -329,7 +330,11 @@ export function HorizontalBarGraph(props: Props) {
                         valueColor={valueColor}
                         classNames={classNames}
                         styles={styles}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                         customLayers={customLayers}

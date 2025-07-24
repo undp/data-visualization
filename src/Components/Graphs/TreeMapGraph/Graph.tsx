@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { P, Modal, cn } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { ClassNameObject, Languages, StyleObject, TreeMapDataType } from '@/Types';
+import { AnimateDataType, ClassNameObject, Languages, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
@@ -38,7 +38,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   language?: Languages;
-  animate: number;
+  animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
 }
@@ -131,7 +131,7 @@ export function Graph(props: Props) {
                     x: d.x0,
                     y: d.y0,
                   }}
-                  animate={{
+                  whileInView={{
                     opacity: selectedColor
                       ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         (d.data as any).data.color
@@ -151,8 +151,9 @@ export function Graph(props: Props) {
                     x: d.x0,
                     y: d.y0,
                   }}
-                  transition={{ duration: animate }}
-                  exit={{ opacity: 0, transition: { duration: animate } }}
+                  transition={{ duration: animate.duration }}
+                  viewport={{ once: animate.once, amount: animate.amount }}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     setMouseOverData((d.data as any).data);
@@ -208,7 +209,7 @@ export function Graph(props: Props) {
                                 colorDomain.indexOf((d.data as any).data.color)
                               ],
                     }}
-                    animate={{
+                    whileInView={{
                       width: d.x1 - d.x0,
                       height: d.y1 - d.y0,
                       fill:
@@ -226,20 +227,22 @@ export function Graph(props: Props) {
                       width: 0,
                       height: 0,
                       opacity: 0,
-                      transition: { duration: animate },
+                      transition: { duration: animate.duration },
                     }}
-                    transition={{ duration: animate }}
+                    transition={{ duration: animate.duration }}
+                    viewport={{ once: animate.once, amount: animate.amount }}
                   />
                   {d.x1 - d.x0 > 50 && d.y1 - d.y0 > 25 && (showLabels || showValues) ? (
                     <motion.g
-                      animate={{
+                      whileInView={{
                         opacity: 1,
                       }}
                       initial={{
                         opacity: 0,
                       }}
-                      transition={{ duration: animate }}
-                      exit={{ opacity: 0, transition: { duration: animate } }}
+                      transition={{ duration: animate.duration }}
+                      viewport={{ once: animate.once, amount: animate.amount }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     >
                       <foreignObject y={0} x={0} width={d.x1 - d.x0} height={d.y1 - d.y0}>
                         <div

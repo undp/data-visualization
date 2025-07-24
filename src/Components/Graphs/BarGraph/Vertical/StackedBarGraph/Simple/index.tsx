@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -75,7 +76,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   filterNA?: boolean;
-  animate?: boolean | number;
+  animate?: boolean | AnimateDataType;
   precision?: number;
   customLayers?: CustomLayerDataType[];
 }
@@ -286,7 +287,11 @@ export function VerticalStackedBarGraph(props: Props) {
                         valueColor={valueColor}
                         styles={styles}
                         classNames={classNames}
-                        animate={animate === true ? 0.5 : animate || 0}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                         colorDomain={colorDomain}
                         precision={precision}
                         customLayers={customLayers}
