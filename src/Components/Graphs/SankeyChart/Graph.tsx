@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 import { cn, Modal, P } from '@undp/design-system-react';
 
 import {
@@ -88,6 +88,11 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -134,12 +139,13 @@ export function Graph(props: Props) {
   const linkPathGenerator = sankeyLinkHorizontal();
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
         direction='ltr'
+        ref={svgRef}
       >
         {sourceTitle ? (
           <text
@@ -391,52 +397,55 @@ export function Graph(props: Props) {
                     setEventY(undefined);
                     onSeriesMouseOver?.(undefined);
                   }}
-                  initial={{
-                    opacity: selectedNode
-                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (d.source as any).name === selectedNode.name ||
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (d.target as any).name === selectedNode.name
-                        ? 0.85
-                        : defaultLinkOpacity
-                      : highlightedSourceDataPoints.length !== 0 ||
-                          highlightedTargetDataPoints.length !== 0
-                        ? highlightedSourceDataPoints.indexOf(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (d.source as any).label,
-                          ) !== -1 ||
-                          highlightedTargetDataPoints.indexOf(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (d.target as any).label,
-                          ) !== -1
+                  variants={{
+                    initial: {
+                      opacity: selectedNode
+                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (d.source as any).name === selectedNode.name ||
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (d.target as any).name === selectedNode.name
                           ? 0.85
                           : defaultLinkOpacity
-                        : defaultLinkOpacity,
-                  }}
-                  whileInView={{
-                    opacity: selectedNode
-                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (d.source as any).name === selectedNode.name ||
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (d.target as any).name === selectedNode.name
-                        ? 0.85
-                        : defaultLinkOpacity
-                      : highlightedSourceDataPoints.length !== 0 ||
-                          highlightedTargetDataPoints.length !== 0
-                        ? highlightedSourceDataPoints.indexOf(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (d.source as any).label,
-                          ) !== -1 ||
-                          highlightedTargetDataPoints.indexOf(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (d.target as any).label,
-                          ) !== -1
+                        : highlightedSourceDataPoints.length !== 0 ||
+                            highlightedTargetDataPoints.length !== 0
+                          ? highlightedSourceDataPoints.indexOf(
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              (d.source as any).label,
+                            ) !== -1 ||
+                            highlightedTargetDataPoints.indexOf(
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              (d.target as any).label,
+                            ) !== -1
+                            ? 0.85
+                            : defaultLinkOpacity
+                          : defaultLinkOpacity,
+                    },
+                    whileInView: {
+                      opacity: selectedNode
+                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (d.source as any).name === selectedNode.name ||
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (d.target as any).name === selectedNode.name
                           ? 0.85
                           : defaultLinkOpacity
-                        : defaultLinkOpacity,
+                        : highlightedSourceDataPoints.length !== 0 ||
+                            highlightedTargetDataPoints.length !== 0
+                          ? highlightedSourceDataPoints.indexOf(
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              (d.source as any).label,
+                            ) !== -1 ||
+                            highlightedTargetDataPoints.indexOf(
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              (d.target as any).label,
+                            ) !== -1
+                            ? 0.85
+                            : defaultLinkOpacity
+                          : defaultLinkOpacity,
+                      transition: { duration: animate.duration },
+                    },
                   }}
-                  transition={{ duration: animate.duration }}
-                  viewport={{ once: animate.once, amount: animate.amount }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 >
                   <motion.path
@@ -447,17 +456,20 @@ export function Graph(props: Props) {
                       strokeWidth: d.width,
                       fill: 'none',
                     }}
-                    initial={{
-                      pathLength: 0,
-                      opacity: 1,
-                    }}
-                    whileInView={{
-                      pathLength: 1,
-                      opacity: 1,
-                    }}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
+                    variants={{
+                      initial: {
+                        pathLength: 0,
+                        opacity: 1,
+                      },
+                      whileInView: {
+                        pathLength: 1,
+                        opacity: 1,
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                   />
                 </motion.g>
               ))}
@@ -465,7 +477,7 @@ export function Graph(props: Props) {
           </g>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

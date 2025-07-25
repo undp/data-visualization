@@ -15,6 +15,7 @@ import {
   HighlightAreaSettingsDataType,
   CurveTypes,
   CustomLayerDataType,
+  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -108,6 +109,8 @@ interface Props {
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | AnimateDataType;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -176,6 +179,7 @@ export function AreaChart(props: Props) {
     classNames,
     precision = 2,
     customLayers = [],
+    animate = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -309,6 +313,11 @@ export function AreaChart(props: Props) {
                         classNames={classNames}
                         precision={precision}
                         customLayers={customLayers}
+                        animate={
+                          animate === true
+                            ? { duration: 0.5, once: true, amount: 0.5 }
+                            : animate || { duration: 0, once: true, amount: 0 }
+                        }
                       />
                     ) : null}
                   </div>

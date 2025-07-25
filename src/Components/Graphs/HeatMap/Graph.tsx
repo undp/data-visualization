@@ -1,9 +1,9 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand, scaleOrdinal, scaleThreshold } from 'd3-scale';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import uniqBy from 'lodash.uniqby';
 import { cn, Modal } from '@undp/design-system-react';
-import { motion } from 'motion/react';
+import { motion, useInView } from 'motion/react';
 
 import {
   AnimateDataType,
@@ -84,6 +84,11 @@ export function Graph(props: Props) {
     animate,
     precision,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   const margin = {
     top: topMargin,
     bottom: bottomMargin,
@@ -115,12 +120,13 @@ export function Graph(props: Props) {
             .range(colors);
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         style={{ marginLeft: 'auto', marginRight: 'auto' }}
         direction='ltr'
+        ref={svgRef}
       >
         <g transform={`translate(${margin.left},${0})`}>
           {showColumnLabels
@@ -138,6 +144,7 @@ export function Graph(props: Props) {
                   className={classNames?.xAxis?.labels}
                   alignment='bottom'
                   animate={{ duration: 0, once: true, amount: 0 }}
+                  isInView={isInView}
                 />
               ))
             : null}
@@ -158,6 +165,7 @@ export function Graph(props: Props) {
                   style={styles?.yAxis?.labels}
                   className={classNames?.yAxis?.labels}
                   animate={{ duration: 0, once: true, amount: 0 }}
+                  isInView={isInView}
                 />
               ))
             : null}
@@ -225,26 +233,26 @@ export function Graph(props: Props) {
                     width={barWidth}
                     height={barHeight}
                     className='stroke-1 stroke-primary-white dark:stroke-primary-gray-700'
-                    initial={{
-                      fill: color,
-                    }}
-                    whileInView={{
-                      fill: color,
-                    }}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
+                    variants={{
+                      initial: { fill: color, opacity: 0 },
+                      whileInView: {
+                        fill: color,
+                        opacity: 1,
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                   />
                   {showValues && !checkIfNullOrUndefined(d.value) ? (
                     <motion.g
-                      whileInView={{
-                        opacity: 1,
+                      variants={{
+                        initial: { opacity: 0 },
+                        whileInView: { opacity: 1, transition: { duration: animate.duration } },
                       }}
-                      initial={{
-                        opacity: 0,
-                      }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     >
                       <foreignObject key={i} y={0} x={0} width={barWidth} height={barHeight}>
@@ -285,7 +293,7 @@ export function Graph(props: Props) {
             />
           ) : null}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

@@ -323,6 +323,7 @@ export function Graph(props: Props) {
                     classNames={el.classNames}
                     styles={el.styles}
                     animate={{ duration: 0, once: true, amount: 0 }}
+                    isInView
                   />
                 ))}
               </>
@@ -451,6 +452,7 @@ export function Graph(props: Props) {
                     classNames={el.classNames}
                     styles={el.styles}
                     animate={{ duration: 0, once: true, amount: 0 }}
+                    isInView
                   />
                 ))}
               </>
@@ -473,6 +475,7 @@ export function Graph(props: Props) {
                 style={styles?.yAxis?.labels}
                 className={classNames?.yAxis?.labels}
                 animate={{ duration: 0, once: true, amount: 0 }}
+                isInView
               />
             ))}
           </g>

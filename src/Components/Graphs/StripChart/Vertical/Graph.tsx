@@ -1,9 +1,9 @@
 import isEqual from 'fast-deep-equal';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { scaleLinear } from 'd3-scale';
 import sortBy from 'lodash.sortby';
 import { cn, Modal } from '@undp/design-system-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
   AnimateDataType,
@@ -93,6 +93,11 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -128,11 +133,12 @@ export function Graph(props: Props) {
   const ticks = getTickPositions(noOfTicks, graphHeight);
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         direction='ltr'
+        ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
@@ -142,28 +148,31 @@ export function Graph(props: Props) {
                 <motion.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
-                  initial={{
-                    opacity: 0,
-                    x: graphWidth / 2,
-                    y: y(0),
-                  }}
-                  whileInView={{
-                    x: graphWidth / 2,
-                    y: y(d.position),
-                    opacity: selectedColor
-                      ? d.color
-                        ? colors[colorDomain.indexOf(d.color)] === selectedColor
-                          ? 0.95
+                  variants={{
+                    initial: {
+                      opacity: 0,
+                      x: graphWidth / 2,
+                      y: y(0),
+                    },
+                    whileInView: {
+                      x: graphWidth / 2,
+                      y: y(d.position),
+                      opacity: selectedColor
+                        ? d.color
+                          ? colors[colorDomain.indexOf(d.color)] === selectedColor
+                            ? 0.95
+                            : dimmedOpacity
                           : dimmedOpacity
-                        : dimmedOpacity
-                      : highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : dotOpacity,
+                        : highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 0.85
+                            : dimmedOpacity
+                          : dotOpacity,
+                      transition: { duration: animate.duration },
+                    },
                   }}
-                  transition={{ duration: animate.duration }}
-                  viewport={{ once: animate.once, amount: animate.amount }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     setMouseOverData(d);
@@ -198,40 +207,43 @@ export function Graph(props: Props) {
                     <motion.circle
                       cy={0}
                       cx={0}
-                      initial={{
-                        fill:
-                          highlightColor && highlightedDataPoints
-                            ? highlightedDataPoints.indexOf(d.label) !== -1
-                              ? highlightColor
+                      variants={{
+                        initial: {
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
                               : data.filter(el => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
-                                  : colors[colorDomain.indexOf(d.color)]
-                            : data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(d.color)],
-                      }}
-                      whileInView={{
-                        fill:
-                          highlightColor && highlightedDataPoints
-                            ? highlightedDataPoints.indexOf(d.label) !== -1
-                              ? highlightColor
+                                  : colors[colorDomain.indexOf(d.color)],
+                        },
+                        whileInView: {
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
                               : data.filter(el => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
-                                  : colors[colorDomain.indexOf(d.color)]
-                            : data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(d.color)],
+                                  : colors[colorDomain.indexOf(d.color)],
+                          transition: { duration: animate.duration },
+                        },
                       }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       r={radius}
                     />
@@ -241,40 +253,43 @@ export function Graph(props: Props) {
                       y={-1}
                       width={radius * 2}
                       height={2}
-                      initial={{
-                        fill:
-                          highlightColor && highlightedDataPoints
-                            ? highlightedDataPoints.indexOf(d.label) !== -1
-                              ? highlightColor
+                      variants={{
+                        initial: {
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
                               : data.filter(el => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
-                                  : colors[colorDomain.indexOf(d.color)]
-                            : data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(d.color)],
-                      }}
-                      whileInView={{
-                        fill:
-                          highlightColor && highlightedDataPoints
-                            ? highlightedDataPoints.indexOf(d.label) !== -1
-                              ? highlightColor
+                                  : colors[colorDomain.indexOf(d.color)],
+                        },
+                        whileInView: {
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
                               : data.filter(el => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
-                                  : colors[colorDomain.indexOf(d.color)]
-                            : data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(d.color)],
+                                  : colors[colorDomain.indexOf(d.color)],
+                          transition: { duration: animate.duration },
+                        },
                       }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     />
                   )}
@@ -284,10 +299,15 @@ export function Graph(props: Props) {
                         y={0}
                         dy='0.33em'
                         x={0 + radius + 3}
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ duration: animate.duration }}
-                        viewport={{ once: animate.once, amount: animate.amount }}
+                        variants={{
+                          initial: { opacity: 0 },
+                          whileInView: {
+                            opacity: 1,
+                            transition: { duration: animate.duration },
+                          },
+                        }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         style={{
                           fill:
@@ -340,7 +360,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

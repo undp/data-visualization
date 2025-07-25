@@ -17,9 +17,10 @@ interface Props {
   scaleX: (value: Date | NumberValue) => number;
   scaleY: (value: Date | NumberValue) => number;
   animate: AnimateDataType;
+  isInView: boolean;
 }
 export function CustomArea(props: Props) {
-  const { areaSettings, scaleX, scaleY, animate } = props;
+  const { areaSettings, scaleX, scaleY, animate, isInView } = props;
   return (
     <>
       {areaSettings.map(d => (
@@ -27,13 +28,17 @@ export function CustomArea(props: Props) {
           key={d.coordinates
             .map(item => (item instanceof Date ? item.toISOString() : item.toString()))
             .join('~')}
-          initial={{ opacity: 0 }}
-          whileInView={{
-            opacity: 1,
+          variants={{
+            initial: {
+              opacity: 0,
+            },
+            whileInView: {
+              opacity: 1,
+              transition: { duration: animate.duration },
+            },
           }}
-          transition={{ duration: animate.duration }}
-          viewport={{ once: animate.once, amount: animate.amount }}
-          exit={{ opacity: 0, transition: { duration: animate.duration } }}
+          initial='initial'
+          animate={isInView ? 'whileInView' : 'initial'}
         >
           {d.coordinates.length !== 4 ? (
             <path

@@ -16,10 +16,11 @@ interface Props {
   height: number;
   scale: (value: Date | NumberValue) => number;
   animate: AnimateDataType;
+  isInView: boolean;
 }
 
 export function HighlightArea(props: Props) {
-  const { areaSettings, width, height, scale, animate } = props;
+  const { areaSettings, width, height, scale, animate, isInView } = props;
   return (
     <>
       {areaSettings.map((d, i) => (
@@ -35,20 +36,23 @@ export function HighlightArea(props: Props) {
                 className={d.className}
                 y={0}
                 height={height}
-                initial={{
-                  width: 0,
-                  x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
-                  opacity: 1,
+                variants={{
+                  initial: {
+                    width: 0,
+                    x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
+                    opacity: 1,
+                  },
+                  whileInView: {
+                    width: d.coordinates[1]
+                      ? scale(d.coordinates[1]) - (d.coordinates[0] ? scale(d.coordinates[0]) : 0)
+                      : width - (d.coordinates[0] ? scale(d.coordinates[0]) : 0),
+                    x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
+                    opacity: 1,
+                    transition: { duration: animate.duration },
+                  },
                 }}
-                whileInView={{
-                  width: d.coordinates[1]
-                    ? scale(d.coordinates[1]) - (d.coordinates[0] ? scale(d.coordinates[0]) : 0)
-                    : width - (d.coordinates[0] ? scale(d.coordinates[0]) : 0),
-                  x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
-                  opacity: 1,
-                }}
-                transition={{ duration: animate.duration }}
-                viewport={{ once: animate.once, amount: animate.amount }}
+                initial='initial'
+                animate={isInView ? 'whileInView' : 'initial'}
                 exit={{ opacity: 0, width: 0, transition: { duration: animate.duration } }}
               />
             </motion.g>
@@ -72,10 +76,11 @@ interface ScatterPlotProps {
   scaleX: (value: Date | NumberValue) => number;
   scaleY: (value: Date | NumberValue) => number;
   animate: AnimateDataType;
+  isInView: boolean;
 }
 
 export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
-  const { areaSettings, width, height, scaleX, scaleY, animate } = props;
+  const { areaSettings, width, height, scaleX, scaleY, animate, isInView } = props;
   return (
     <>
       {areaSettings.map((d, i) => (
@@ -89,34 +94,37 @@ export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
                   ...(d.style || {}),
                 }}
                 className={d.className}
-                initial={{
-                  x: d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0,
-                  width: 0,
-                  y: d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0,
-                  height: 0,
+                variants={{
+                  initial: {
+                    x: d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0,
+                    width: 0,
+                    y: d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0,
+                    height: 0,
+                  },
+                  whileInView: {
+                    x: d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0,
+                    width: d.coordinates[1]
+                      ? scaleX(d.coordinates[1] as number) -
+                        (d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0)
+                      : width - (d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0),
+                    y: d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0,
+                    height:
+                      d.coordinates[2] !== null
+                        ? scaleY(d.coordinates[2] as number) -
+                          (d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0)
+                        : height -
+                          (d.coordinates[3] ? height - scaleY(d.coordinates[3] as number) : 0),
+                    transition: { duration: animate.duration },
+                  },
                 }}
-                whileInView={{
-                  x: d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0,
-                  width: d.coordinates[1]
-                    ? scaleX(d.coordinates[1] as number) -
-                      (d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0)
-                    : width - (d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0),
-                  y: d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0,
-                  height:
-                    d.coordinates[2] !== null
-                      ? scaleY(d.coordinates[2] as number) -
-                        (d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0)
-                      : height -
-                        (d.coordinates[3] ? height - scaleY(d.coordinates[3] as number) : 0),
-                }}
+                initial='initial'
+                animate={isInView ? 'whileInView' : 'initial'}
                 exit={{
                   opacity: 0,
                   width: 0,
                   height: 0,
                   transition: { duration: animate.duration },
                 }}
-                transition={{ duration: animate.duration }}
-                viewport={{ once: animate.once, amount: animate.amount }}
               />
             </motion.g>
           )}

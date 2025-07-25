@@ -13,24 +13,40 @@ interface Props {
   className?: string;
   alignment?: 'left' | 'right' | 'center';
   animate: AnimateDataType;
+  isInView: boolean;
 }
 
 export function YAxesLabels(props: Props) {
-  const { value, y, x, style, className, width, height, alignment = 'right', animate } = props;
+  const {
+    value,
+    y,
+    x,
+    style,
+    className,
+    width,
+    height,
+    alignment = 'right',
+    animate,
+    isInView,
+  } = props;
   return (
     <motion.foreignObject
       width={width}
       height={height}
-      initial={{
-        x,
-        y,
+      variants={{
+        initial: {
+          x,
+          y,
+        },
+        whileInView: {
+          x,
+          y,
+          transition: { duration: animate.duration },
+        },
       }}
-      whileInView={{
-        x,
-        y,
-      }}
-      transition={{ duration: animate.duration }}
-      viewport={{ once: animate.once, amount: animate.amount }}
+      initial='initial'
+      animate={isInView ? 'whileInView' : 'initial'}
+      exit={{ opacity: 0, transition: { duration: animate.duration } }}
     >
       <div className='flex flex-col justify-center h-inherit'>
         <p

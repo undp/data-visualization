@@ -12,10 +12,11 @@ interface Props {
   className?: string;
   style?: React.CSSProperties;
   animate: AnimateDataType;
+  isInView: boolean;
 }
 
 export function RegressionLine(props: Props) {
-  const { color, x1, x2, y1, y2, className, style, animate } = props;
+  const { color, x1, x2, y1, y2, className, style, animate, isInView } = props;
   return (
     <g>
       <AnimatePresence>
@@ -30,25 +31,24 @@ export function RegressionLine(props: Props) {
             fill: 'none',
             ...(style || {}),
           }}
-          y1={y1}
-          y2={y2}
-          x1={x1}
-          x2={x2}
-          initial={{
-            y1: y1,
-            y2: y1,
-            x1: x1,
-            x2: x1,
-          }}
-          whileInView={{
-            y1: y1,
-            y2: y2,
-            x1: x1,
-            x2: x2,
-          }}
-          transition={{ duration: animate.duration }}
-          viewport={{ once: animate.once, amount: animate.amount }}
           exit={{ opacity: 0, transition: { duration: animate.duration } }}
+          variants={{
+            initial: {
+              y1,
+              y2: y1,
+              x1,
+              x2: x1,
+            },
+            whileInView: {
+              y1,
+              y2,
+              x1,
+              x2,
+              transition: { duration: animate.duration },
+            },
+          }}
+          initial='initial'
+          animate={isInView ? 'whileInView' : 'initial'}
         />
       </AnimatePresence>
     </g>

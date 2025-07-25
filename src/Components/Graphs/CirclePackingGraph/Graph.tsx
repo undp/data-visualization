@@ -1,11 +1,11 @@
-import { memo, useCallback, useMemo, useEffect, useState } from 'react';
+import { memo, useCallback, useMemo, useEffect, useState, useRef } from 'react';
 import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
 import orderBy from 'lodash.orderby';
 import { scaleSqrt } from 'd3-scale';
 import maxBy from 'lodash.maxby';
 import { extent } from 'd3-array';
 import { cn, Modal, Spinner } from '@undp/design-system-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import { AnimateDataType, ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -87,6 +87,11 @@ export const Graph = memo((props: Props) => {
     dimmedOpacity,
     precision,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
@@ -279,7 +284,7 @@ export const Graph = memo((props: Props) => {
   if (viewPortDimensions) {
     return (
       <>
-        <svg
+        <motion.svg
           width={`${width}px`}
           height={`${height}px`}
           viewBox={`${viewPortDimensions[0] > 0 ? 0 : viewPortDimensions[0]} ${
@@ -288,6 +293,7 @@ export const Graph = memo((props: Props) => {
             height < viewPortDimensions[3] ? viewPortDimensions[3] : height
           }`}
           direction='ltr'
+          ref={svgRef}
         >
           <g transform={`translate(${margin.left},${margin.top})`}>
             <AnimatePresence>
@@ -306,48 +312,53 @@ export const Graph = memo((props: Props) => {
                     onMouseMove={event => handleMouseMove(event, d)}
                     onClick={() => handleClick(d)}
                     onMouseLeave={handleMouseLeave}
-                    initial={{
-                      opacity: 0,
+                    variants={{
+                      initial: { opacity: 0 },
+                      whileInView: {
+                        opacity,
+                        transition: { duration: animate.duration },
+                      },
                     }}
-                    whileInView={{
-                      opacity,
-                    }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                   >
                     <motion.circle
                       cx={0}
                       cy={0}
                       r={bubbleRadius}
-                      initial={{
-                        fill: circleColor,
-                        r: 0,
-                        opacity: 0,
-                      }}
-                      whileInView={{
-                        fill: circleColor,
-                        r: bubbleRadius,
-                        opacity: 1,
-                      }}
                       exit={{
                         fill: circleColor,
                         r: 0,
                         opacity: 0,
                         transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      variants={{
+                        initial: {
+                          fill: circleColor,
+                          r: 0,
+                          opacity: 0,
+                        },
+                        whileInView: {
+                          fill: circleColor,
+                          r: bubbleRadius,
+                          opacity: 1,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                     />
                     {showLabel && (
                       <motion.g
-                        whileInView={{
-                          opacity: 1,
+                        variants={{
+                          initial: { opacity: 0 },
+                          whileInView: {
+                            opacity: 1,
+                            transition: { duration: animate.duration },
+                          },
                         }}
-                        initial={{
-                          opacity: 0,
-                        }}
-                        transition={{ duration: animate.duration }}
-                        viewport={{ once: animate.once, amount: animate.amount }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       >
                         <foreignObject
@@ -413,7 +424,7 @@ export const Graph = memo((props: Props) => {
               })}
             </AnimatePresence>
           </g>
-        </svg>
+        </motion.svg>
         {mouseOverData && tooltip && eventX && eventY && (
           <Tooltip
             data={mouseOverData}

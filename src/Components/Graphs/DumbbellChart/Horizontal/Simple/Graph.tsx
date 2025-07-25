@@ -2,9 +2,9 @@ import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand } from 'd3-scale';
 import max from 'lodash.max';
 import min from 'lodash.min';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
   AnimateDataType,
@@ -112,6 +112,11 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   const margin = {
     top: axisTitle ? topMargin + 25 : topMargin,
     bottom: bottomMargin,
@@ -159,11 +164,12 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         direction='ltr'
+        ref={svgRef}
       >
         {arrowConnector ? (
           <defs>
@@ -229,16 +235,19 @@ export function Graph(props: Props) {
               <motion.g
                 className='undp-viz-low-opacity undp-viz-g-with-hover'
                 key={d.label}
-                initial={{
-                  x: 0,
-                  y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
+                variants={{
+                  initial: {
+                    x: 0,
+                    y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
+                  },
+                  whileInView: {
+                    x: 0,
+                    y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
+                    transition: { duration: animate.duration },
+                  },
                 }}
-                whileInView={{
-                  x: 0,
-                  y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
-                }}
-                transition={{ duration: animate.duration }}
-                viewport={{ once: animate.once, amount: animate.amount }}
+                initial='initial'
+                animate={isInView ? 'whileInView' : 'initial'}
                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
               >
                 {showLabels ? (
@@ -256,6 +265,7 @@ export function Graph(props: Props) {
                     style={styles?.yAxis?.labels}
                     className={classNames?.yAxis?.labels}
                     animate={animate}
+                    isInView={isInView}
                   />
                 ) : null}
                 <motion.line
@@ -278,17 +288,20 @@ export function Graph(props: Props) {
                       ? 'url(#arrow)'
                       : ''
                   }
-                  initial={{
-                    x1: 0,
-                    x2: 0,
-                  }}
-                  whileInView={{
-                    x1: x(min(d.x) as number) + radius,
-                    x2: x(max(d.x) as number) - radius,
-                  }}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  transition={{ duration: animate.duration }}
-                  viewport={{ once: animate.once, amount: animate.amount }}
+                  variants={{
+                    initial: {
+                      x1: 0,
+                      x2: 0,
+                    },
+                    whileInView: {
+                      x1: x(min(d.x) as number) + radius,
+                      x2: x(max(d.x) as number) - radius,
+                      transition: { duration: animate.duration },
+                    },
+                  }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
                 />
                 {d.x.map((el, j) => (
                   <motion.g
@@ -324,15 +337,18 @@ export function Graph(props: Props) {
                       setEventY(undefined);
                       onSeriesMouseOver?.(undefined);
                     }}
-                    initial={{
-                      opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
-                    }}
-                    whileInView={{
-                      opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
-                    }}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
+                    variants={{
+                      initial: {
+                        opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                      },
+                      whileInView: {
+                        opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                   >
                     {checkIfNullOrUndefined(el) ? null : (
                       <>
@@ -346,14 +362,17 @@ export function Graph(props: Props) {
                             strokeWidth: 1,
                             opacity: checkIfNullOrUndefined(el) ? 0 : 1,
                           }}
-                          initial={{ cx: x(el || 0), opacity: 0 }}
-                          whileInView={{
-                            cx: x(el || 0),
-                            opacity: checkIfNullOrUndefined(el) ? 0 : 1,
-                          }}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                          transition={{ duration: animate.duration }}
-                          viewport={{ once: animate.once, amount: animate.amount }}
+                          variants={{
+                            initial: { cx: x(el || 0), opacity: 0 },
+                            whileInView: {
+                              cx: x(el || 0),
+                              opacity: checkIfNullOrUndefined(el) ? 0 : 1,
+                              transition: { duration: animate.duration },
+                            },
+                          }}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
                         />
                         {showValues ? (
                           <motion.text
@@ -370,11 +389,17 @@ export function Graph(props: Props) {
                               checkIfNullOrUndefined(el) ? '0opacity-0' : 'opacity-100',
                               classNames?.graphObjectValues,
                             )}
-                            initial={{ x: x(el || 0), opacity: 0 }}
-                            whileInView={{ x: x(el || 0), opacity: 1 }}
                             exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                            transition={{ duration: animate.duration }}
-                            viewport={{ once: animate.once, amount: animate.amount }}
+                            variants={{
+                              initial: { x: x(el || 0), opacity: 0 },
+                              whileInView: {
+                                x: x(el || 0),
+                                opacity: 1,
+                                transition: { duration: animate.duration },
+                              },
+                            }}
+                            initial='initial'
+                            animate={isInView ? 'whileInView' : 'initial'}
                           >
                             {numberFormattingFunction(el, precision, prefix, suffix)}
                           </motion.text>
@@ -399,6 +424,7 @@ export function Graph(props: Props) {
                     classNames={el.classNames}
                     styles={el.styles}
                     animate={animate}
+                    isInView={isInView}
                   />
                 ))}
               </>
@@ -406,7 +432,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

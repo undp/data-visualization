@@ -33,17 +33,26 @@ interface Props {
     text?: React.CSSProperties;
   };
   animate: AnimateDataType;
+  isInView: boolean;
 }
 
 export function Annotation(props: Props) {
-  const { connectorsSettings, text, color, labelSettings, classNames, styles, animate } = props;
+  const { connectorsSettings, text, color, labelSettings, classNames, styles, animate, isInView } =
+    props;
   return (
     <motion.g
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: animate.duration } }}
-      transition={{ duration: animate.duration }}
-      viewport={{ once: animate.once, amount: animate.amount }}
+      variants={{
+        initial: {
+          opacity: 0,
+        },
+        whileInView: {
+          opacity: 1,
+          transition: { duration: animate.duration },
+        },
+      }}
+      initial='initial'
+      animate={isInView ? 'whileInView' : 'initial'}
     >
       {connectorsSettings ? (
         <>

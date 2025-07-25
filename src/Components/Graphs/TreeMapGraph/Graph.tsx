@@ -1,7 +1,7 @@
 import { stratify, treemap } from 'd3-hierarchy';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { P, Modal, cn } from '@undp/design-system-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import { AnimateDataType, ClassNameObject, Languages, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -72,6 +72,11 @@ export function Graph(props: Props) {
     dimmedOpacity,
     precision,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,11 +117,12 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         direction='ltr'
+        ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           <AnimatePresence>
@@ -126,33 +132,36 @@ export function Graph(props: Props) {
                   className='undp-viz-g-with-hover'
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   key={(d.data as any).id}
-                  initial={{
-                    opacity: 0,
-                    x: d.x0,
-                    y: d.y0,
-                  }}
-                  whileInView={{
-                    opacity: selectedColor
-                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (d.data as any).data.color
-                        ? colors[
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            colorDomain.indexOf((d.data as any).data.color)
-                          ] === selectedColor
-                          ? 1
-                          : dimmedOpacity
-                        : dimmedOpacity
-                      : highlightedDataPoints.length !== 0
+                  variants={{
+                    initial: {
+                      opacity: 0,
+                      x: d.x0,
+                      y: d.y0,
+                    },
+                    whileInView: {
+                      opacity: selectedColor
                         ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          highlightedDataPoints.indexOf((d.data as any).id) !== -1
-                          ? 0.85
+                          (d.data as any).data.color
+                          ? colors[
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              colorDomain.indexOf((d.data as any).data.color)
+                            ] === selectedColor
+                            ? 1
+                            : dimmedOpacity
                           : dimmedOpacity
-                        : 0.85,
-                    x: d.x0,
-                    y: d.y0,
+                        : highlightedDataPoints.length !== 0
+                          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            highlightedDataPoints.indexOf((d.data as any).id) !== -1
+                            ? 0.85
+                            : dimmedOpacity
+                          : 0.85,
+                      x: d.x0,
+                      y: d.y0,
+                      transition: { duration: animate.duration },
+                    },
                   }}
-                  transition={{ duration: animate.duration }}
-                  viewport={{ once: animate.once, amount: animate.amount }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -195,53 +204,57 @@ export function Graph(props: Props) {
                   <motion.rect
                     x={0}
                     y={0}
-                    initial={{
-                      width: 0,
-                      height: 0,
-                      fill:
-                        data.filter(el => el.color).length === 0
-                          ? colors[0]
-                          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            !(d.data as any).data.color
-                            ? Colors.gray
-                            : colors[
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                colorDomain.indexOf((d.data as any).data.color)
-                              ],
-                    }}
-                    whileInView={{
-                      width: d.x1 - d.x0,
-                      height: d.y1 - d.y0,
-                      fill:
-                        data.filter(el => el.color).length === 0
-                          ? colors[0]
-                          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            !(d.data as any).data.color
-                            ? Colors.gray
-                            : colors[
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                colorDomain.indexOf((d.data as any).data.color)
-                              ],
-                    }}
                     exit={{
                       width: 0,
                       height: 0,
                       opacity: 0,
                       transition: { duration: animate.duration },
                     }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
+                    variants={{
+                      initial: {
+                        width: 0,
+                        height: 0,
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              !(d.data as any).data.color
+                              ? Colors.gray
+                              : colors[
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  colorDomain.indexOf((d.data as any).data.color)
+                                ],
+                      },
+                      whileInView: {
+                        width: d.x1 - d.x0,
+                        height: d.y1 - d.y0,
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              !(d.data as any).data.color
+                              ? Colors.gray
+                              : colors[
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  colorDomain.indexOf((d.data as any).data.color)
+                                ],
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                   />
                   {d.x1 - d.x0 > 50 && d.y1 - d.y0 > 25 && (showLabels || showValues) ? (
                     <motion.g
-                      whileInView={{
-                        opacity: 1,
+                      variants={{
+                        initial: { opacity: 0 },
+                        whileInView: {
+                          opacity: 1,
+                          transition: { duration: animate.duration },
+                        },
                       }}
-                      initial={{
-                        opacity: 0,
-                      }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     >
                       <foreignObject y={0} x={0} width={d.x1 - d.x0} height={d.y1 - d.y0}>
@@ -350,7 +363,7 @@ export function Graph(props: Props) {
             })}
           </AnimatePresence>
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

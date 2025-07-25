@@ -236,12 +236,14 @@ export function Graph(props: Props) {
               scaleX={x}
               scaleY={y}
               animate={{ duration: 0, once: true, amount: 0 }}
+              isInView
             />
             <CustomArea
               areaSettings={customHighlightAreaSettings}
               scaleX={x}
               scaleY={y}
               animate={{ duration: 0, once: true, amount: 0 }}
+              isInView
             />
           </AnimatePresence>
           <g>
@@ -552,6 +554,7 @@ export function Graph(props: Props) {
                 classNames={el.classNames}
                 styles={el.styles}
                 animate={{ duration: 0, once: true, amount: 0 }}
+                isInView
               />
             ))}
             {refYValues.map((el, i) => (
@@ -565,6 +568,7 @@ export function Graph(props: Props) {
                 classNames={el.classNames}
                 styles={el.styles}
                 animate={{ duration: 0, once: true, amount: 0 }}
+                isInView
               />
             ))}
             <g>
@@ -633,6 +637,7 @@ export function Graph(props: Props) {
                     classNames={d.classNames}
                     styles={d.styles}
                     animate={{ duration: 0, once: true, amount: 0 }}
+                    isInView
                   />
                 );
               })}

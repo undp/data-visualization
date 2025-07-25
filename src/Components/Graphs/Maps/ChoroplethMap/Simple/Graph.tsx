@@ -13,7 +13,7 @@ import { scaleThreshold, scaleOrdinal } from 'd3-scale';
 import { Modal, P } from '@undp/design-system-react';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
   AnimateDataType,
@@ -112,6 +112,10 @@ export function Graph(props: Props) {
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
   const mapSvg = useRef<SVGSVGElement>(null);
+  const isInView = useInView(mapSvg, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   const mapG = useRef<SVGGElement>(null);
   const colorScale = categorical
     ? scaleOrdinal<number | string, string>().domain(colorDomain).range(colors)
@@ -204,7 +208,7 @@ export function Graph(props: Props) {
   return (
     <>
       <div className='relative'>
-        <svg
+        <motion.svg
           width={`${width}px`}
           height={`${height}px`}
           viewBox={`0 0 ${width} ${height}`}
@@ -293,20 +297,23 @@ export function Graph(props: Props) {
                 return (
                   <motion.g
                     key={d.id}
-                    whileInView={{
-                      opacity: selectedColor
-                        ? selectedColor === color
-                          ? 1
-                          : dimmedOpacity
-                        : highlightedIds.length !== 0
-                          ? highlightedIds.indexOf(d.id) !== -1
+                    variants={{
+                      initial: { opacity: 0 },
+                      whileInView: {
+                        opacity: selectedColor
+                          ? selectedColor === color
                             ? 1
                             : dimmedOpacity
-                          : 1,
+                          : highlightedIds.length !== 0
+                            ? highlightedIds.indexOf(d.id) !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : 1,
+                        transition: { duration: animate.duration },
+                      },
                     }}
-                    initial={{ opacity: 0 }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     onMouseEnter={event => {
                       setMouseOverData(d);
@@ -358,10 +365,16 @@ export function Graph(props: Props) {
                                 <motion.path
                                   key={`${d.id}-${j}`}
                                   d={masterPath}
-                                  whileInView={{ fill: color, opacity: 1 }}
-                                  initial={{ opacity: 0 }}
-                                  transition={{ duration: animate.duration }}
-                                  viewport={{ once: animate.once, amount: animate.amount }}
+                                  variants={{
+                                    initial: { fill: color, opacity: 0 },
+                                    whileInView: {
+                                      fill: color,
+                                      opacity: 1,
+                                      transition: { duration: animate.duration },
+                                    },
+                                  }}
+                                  initial='initial'
+                                  animate={isInView ? 'whileInView' : 'initial'}
                                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                                   style={{
                                     stroke: mapBorderColor,
@@ -384,10 +397,16 @@ export function Graph(props: Props) {
                                 <motion.path
                                   key={`${d.id}-${j}`}
                                   d={path}
-                                  whileInView={{ fill: color, opacity: 1 }}
-                                  initial={{ opacity: 0 }}
-                                  transition={{ duration: animate.duration }}
-                                  viewport={{ once: animate.once, amount: animate.amount }}
+                                  variants={{
+                                    initial: { fill: color, opacity: 0 },
+                                    whileInView: {
+                                      fill: color,
+                                      opacity: 1,
+                                      transition: { duration: animate.duration },
+                                    },
+                                  }}
+                                  initial='initial'
+                                  animate={isInView ? 'whileInView' : 'initial'}
                                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                                   style={{
                                     stroke: mapBorderColor,
@@ -465,7 +484,7 @@ export function Graph(props: Props) {
               : null}
             {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           </g>
-        </svg>
+        </motion.svg>
         {showColorScale === false ? null : (
           <div className='absolute left-4 bottom-4'>
             {showLegend ? (

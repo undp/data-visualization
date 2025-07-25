@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import maxBy from 'lodash.maxby';
 import orderBy from 'lodash.orderby';
 import { Delaunay } from 'd3-delaunay';
@@ -7,7 +7,7 @@ import { scaleLinear, scaleSqrt } from 'd3-scale';
 import minBy from 'lodash.minby';
 import { linearRegression } from 'simple-statistics';
 import { cn, Modal } from '@undp/design-system-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
   ScatterPlotDataType,
@@ -136,6 +136,11 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -207,11 +212,12 @@ export function Graph(props: Props) {
   );
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         direction='ltr'
+        ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           <AnimatePresence>
@@ -222,12 +228,14 @@ export function Graph(props: Props) {
               scaleX={x}
               scaleY={y}
               animate={animate}
+              isInView={isInView}
             />
             <CustomArea
               areaSettings={customHighlightAreaSettings}
               scaleX={x}
               scaleY={y}
               animate={animate}
+              isInView={isInView}
             />
           </AnimatePresence>
           <g>
@@ -390,48 +398,50 @@ export function Graph(props: Props) {
                 return (
                   <motion.g
                     key={`${d.label || i}`}
-                    whileInView={{
-                      x: x(d.x as number),
-                      y: y(d.y as number),
-                      opacity: selectedColor
-                        ? d.color
-                          ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
-                            ? 1
-                            : dimmedOpacity
-                          : dimmedOpacity
-                        : mouseOverData
-                          ? mouseOverData.id === d.id
-                            ? 1
-                            : dimmedOpacity
-                          : highlightedDataPoints.length !== 0
-                            ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                    variants={{
+                      initial: {
+                        x: x(d.x as number),
+                        y: y(d.y as number),
+                        opacity: selectedColor
+                          ? d.color
+                            ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
                               ? 1
-                              : 0.5
-                            : 1,
-                    }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
-                    initial={{
-                      x: x(d.x as number),
-                      y: y(d.y as number),
-                      opacity: selectedColor
-                        ? d.color
-                          ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
-                            ? 1
+                              : dimmedOpacity
                             : dimmedOpacity
-                          : dimmedOpacity
-                        : mouseOverData
-                          ? mouseOverData.id === d.id
-                            ? 1
-                            : dimmedOpacity
-                          : highlightedDataPoints.length !== 0
-                            ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                          : mouseOverData
+                            ? mouseOverData.id === d.id
                               ? 1
-                              : 0.5
-                            : 1,
+                              : dimmedOpacity
+                            : highlightedDataPoints.length !== 0
+                              ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                                ? 1
+                                : 0.5
+                              : 1,
+                      },
+                      whileInView: {
+                        x: x(d.x as number),
+                        y: y(d.y as number),
+                        opacity: selectedColor
+                          ? d.color
+                            ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
+                              ? 1
+                              : dimmedOpacity
+                            : dimmedOpacity
+                          : mouseOverData
+                            ? mouseOverData.id === d.id
+                              ? 1
+                              : dimmedOpacity
+                            : highlightedDataPoints.length !== 0
+                              ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                                ? 1
+                                : 0.5
+                              : 1,
+                        transition: { duration: animate.duration },
+                      },
                     }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    transform={`translate(${x(d.x as number)},${y(d.y as number)})`}
                     onMouseEnter={event => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
@@ -464,39 +474,42 @@ export function Graph(props: Props) {
                     <motion.circle
                       cx={0}
                       cy={0}
-                      initial={{
-                        r: 0,
-                        fill:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
-                        stroke:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
-                      }}
-                      whileInView={{
-                        r: !radiusScale ? radius : radiusScale(d.radius || 0),
-                        fill:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
-                        stroke:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
-                      }}
                       exit={{ r: 0, transition: { duration: animate.duration } }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      variants={{
+                        initial: {
+                          r: 0,
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          stroke:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                        },
+                        whileInView: {
+                          r: !radiusScale ? radius : radiusScale(d.radius || 0),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          stroke:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                       style={{
                         fillOpacity: 0.6,
                       }}
@@ -508,31 +521,34 @@ export function Graph(props: Props) {
                         }}
                         className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                         y={0}
-                        initial={{
-                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
-                          opacity: 0,
-                          fill:
-                            labelColor ||
-                            (data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)]),
-                        }}
-                        whileInView={{
-                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
-                          opacity: 1,
-                          fill:
-                            labelColor ||
-                            (data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)]),
-                        }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                        transition={{ duration: animate.duration }}
-                        viewport={{ once: animate.once, amount: animate.amount }}
+                        variants={{
+                          initial: {
+                            x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                            opacity: 0,
+                            fill:
+                              labelColor ||
+                              (data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(`${d.color}`)]),
+                          },
+                          whileInView: {
+                            x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                            opacity: 1,
+                            fill:
+                              labelColor ||
+                              (data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(`${d.color}`)]),
+                            transition: { duration: animate.duration },
+                          },
+                        }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
                         dy='0.33em'
                         dx={3}
                       >
@@ -553,17 +569,20 @@ export function Graph(props: Props) {
                           }}
                           className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                           y={0}
-                          initial={{
-                            opacity: 0,
-                            x: !radiusScale ? radius : radiusScale(d.radius || 0),
-                          }}
-                          whileInView={{
-                            x: !radiusScale ? radius : radiusScale(d.radius || 0),
-                            opacity: 1,
-                          }}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                          transition={{ duration: animate.duration }}
-                          viewport={{ once: animate.once, amount: animate.amount }}
+                          variants={{
+                            initial: {
+                              x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                              opacity: 0,
+                            },
+                            whileInView: {
+                              x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                              opacity: 1,
+                              transition: { duration: animate.duration },
+                            },
+                          }}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
                           dy='0.33em'
                           dx={3}
                         >
@@ -586,6 +605,7 @@ export function Graph(props: Props) {
                 classNames={el.classNames}
                 styles={el.styles}
                 animate={animate}
+                isInView={isInView}
               />
             ))}
             {refYValues.map((el, i) => (
@@ -599,6 +619,7 @@ export function Graph(props: Props) {
                 classNames={el.classNames}
                 styles={el.styles}
                 animate={animate}
+                isInView={isInView}
               />
             ))}
             <g>
@@ -667,6 +688,7 @@ export function Graph(props: Props) {
                     classNames={d.classNames}
                     styles={d.styles}
                     animate={animate}
+                    isInView={isInView}
                   />
                 );
               })}
@@ -685,12 +707,13 @@ export function Graph(props: Props) {
                 style={styles?.regLine}
                 color={typeof regressionLine === 'string' ? regressionLine : undefined}
                 animate={animate}
+                isInView={isInView}
               />
             ) : null}
           </AnimatePresence>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

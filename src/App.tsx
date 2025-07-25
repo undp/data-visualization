@@ -1,51 +1,60 @@
+import { useState } from 'react';
+
+import { SimpleBarGraph } from './Components/Graphs/BarGraph';
 import './styles/styles.css';
 import '@undp/design-system-react/style.css';
 
 function App() {
+  const [data, setData] = useState([
+    {
+      label: '2020 Q1',
+      size: 3,
+    },
+    {
+      label: '2020 Q2',
+      size: 8,
+    },
+    {
+      label: '2020 Q3',
+      size: 11,
+    },
+    {
+      label: '2020 Q4',
+      size: 19,
+    },
+    {
+      label: '2021 Q1',
+      size: 3,
+    },
+    {
+      label: '2022 Q2',
+      size: 8,
+    },
+    {
+      label: '2023 Q3',
+      size: 11,
+    },
+    {
+      label: '2024 Q4',
+      size: 19,
+    },
+  ]);
   return (
-    <div
-      style={{
-        height: '90vh',
-        maxWidth: '712px',
-        margin: '0 auto',
-        padding: '2rem',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <img width='56' alt='undp-logo' src='/undp-logo-blue.svg' />
-      <h3 className='undp-viz-typography' style={{ textAlign: 'center', paddingTop: '24px' }}>
-        UNDP Data Visualization Library
-      </h3>
-      <p className='undp-viz-typography' style={{ textAlign: 'center' }}>
-        This open-source graphing library, developed by the United Nations Development Programme,
-        offers ready-to-use charts, including bar charts, line charts, area charts, and more. You
-        can access the documentation{' '}
-        <a
-          href='https://data-viz.data.undp.org/'
-          target='_blank'
-          rel='noreferrer'
-          className='undp-viz-style'
-        >
-          here
-        </a>
-        .
-      </p>
-      <p
-        className='undp-viz-typography'
-        style={{
-          fontSize: '16px',
-          textAlign: 'center',
+    <>
+      <div style={{ width: '100%', height: '2000px', backgroundColor: '#fff000' }} />
+      <button
+        onClick={() => {
+          setData(data.map(d => ({ ...d, size: d.size * Math.random() * 5 })));
         }}
       >
-        For any feedback or inquiries, please feel free to reach out to us at{' '}
-        <a href='mailto:data@undp.org' target='_blank' rel='noreferrer' className='undp-viz-style'>
-          data@undp.org
-        </a>
-      </p>
-    </div>
+        Click here
+      </button>
+      <SimpleBarGraph
+        data={data}
+        animate={{ duration: 10, once: false, amount: 0 }}
+        height={1000}
+      />
+    </>
   );
 }
 

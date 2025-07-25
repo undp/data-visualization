@@ -18,18 +18,27 @@ interface RefLineYProps {
     text?: React.CSSProperties;
   };
   animate: AnimateDataType;
+  isInView: boolean;
 }
 
 export function RefLineY(props: RefLineYProps) {
-  const { text, x1, x2, y, classNames, styles, color, animate } = props;
+  const { text, x1, x2, y, classNames, styles, color, animate, isInView } = props;
   if (!text) return null;
   return (
     <motion.g
       key={`${x1}-${x2}-${y}`}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: animate.duration }}
-      viewport={{ once: animate.once, amount: animate.amount }}
+      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+      variants={{
+        initial: {
+          opacity: 0,
+        },
+        whileInView: {
+          opacity: 1,
+          transition: { duration: animate.duration },
+        },
+      }}
+      initial='initial'
+      animate={isInView ? 'whileInView' : 'initial'}
     >
       <line
         className={cn(
@@ -83,19 +92,27 @@ interface RefLineXProps {
     text?: React.CSSProperties;
   };
   animate: AnimateDataType;
+  isInView: boolean;
 }
 
 export function RefLineX(props: RefLineXProps) {
-  const { text, y1, y2, x, classNames, styles, color, textSide, animate } = props;
+  const { text, y1, y2, x, classNames, styles, color, textSide, animate, isInView } = props;
   if (!text) return null;
   return (
     <motion.g
       key={`${y1}-${y2}-${x}`}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: animate.duration }}
-      viewport={{ once: animate.once, amount: animate.amount }}
       exit={{ opacity: 0, transition: { duration: animate.duration } }}
+      variants={{
+        initial: {
+          opacity: 0,
+        },
+        whileInView: {
+          opacity: 1,
+          transition: { duration: animate.duration },
+        },
+      }}
+      initial='initial'
+      animate={isInView ? 'whileInView' : 'initial'}
     >
       <line
         className={cn(

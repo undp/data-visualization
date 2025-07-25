@@ -14,7 +14,7 @@ import maxBy from 'lodash.maxby';
 import { Modal, P } from '@undp/design-system-react';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
   AnimateDataType,
@@ -113,6 +113,10 @@ export function Graph(props: Props) {
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
   const mapSvg = useRef<SVGSVGElement>(null);
+  const isInView = useInView(mapSvg, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   const mapG = useRef<SVGGElement>(null);
   const radiusScale =
     data.filter(d => d.radius === undefined).length !== data.length
@@ -209,7 +213,7 @@ export function Graph(props: Props) {
   return (
     <>
       <div className='relative'>
-        <svg
+        <motion.svg
           width={`${width}px`}
           height={`${height}px`}
           viewBox={`0 0 ${width} ${height}`}
@@ -283,20 +287,23 @@ export function Graph(props: Props) {
                 return (
                   <motion.g
                     key={d.label || `${d.lat}-${d.long}`}
-                    whileInView={{
-                      opacity: selectedColor
-                        ? selectedColor === color
-                          ? 1
-                          : dimmedOpacity
-                        : highlightedDataPoints.length !== 0
-                          ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                    variants={{
+                      initial: { opacity: 0 },
+                      whileInView: {
+                        opacity: selectedColor
+                          ? selectedColor === color
                             ? 1
                             : dimmedOpacity
-                          : 1,
+                          : highlightedDataPoints.length !== 0
+                            ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : 1,
+                        transition: { duration: animate.duration },
+                      },
                     }}
-                    initial={{ opacity: 0 }}
-                    transition={{ duration: animate.duration }}
-                    viewport={{ once: animate.once, amount: animate.amount }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     onMouseEnter={event => {
                       setMouseOverData(d);
@@ -333,38 +340,41 @@ export function Graph(props: Props) {
                     <motion.circle
                       cx={0}
                       cy={0}
-                      whileInView={{
-                        r: !radiusScale ? radius : radiusScale(d.radius || 0),
-                        fill:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
-                        stroke:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
+                      variants={{
+                        initial: {
+                          r: 0,
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          stroke:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                        },
+                        whileInView: {
+                          r: !radiusScale ? radius : radiusScale(d.radius || 0),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          stroke:
+                            data.filter(el => el.color).length === 0
+                              ? colors[0]
+                              : !d.color
+                                ? Colors.gray
+                                : colors[colorDomain.indexOf(`${d.color}`)],
+                          transition: { duration: animate.duration },
+                        },
                       }}
-                      initial={{
-                        r: 0,
-                        fill:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
-                        stroke:
-                          data.filter(el => el.color).length === 0
-                            ? colors[0]
-                            : !d.color
-                              ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
-                      }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ r: 0, transition: { duration: animate.duration } }}
                       style={{
                         fillOpacity: 0.8,
@@ -372,16 +382,19 @@ export function Graph(props: Props) {
                     />
                     {showLabels && d.label ? (
                       <motion.text
-                        whileInView={{
-                          opacity: 1,
-                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                        variants={{
+                          initial: {
+                            opacity: 0,
+                            x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                          },
+                          whileInView: {
+                            opacity: 1,
+                            x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                            transition: { duration: animate.duration },
+                          },
                         }}
-                        initial={{
-                          opacity: 0,
-                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
-                        }}
-                        transition={{ duration: animate.duration }}
-                        viewport={{ once: animate.once, amount: animate.amount }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         y={0}
                         className='fill-primary-gray-600 dark:fill-primary-gray-300 text-sm'
@@ -398,7 +411,7 @@ export function Graph(props: Props) {
             </AnimatePresence>
             {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           </g>
-        </svg>
+        </motion.svg>
         {data.filter(el => el.color).length === 0 || showColorScale === false ? null : (
           <div className='absolute left-4 bottom-4'>
             {showLegend ? (

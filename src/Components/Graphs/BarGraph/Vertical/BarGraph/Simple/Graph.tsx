@@ -1,8 +1,8 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand } from 'd3-scale';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import {
@@ -109,6 +109,11 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   const margin = {
     top: topMargin,
     bottom: bottomMargin,
@@ -156,7 +161,8 @@ export function Graph(props: Props) {
   const yTicks = y.ticks(noOfTicks);
   return (
     <>
-      <svg
+      <motion.svg
+        ref={svgRef}
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -223,34 +229,37 @@ export function Graph(props: Props) {
                 <motion.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
-                  initial={{
-                    opacity: selectedColor
-                      ? d.color
-                        ? barColor[colorDomain.indexOf(d.color)] === selectedColor
-                          ? 1
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
+                  variants={{
+                    initial: {
+                      opacity: selectedColor
+                        ? d.color
+                          ? barColor[colorDomain.indexOf(d.color)] === selectedColor
+                            ? 1
+                            : dimmedOpacity
                           : dimmedOpacity
-                        : dimmedOpacity
-                      : highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
+                        : highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 0.85
+                            : dimmedOpacity
+                          : 0.85,
+                    },
+                    whileInView: {
+                      opacity: selectedColor
+                        ? d.color
+                          ? barColor[colorDomain.indexOf(d.color)] === selectedColor
+                            ? 1
+                            : dimmedOpacity
                           : dimmedOpacity
-                        : 0.85,
+                        : highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 0.85
+                            : dimmedOpacity
+                          : 0.85,
+                      transition: { duration: animate.duration },
+                    },
                   }}
-                  whileInView={{
-                    opacity: selectedColor
-                      ? d.color
-                        ? barColor[colorDomain.indexOf(d.color)] === selectedColor
-                          ? 1
-                          : dimmedOpacity
-                        : dimmedOpacity
-                      : highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : 0.85,
-                  }}
-                  transition={{ duration: animate.duration }}
-                  viewport={{ once: animate.once, amount: animate.amount }}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   onMouseEnter={event => {
                     setMouseOverData(d);
@@ -284,30 +293,33 @@ export function Graph(props: Props) {
                   {d.size ? (
                     <motion.rect
                       width={x.bandwidth()}
-                      initial={{
-                        height: 0,
-                        x: x(`${d.id}`),
-                        y: y(0),
-                        fill:
-                          data.filter(el => el.color).length === 0
-                            ? barColor[0]
-                            : !d.color
-                              ? Colors.gray
-                              : barColor[colorDomain.indexOf(d.color)],
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      variants={{
+                        initial: {
+                          height: 0,
+                          x: x(`${d.id}`),
+                          y: y(0),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? barColor[0]
+                              : !d.color
+                                ? Colors.gray
+                                : barColor[colorDomain.indexOf(d.color)],
+                        },
+                        whileInView: {
+                          height: d.size ? Math.abs(y(d.size) - y(0)) : 0,
+                          y: d.size ? (d.size > 0 ? y(d.size) : y(0)) : y(0),
+                          x: x(`${d.id}`),
+                          fill:
+                            data.filter(el => el.color).length === 0
+                              ? barColor[0]
+                              : !d.color
+                                ? Colors.gray
+                                : barColor[colorDomain.indexOf(d.color)],
+                          transition: { duration: animate.duration },
+                        },
                       }}
-                      whileInView={{
-                        height: d.size ? Math.abs(y(d.size) - y(0)) : 0,
-                        y: d.size ? (d.size > 0 ? y(d.size) : y(0)) : y(0),
-                        x: x(`${d.id}`),
-                        fill:
-                          data.filter(el => el.color).length === 0
-                            ? barColor[0]
-                            : !d.color
-                              ? Colors.gray
-                              : barColor[colorDomain.indexOf(d.color)],
-                      }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
                       exit={{
                         height: 0,
                         y: y(0),
@@ -330,6 +342,7 @@ export function Graph(props: Props) {
                       className={classNames?.xAxis?.labels}
                       alignment={(d.size || 0) < 0 ? 'bottom' : 'top'}
                       animate={animate}
+                      isInView={isInView}
                     />
                   ) : null}
                   {showValues ? (
@@ -346,32 +359,35 @@ export function Graph(props: Props) {
                         classNames?.graphObjectValues,
                       )}
                       dy={d.size ? (d.size >= 0 ? '-5px' : '1em') : '-5px'}
-                      initial={{
-                        x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
-                        y: y(0),
-                        opacity: 0,
-                        fill: valueColor
-                          ? valueColor
-                          : data.filter(el => el.color).length === 0
-                            ? barColor[0]
-                            : !d.color
-                              ? Colors.gray
-                              : barColor[colorDomain.indexOf(d.color)],
+                      variants={{
+                        initial: {
+                          x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
+                          y: y(0),
+                          opacity: 0,
+                          fill: valueColor
+                            ? valueColor
+                            : data.filter(el => el.color).length === 0
+                              ? barColor[0]
+                              : !d.color
+                                ? Colors.gray
+                                : barColor[colorDomain.indexOf(d.color)],
+                        },
+                        whileInView: {
+                          x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
+                          y: y(d.size || 0),
+                          fill: valueColor
+                            ? valueColor
+                            : data.filter(el => el.color).length === 0
+                              ? barColor[0]
+                              : !d.color
+                                ? Colors.gray
+                                : barColor[colorDomain.indexOf(d.color)],
+                          opacity: 1,
+                          transition: { duration: animate.duration },
+                        },
                       }}
-                      whileInView={{
-                        x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
-                        y: y(d.size || 0),
-                        fill: valueColor
-                          ? valueColor
-                          : data.filter(el => el.color).length === 0
-                            ? barColor[0]
-                            : !d.color
-                              ? Colors.gray
-                              : barColor[colorDomain.indexOf(d.color)],
-                        opacity: 1,
-                      }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                       exit={{
                         opacity: 0,
                         transition: { duration: animate.duration },
@@ -396,6 +412,7 @@ export function Graph(props: Props) {
                     classNames={el.classNames}
                     styles={el.styles}
                     animate={animate}
+                    isInView={isInView}
                   />
                 ))}
               </>
@@ -403,7 +420,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

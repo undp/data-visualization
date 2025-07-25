@@ -1,9 +1,9 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand } from 'd3-scale';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
 import sum from 'lodash.sum';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
   AnimateDataType,
@@ -115,6 +115,11 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -191,11 +196,12 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         direction='ltr'
+        ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           {showTicks ? (
@@ -269,59 +275,65 @@ export function Graph(props: Props) {
                     setEventY(undefined);
                     onSeriesMouseOver?.(undefined);
                   }}
-                  initial={{
-                    x: 0,
-                    y: y(`${d.id}`),
-                    opacity:
-                      highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : 0.85,
-                  }}
-                  whileInView={{
-                    x: 0,
-                    y: y(`${d.id}`),
-                    opacity:
-                      highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : 0.85,
-                  }}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  transition={{ duration: animate.duration }}
-                  viewport={{ once: animate.once, amount: animate.amount }}
+                  variants={{
+                    initial: {
+                      x: 0,
+                      y: y(`${d.id}`),
+                      opacity:
+                        highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 0.85
+                            : dimmedOpacity
+                          : 0.85,
+                    },
+                    whileInView: {
+                      x: 0,
+                      y: y(`${d.id}`),
+                      opacity:
+                        highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 0.85
+                            : dimmedOpacity
+                          : 0.85,
+                      transition: { duration: animate.duration },
+                    },
+                  }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
                 >
                   {d.qualitativeRange
                     ? d.qualitativeRange.map((el, j) => (
                         <motion.rect
                           key={j}
-                          initial={{
-                            x: x(0),
-                            width: 0,
-                            fill: qualitativeRangeColors[j],
-                          }}
-                          whileInView={{
-                            x: x(
-                              j === 0
-                                ? 0
-                                : sum(
-                                    (d.qualitativeRange as number[]).filter(
-                                      (element, k) => k < j && element,
-                                    ),
-                                  ),
-                            ),
-                            width: x(el),
-                            fill: qualitativeRangeColors[j],
-                          }}
                           exit={{
                             width: 0,
                             x: x(0),
                             transition: { duration: animate.duration },
                           }}
-                          transition={{ duration: animate.duration }}
-                          viewport={{ once: animate.once, amount: animate.amount }}
+                          variants={{
+                            initial: {
+                              x: x(0),
+                              width: 0,
+                              fill: qualitativeRangeColors[j],
+                            },
+                            whileInView: {
+                              x: x(
+                                j === 0
+                                  ? 0
+                                  : sum(
+                                      (d.qualitativeRange as number[]).filter(
+                                        (element, k) => k < j && element,
+                                      ),
+                                    ),
+                              ),
+                              width: x(el),
+                              fill: qualitativeRangeColors[j],
+                              transition: { duration: animate.duration },
+                            },
+                          }}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
                           y={0}
                           height={y.bandwidth()}
                         />
@@ -335,21 +347,24 @@ export function Graph(props: Props) {
                       style={{
                         fill: targetColor,
                       }}
-                      initial={{
-                        x: x(0),
-                        width: 0,
-                      }}
-                      whileInView={{
-                        x: d.target >= 0 ? x(0) : x(d.target),
-                        width: d.target >= 0 ? x(d.target) - x(0) : x(0) - x(d.target),
-                      }}
                       exit={{
                         width: 0,
                         x: x(0),
                         transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      variants={{
+                        initial: {
+                          x: x(0),
+                          width: 0,
+                        },
+                        whileInView: {
+                          x: d.target >= 0 ? x(0) : x(d.target),
+                          width: d.target >= 0 ? x(d.target) - x(0) : x(0) - x(d.target),
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                     />
                   ) : null}
                   {d.size ? (
@@ -359,21 +374,24 @@ export function Graph(props: Props) {
                         fill: barColor,
                       }}
                       height={y.bandwidth() * measureBarWidthFactor}
-                      initial={{
-                        x: x(0),
-                        width: 0,
-                      }}
-                      whileInView={{
-                        x: d.size >= 0 ? x(0) : x(d.size),
-                        width: d.size >= 0 ? x(d.size) - x(0) : x(0) - x(d.size),
-                      }}
                       exit={{
                         width: 0,
                         x: x(0),
                         transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      variants={{
+                        initial: {
+                          x: x(0),
+                          width: 0,
+                        },
+                        whileInView: {
+                          x: d.size >= 0 ? x(0) : x(d.size),
+                          width: d.size >= 0 ? x(d.size) - x(0) : x(0) - x(d.size),
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                     />
                   ) : null}
                   {d.target && targetStyle === 'line' ? (
@@ -384,21 +402,24 @@ export function Graph(props: Props) {
                         fill: targetColor,
                       }}
                       width={2}
-                      initial={{
-                        x: x(0),
-                        opacity: 0,
-                      }}
-                      whileInView={{
-                        x: x(d.target) - 1,
-                        opacity: 1,
-                      }}
                       exit={{
                         opacity: 0,
                         x: x(0),
                         transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      variants={{
+                        initial: {
+                          x: x(0),
+                          opacity: 0,
+                        },
+                        whileInView: {
+                          x: x(d.target) - 1,
+                          opacity: 1,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                     />
                   ) : null}
                   {showLabels ? (
@@ -416,6 +437,7 @@ export function Graph(props: Props) {
                       style={styles?.yAxis?.labels}
                       className={classNames?.yAxis?.labels}
                       animate={animate}
+                      isInView={isInView}
                     />
                   ) : null}
                   {showValues ? (
@@ -435,17 +457,20 @@ export function Graph(props: Props) {
                       )}
                       dx={d.size ? (d.size < 0 ? -5 : 5) : 5}
                       dy='0.33em'
-                      initial={{
-                        x: x(0),
-                        opacity: 0,
-                      }}
-                      whileInView={{
-                        x: d.size ? x(d.size) : x(0),
-                        opacity: 1,
-                      }}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      variants={{
+                        initial: {
+                          x: x(0),
+                          opacity: 0,
+                        },
+                        whileInView: {
+                          x: d.size ? x(d.size) : x(0),
+                          opacity: 1,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                     >
                       {numberFormattingFunction(d.size, precision, prefix, suffix)}
                     </motion.text>
@@ -467,6 +492,7 @@ export function Graph(props: Props) {
                     classNames={el.classNames}
                     styles={el.styles}
                     animate={animate}
+                    isInView={isInView}
                   />
                 ))}
               </>
@@ -474,7 +500,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

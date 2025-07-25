@@ -1,9 +1,9 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand } from 'd3-scale';
 import sum from 'lodash.sum';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
   AnimateDataType,
@@ -106,6 +106,11 @@ export function Graph(props: Props) {
     precision,
     customLayers,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   const margin = {
     top: barAxisTitle ? topMargin + 25 : topMargin,
     bottom: bottomMargin,
@@ -147,7 +152,8 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <svg
+      <motion.svg
+        ref={svgRef}
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -189,10 +195,17 @@ export function Graph(props: Props) {
                 <motion.g
                   className='undp-viz-low-opacity undp-viz-g-with-hover'
                   key={d.label}
-                  initial={{ x: 0, y: y(`${d.id}`) }}
-                  whileInView={{ x: 0, y: y(`${d.id}`) }}
-                  transition={{ duration: animate.duration }}
-                  viewport={{ once: animate.once, amount: animate.amount }}
+                  variants={{
+                    initial: { x: 0, y: y(`${d.id}`) },
+                    whileInView: {
+                      x: 0,
+                      y: y(`${d.id}`),
+                      transition: { duration: animate.duration },
+                    },
+                  }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 >
                   {d.size.map((el, j) => (
                     <motion.g
@@ -236,25 +249,28 @@ export function Graph(props: Props) {
                           y={0}
                           style={{ fill: barColors[j] }}
                           height={y.bandwidth()}
-                          initial={{
-                            width: 0,
-                            x: x(0),
-                            fill: barColors[j],
-                          }}
-                          whileInView={{
-                            width: x(el || 0),
-                            x: x(
-                              j === 0 ? 0 : sum(d.size.filter((element, k) => k < j && element)),
-                            ),
-                            fill: barColors[j],
-                          }}
                           exit={{
                             width: 0,
                             x: x(0),
                             transition: { duration: animate.duration },
                           }}
-                          transition={{ duration: animate.duration }}
-                          viewport={{ once: animate.once, amount: animate.amount }}
+                          variants={{
+                            initial: {
+                              width: 0,
+                              x: x(0),
+                              fill: barColors[j],
+                            },
+                            whileInView: {
+                              width: x(el || 0),
+                              x: x(
+                                j === 0 ? 0 : sum(d.size.filter((element, k) => k < j && element)),
+                              ),
+                              fill: barColors[j],
+                              transition: { duration: animate.duration },
+                            },
+                          }}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
                         />
                       ) : null}
                       <motion.text
@@ -265,29 +281,35 @@ export function Graph(props: Props) {
                         }}
                         dy='0.33em'
                         className={cn('graph-value text-sm', classNames?.graphObjectValues)}
-                        initial={{
-                          x: x(0),
-                          opacity: 0,
-                          fill: getTextColorBasedOnBgColor(barColors[j]),
-                        }}
-                        whileInView={{
-                          x:
-                            x(j === 0 ? 0 : sum(d.size.filter((element, k) => k < j && element))) +
-                            x(el || 0) / 2,
-                          opacity:
-                            el &&
-                            x(el) / numberFormattingFunction(el, precision, prefix, suffix).length >
-                              12
-                              ? 1
-                              : 0,
-                          fill: getTextColorBasedOnBgColor(barColors[j]),
-                        }}
                         exit={{
                           opacity: 0,
                           transition: { duration: animate.duration },
                         }}
-                        transition={{ duration: animate.duration }}
-                        viewport={{ once: animate.once, amount: animate.amount }}
+                        variants={{
+                          initial: {
+                            x: x(0),
+                            opacity: 0,
+                            fill: getTextColorBasedOnBgColor(barColors[j]),
+                          },
+                          whileInView: {
+                            x:
+                              x(
+                                j === 0 ? 0 : sum(d.size.filter((element, k) => k < j && element)),
+                              ) +
+                              x(el || 0) / 2,
+                            opacity:
+                              el &&
+                              x(el) /
+                                numberFormattingFunction(el, precision, prefix, suffix).length >
+                                12
+                                ? 1
+                                : 0,
+                            fill: getTextColorBasedOnBgColor(barColors[j]),
+                            transition: { duration: animate.duration },
+                          },
+                        }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
                       >
                         {numberFormattingFunction(el, precision, prefix, suffix)}
                       </motion.text>
@@ -307,6 +329,7 @@ export function Graph(props: Props) {
                       style={styles?.yAxis?.labels}
                       className={classNames?.yAxis?.labels}
                       animate={animate}
+                      isInView={isInView}
                     />
                   ) : null}
                   {showValues ? (
@@ -324,20 +347,23 @@ export function Graph(props: Props) {
                       y={y.bandwidth() / 2}
                       dx={5}
                       dy='0.33em'
-                      initial={{
-                        x: x(0),
-                        opacity: 0,
-                      }}
-                      whileInView={{
-                        x: x(sum(d.size.map(el => el || 0))),
-                        opacity: 1,
+                      variants={{
+                        initial: {
+                          x: x(0),
+                          opacity: 0,
+                        },
+                        whileInView: {
+                          x: x(sum(d.size.map(el => el || 0))),
+                          opacity: 1,
+                          transition: { duration: animate.duration },
+                        },
                       }}
                       exit={{
                         opacity: 0,
                         transition: { duration: animate.duration },
                       }}
-                      transition={{ duration: animate.duration }}
-                      viewport={{ once: animate.once, amount: animate.amount }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
                     >
                       {numberFormattingFunction(
                         sum(d.size.filter(element => element)),
@@ -372,6 +398,7 @@ export function Graph(props: Props) {
                     classNames={el.classNames}
                     styles={el.styles}
                     animate={animate}
+                    isInView={isInView}
                   />
                 ))}
               </>
@@ -379,7 +406,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
         </g>
-      </svg>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

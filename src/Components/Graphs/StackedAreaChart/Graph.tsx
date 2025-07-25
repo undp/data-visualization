@@ -14,8 +14,10 @@ import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
 import sum from 'lodash.sum';
 import { cn } from '@undp/design-system-react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
+  AnimateDataType,
   AnnotationSettingsDataType,
   ClassNameObject,
   CurveTypes,
@@ -70,6 +72,7 @@ interface Props {
   classNames?: ClassNameObject;
   precision: number;
   customLayers: CustomLayerDataType[];
+  animate: AnimateDataType;
 }
 
 export function Graph(props: Props) {
@@ -102,7 +105,13 @@ export function Graph(props: Props) {
     classNames,
     precision,
     customLayers,
+    animate,
   } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
   const curve =
     curveType === 'linear'
       ? curveLinear
@@ -200,232 +209,260 @@ export function Graph(props: Props) {
   }, [x, dataFormatted, onSeriesMouseOver]);
   return (
     <>
-      <svg
+      <motion.svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
         direction='ltr'
+        ref={svgRef}
       >
-        <g transform={`translate(${margin.left},${margin.top})`}>
-          <HighlightArea
-            areaSettings={highlightAreaSettingsFormatted}
-            width={graphWidth}
-            height={graphHeight}
-            scale={x}
-            animate={{ duration: 0.5, once: true, amount: 0.5 }}
-          />
-          <CustomArea
-            animate={{ duration: 0.5, once: true, amount: 0.5 }}
-            areaSettings={customHighlightAreaSettingsFormatted}
-            scaleX={x}
-            scaleY={y}
-          />
-          <g>
-            <YTicksAndGridLines
-              values={yTicks.filter(d => d !== 0)}
-              y={yTicks.filter(d => d !== 0).map(d => y(d))}
-              x1={0 - leftMargin}
-              x2={graphWidth + margin.right}
+        <AnimatePresence>
+          <motion.g transform={`translate(${margin.left},${margin.top})`}>
+            <HighlightArea
+              areaSettings={highlightAreaSettingsFormatted}
+              width={graphWidth}
+              height={graphHeight}
+              scale={x}
+              animate={animate}
+              isInView={isInView}
+            />
+            <CustomArea
+              animate={animate}
+              areaSettings={customHighlightAreaSettingsFormatted}
+              scaleX={x}
+              scaleY={y}
+              isInView={isInView}
+            />
+            <g>
+              <YTicksAndGridLines
+                values={yTicks.filter(d => d !== 0)}
+                y={yTicks.filter(d => d !== 0).map(d => y(d))}
+                x1={0 - leftMargin}
+                x2={graphWidth + margin.right}
+                styles={{
+                  gridLines: styles?.yAxis?.gridLines,
+                  labels: styles?.yAxis?.labels,
+                }}
+                classNames={{
+                  gridLines: classNames?.yAxis?.gridLines,
+                  labels: classNames?.yAxis?.labels,
+                }}
+                suffix={suffix}
+                prefix={prefix}
+                labelType='secondary'
+                showGridLines
+                labelPos='vertical'
+                precision={precision}
+              />
+              <Axis
+                y1={y(minParam < 0 ? 0 : minParam)}
+                y2={y(minParam < 0 ? 0 : minParam)}
+                x1={0 - leftMargin}
+                x2={graphWidth + margin.right}
+                label={numberFormattingFunction(
+                  minParam < 0 ? 0 : minParam,
+                  precision,
+                  prefix,
+                  suffix,
+                )}
+                labelPos={{
+                  x: 0 - leftMargin,
+                  dx: 0,
+                  dy: maxParam < 0 ? '1em' : -5,
+                  y: y(minParam < 0 ? 0 : minParam),
+                }}
+                classNames={{
+                  axis: classNames?.xAxis?.axis,
+                  label: classNames?.yAxis?.labels,
+                }}
+                styles={{
+                  axis: styles?.xAxis?.axis,
+                  label: styles?.yAxis?.labels,
+                }}
+              />
+              <AxisTitle
+                x={0 - leftMargin - 15}
+                y={graphHeight / 2}
+                style={styles?.yAxis?.title}
+                className={classNames?.yAxis?.title}
+                text={yAxisTitle}
+                rotate90
+              />
+            </g>
+            <XTicksAndGridLines
+              values={xTicks.map(d => format(d, dateFormat))}
+              x={xTicks.map(d => x(d))}
+              y1={0}
+              y2={graphHeight}
               styles={{
-                gridLines: styles?.yAxis?.gridLines,
-                labels: styles?.yAxis?.labels,
+                gridLines: styles?.xAxis?.gridLines,
+                labels: styles?.xAxis?.labels,
               }}
               classNames={{
-                gridLines: classNames?.yAxis?.gridLines,
-                labels: classNames?.yAxis?.labels,
+                gridLines: cn('opacity-0', classNames?.xAxis?.gridLines),
+                labels: cn(
+                  'fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs',
+                  classNames?.xAxis?.labels,
+                ),
               }}
               suffix={suffix}
               prefix={prefix}
-              labelType='secondary'
+              labelType='primary'
               showGridLines
-              labelPos='vertical'
               precision={precision}
             />
-            <Axis
-              y1={y(minParam < 0 ? 0 : minParam)}
-              y2={y(minParam < 0 ? 0 : minParam)}
-              x1={0 - leftMargin}
-              x2={graphWidth + margin.right}
-              label={numberFormattingFunction(
-                minParam < 0 ? 0 : minParam,
-                precision,
-                prefix,
-                suffix,
-              )}
-              labelPos={{
-                x: 0 - leftMargin,
-                dx: 0,
-                dy: maxParam < 0 ? '1em' : -5,
-                y: y(minParam < 0 ? 0 : minParam),
-              }}
-              classNames={{
-                axis: classNames?.xAxis?.axis,
-                label: classNames?.yAxis?.labels,
-              }}
-              styles={{
-                axis: styles?.xAxis?.axis,
-                label: styles?.yAxis?.labels,
-              }}
-            />
-            <AxisTitle
-              x={0 - leftMargin - 15}
-              y={graphHeight / 2}
-              style={styles?.yAxis?.title}
-              className={classNames?.yAxis?.title}
-              text={yAxisTitle}
-              rotate90
-            />
-          </g>
-          <XTicksAndGridLines
-            values={xTicks.map(d => format(d, dateFormat))}
-            x={xTicks.map(d => x(d))}
-            y1={0}
-            y2={graphHeight}
-            styles={{
-              gridLines: styles?.xAxis?.gridLines,
-              labels: styles?.xAxis?.labels,
-            }}
-            classNames={{
-              gridLines: cn('opacity-0', classNames?.xAxis?.gridLines),
-              labels: cn(
-                'fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs',
-                classNames?.xAxis?.labels,
-              ),
-            }}
-            suffix={suffix}
-            prefix={prefix}
-            labelType='primary'
-            showGridLines
-            precision={precision}
-          />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-          <g>
-            {dataArray.map((d, i) => {
-              return (
-                <path
-                  key={i}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  d={areaShape(d as any) as string}
-                  style={{
-                    fill: colors[i],
-                    opacity: 0.8,
-                  }}
+            {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+            <motion.g>
+              {dataArray.map((d, i) => {
+                return (
+                  <motion.path
+                    key={i}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    d={areaShape(d as any) as string}
+                    exit={{
+                      opacity: 0,
+                      transition: { duration: animate.duration },
+                    }}
+                    variants={{
+                      initial: {
+                        d: areaShape(
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          d.map(el => ({ ...el, y0: 0, y1: 0 })) as any,
+                        ) as string as string,
+                        opacity: 0,
+                      },
+                      whileInView: {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        d: areaShape(d as any) as string,
+                        opacity: 1,
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
+                    style={{
+                      fill: colors[i],
+                      opacity: 0.8,
+                    }}
+                  />
+                );
+              })}
+              {mouseOverData ? (
+                <line
+                  y1={0}
+                  y2={graphHeight}
+                  x1={x(mouseOverData.date)}
+                  x2={x(mouseOverData.date)}
+                  className={cn(
+                    'undp-tick-line stroke-primary-gray-700 dark:stroke-primary-gray-100',
+                    classNames?.mouseOverLine,
+                  )}
+                  style={styles?.mouseOverLine}
                 />
-              );
-            })}
-            {mouseOverData ? (
-              <line
-                y1={0}
-                y2={graphHeight}
-                x1={x(mouseOverData.date)}
-                x2={x(mouseOverData.date)}
-                className={cn(
-                  'undp-tick-line stroke-primary-gray-700 dark:stroke-primary-gray-100',
-                  classNames?.mouseOverLine,
-                )}
-                style={styles?.mouseOverLine}
-              />
+              ) : null}
+            </motion.g>
+            {refValues ? (
+              <>
+                {refValues.map((el, i) => (
+                  <RefLineY
+                    key={i}
+                    text={el.text}
+                    color={el.color}
+                    y={y(el.value as number)}
+                    x1={0 - leftMargin}
+                    x2={graphWidth + margin.right}
+                    classNames={el.classNames}
+                    styles={el.styles}
+                    animate={animate}
+                    isInView={isInView}
+                  />
+                ))}
+              </>
             ) : null}
-          </g>
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineY
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  y={y(el.value as number)}
-                  x1={0 - leftMargin}
-                  x2={graphWidth + margin.right}
-                  classNames={el.classNames}
-                  styles={el.styles}
-                  animate={{ duration: 0, once: true, amount: 0 }}
-                />
-              ))}
-            </>
-          ) : null}
-          <g>
-            {annotations.map((d, i) => {
-              const endPoints = getLineEndPoint(
-                {
-                  x: d.xCoordinate
-                    ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
-                    : 0 + (d.xOffset || 0),
+            <g>
+              {annotations.map((d, i) => {
+                const endPoints = getLineEndPoint(
+                  {
+                    x: d.xCoordinate
+                      ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
+                      : 0 + (d.xOffset || 0),
+                    y: d.yCoordinate
+                      ? y(d.yCoordinate as number) + (d.yOffset || 0) - 8
+                      : 0 + (d.yOffset || 0) - 8,
+                  },
+                  {
+                    x: d.xCoordinate ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) : 0,
+                    y: d.yCoordinate ? y(d.yCoordinate as number) : 0,
+                  },
+                  checkIfNullOrUndefined(d.connectorRadius) ? 3.5 : (d.connectorRadius as number),
+                );
+                const connectorSettings = d.showConnector
+                  ? {
+                      y1: endPoints.y,
+                      x1: endPoints.x,
+                      y2: d.yCoordinate
+                        ? y(d.yCoordinate as number) + (d.yOffset || 0)
+                        : 0 + (d.yOffset || 0),
+                      x2: d.xCoordinate
+                        ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
+                        : 0 + (d.xOffset || 0),
+                      cx: d.xCoordinate ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) : 0,
+                      cy: d.yCoordinate ? y(d.yCoordinate as number) : 0,
+                      circleRadius: checkIfNullOrUndefined(d.connectorRadius)
+                        ? 3.5
+                        : (d.connectorRadius as number),
+                      strokeWidth: d.showConnector === true ? 2 : Math.min(d.showConnector || 0, 1),
+                    }
+                  : undefined;
+                const labelSettings = {
                   y: d.yCoordinate
                     ? y(d.yCoordinate as number) + (d.yOffset || 0) - 8
                     : 0 + (d.yOffset || 0) - 8,
-                },
-                {
-                  x: d.xCoordinate ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) : 0,
-                  y: d.yCoordinate ? y(d.yCoordinate as number) : 0,
-                },
-                checkIfNullOrUndefined(d.connectorRadius) ? 3.5 : (d.connectorRadius as number),
-              );
-              const connectorSettings = d.showConnector
-                ? {
-                    y1: endPoints.y,
-                    x1: endPoints.x,
-                    y2: d.yCoordinate
-                      ? y(d.yCoordinate as number) + (d.yOffset || 0)
-                      : 0 + (d.yOffset || 0),
-                    x2: d.xCoordinate
+                  x: rtl
+                    ? 0
+                    : d.xCoordinate
                       ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
                       : 0 + (d.xOffset || 0),
-                    cx: d.xCoordinate ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) : 0,
-                    cy: d.yCoordinate ? y(d.yCoordinate as number) : 0,
-                    circleRadius: checkIfNullOrUndefined(d.connectorRadius)
-                      ? 3.5
-                      : (d.connectorRadius as number),
-                    strokeWidth: d.showConnector === true ? 2 : Math.min(d.showConnector || 0, 1),
-                  }
-                : undefined;
-              const labelSettings = {
-                y: d.yCoordinate
-                  ? y(d.yCoordinate as number) + (d.yOffset || 0) - 8
-                  : 0 + (d.yOffset || 0) - 8,
-                x: rtl
-                  ? 0
-                  : d.xCoordinate
-                    ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
-                    : 0 + (d.xOffset || 0),
-                width: rtl
-                  ? d.xCoordinate
-                    ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
-                    : 0 + (d.xOffset || 0)
-                  : graphWidth -
-                    (d.xCoordinate
+                  width: rtl
+                    ? d.xCoordinate
                       ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
-                      : 0 + (d.xOffset || 0)),
-                maxWidth: d.maxWidth,
-                fontWeight: d.fontWeight,
-                align: d.align,
-              };
-              return (
-                <Annotation
-                  key={i}
-                  color={d.color}
-                  connectorsSettings={connectorSettings}
-                  labelSettings={labelSettings}
-                  text={d.text}
-                  classNames={d.classNames}
-                  styles={d.styles}
-                  animate={{ duration: 0.5, once: true, amount: 0.5 }}
-                />
-              );
-            })}
-          </g>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
-          <rect
-            ref={MouseoverRectRef}
-            style={{
-              fill: 'none',
-              pointerEvents: 'all',
-            }}
-            width={graphWidth}
-            height={graphHeight}
-          />
-        </g>
-      </svg>
+                      : 0 + (d.xOffset || 0)
+                    : graphWidth -
+                      (d.xCoordinate
+                        ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
+                        : 0 + (d.xOffset || 0)),
+                  maxWidth: d.maxWidth,
+                  fontWeight: d.fontWeight,
+                  align: d.align,
+                };
+                return (
+                  <Annotation
+                    key={i}
+                    color={d.color}
+                    connectorsSettings={connectorSettings}
+                    labelSettings={labelSettings}
+                    text={d.text}
+                    classNames={d.classNames}
+                    styles={d.styles}
+                    animate={animate}
+                    isInView={isInView}
+                  />
+                );
+              })}
+            </g>
+            {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+            <rect
+              ref={MouseoverRectRef}
+              style={{
+                fill: 'none',
+                pointerEvents: 'all',
+              }}
+              width={graphWidth}
+              height={graphHeight}
+            />
+          </motion.g>
+        </AnimatePresence>
+      </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}
