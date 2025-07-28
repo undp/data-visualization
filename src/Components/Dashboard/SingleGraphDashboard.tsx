@@ -306,7 +306,7 @@ export function SingleGraphDashboard(props: Props) {
     <div
       className={`${theme || graphSettings?.theme || 'light'} flex ${
         graphSettings?.width ? 'w-fit grow-0' : 'w-full grow'
-      }`}
+      }${graphSettings?.height ? '' : ' h-full'}`}
       dir={graphSettings?.language === 'he' || graphSettings?.language === 'ar' ? 'rtl' : undefined}
     >
       <div

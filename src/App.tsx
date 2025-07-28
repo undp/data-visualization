@@ -1,58 +1,76 @@
-import { useState } from 'react';
-
-import { SimpleBarGraph } from './Components/Graphs/BarGraph';
+import { ScrollStory } from './Components/Dashboard/ScrollStory';
 import './styles/styles.css';
 import '@undp/design-system-react/style.css';
 
 function App() {
-  const [data, setData] = useState([
-    {
-      label: '2020 Q1',
-      size: 3,
-    },
-    {
-      label: '2020 Q2',
-      size: 8,
-    },
-    {
-      label: '2020 Q3',
-      size: 11,
-    },
-    {
-      label: '2020 Q4',
-      size: 19,
-    },
-    {
-      label: '2021 Q1',
-      size: 3,
-    },
-    {
-      label: '2022 Q2',
-      size: 8,
-    },
-    {
-      label: '2023 Q3',
-      size: 11,
-    },
-    {
-      label: '2024 Q4',
-      size: 19,
-    },
-  ]);
   return (
     <>
-      <div style={{ width: '100%', height: '2000px', backgroundColor: '#fff000' }} />
-      <button
-        onClick={() => {
-          setData(data.map(d => ({ ...d, size: d.size * Math.random() * 5 })));
-        }}
-      >
-        Click here
-      </button>
-      <SimpleBarGraph
-        data={data}
-        animate={{ duration: 10, once: false, amount: 0 }}
-        height={1000}
+      <ScrollStory
+        chapters={[
+          {
+            dataSettings: {
+              data: [
+                {
+                  Country: 'Country A',
+                  Value1: 20,
+                  Value: 8,
+                  Region: 'Region A',
+                  Category: 'Category A',
+                },
+                {
+                  Country: 'Country C',
+                  Value1: 20,
+                  Value: 42,
+                  Region: 'Region C',
+                  Category: 'Category B',
+                },
+                {
+                  Country: 'Country D',
+                  Value1: 20,
+                  Value: 10,
+                  Region: 'Region D',
+                  Category: 'Category C',
+                },
+              ],
+            },
+            graphType: 'barChart',
+            graphSettings: {
+              graphTitle: 'Title of the graph',
+              graphDescription: 'Description of the graph',
+              sources: [
+                {
+                  source: 'Organization ABC',
+                  link: 'www.example.com',
+                },
+              ],
+              footNote: 'Footnote of the graph',
+              padding: '16px 32px 16px 16px',
+            },
+            graphDataConfiguration: [
+              { columnId: 'Country', chartConfigId: 'label' },
+              { columnId: 'Value', chartConfigId: 'size' },
+            ],
+            sections: [
+              {
+                graphDataConfiguration: [
+                  { columnId: 'Country', chartConfigId: 'label' },
+                  { columnId: 'Value', chartConfigId: 'size' },
+                ],
+                infoBox: { description: 'Welcome to the journey!' },
+              },
+              {
+                graphDataConfiguration: [
+                  { columnId: 'Country', chartConfigId: 'label' },
+                  { columnId: 'Value1', chartConfigId: 'size' },
+                ],
+                infoBox: { description: 'Welcome to the journey!' },
+              },
+            ],
+          },
+        ]}
+        infoWidth='480px'
+        infoPosition='right'
+        infoBackgroundColor='rgba(255,255,255,0.8)'
       />
     </>
   );

@@ -925,3 +925,32 @@ export interface GraphSettingsDataType {
   precision?: number;
   customLayers?: CustomLayerDataType[];
 }
+
+export interface InfoBoxDataType {
+  title?: string | React.ReactNode;
+  description?: string | React.ReactNode;
+}
+
+export interface SectionsDataType {
+  graphSettings?: GraphSettingsDataType;
+  graphDataConfiguration?: GraphConfigurationDataType[];
+  infoBox: InfoBoxDataType;
+}
+
+export interface ChaptersDataType {
+  dataSettings: DataSettingsDataType;
+  graphSettings: GraphSettingsDataType;
+  graphType: GraphType;
+  graphDataConfiguration?: GraphConfigurationDataType[];
+  sections: SectionsDataType[];
+}
+
+export interface SectionsArrDataType {
+  chapter: number;
+  section: number;
+  dataSettings: DataSettingsDataType;
+  graphSettings: GraphSettingsDataType;
+  graphType: GraphType;
+  graphDataConfiguration: GraphConfigurationDataType[];
+  infoBox: InfoBoxDataType;
+}

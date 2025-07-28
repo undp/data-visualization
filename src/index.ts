@@ -65,6 +65,7 @@ export { MultiGraphDashboard } from './Components/Dashboard/MultiGraphDashboard'
 export { MultiGraphDashboardWideToLongFormat } from './Components/Dashboard/MultiGraphDashboardWideToLongFormat';
 export { SingleGraphDashboard } from './Components/Dashboard/SingleGraphDashboard';
 export { GriddedGraphs } from './Components/Dashboard/GriddedGraphs';
+export { ScrollStory } from './Components/Dashboard/ScrollStory';
 // Dashboard from Config Files
 export { MultiGraphDashboardFromConfig } from './Components/Dashboard/MultiGraphDashboardFromConfig';
 export { MultiGraphDashboardWideToLongFormatFromConfig } from './Components/Dashboard/MultiGraphDashboardWideToLongFormatFromConfig';

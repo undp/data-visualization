@@ -1,0 +1,156 @@
+import { useState } from 'react';
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import ChapterType from './PageSections/ComplexDataTypes/ScrollStoryChapter.mdx';
+
+<Meta title="Scroll story/Scroll story" />
+
+# Scroll story
+
+`ScrollStory` is a scrollytelling container component that reveals content step-by-step as the user scrolls through the page.
+
+## Usage
+
+```tsx
+import { ScrollStory } from '@undp/data-viz';
+import '@undp/design-system-react/style.css';
+
+function Graph() {
+  return (
+    <ScrollStory
+      chapters={[
+        {
+          dataSettings: {
+            data: [
+              {
+                Country: 'Country A',
+                Value1: 20,
+                Value: 8,
+                Region: 'Region A',
+                Category: 'Category A',
+              },
+              {
+                Country: 'Country C',
+                Value1: 20,
+                Value: 42,
+                Region: 'Region C',
+                Category: 'Category B',
+              },
+              {
+                Country: 'Country D',
+                Value1: 20,
+                Value: 10,
+                Region: 'Region D',
+                Category: 'Category C',
+              },
+            ],
+          },
+          graphType: 'barChart',
+          graphSettings: {
+            graphTitle: 'Title of the graph',
+            graphDescription: 'Description of the graph',
+            sources: [
+              {
+                source: 'Organization ABC',
+                link: 'www.example.com',
+              },
+            ],
+            footNote: 'Footnote of the graph',
+            padding: '16px 32px 16px 16px',
+          },
+          graphDataConfiguration: [
+            { columnId: 'Country', chartConfigId: 'label' },
+            { columnId: 'Value', chartConfigId: 'size' },
+          ],
+          sections: [
+            {
+              graphDataConfiguration: [
+                { columnId: 'Country', chartConfigId: 'label' },
+                { columnId: 'Value', chartConfigId: 'size' },
+              ],
+              infoLayout: { infoDescription: 'Welcome to the journey!' },
+            },
+            {
+              graphDataConfiguration: [
+                { columnId: 'Country', chartConfigId: 'label' },
+                { columnId: 'Value1', chartConfigId: 'size' },
+              ],
+              infoLayout: { infoDescription: 'Welcome to the journey!' },
+            },
+          ],
+        },
+      ]}
+      infoWidth='480px'
+      infoPosition='right'
+      infoBackgroundColor='rgba(255,255,255,0.8)'
+    />
+  );
+}
+
+```
+
+## Props
+
+#### Parameters
+
+- [mode](#mode) - Defines if the information is shown as overlay or on the side.
+- [infoWidth](#infoWidth) - Defines the width of the info section.
+- [infoPosition](#infoPosition) - Position of info on the page.
+- [infoBackgroundColor](#infoBackgroundColor) - Defines the background color of the info box.
+- [visibilityThreshold](#visibilityThreshold) - Sets how much of the element (from 0 to 1) must be visible before it's considered in view and it trigger the animation in the scrollytelling.
+- [chapters](#chapters) - Defined the different chapters for the story and different sections within the story.
+
+#### Props interface
+
+### mode
+
+Type - `overlay` or `side`
+
+Default - `overlay`
+
+Defines if the information is shown as overlay or on the side.
+
+---
+
+### infoWidth
+
+Type - `string`
+
+Default - `320px`
+
+Defines the width of the info section.
+
+---
+
+### infoPosition
+
+Type - `left`, `right` or `center`
+
+Default - `left`
+
+Defines the background color of the info box.
+
+---
+
+### infoBackgroundColor
+
+Type - `string`
+
+Default - `rgba(255,255,255,0.8)`
+
+Position of info on the page. `center` is only applicable if `mode` is `overlay`.
+
+---
+
+### visibilityThreshold
+
+Type - `number`
+
+Default - `0.5`
+
+Sets how much of the element (from 0 to 1) must be visible before it's considered in view and it trigger the animation in the scrollytelling.
+
+---
+
+<ChapterType />
+
+

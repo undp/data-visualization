@@ -1,0 +1,218 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import GraphType from './GraphType.mdx';
+import DataSettings from './DataSettings.mdx';
+import GraphSettings from './GraphSettings.mdx';
+import GraphDataConfig from './GraphDataConfig.mdx';
+
+<Meta title="Scroll story/Data types/chapters" />
+
+### chapters
+
+`required`
+
+Type - `object`
+
+Defined the different chapters for the story and different sections within the story.
+
+#### Data Format
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Required</th>
+      <th>Type</th>
+      <th>Default value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dataSettings</td>
+      <td>yes</td>
+      <td>
+        <code>dataSettings</code>
+      </td>
+      <td></td>
+      <td>Defines data settings for the chapter.</td>
+    </tr>
+    <tr>
+      <td>graphType</td>
+      <td>yes</td>
+      <td>
+        <code>graphType</code>
+      </td>
+      <td></td>
+      <td>Defines the graph type in the section.</td>
+    </tr>
+    <tr>
+      <td>graphSettings</td>
+      <td>yes</td>
+      <td>
+        <code>graphSettings</code>
+      </td>
+      <td></td>
+      <td>
+        Defines the default layout settings for the graph for the chapter. The parameter within the object depends on the graph type.This is the default for the chapter but can be changed in the sections.
+      </td>
+    </tr>
+    <tr>
+      <td>graphDataConfiguration</td>
+      <td>yes</td>
+      <td>
+        <code>graphDataConfiguration</code> or <code>boolean</code>
+      </td>
+      <td></td>
+      <td>
+        Defines which data sheet column maps to each graph parameter. This object depends on the graph type. This is the default for the chapter but can be changed in the sections.
+      </td>
+    </tr>
+    <tr>
+      <td>sections</td>
+      <td>yes</td>
+      <td>
+        <code>sectionDataType</code>
+      </td>
+      <td>
+      </td>
+      <td>
+        Defines the different section within the chapter
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+#### Example
+
+```
+chapters={[
+  {
+    dataSettings: {
+      data: [
+        {
+          Country: 'Country A',
+          Value1: 20,
+          Value: 8,
+          Region: 'Region A',
+          Category: 'Category A',
+        },
+        {
+          Country: 'Country C',
+          Value1: 20,
+          Value: 42,
+          Region: 'Region C',
+          Category: 'Category B',
+        },
+        {
+          Country: 'Country D',
+          Value1: 20,
+          Value: 10,
+          Region: 'Region D',
+          Category: 'Category C',
+        },
+      ],
+    },
+    graphType: 'barChart',
+    graphSettings: {
+      graphTitle: 'Title of the graph',
+      graphDescription: 'Description of the graph',
+      sources: [
+        {
+          source: 'Organization ABC',
+          link: 'www.example.com',
+        },
+      ],
+      footNote: 'Footnote of the graph',
+      padding: '16px 32px 16px 16px',
+    },
+    graphDataConfiguration: [
+      { columnId: 'Country', chartConfigId: 'label' },
+      { columnId: 'Value', chartConfigId: 'size' },
+    ],
+    sections: [
+      {
+        graphDataConfiguration: [
+          { columnId: 'Country', chartConfigId: 'label' },
+          { columnId: 'Value', chartConfigId: 'size' },
+        ],
+        infoLayout: { infoDescription: 'Welcome to the journey!' },
+      },
+      {
+        graphDataConfiguration: [
+          { columnId: 'Country', chartConfigId: 'label' },
+          { columnId: 'Value1', chartConfigId: 'size' },
+        ],
+        infoLayout: { infoDescription: 'Welcome to the journey!' },
+      },
+    ],
+  },
+]}
+```
+
+---
+
+<DataSettings />
+
+---
+
+<GraphType />
+
+---
+
+<GraphSettings />
+
+---
+
+<GraphDataConfig />
+
+---
+
+### sectionDataType 
+
+`required`
+
+Type - `object`
+#### Data Format
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Required</th>
+      <th>Type</th>
+      <th>Default value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>graphSettings</td>
+      <td>no</td>
+      <td>
+        <code>graphSettings</code>
+      </td>
+      <td></td>
+      <td>Defines graph setting for the chart in the chapter.</td>
+    </tr>
+    <tr>
+      <td>graphDataConfiguration</td>
+      <td>no</td>
+      <td>
+        <code>graphDataConfiguration</code>
+      </td>
+      <td></td>
+      <td>Defines graph data configuration for the chart in the chapter.</td>
+    </tr>
+    <tr>
+      <td>infoLayout</td>
+      <td>yes</td>
+      <td>
+        <code>\{title: string | React.ReactNode; description: string | React.ReactNode; }</code>
+      </td>
+      <td></td>
+      <td>
+        Defines the content of the info box.
+      </td>
+    </tr>
+  </tbody>
+</table>
