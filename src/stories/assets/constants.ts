@@ -149,6 +149,10 @@ export const GraphNames = [
     id: 'animatedGroupedBarChart',
   },
   {
+    name: 'Bullet chart',
+    id: 'bulletChart',
+  },
+  {
     name: 'Donut graph',
     id: 'donutChart',
   },
@@ -163,6 +167,10 @@ export const GraphNames = [
   {
     name: 'Beeswarm chart',
     id: 'beeSwarmChart',
+  },
+  {
+    name: 'Bullet chart',
+    id: 'bulletChart',
   },
   {
     name: 'Butterfly chart',
@@ -221,6 +229,10 @@ export const GraphNames = [
     id: 'paretoChart',
   },
   {
+    name: 'Radar chart',
+    id: 'radarChart',
+  },
+  {
     name: 'Sankey chart',
     id: 'sankeyChart',
   },
@@ -277,7 +289,15 @@ export const GraphNames = [
     id: 'animatedDotDensityMap',
   },
   {
-    name: 'Bullet chart',
-    id: 'bulletChart',
+    name: 'GeoHub Map',
+    id: 'geoHubMap',
+  },
+  {
+    name: 'GeoHub map with layer selection',
+    id: 'geoHubMapWithLayerSelection',
+  },
+  {
+    name: 'GeoHub compare map',
+    id: 'geoHubCompareMap',
   },
 ];

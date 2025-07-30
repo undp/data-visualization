@@ -1,0 +1,61 @@
+{
+  "graphType": "geoHubMap",
+  "graphSettings": {
+    "graphTitle": "Urban Expansion Visualization",
+    "graphDescription": "This map illustrates the expansion of urban areas over time.",
+    "footNote": "Source: Urban Planning Department, 2024",
+    "sources": [
+      {
+        "label": "OpenStreetMap",
+        "url": "https://www.openstreetmap.org"
+      },
+      {
+        "label": "Urban Institute",
+        "url": "https://www.urban.org"
+      }
+    ],
+    "ariaLabel": "Map showing urban expansion trends",
+    "backgroundColor": "#f5f5f5",
+    "styles": {
+      "margin": "0 auto",
+      "boxShadow": "0px 0px 10px rgba(0,0,0,0.1)"
+    },
+    "classNames": {
+      "container": "map-graph-wrapper",
+      "title": "map-title"
+    },
+    "width": 960,
+    "height": 540,
+    "minHeight": 400,
+    "relativeHeight": 1.25,
+    "padding": "1rem",
+    "mapStyle": "https://example.com/mapstyles/urban-style.json",
+    "center": [77.209, 28.6139],
+    "zoomLevel": 6,
+    "layerSelection": [
+      {
+        "layerID": ["urban-2020", "urban-2024"],
+        "name": "Urban Growth"
+      },
+      {
+        "layerID": ["transport-2024"],
+        "name": "Transport Network"
+      }
+    ],
+    "mapLegend": [
+      {
+        "mapStyleName": "Urban Growth",
+        "legend": "Dark red areas show new urban development between 2020 and 2024."
+      },
+      {
+        "mapStyleName": "Transport Network",
+        "legend": "Lines represent major transport infrastructure."
+      }
+    ],
+    "excludeLayers": ["water-layer", "label-layer"],
+    "language": "en",
+    "theme": "light",
+    "uiMode": "normal",
+    "graphID": "urban-expansion-2025"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "graphType": "geoHubMap",
+  "graphSettings": {
+    "graphTitle": "Land Use Comparison: 2015 vs 2024",
+    "graphDescription": "This map compares land use changes between the years 2015 and 2024.",
+    "footNote": "Comparison based on satellite imagery analysis.",
+    "sources": [
+      {
+        "label": "NASA Earth Observatory",
+        "url": "https://earthobservatory.nasa.gov"
+      },
+      {
+        "label": "Global Land Cover Facility",
+        "url": "https://glcf.umd.edu"
+      }
+    ],
+    "ariaLabel": "Map comparing land use patterns across two time periods",
+    "backgroundColor": "#ffffff",
+    "styles": {
+      "padding": "1rem",
+      "border": "1px solid #ddd"
+    },
+    "classNames": {
+      "graphContainer": "land-use-comparison-wrapper",
+      "title": "land-use-comparison-title"
+    },
+    "width": 1000,
+    "height": 600,
+    "minHeight": 400,
+    "relativeHeight": 1.3,
+    "padding": "1rem",
+    "mapStyles": [
+      "https://example.com/mapstyles/landuse-2015.json",
+      "https://example.com/mapstyles/landuse-2024.json"
+    ],
+    "mapLegend": "<strong>Dark green:</strong> Forest<br><strong>Yellow:</strong> Agriculture<br><strong>Gray:</strong> Urban areas",
+    "center": [77.1025, 28.7041],
+    "zoomLevel": 5,
+    "language": "en",
+    "theme": "dark",
+    "graphID": "land-use-comparison-2015-2024"
+  }
+}

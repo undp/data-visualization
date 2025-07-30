@@ -1,0 +1,61 @@
+{
+  "graphType": "geoHubMap",
+  "graphSettings": {
+    "graphTitle": "Population Density Map",
+    "graphDescription": "This map shows population density by region.",
+    "footNote": "Data from national census 2021",
+    "sources": [
+      {
+        "label": "World Bank",
+        "url": "https://data.worldbank.org"
+      },
+      {
+        "label": "UN Data",
+        "url": "https://data.un.org"
+      }
+    ],
+    "ariaLabel": "Population density map visualization",
+    "backgroundColor": "#ffffff",
+    "styles": {
+      "border": "1px solid #ccc",
+      "borderRadius": "8px"
+    },
+    "classNames": {
+      "wrapper": "graph-container",
+      "title": "graph-title"
+    },
+    "width": 800,
+    "height": 600,
+    "minHeight": 400,
+    "relativeHeight": 1.2,
+    "padding": "1rem",
+    "mapStyle": [
+      {
+        "style": "mapbox://styles/mapbox/light-v10",
+        "name": "Light"
+      },
+      {
+        "style": "mapbox://styles/mapbox/dark-v10",
+        "name": "Dark"
+      }
+    ],
+    "mapLegend": [
+      {
+        "mapStyleName": "Light",
+        "legend": "Population per square kilometer"
+      },
+      {
+        "mapStyleName": "Dark",
+        "legend": "Pop. Density (dark theme)"
+      }
+    ],
+    "center": [78.9629, 20.5937],
+    "zoomLevel": 4,
+    "includeLayers": ["population-layer", "admin-boundary"],
+    "excludeLayers": ["water-labels"],
+    "language": "en",
+    "theme": "light",
+    "uiMode": "normal",
+    "graphID": "population-density-map"
+  }
+}

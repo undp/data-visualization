@@ -1,0 +1,78 @@
+{
+  "graphType": "radarChart",
+  "dataSettings": {
+    "dataURL": "/data/data-sample-01.csv",
+    "fileType": "csv"
+  },
+  "graphDataConfiguration": [
+    {
+      "chartConfigId": "label",
+      "columnId": "Country"
+    },
+    {
+      "chartConfigId": "values",
+      "columnId": ["Indicator-01", "Indicator-03"]
+    }
+  ],
+  "graphSettings": {
+    "graphTitle": "Radar Chart of Development Indicators",
+    "graphDescription": "A comparative analysis of countries across four development dimensions.",
+    "footNote": "Data Source: Global Development Report 2024",
+    "sources": [
+      {
+        "label": "World Development Indicators",
+        "url": "https://databank.worldbank.org"
+      }
+    ],
+    "ariaLabel": "Radar chart showing development metrics across multiple sectors",
+    "colors": ["#1f77b4", "#ff7f0e"],
+    "colorDomain": ["Country A", "Country B"],
+    "colorLegendTitle": "Country",
+    "backgroundColor": "#ffffff",
+    "styles": {
+      "margin": "0 auto",
+      "boxShadow": "0 0 8px rgba(0, 0, 0, 0.1)"
+    },
+    "classNames": {
+      "container": "radar-chart-container"
+    },
+    "width": 700,
+    "height": 500,
+    "minHeight": 400,
+    "relativeHeight": 1.1,
+    "padding": "1rem",
+    "radius": 200,
+    "leftMargin": 30,
+    "rightMargin": 30,
+    "topMargin": 30,
+    "bottomMargin": 30,
+    "maxValue": 100,
+    "minValue": 0,
+    "showValues": true,
+    "showDots": true,
+    "strokeWidth": 2,
+    "fillShape": true,
+    "noOfTicks": 5,
+    "showColorScale": true,
+    "showNAColor": false,
+    "highlightedLines": ["Country A"],
+    "dimmedOpacity": 0.2,
+    "animate": {
+      "duration": 800,
+      "once": true,
+      "amount": 0.5
+    },
+    "axisLabels": ["Health", "Education", "Economy", "Infrastructure"],
+    "curveType": "linear",
+    "resetSelectionOnDoubleClick": true,
+    "precision": 1,
+    "customLayers": [],
+    "graphDownload": true,
+    "dataDownload": true,
+    "tooltip": "{{label}}: {{value}}",
+    "detailsOnClick": "{{label}} - {{value}}",
+    "language": "en",
+    "theme": "light",
+    "graphID": "radar-dev-indicators"
+  }
+}

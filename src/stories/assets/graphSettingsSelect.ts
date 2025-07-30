@@ -37,6 +37,10 @@ import biVariateChoroplethMap from './config/biVariateChoroplethMap.json';
 import animatedBiVariateChoroplethMap from './config/animatedBivariateChoroplethMap.json';
 import dotDensityMap from './config/dotDensityMap.json';
 import animatedDotDensityMap from './config/animatedDotDensityMap.json';
+import radarChart from './config/radarChart.json';
+import geoHubMap from './config/geoHubMap.json';
+import geoHubMapWithLayerSelection from './config/geoHubMapWithLayerSelection.json';
+import geoHubCompareMap from './config/geoHubCompareMap.json';
 import griddedChartExtraParam from './config/griddedChartExtraParam.json';
 
 export function GraphSettingsSelector(
@@ -84,6 +88,10 @@ export function GraphSettingsSelector(
     'Dot density map': dotDensityMap,
     'Dot density map (animated)': animatedDotDensityMap,
     'Bullet chart': bulletChart,
+    'Radar chart': radarChart,
+    'GeoHub Map': geoHubMap,
+    'GeoHub map with layer selection': geoHubMapWithLayerSelection,
+    'GeoHub compare map': geoHubCompareMap,
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
