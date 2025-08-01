@@ -195,7 +195,7 @@ export function GeoHubMap(props: Props) {
                 minHeight={minHeight}
                 includeLayers={includeLayers}
                 excludeLayers={excludeLayers}
-                mapLegend={mapLegend as string | React.ReactNode}
+                mapLegend={mapLegend as string | React.ReactNode | undefined}
               />
             ) : (
               <GeoHubMultipleMap
@@ -209,7 +209,7 @@ export function GeoHubMap(props: Props) {
                 includeLayers={includeLayers}
                 excludeLayers={excludeLayers}
                 mapLegend={
-                  (mapLegend as MapLegendDataType[]).find(
+                  ((mapLegend || []) as MapLegendDataType[]).find(
                     d =>
                       d.mapStyleName === mapStyle.find(el => el.style === selectedMapStyle)?.name,
                   )?.legend

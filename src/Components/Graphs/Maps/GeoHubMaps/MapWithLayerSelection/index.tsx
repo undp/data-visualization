@@ -97,7 +97,7 @@ export function GeoHubMapWithLayerSelection(props: Props) {
     uiMode = 'normal',
     styles,
     classNames,
-    mapLegend,
+    mapLegend = [],
   } = props;
 
   const [selectedLayer, setSelectedLayer] = useState(layerSelection[0].layerID);

@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "1.1.9",
+  "version": "1.1.11",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "browser": "./dist/index.umd.js",
@@ -66,7 +66,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@turf/bbox": "^7.2.0",
     "@turf/centroid": "^7.2.0",
-    "@undp/design-system-react": "^1.0.3",
+    "@undp/design-system-react": "^1.0.4",
     "ajv": "^8.17.1",
     "d3-array": "^3.2.4",
     "d3-delaunay": "^6.0.4",
