@@ -103,6 +103,8 @@ interface Props {
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
+  showColorScale?: boolean;
   /** Toggle if the is a arrow head at the end of the connector */
   arrowConnector?: boolean;
   /** Stroke width of the connector */
@@ -207,6 +209,8 @@ export function DumbbellChart(props: Props) {
     filterNA,
     animate,
     precision,
+    showColorScale,
+    customLayers,
   } = props;
 
   if (orientation === 'vertical')
@@ -267,6 +271,8 @@ export function DumbbellChart(props: Props) {
         filterNA={filterNA}
         animate={animate}
         precision={precision}
+        showColorScale={showColorScale}
+        customLayers={customLayers}
       />
     );
   return (
@@ -326,6 +332,8 @@ export function DumbbellChart(props: Props) {
       filterNA={filterNA}
       animate={animate}
       precision={precision}
+      showColorScale={showColorScale}
+      customLayers={customLayers}
     />
   );
 }

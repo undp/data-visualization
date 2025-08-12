@@ -47,6 +47,7 @@ interface Props {
   radius?: number;
   relativeHeight?: number;
   showLabels?: boolean;
+  showColorScale?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -142,6 +143,7 @@ export function HorizontalDumbbellChart(props: Props) {
     animate = false,
     precision = 2,
     customLayers = [],
+    showColorScale = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -227,14 +229,16 @@ export function HorizontalDumbbellChart(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  <ColorLegendWithMouseOver
-                    width={width}
-                    colorDomain={colorDomain}
-                    colors={colors}
-                    colorLegendTitle={colorLegendTitle}
-                    setSelectedColor={setSelectedColor}
-                    showNAColor={false}
-                  />
+                  {showColorScale ? (
+                    <ColorLegendWithMouseOver
+                      width={width}
+                      colorDomain={colorDomain}
+                      colors={colors}
+                      colorLegendTitle={colorLegendTitle}
+                      setSelectedColor={setSelectedColor}
+                      showNAColor={false}
+                    />
+                  ) : null}
                   <div
                     className='flex grow w-full justify-center leading-0'
                     ref={graphDiv}

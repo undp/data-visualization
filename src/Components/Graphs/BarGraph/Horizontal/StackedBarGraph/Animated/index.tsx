@@ -53,6 +53,7 @@ interface Props {
   refValues?: ReferenceDataType[];
   graphID?: string;
   maxValue?: number;
+  showColorScale?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   graphDownload?: boolean;
@@ -118,6 +119,7 @@ export function AnimatedHorizontalStackedBarChart(props: Props) {
     showOnlyActiveDate = false,
     autoPlay = false,
     autoSort = true,
+    showColorScale = true,
     language = 'en',
     minHeight = 0,
     theme = 'light',
@@ -271,14 +273,16 @@ export function AnimatedHorizontalStackedBarChart(props: Props) {
               />
             </div>
             <div className='grow flex flex-col justify-center gap-3 w-full'>
-              <ColorLegendWithMouseOver
-                width={width}
-                colorDomain={colorDomain}
-                colors={colors}
-                colorLegendTitle={colorLegendTitle}
-                setSelectedColor={setSelectedColor}
-                showNAColor={false}
-              />
+              {showColorScale ? (
+                <ColorLegendWithMouseOver
+                  width={width}
+                  colorDomain={colorDomain}
+                  colors={colors}
+                  colorLegendTitle={colorLegendTitle}
+                  setSelectedColor={setSelectedColor}
+                  showNAColor={false}
+                />
+              ) : null}
               <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                 {(width || svgWidth) && (height || svgHeight) ? (
                   <Graph

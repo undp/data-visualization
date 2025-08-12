@@ -431,6 +431,8 @@ interface GroupedBarChartProps {
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
+  showColorScale?: boolean;
   /** Title for the bar axis */
   barAxisTitle?: string;
   /** Specifies the number of decimal places to display in the value. */
@@ -520,6 +522,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     animate,
     precision,
     customLayers,
+    showColorScale,
   } = props;
 
   if (orientation === 'vertical')
@@ -575,6 +578,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
         animate={animate}
         precision={precision}
         customLayers={customLayers}
+        showColorScale={showColorScale}
       />
     );
   return (
@@ -629,6 +633,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       animate={animate}
       precision={precision}
       customLayers={customLayers}
+      showColorScale={showColorScale}
     />
   );
 }
@@ -720,6 +725,8 @@ interface StackedBarChartProps {
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
+  showColorScale?: boolean;
   /** Title for the bar axis */
   barAxisTitle?: string;
   /** Parameter to sort the data. If a number is provided, it refers to the index of the size array to determine which value to sort by. If set to total, it sorts by the sum of all the values. */
@@ -817,6 +824,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     animate,
     precision,
     customLayers,
+    showColorScale,
   } = props;
 
   if (orientation === 'vertical')
@@ -874,6 +882,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
         animate={animate}
         precision={precision}
         customLayers={customLayers}
+        showColorScale={showColorScale}
       />
     );
   return (
@@ -930,6 +939,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       animate={animate}
       precision={precision}
       customLayers={customLayers}
+      showColorScale={showColorScale}
     />
   );
 }

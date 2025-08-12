@@ -70,6 +70,7 @@ interface Props {
   maxBarThickness?: number;
   minBarThickness?: number;
   ariaLabel?: string;
+  showColorScale?: boolean;
   resetSelectionOnDoubleClick?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
@@ -140,6 +141,7 @@ export function AnimatedHorizontalDumbbellChart(props: Props) {
     refValues,
     precision = 2,
     customLayers = [],
+    showColorScale = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -277,14 +279,16 @@ export function AnimatedHorizontalDumbbellChart(props: Props) {
               />
             </div>
             <div className='grow flex flex-col justify-center gap-3 w-full'>
-              <ColorLegendWithMouseOver
-                width={width}
-                colorDomain={colorDomain}
-                colors={colors}
-                colorLegendTitle={colorLegendTitle}
-                setSelectedColor={setSelectedColor}
-                showNAColor={false}
-              />
+              {showColorScale ? (
+                <ColorLegendWithMouseOver
+                  width={width}
+                  colorDomain={colorDomain}
+                  colors={colors}
+                  colorLegendTitle={colorLegendTitle}
+                  setSelectedColor={setSelectedColor}
+                  showNAColor={false}
+                />
+              ) : null}
               <div
                 className='flex grow w-full justify-center leading-0'
                 ref={graphDiv}

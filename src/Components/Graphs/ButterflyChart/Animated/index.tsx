@@ -40,10 +40,8 @@ interface Props {
   ariaLabel?: string;
 
   // Colors and Styling
-  /** Color for the left bars */
-  leftBarColor?: string;
-  /** Color for the right bars */
-  rightBarColor?: string;
+  /** Color for the left and right bars */
+  barColors?: [string, string];
   /** Title for the color legend */
   colorLegendTitle?: string;
   /** Background color of the graph */
@@ -156,8 +154,10 @@ export function AnimatedButterflyChart(props: Props) {
     width,
     footNote,
     padding,
-    leftBarColor = Colors.light.categoricalColors.colors[0],
-    rightBarColor = Colors.light.categoricalColors.colors[1],
+    barColors = [
+      Colors.light.categoricalColors.colors[0],
+      Colors.light.categoricalColors.colors[1],
+    ],
     backgroundColor = false,
     leftMargin = 20,
     rightMargin = 20,
@@ -337,7 +337,7 @@ export function AnimatedButterflyChart(props: Props) {
                 <ColorLegend
                   colorLegendTitle={colorLegendTitle}
                   colorDomain={[leftBarTitle, rightBarTitle]}
-                  colors={[leftBarColor, rightBarColor]}
+                  colors={barColors}
                   showNAColor={false}
                 />
               ) : null}
@@ -349,7 +349,7 @@ export function AnimatedButterflyChart(props: Props) {
                 {(width || svgWidth) && (height || svgHeight) ? (
                   <Graph
                     data={data}
-                    barColors={[leftBarColor, rightBarColor]}
+                    barColors={barColors}
                     width={width || svgWidth}
                     centerGap={centerGap}
                     height={Math.max(

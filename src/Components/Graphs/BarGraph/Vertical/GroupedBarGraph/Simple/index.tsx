@@ -36,6 +36,7 @@ interface Props {
   showTicks?: boolean;
   colorDomain: string[];
   colorLegendTitle?: string;
+  showColorScale?: boolean;
   labelOrder?: string[];
   truncateBy?: number;
   backgroundColor?: string | boolean;
@@ -125,6 +126,7 @@ export function VerticalGroupedBarGraph(props: Props) {
     styles,
     classNames,
     filterNA = true,
+    showColorScale = true,
     animate = false,
     precision = 2,
     customLayers = [],
@@ -210,14 +212,16 @@ export function VerticalGroupedBarGraph(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  <ColorLegendWithMouseOver
-                    width={width}
-                    colorDomain={colorDomain}
-                    colors={colors}
-                    colorLegendTitle={colorLegendTitle}
-                    setSelectedColor={setSelectedColor}
-                    showNAColor={false}
-                  />
+                  {showColorScale ? (
+                    <ColorLegendWithMouseOver
+                      width={width}
+                      colorDomain={colorDomain}
+                      colors={colors}
+                      colorLegendTitle={colorLegendTitle}
+                      setSelectedColor={setSelectedColor}
+                      showNAColor={false}
+                    />
+                  ) : null}
                   <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                     {(width || svgWidth) && (height || svgHeight) ? (
                       <Graph

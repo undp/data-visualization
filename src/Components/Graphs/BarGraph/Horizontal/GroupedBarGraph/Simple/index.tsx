@@ -44,6 +44,7 @@ interface Props {
   showLabels?: boolean;
   bottomMargin?: number;
   relativeHeight?: number;
+  showColorScale?: boolean;
   minHeight?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tooltip?: string | ((_d: any) => React.ReactNode);
@@ -94,6 +95,7 @@ export function HorizontalGroupedBarGraph(props: Props) {
     suffix = '',
     prefix = '',
     showValues = true,
+    showColorScale = true,
     padding,
     backgroundColor = false,
     leftMargin = 100,
@@ -211,14 +213,16 @@ export function HorizontalGroupedBarGraph(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  <ColorLegendWithMouseOver
-                    width={width}
-                    colorDomain={colorDomain}
-                    colors={colors}
-                    colorLegendTitle={colorLegendTitle}
-                    setSelectedColor={setSelectedColor}
-                    showNAColor={false}
-                  />
+                  {showColorScale ? (
+                    <ColorLegendWithMouseOver
+                      width={width}
+                      colorDomain={colorDomain}
+                      colors={colors}
+                      colorLegendTitle={colorLegendTitle}
+                      setSelectedColor={setSelectedColor}
+                      showNAColor={false}
+                    />
+                  ) : null}
                   <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                     {(width || svgWidth) && (height || svgHeight) ? (
                       <Graph

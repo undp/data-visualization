@@ -34,6 +34,7 @@ interface Props {
   showTicks?: boolean;
   leftMargin?: number;
   rightMargin?: number;
+  showColorScale?: boolean;
   truncateBy?: number;
   colorDomain: string[];
   colorLegendTitle?: string;
@@ -129,6 +130,7 @@ export function AnimatedVerticalStackedBarChart(props: Props) {
     detailsOnClick,
     barAxisTitle,
     noOfTicks = 5,
+    showColorScale = true,
     valueColor,
     styles,
     classNames,
@@ -270,14 +272,16 @@ export function AnimatedVerticalStackedBarChart(props: Props) {
               />
             </div>
             <div className='grow flex flex-col justify-center gap-3 w-full'>
-              <ColorLegendWithMouseOver
-                width={width}
-                colorDomain={colorDomain}
-                colors={colors}
-                colorLegendTitle={colorLegendTitle}
-                setSelectedColor={setSelectedColor}
-                showNAColor={false}
-              />
+              {showColorScale ? (
+                <ColorLegendWithMouseOver
+                  width={width}
+                  colorDomain={colorDomain}
+                  colors={colors}
+                  colorLegendTitle={colorLegendTitle}
+                  setSelectedColor={setSelectedColor}
+                  showNAColor={false}
+                />
+              ) : null}
               <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                 {(width || svgWidth) && (height || svgHeight) ? (
                   <Graph

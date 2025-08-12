@@ -596,18 +596,17 @@ export function GriddedGraphs(props: Props) {
                     ))}
                   </div>
                 ) : null}
-                {showCommonColorScale !== false &&
-                graphSettings?.colorDomain &&
-                graphSettings?.showColorScale !== false ? (
+                {showCommonColorScale !== false && graphSettings?.showColorScale !== false ? (
                   <ColorLegend
                     width={graphSettings?.width}
                     colorLegendTitle={graphSettings?.colorLegendTitle}
                     colors={
                       (graphSettings?.colors as string[] | undefined) ||
+                      (graphSettings?.lineColors as string[] | undefined) ||
                       Colors[(graphSettings?.theme as 'light' | 'dark' | undefined) || 'light']
                         .categoricalColors.colors
                     }
-                    colorDomain={graphSettings?.colorDomain}
+                    colorDomain={graphSettings?.colorDomain || graphSettings?.labels || []}
                     showNAColor={
                       graphSettings?.showNAColor === undefined ||
                       graphSettings?.showNAColor === null

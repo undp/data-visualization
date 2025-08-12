@@ -81,8 +81,6 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
-    leftBarColor: { control: 'color' },
-    rightBarColor: { control: 'color' },
     styles: { table: { type: { detail: STYLE_OBJECT } } },
     classNames: { table: { type: { detail: CLASS_NAME_OBJECT } } },
 

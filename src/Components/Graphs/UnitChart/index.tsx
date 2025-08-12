@@ -208,7 +208,7 @@ export function UnitChart(props: Props) {
                     style={{ width: width ? `${width}px` : '100%' }}
                     aria-label='Color legend'
                   >
-                    <div className='flex mb-0 flex-wrap gap-x-1 gap-y-4'>
+                    <div className='flex mb-0 flex-wrap gap-x-4 gap-y-1'>
                       {data.map((d, i) => (
                         <div className='flex gap-2 items-center' key={i}>
                           <div

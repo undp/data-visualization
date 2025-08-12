@@ -38,6 +38,7 @@ interface Props {
   suffix?: string;
   prefix?: string;
   showValues?: boolean;
+  showColorScale?: boolean;
   backgroundColor?: string | boolean;
   padding?: string;
   leftMargin?: number;
@@ -96,6 +97,7 @@ export function AnimatedHorizontalGroupedBarGraph(props: Props) {
     suffix = '',
     prefix = '',
     showValues = true,
+    showColorScale = true,
     padding,
     backgroundColor = false,
     leftMargin = 100,
@@ -266,14 +268,16 @@ export function AnimatedHorizontalGroupedBarGraph(props: Props) {
               />
             </div>
             <div className='grow flex flex-col justify-center gap-3 w-full'>
-              <ColorLegendWithMouseOver
-                width={width}
-                colorDomain={colorDomain}
-                colors={colors}
-                colorLegendTitle={colorLegendTitle}
-                setSelectedColor={setSelectedColor}
-                showNAColor={false}
-              />
+              {showColorScale ? (
+                <ColorLegendWithMouseOver
+                  width={width}
+                  colorDomain={colorDomain}
+                  colors={colors}
+                  colorLegendTitle={colorLegendTitle}
+                  setSelectedColor={setSelectedColor}
+                  showNAColor={false}
+                />
+              ) : null}
               <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                 {(width || svgWidth) && (height || svgHeight) ? (
                   <Graph

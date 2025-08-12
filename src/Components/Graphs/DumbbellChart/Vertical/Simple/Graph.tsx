@@ -375,7 +375,7 @@ export function Graph(props: Props) {
                           }}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           variants={{
-                            initial: { cy: y(el || 0), opacity: 0 },
+                            initial: { cy: y(0), opacity: 0 },
                             whileInView: {
                               cy: y(el || 0),
                               opacity: checkIfNullOrUndefined(el) ? 0 : 1,
@@ -402,7 +402,7 @@ export function Graph(props: Props) {
                             dy='0.33em'
                             exit={{ opacity: 0, transition: { duration: animate.duration } }}
                             variants={{
-                              initial: { y: y(el || 0), opacity: 0 },
+                              initial: { y: y(0), opacity: 0 },
                               whileInView: {
                                 y: y(el || 0),
                                 opacity: 1,

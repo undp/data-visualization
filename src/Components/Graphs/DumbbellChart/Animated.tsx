@@ -98,6 +98,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
+  showColorScale?: boolean;
   /** Toggle if the is a arrow head at the end of the connector */
   arrowConnector?: boolean;
   /** Stroke width of the connector */
@@ -205,6 +207,7 @@ export function AnimatedDumbbellChart(props: Props) {
     styles,
     classNames,
     precision,
+    showColorScale,
   } = props;
 
   if (orientation === 'vertical')
@@ -264,6 +267,7 @@ export function AnimatedDumbbellChart(props: Props) {
         valueColor={valueColor}
         classNames={classNames}
         precision={precision}
+        showColorScale={showColorScale}
       />
     );
   return (
@@ -322,6 +326,7 @@ export function AnimatedDumbbellChart(props: Props) {
       valueColor={valueColor}
       classNames={classNames}
       precision={precision}
+      showColorScale={showColorScale}
     />
   );
 }

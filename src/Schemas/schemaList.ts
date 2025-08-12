@@ -659,7 +659,6 @@ export const sankeyChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     highlightedSourceDataPoints: {
       type: 'array',
@@ -817,7 +816,6 @@ export const simpleBarChartSettingsSchema = {
     showColorScale: { type: 'boolean' },
     maxValue: { type: 'number' },
     minValue: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -959,6 +957,7 @@ export const groupedBarChartSettingsSchema = {
     footNote: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     width: { type: 'number' },
     height: { type: 'number' },
+    showColorScale: { type: 'boolean' },
     sources: {
       type: 'array',
       items: {
@@ -990,7 +989,6 @@ export const groupedBarChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -1124,6 +1122,7 @@ export const stackedBarChartSettingsSchema = {
     footNote: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     width: { type: 'number' },
     height: { type: 'number' },
+    showColorScale: { type: 'boolean' },
     ariaLabel: { type: 'string' },
     sources: {
       type: 'array',
@@ -1156,7 +1155,6 @@ export const stackedBarChartSettingsSchema = {
     showLabels: { type: 'boolean' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -1292,7 +1290,6 @@ export const animatedSimpleBarChartSettingsSchema = {
     showColorScale: { type: 'boolean' },
     maxValue: { type: 'number' },
     minValue: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -1405,6 +1402,7 @@ export const animatedGroupedBarChartSettingsSchema = {
     footNote: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     width: { type: 'number' },
     height: { type: 'number' },
+    showColorScale: { type: 'boolean' },
     sources: {
       type: 'array',
       items: {
@@ -1436,7 +1434,6 @@ export const animatedGroupedBarChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     maxBarThickness: { type: 'number' },
     refValues: {
       type: 'array',
@@ -1541,6 +1538,7 @@ export const animatedStackedBarChartSettingsSchema = {
     footNote: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     width: { type: 'number' },
     height: { type: 'number' },
+    showColorScale: { type: 'boolean' },
     sources: {
       type: 'array',
       items: {
@@ -1572,7 +1570,6 @@ export const animatedStackedBarChartSettingsSchema = {
     showLabels: { type: 'boolean' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -1732,7 +1729,6 @@ export const beeSwarmChartSettingsSchema = {
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
     showColorScale: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -1883,7 +1879,6 @@ export const butterflyChartSettingsSchema = {
     },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     graphDownload: { type: 'boolean' },
     dataDownload: { type: 'boolean' },
@@ -2007,7 +2002,6 @@ export const animatedButterflyChartSettingsSchema = {
     },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     graphDownload: { type: 'boolean' },
     dataDownload: { type: 'boolean' },
@@ -2156,7 +2150,6 @@ export const circlePackingSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     showColorScale: { type: 'boolean' },
     showValues: { type: 'boolean' },
     graphID: { type: 'string' },
@@ -2480,7 +2473,6 @@ export const radarChartSettingsSchema = {
     backgroundColor: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
     colorLegendTitle: { type: 'string' },
     padding: { type: 'string' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     graphDownload: { type: 'boolean' },
     dataDownload: { type: 'boolean' },
@@ -2587,7 +2579,6 @@ export const donutChartSettingsSchema = {
     showColorScale: { type: 'boolean' },
     backgroundColor: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
     padding: { type: 'string' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     graphDownload: { type: 'boolean' },
     dataDownload: { type: 'boolean' },
@@ -2726,6 +2717,7 @@ export const dumbbellChartSettingsSchema = {
     footNote: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     width: { type: 'number' },
     height: { type: 'number' },
+    showColorScale: { type: 'boolean' },
     suffix: { type: 'string' },
     prefix: { type: 'string' },
     sources: {
@@ -2758,7 +2750,6 @@ export const dumbbellChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     maxPositionValue: { type: 'number' },
     minPositionValue: { type: 'number' },
@@ -2883,6 +2874,7 @@ export const animatedDumbbellChartSettingsSchema = {
     showTicks: { type: 'boolean' },
     leftMargin: { type: 'number' },
     rightMargin: { type: 'number' },
+    showColorScale: { type: 'boolean' },
     topMargin: { type: 'number' },
     bottomMargin: { type: 'number' },
     truncateBy: { type: 'number' },
@@ -2897,7 +2889,6 @@ export const animatedDumbbellChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     maxPositionValue: { type: 'number' },
     minPositionValue: { type: 'number' },
@@ -3027,7 +3018,6 @@ export const heatMapSettingsSchema = {
     showRowLabels: { type: 'boolean' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     noDataColor: { type: 'string' },
     showColorScale: { type: 'boolean' },
@@ -3109,7 +3099,6 @@ export const histogramSettingsSchema = {
     minHeight: { type: 'number' },
     showLabels: { type: 'boolean' },
     maxValue: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -3251,7 +3240,6 @@ export const dualAxisLineChartSettingsSchema = {
     sameAxes: { type: 'boolean' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     highlightAreaSettings: {
       type: 'array',
       items: {
@@ -3407,7 +3395,6 @@ export const lineChartSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     theme: {
       type: 'string',
       enum: ['light', 'dark'],
@@ -3635,7 +3622,6 @@ export const lineChartWithConfidenceIntervalSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     theme: {
       type: 'string',
       enum: ['light', 'dark'],
@@ -3899,7 +3885,6 @@ export const differenceLineChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showColorLegendAtTop: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -4138,7 +4123,6 @@ export const multiLineChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     showColorLegendAtTop: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -4372,7 +4356,6 @@ export const multiLineAltChartSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -4600,7 +4583,6 @@ export const sparkLineSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     maxValue: { type: 'number' },
     minValue: { type: 'number' },
@@ -4745,7 +4727,6 @@ export const choroplethMapSettingsSchema = {
     minHeight: { type: 'number' },
     padding: { type: 'string' },
     isWorldMap: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     showColorScale: { type: 'boolean' },
     zoomScaleExtend: {
       type: 'array',
@@ -4909,7 +4890,6 @@ export const biVariateChoroplethMapSettingsSchema = {
     mapBorderColor: { type: 'string' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     isWorldMap: { type: 'boolean' },
     zoomScaleExtend: {
       type: 'array',
@@ -5073,7 +5053,6 @@ export const dotDensityMapSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     isWorldMap: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     showColorScale: { type: 'boolean' },
     zoomScaleExtend: {
       type: 'array',
@@ -5212,7 +5191,6 @@ export const animatedChoroplethMapSettingsSchema = {
     minHeight: { type: 'number' },
     padding: { type: 'string' },
     isWorldMap: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     showColorScale: { type: 'boolean' },
     zoomScaleExtend: {
       type: 'array',
@@ -5351,7 +5329,6 @@ export const animatedBiVariateChoroplethMapSettingsSchema = {
     mapBorderColor: { type: 'string' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     isWorldMap: { type: 'boolean' },
     zoomScaleExtend: {
       type: 'array',
@@ -5490,7 +5467,6 @@ export const animatedDotDensityMapSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     isWorldMap: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     showColorScale: { type: 'boolean' },
     zoomScaleExtend: {
       type: 'array',
@@ -5879,7 +5855,6 @@ export const paretoChartSettingsSchema = {
     sameAxes: { type: 'boolean' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphID: { type: 'string' },
     graphDownload: { type: 'boolean' },
     dataDownload: { type: 'boolean' },
@@ -6015,7 +5990,6 @@ export const scatterPlotSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refXValues: {
       type: 'array',
       items: {
@@ -6261,7 +6235,6 @@ export const animatedScatterPlotSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refXValues: {
       type: 'array',
       items: {
@@ -6541,7 +6514,6 @@ export const slopeChartSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     highlightedDataPoints: {
       type: 'array',
       items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
@@ -6645,7 +6617,6 @@ export const stackedAreaChartSettingsSchema = {
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
     bottomMargin: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -6957,7 +6928,6 @@ export const stripChartSettingsSchema = {
     bottomMargin: { type: 'number' },
     relativeHeight: { type: 'number' },
     minHeight: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     highlightedDataPoints: {
       type: 'array',
       items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
@@ -7084,7 +7054,6 @@ export const treeMapSettingsSchema = {
     topMargin: { type: 'number' },
     bottomMargin: { type: 'number' },
     showLabels: { type: 'boolean' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     showColorScale: { type: 'boolean' },
     showValues: { type: 'boolean' },
     graphID: { type: 'string' },
@@ -7300,7 +7269,6 @@ export const bulletChartSettingsSchema = {
     showColorScale: { type: 'boolean' },
     maxValue: { type: 'number' },
     minValue: { type: 'number' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     refValues: {
       type: 'array',
       items: {
@@ -7951,7 +7919,6 @@ export const SettingsSchema = {
     strokeWidth: { type: 'number' },
     subNote: { type: 'string' },
     suffix: { type: 'string' },
-    tooltip: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     topMargin: { type: 'number' },
     totalNoOfDots: { type: 'number' },
     truncateBy: { type: 'number' },

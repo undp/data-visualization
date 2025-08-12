@@ -78,6 +78,7 @@ interface Props {
   filterNA?: boolean;
   animate?: boolean | AnimateDataType;
   precision?: number;
+  showColorScale?: boolean;
   customLayers?: CustomLayerDataType[];
 }
 
@@ -123,6 +124,7 @@ export function HorizontalStackedBarGraph(props: Props) {
     sortParameter,
     maxNumberOfBars,
     minBarThickness,
+    showColorScale = true,
     ariaLabel,
     resetSelectionOnDoubleClick = true,
     detailsOnClick,
@@ -217,14 +219,16 @@ export function HorizontalStackedBarGraph(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  <ColorLegendWithMouseOver
-                    width={width}
-                    colorDomain={colorDomain}
-                    colors={colors}
-                    colorLegendTitle={colorLegendTitle}
-                    setSelectedColor={setSelectedColor}
-                    showNAColor={false}
-                  />
+                  {showColorScale ? (
+                    <ColorLegendWithMouseOver
+                      width={width}
+                      colorDomain={colorDomain}
+                      colors={colors}
+                      colorLegendTitle={colorLegendTitle}
+                      setSelectedColor={setSelectedColor}
+                      showNAColor={false}
+                    />
+                  ) : null}
                   <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                     {(width || svgWidth) && (height || svgHeight) ? (
                       <Graph

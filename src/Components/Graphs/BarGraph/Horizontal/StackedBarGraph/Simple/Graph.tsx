@@ -273,46 +273,50 @@ export function Graph(props: Props) {
                           animate={isInView ? 'whileInView' : 'initial'}
                         />
                       ) : null}
-                      <motion.text
-                        y={y.bandwidth() / 2}
-                        style={{
-                          textAnchor: 'middle',
-                          ...(styles?.graphObjectValues || {}),
-                        }}
-                        dy='0.33em'
-                        className={cn('graph-value text-sm', classNames?.graphObjectValues)}
-                        exit={{
-                          opacity: 0,
-                          transition: { duration: animate.duration },
-                        }}
-                        variants={{
-                          initial: {
-                            x: x(0),
+                      {showValues ? (
+                        <motion.text
+                          y={y.bandwidth() / 2}
+                          style={{
+                            textAnchor: 'middle',
+                            ...(styles?.graphObjectValues || {}),
+                          }}
+                          dy='0.33em'
+                          className={cn('graph-value text-sm', classNames?.graphObjectValues)}
+                          exit={{
                             opacity: 0,
-                            fill: getTextColorBasedOnBgColor(barColors[j]),
-                          },
-                          whileInView: {
-                            x:
-                              x(
-                                j === 0 ? 0 : sum(d.size.filter((element, k) => k < j && element)),
-                              ) +
-                              x(el || 0) / 2,
-                            opacity:
-                              el &&
-                              x(el) /
-                                numberFormattingFunction(el, precision, prefix, suffix).length >
-                                12
-                                ? 1
-                                : 0,
-                            fill: getTextColorBasedOnBgColor(barColors[j]),
                             transition: { duration: animate.duration },
-                          },
-                        }}
-                        initial='initial'
-                        animate={isInView ? 'whileInView' : 'initial'}
-                      >
-                        {numberFormattingFunction(el, precision, prefix, suffix)}
-                      </motion.text>
+                          }}
+                          variants={{
+                            initial: {
+                              x: x(0),
+                              opacity: 0,
+                              fill: getTextColorBasedOnBgColor(barColors[j]),
+                            },
+                            whileInView: {
+                              x:
+                                x(
+                                  j === 0
+                                    ? 0
+                                    : sum(d.size.filter((element, k) => k < j && element)),
+                                ) +
+                                x(el || 0) / 2,
+                              opacity:
+                                el &&
+                                x(el) /
+                                  numberFormattingFunction(el, precision, prefix, suffix).length >
+                                  12
+                                  ? 1
+                                  : 0,
+                              fill: getTextColorBasedOnBgColor(barColors[j]),
+                              transition: { duration: animate.duration },
+                            },
+                          }}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
+                        >
+                          {numberFormattingFunction(el, precision, prefix, suffix)}
+                        </motion.text>
+                      ) : null}
                     </motion.g>
                   ))}
                   {showLabels ? (

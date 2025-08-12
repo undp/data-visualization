@@ -32,6 +32,7 @@ interface Props {
   sources?: SourcesDataType[];
   barPadding?: number;
   showTicks?: boolean;
+  showColorScale?: boolean;
   leftMargin?: number;
   rightMargin?: number;
   topMargin?: number;
@@ -140,6 +141,7 @@ export function AnimatedVerticalDumbbellChart(props: Props) {
     refValues,
     precision = 2,
     customLayers = [],
+    showColorScale = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -277,14 +279,16 @@ export function AnimatedVerticalDumbbellChart(props: Props) {
               />
             </div>
             <div className='grow flex flex-col justify-center gap-3 w-full'>
-              <ColorLegendWithMouseOver
-                width={width}
-                colorDomain={colorDomain}
-                colors={colors}
-                colorLegendTitle={colorLegendTitle}
-                setSelectedColor={setSelectedColor}
-                showNAColor={false}
-              />
+              {showColorScale ? (
+                <ColorLegendWithMouseOver
+                  width={width}
+                  colorDomain={colorDomain}
+                  colors={colors}
+                  colorLegendTitle={colorLegendTitle}
+                  setSelectedColor={setSelectedColor}
+                  showNAColor={false}
+                />
+              ) : null}
               <div
                 className='flex grow w-full justify-center leading-0'
                 ref={graphDiv}

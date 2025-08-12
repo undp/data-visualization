@@ -75,6 +75,7 @@ interface Props {
   noOfTicks?: number;
   valueColor?: string;
   labelOrder?: string[];
+  showColorScale?: boolean;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   refValues?: ReferenceDataType[];
@@ -142,6 +143,7 @@ export function VerticalDumbbellChart(props: Props) {
     animate = false,
     precision = 2,
     customLayers = [],
+    showColorScale = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -227,14 +229,16 @@ export function VerticalDumbbellChart(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  <ColorLegendWithMouseOver
-                    width={width}
-                    colorDomain={colorDomain}
-                    colors={colors}
-                    colorLegendTitle={colorLegendTitle}
-                    setSelectedColor={setSelectedColor}
-                    showNAColor={false}
-                  />
+                  {showColorScale ? (
+                    <ColorLegendWithMouseOver
+                      width={width}
+                      colorDomain={colorDomain}
+                      colors={colors}
+                      colorLegendTitle={colorLegendTitle}
+                      setSelectedColor={setSelectedColor}
+                      showNAColor={false}
+                    />
+                  ) : null}
                   <div
                     className='flex grow w-full justify-center leading-0'
                     ref={graphDiv}

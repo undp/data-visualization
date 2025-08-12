@@ -37,6 +37,7 @@ interface Props {
   showTicks?: boolean;
   colorDomain: string[];
   colorLegendTitle?: string;
+  showColorScale?: boolean;
   truncateBy?: number;
   backgroundColor?: string | boolean;
   padding?: string;
@@ -98,6 +99,7 @@ export function VerticalStackedBarGraph(props: Props) {
     showLabels = true,
     showValues = true,
     backgroundColor = false,
+    showColorScale = true,
     suffix = '',
     prefix = '',
     height,
@@ -214,14 +216,16 @@ export function VerticalStackedBarGraph(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  <ColorLegendWithMouseOver
-                    width={width}
-                    colorDomain={colorDomain}
-                    colors={colors}
-                    colorLegendTitle={colorLegendTitle}
-                    setSelectedColor={setSelectedColor}
-                    showNAColor={false}
-                  />
+                  {showColorScale ? (
+                    <ColorLegendWithMouseOver
+                      width={width}
+                      colorDomain={colorDomain}
+                      colors={colors}
+                      colorLegendTitle={colorLegendTitle}
+                      setSelectedColor={setSelectedColor}
+                      showNAColor={false}
+                    />
+                  ) : null}
                   <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                     {(width || svgWidth) && (height || svgHeight) ? (
                       <Graph
