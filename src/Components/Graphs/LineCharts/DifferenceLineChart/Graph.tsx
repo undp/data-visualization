@@ -520,8 +520,6 @@ export function Graph(props: Props) {
                   <>
                     {showDots ? (
                       <motion.circle
-                        cx={x(d.date)}
-                        cy={y(d.y1)}
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -532,10 +530,12 @@ export function Graph(props: Props) {
                         style={{ fill: lineColors[0] }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0 },
+                          initial: { opacity: 0, cx: x(d.date), cy: y(d.y1) },
                           whileInView: {
                             opacity: 1,
                             transition: { duration: 0.5, delay: animate.duration },
+                            cx: x(d.date),
+                            cy: y(d.y1),
                           },
                         }}
                         initial='initial'
@@ -576,8 +576,6 @@ export function Graph(props: Props) {
                   <>
                     {showDots ? (
                       <motion.circle
-                        cx={x(d.date)}
-                        cy={y(d.y2)}
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -588,10 +586,12 @@ export function Graph(props: Props) {
                         style={{ fill: lineColors[1] }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0 },
+                          initial: { opacity: 0, cx: x(d.date), cy: y(d.y2) },
                           whileInView: {
                             opacity: 1,
                             transition: { duration: 0.5, delay: animate.duration },
+                            cx: x(d.date),
+                            cy: y(d.y2),
                           },
                         }}
                         initial='initial'

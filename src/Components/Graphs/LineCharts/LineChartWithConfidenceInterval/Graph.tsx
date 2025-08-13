@@ -474,8 +474,6 @@ export function Graph(props: Props) {
                   <>
                     {showDots ? (
                       <motion.circle
-                        cx={x(d.date)}
-                        cy={y(d.y)}
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -486,10 +484,12 @@ export function Graph(props: Props) {
                         style={{ fill: lineColor }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0 },
+                          initial: { opacity: 0, cx: x(d.date), cy: y(d.y) },
                           whileInView: {
                             opacity: 1,
                             transition: { duration: 0.5, delay: animate.duration },
+                            cx: x(d.date),
+                            cy: y(d.y),
                           },
                         }}
                         initial='initial'
@@ -499,8 +499,6 @@ export function Graph(props: Props) {
                     {showIntervalDots ? (
                       <>
                         <motion.circle
-                          cx={x(d.date)}
-                          cy={y(d.yMin)}
                           r={
                             graphWidth / dataFormatted.length < 5
                               ? 0
@@ -511,18 +509,18 @@ export function Graph(props: Props) {
                           style={{ fill: intervalLineColors[0] }}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           variants={{
-                            initial: { opacity: 0 },
+                            initial: { opacity: 0, cx: x(d.date), cy: y(d.yMin) },
                             whileInView: {
                               opacity: 1,
                               transition: { duration: 0.5, delay: animate.duration },
+                              cx: x(d.date),
+                              cy: y(d.yMin),
                             },
                           }}
                           initial='initial'
                           animate={isInView ? 'whileInView' : 'initial'}
                         />
                         <motion.circle
-                          cx={x(d.date)}
-                          cy={y(d.yMax)}
                           r={
                             graphWidth / dataFormatted.length < 5
                               ? 0
@@ -533,10 +531,12 @@ export function Graph(props: Props) {
                           style={{ fill: intervalLineColors[1] }}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           variants={{
-                            initial: { opacity: 0 },
+                            initial: { opacity: 0, cx: x(d.date), cy: y(d.yMax) },
                             whileInView: {
                               opacity: 1,
                               transition: { duration: 0.5, delay: animate.duration },
+                              cx: x(d.date),
+                              cy: y(d.yMax),
                             },
                           }}
                           initial='initial'

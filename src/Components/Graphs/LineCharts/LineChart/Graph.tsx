@@ -382,8 +382,6 @@ export function Graph(props: Props) {
                   <>
                     {showDots ? (
                       <motion.circle
-                        cx={x(d.date)}
-                        cy={y(d.y as number)}
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -394,10 +392,12 @@ export function Graph(props: Props) {
                         style={{ fill: lineColor }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0 },
+                          initial: { opacity: 0, cx: x(d.date), cy: y(d.y as number) },
                           whileInView: {
                             opacity: 1,
                             transition: { duration: 0.5, delay: animate.duration },
+                            cx: x(d.date),
+                            cy: y(d.y as number),
                           },
                         }}
                         initial='initial'
