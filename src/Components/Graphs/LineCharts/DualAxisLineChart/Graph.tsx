@@ -111,6 +111,19 @@ export function Graph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
+  const [hasAnimatedOnce, setHasAnimatedOnce] = useState(false);
+
+  useEffect(() => {
+    if (isInView && !hasAnimatedOnce) {
+      const timeout = setTimeout(
+        () => {
+          setHasAnimatedOnce(true);
+        },
+        (animate.duration + 0.5) * 1000,
+      );
+      return () => clearTimeout(timeout);
+    }
+  }, [isInView, hasAnimatedOnce, animate.duration]);
   const curve =
     curveType === 'linear'
       ? curveLinear
@@ -479,7 +492,10 @@ export function Graph(props: Props) {
                           initial: { opacity: 0, cx: x(d.date), cy: y1(d.y1 as number) },
                           whileInView: {
                             opacity: 1,
-                            transition: { duration: 0.5, delay: animate.duration },
+                            transition: {
+                              duration: hasAnimatedOnce ? animate.duration : 0.5,
+                              delay: hasAnimatedOnce ? 0 : animate.duration,
+                            },
                             cx: x(d.date),
                             cy: y1(d.y1 as number),
                           },
@@ -490,8 +506,6 @@ export function Graph(props: Props) {
                     ) : null}
                     {showValues ? (
                       <motion.text
-                        x={x(d.date)}
-                        y={y1(d.y1 as number)}
                         dy={
                           checkIfNullOrUndefined(d.y2)
                             ? -8
@@ -510,10 +524,15 @@ export function Graph(props: Props) {
                         )}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0 },
+                          initial: { opacity: 0, x: x(d.date), y: y2(d.y1 as number) },
                           whileInView: {
                             opacity: 1,
-                            transition: { duration: 0.5, delay: animate.duration },
+                            x: x(d.date),
+                            y: y2(d.y1 as number),
+                            transition: {
+                              duration: hasAnimatedOnce ? animate.duration : 0.5,
+                              delay: hasAnimatedOnce ? 0 : animate.duration,
+                            },
                           },
                         }}
                         initial='initial'
@@ -546,7 +565,10 @@ export function Graph(props: Props) {
                           initial: { opacity: 0, cx: x(d.date), cy: y2(d.y2 as number) },
                           whileInView: {
                             opacity: 1,
-                            transition: { duration: 0.5, delay: animate.duration },
+                            transition: {
+                              duration: hasAnimatedOnce ? animate.duration : 0.5,
+                              delay: hasAnimatedOnce ? 0 : animate.duration,
+                            },
                             cx: x(d.date),
                             cy: y2(d.y2 as number),
                           },
@@ -557,8 +579,6 @@ export function Graph(props: Props) {
                     ) : null}
                     {showValues ? (
                       <motion.text
-                        x={x(d.date)}
-                        y={y2(d.y2 as number)}
                         dy={
                           checkIfNullOrUndefined(d.y1)
                             ? -8
@@ -577,10 +597,15 @@ export function Graph(props: Props) {
                         )}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0 },
+                          initial: { opacity: 0, x: x(d.date), y: y2(d.y2 as number) },
                           whileInView: {
                             opacity: 1,
-                            transition: { duration: 0.5, delay: animate.duration },
+                            x: x(d.date),
+                            y: y2(d.y2 as number),
+                            transition: {
+                              duration: hasAnimatedOnce ? animate.duration : 0.5,
+                              delay: hasAnimatedOnce ? 0 : animate.duration,
+                            },
                           },
                         }}
                         initial='initial'

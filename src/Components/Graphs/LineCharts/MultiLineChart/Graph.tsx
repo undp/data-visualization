@@ -138,6 +138,19 @@ export function Graph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
+  const [hasAnimatedOnce, setHasAnimatedOnce] = useState(false);
+
+  useEffect(() => {
+    if (isInView && !hasAnimatedOnce) {
+      const timeout = setTimeout(
+        () => {
+          setHasAnimatedOnce(true);
+        },
+        (animate.duration + 0.5) * 1000,
+      );
+      return () => clearTimeout(timeout);
+    }
+  }, [isInView, hasAnimatedOnce, animate.duration]);
   const curve =
     curveType === 'linear'
       ? curveLinear
@@ -426,7 +439,10 @@ export function Graph(props: Props) {
                               initial: { opacity: 0, cx: x(el.date), cy: y(el.y as number) },
                               whileInView: {
                                 opacity: 1,
-                                transition: { duration: 0.5, delay: animate.duration },
+                                transition: {
+                                  duration: hasAnimatedOnce ? animate.duration : 0.5,
+                                  delay: hasAnimatedOnce ? 0 : animate.duration,
+                                },
                                 cx: x(el.date),
                                 cy: y(el.y as number),
                               },
@@ -437,8 +453,6 @@ export function Graph(props: Props) {
                         ) : null}
                         {showValues ? (
                           <motion.text
-                            x={x(el.date)}
-                            y={y(el.y as number)}
                             dy={-8}
                             style={{
                               fill: lineColors[i],
@@ -451,10 +465,15 @@ export function Graph(props: Props) {
                             )}
                             exit={{ opacity: 0, transition: { duration: animate.duration } }}
                             variants={{
-                              initial: { opacity: 0 },
+                              initial: { opacity: 0, x: x(el.date), y: y(el.y as number) },
                               whileInView: {
                                 opacity: 1,
-                                transition: { duration: 0.5, delay: animate.duration },
+                                x: x(el.date),
+                                y: y(el.y as number),
+                                transition: {
+                                  duration: hasAnimatedOnce ? animate.duration : 0.5,
+                                  delay: hasAnimatedOnce ? 0 : animate.duration,
+                                },
                               },
                             }}
                             initial='initial'
@@ -471,16 +490,23 @@ export function Graph(props: Props) {
                   <motion.text
                     style={{ fill: lineColors[i] }}
                     className='text-xs'
-                    x={x(d[d.length - 1].date)}
-                    y={y(d[d.length - 1].y as number)}
                     dx={5}
                     dy={4}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     variants={{
-                      initial: { opacity: 0 },
+                      initial: {
+                        opacity: 0,
+                        x: x(d[d.length - 1].date),
+                        y: y(d[d.length - 1].y as number),
+                      },
                       whileInView: {
                         opacity: 1,
-                        transition: { duration: 0.5, delay: animate.duration },
+                        x: x(d[d.length - 1].date),
+                        y: y(d[d.length - 1].y as number),
+                        transition: {
+                          duration: hasAnimatedOnce ? animate.duration : 0.5,
+                          delay: hasAnimatedOnce ? 0 : animate.duration,
+                        },
                       },
                     }}
                     initial='initial'
