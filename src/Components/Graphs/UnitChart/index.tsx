@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import sum from 'lodash.sum';
 import { cn, H2, P } from '@undp/design-system-react';
+import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -11,6 +12,7 @@ import {
   Languages,
   StyleObject,
   ClassNameObject,
+  AnimateDataType,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -66,6 +68,8 @@ interface Props {
   totalNoOfDots?: number;
   /** Toggle visibility of stroke for the unfilled dots */
   showStrokeForWhiteDots?: boolean;
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | AnimateDataType;
   /** Toggle visibility of color scale */
   showColorScale?: boolean;
   /** Specifies the number of decimal places to display in the value. */
@@ -113,8 +117,18 @@ export function UnitChart(props: Props) {
     ariaLabel,
     styles,
     classNames,
+    animate = false,
     precision = 2,
   } = props;
+  const svgRef = useRef(null);
+  const animateValue =
+    animate === true
+      ? { duration: 0.5, once: true, amount: 0.5 }
+      : animate || { duration: 0, once: true, amount: 0 };
+  const isInView = useInView(svgRef, {
+    once: animateValue.once,
+    amount: animateValue.amount,
+  });
   const totalValue = sum(data.map(d => d.value));
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const gridDimension = size / gridSize;
@@ -248,6 +262,7 @@ export function UnitChart(props: Props) {
                             radius +
                             5,
                     )}px`}
+                    ref={svgRef}
                     direction='ltr'
                     viewBox={`0 0 ${width || size} ${Math.max(
                       minHeight,
@@ -265,29 +280,50 @@ export function UnitChart(props: Props) {
                             5,
                     )}`}
                   >
-                    <g>
-                      {cellsData.map((d, i) => (
-                        <circle
-                          key={i}
-                          cx={(i % gridSize) * gridDimension + gridDimension / 2}
-                          cy={Math.floor(i / gridSize) * gridDimension + gridDimension / 2}
-                          style={{
-                            fill: d.color,
-                            ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
-                            strokeWidth: 1,
-                          }}
-                          className={
-                            (d.color.toLowerCase() === '#fff' ||
-                              d.color.toLowerCase() === '#ffffff' ||
-                              d.color.toLowerCase() === 'white') &&
-                            showStrokeForWhiteDots
-                              ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                              : ''
-                          }
-                          r={radius}
-                        />
-                      ))}
-                    </g>
+                    <AnimatePresence>
+                      <g>
+                        {cellsData.map((d, i) => (
+                          <motion.circle
+                            key={i}
+                            cx={(i % gridSize) * gridDimension + gridDimension / 2}
+                            cy={Math.floor(i / gridSize) * gridDimension + gridDimension / 2}
+                            style={{
+                              ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                              strokeWidth: 1,
+                            }}
+                            variants={{
+                              initial: {
+                                fill: '#fff',
+                                opacity: 0,
+                                ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                                strokeWidth: 1,
+                              },
+                              whileInView: {
+                                fill: d.color,
+                                opacity: 1,
+                                ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                                strokeWidth: 1,
+                                transition: {
+                                  duration: 0,
+                                  delay: (animateValue.duration / cellsData.length) * i,
+                                },
+                              },
+                            }}
+                            initial='initial'
+                            animate={isInView ? 'whileInView' : 'initial'}
+                            className={
+                              (d.color.toLowerCase() === '#fff' ||
+                                d.color.toLowerCase() === '#ffffff' ||
+                                d.color.toLowerCase() === 'white') &&
+                              showStrokeForWhiteDots
+                                ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                                : ''
+                            }
+                            r={radius}
+                          />
+                        ))}
+                      </g>
+                    </AnimatePresence>
                   </svg>
                 </div>
               </div>

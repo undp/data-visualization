@@ -7102,6 +7102,34 @@ export const unitChartSettingsSchema = {
     ariaLabel: { type: 'string' },
     gridSize: { type: 'number' },
     unitPadding: { type: 'number' },
+    animate: {
+      oneOf: [
+        {
+          type: 'object',
+          properties: {
+            duration: {
+              type: 'number',
+            },
+            once: {
+              type: 'boolean',
+            },
+            amount: {
+              anyOf: [
+                {
+                  type: 'string',
+                  enum: ['some', 'all'],
+                },
+                {
+                  type: 'number',
+                },
+              ],
+            },
+          },
+          required: ['duration', 'once', 'amount'],
+        },
+        { type: 'boolean' },
+      ],
+    },
     size: { type: 'number' },
     graphTitle: { oneOf: [{ type: 'string' }, { type: 'object' }] },
     graphDescription: { oneOf: [{ type: 'string' }, { type: 'object' }] },

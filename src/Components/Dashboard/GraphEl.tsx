@@ -1931,6 +1931,7 @@ function GraphEl(props: Props) {
           ariaLabel: settings?.ariaLabel,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          animate: settings?.animate,
         };
       case 'animatedBiVariateChoroplethMap':
         return {
