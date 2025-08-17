@@ -4113,6 +4113,21 @@ export const multiLineChartSettingsSchema = {
       items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
       minItems: 1,
     },
+    dashedLines: {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      minItems: 1,
+    },
+    dashSettings: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 1,
+    },
+    labelsToBeHidden: {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      minItems: 1,
+    },
     backgroundColor: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
     padding: { type: 'string' },
     leftMargin: { type: 'number' },
@@ -8106,6 +8121,21 @@ export const SettingsSchema = {
     },
     maxDate: {
       oneOf: [{ type: 'string' }, { type: 'number' }],
+    },
+    dashedLines: {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      minItems: 1,
+    },
+    dashSettings: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 1,
+    },
+    labelsToBeHidden: {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+      minItems: 1,
     },
     colorLegendColors: {
       type: 'array',

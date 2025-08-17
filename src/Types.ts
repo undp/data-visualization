@@ -924,6 +924,9 @@ export interface GraphSettingsDataType {
   dimmedOpacity?: number;
   precision?: number;
   customLayers?: CustomLayerDataType[];
+  dashedLines?: (string | number)[];
+  dashSettings?: string[];
+  labelsToBeHidden?: (string | number)[];
 }
 
 export interface InfoBoxDataType {

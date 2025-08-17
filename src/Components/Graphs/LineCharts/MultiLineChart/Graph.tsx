@@ -85,6 +85,9 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
+  dashedLines: (string | number)[];
+  dashSettings: string[];
+  labelsToBeHidden: (string | number)[];
 }
 
 interface FormattedDataType {
@@ -132,6 +135,9 @@ export function Graph(props: Props) {
     dimmedOpacity,
     precision,
     customLayers,
+    dashedLines,
+    dashSettings,
+    labelsToBeHidden,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -267,6 +273,24 @@ export function Graph(props: Props) {
         ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
+          <defs>
+            <clipPath id='reveal-clip'>
+              <motion.rect
+                x={0}
+                y={0}
+                height={graphHeight}
+                variants={{
+                  initial: { width: 0 },
+                  whileInView: {
+                    width: graphWidth, // Animate to full width
+                    transition: { duration: animate.duration },
+                  },
+                }}
+                initial='initial'
+                animate={isInView ? 'whileInView' : 'initial'}
+              />
+            </clipPath>
+          </defs>
           <HighlightArea
             areaSettings={highlightAreaSettingsFormatted}
             width={graphWidth}
@@ -395,10 +419,11 @@ export function Graph(props: Props) {
                     fill: 'none',
                     strokeWidth,
                   }}
+                  clipPath='url(#reveal-clip)'
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   variants={{
                     initial: {
-                      pathLength: 0,
+                      ...(dashedLines.length === 0 ? { pathLength: 0 } : {}),
                       d:
                         lineShape(
                           d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
@@ -407,7 +432,7 @@ export function Graph(props: Props) {
                       stroke: lineColors[i],
                     },
                     whileInView: {
-                      pathLength: 1,
+                      ...(dashedLines.length === 0 ? { pathLength: 1 } : {}),
                       d:
                         lineShape(
                           d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
@@ -417,6 +442,11 @@ export function Graph(props: Props) {
                       transition: { duration: animate.duration },
                     },
                   }}
+                  strokeDasharray={
+                    dashedLines.includes(labels[i])
+                      ? dashSettings[i % dashSettings.length]
+                      : undefined
+                  }
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                 />
@@ -486,7 +516,7 @@ export function Graph(props: Props) {
                     ) : null}
                   </g>
                 ))}
-                {showColorLegendAtTop ? null : (
+                {showColorLegendAtTop && labelsToBeHidden.includes(labels[i]) ? null : (
                   <motion.text
                     style={{ fill: lineColors[i] }}
                     className='text-xs'

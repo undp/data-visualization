@@ -63,6 +63,12 @@ interface Props {
   minHeight?: number;
   /** Relative height scaling factor. This overwrites the height props */
   relativeHeight?: number;
+  /** Array of labels of line which are dashed */
+  dashedLines?: (string | number)[];
+  /** Array of dash settings that define the dash style for the dashed line. If the length of the array is less than length of dashedLines then it loop around. */
+  dashSettings?: string[];
+  /** Defines which labels are hidden from the color scale and the graph */
+  labelsToBeHidden?: (string | number)[];
   /** Padding around the graph. Defaults to 0 if no backgroundColor is mentioned else defaults to 1rem */
   padding?: string;
   /** Left margin of the graph */
@@ -201,6 +207,9 @@ export function MultiLineChart(props: Props) {
     dimmedOpacity = 0.3,
     precision = 2,
     customLayers = [],
+    dashedLines = [],
+    dashSettings = ['5 5'],
+    labelsToBeHidden = [],
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -289,6 +298,7 @@ export function MultiLineChart(props: Props) {
                     <ColorLegend
                       colorDomain={labels}
                       colorLegendTitle={colorLegendTitle}
+                      labelsToBeHidden={labelsToBeHidden}
                       colors={lineColors}
                       showNAColor={false}
                     />
@@ -348,6 +358,9 @@ export function MultiLineChart(props: Props) {
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                         customLayers={customLayers}
+                        labelsToBeHidden={labelsToBeHidden}
+                        dashedLines={dashedLines}
+                        dashSettings={dashSettings}
                       />
                     ) : null}
                   </div>

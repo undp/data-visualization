@@ -797,6 +797,9 @@ function GraphEl(props: Props) {
           maxDate: settings?.maxDate,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          dashedLines: settings?.dashedLines,
+          dashSettings: settings?.dashSettings,
+          labelsToBeHidden: settings?.labelsToBeHidden,
         };
       case 'multiLineAltChart':
         return {
@@ -861,7 +864,7 @@ function GraphEl(props: Props) {
           theme: settings?.theme,
           data: graphData,
           curveType: settings?.curveType,
-          lineColors: settings?.colors as [string, string] | undefined,
+          lineColors: settings?.lineColors as [string, string] | undefined,
           diffAreaColors: settings?.diffAreaColors,
           graphTitle: settings?.graphTitle,
           graphDescription: settings?.graphDescription,
