@@ -42,6 +42,7 @@ function App() {
           },
         ]}
         labels={['Apples', 'Oranges']}
+        labelsToBeHidden={['Oranges']}
       />
     </>
   );

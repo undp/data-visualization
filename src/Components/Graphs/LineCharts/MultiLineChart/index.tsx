@@ -22,6 +22,7 @@ import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { ColorLegend } from '@/Components/Elements/ColorLegend';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
+import { generateRandomString } from '@/Utils/generateRandomString';
 
 interface Props {
   // Data
@@ -361,6 +362,7 @@ export function MultiLineChart(props: Props) {
                         labelsToBeHidden={labelsToBeHidden}
                         dashedLines={dashedLines}
                         dashSettings={dashSettings}
+                        revealClipId={generateRandomString(8)}
                       />
                     ) : null}
                   </div>

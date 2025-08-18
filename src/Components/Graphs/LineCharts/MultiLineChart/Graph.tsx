@@ -88,6 +88,7 @@ interface Props {
   dashedLines: (string | number)[];
   dashSettings: string[];
   labelsToBeHidden: (string | number)[];
+  revealClipId: string;
 }
 
 interface FormattedDataType {
@@ -138,6 +139,7 @@ export function Graph(props: Props) {
     dashedLines,
     dashSettings,
     labelsToBeHidden,
+    revealClipId,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -274,7 +276,7 @@ export function Graph(props: Props) {
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           <defs>
-            <clipPath id='reveal-clip'>
+            <clipPath id={revealClipId}>
               <motion.rect
                 x={0}
                 y={0}
@@ -282,7 +284,7 @@ export function Graph(props: Props) {
                 variants={{
                   initial: { width: 0 },
                   whileInView: {
-                    width: graphWidth, // Animate to full width
+                    width: graphWidth,
                     transition: { duration: animate.duration },
                   },
                 }}
@@ -419,7 +421,7 @@ export function Graph(props: Props) {
                     fill: 'none',
                     strokeWidth,
                   }}
-                  clipPath='url(#reveal-clip)'
+                  clipPath={`url(#${revealClipId})`}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   variants={{
                     initial: {
@@ -516,7 +518,7 @@ export function Graph(props: Props) {
                     ) : null}
                   </g>
                 ))}
-                {showColorLegendAtTop && labelsToBeHidden.includes(labels[i]) ? null : (
+                {showColorLegendAtTop || labelsToBeHidden.includes(labels[i]) ? null : (
                   <motion.text
                     style={{ fill: lineColors[i] }}
                     className='text-xs'
