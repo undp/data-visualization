@@ -597,6 +597,7 @@ export interface FilterSettingsDataType {
   filter: string;
   singleSelect?: boolean;
   label: string;
+  ui?: 'select' | 'radio';
   clearable?: boolean;
   defaultValue?:
     | {

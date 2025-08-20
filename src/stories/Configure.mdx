@@ -1,4 +1,4 @@
-import { Meta, Source, Canvas, Story } from '@storybook/blocks';
+import { Meta, Source, Canvas, Story } from '@storybook/addon-docs/blocks';
 import { H3, H4, P, Code, H6, Separator, Spacer } from '@undp/design-system-react';
 import githubLogo from "./assets/Github-logo.svg";
 import dsIcon from "./assets/DS-icon.svg";
@@ -7,23 +7,7 @@ import sendIcon from "./assets/Send-icon.svg";
 import npmIcon from "./assets/npm-logo.svg";
 import '@undp/design-system-react/style.css';
 
-<Meta
-  title="Getting started/Intro"
-  parameters={{
-    layout: "fullscreen",
-    viewMode: "docs",
-    previewTabs: {
-      canvas: { hidden: false },
-      story: { hidden: false },
-    },
-    docs: {
-      story: {
-        inline: false,
-        iframeHeight: "100%",
-      },
-    },
-  }}
-/>
+<Meta title="Getting started/Intro" />
 
 # UNDP data viz library ![npm](https://img.shields.io/npm/v/@undp/data-viz)
 

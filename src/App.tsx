@@ -1,50 +1,43 @@
-import { MultiLineChart } from './Components/Graphs/LineCharts/MultiLineChart';
+import { A, H3, P } from '@undp/design-system-react';
 import './styles/styles.css';
 import '@undp/design-system-react/style.css';
 
 function App() {
   return (
-    <>
-      <MultiLineChart
-        animate
-        data={[
-          {
-            date: '2020',
-            y: [3, 5],
-          },
-          {
-            date: '2021',
-            y: [8, 5],
-          },
-          {
-            date: '2022',
-            y: [11, 5],
-          },
-          {
-            date: '2023',
-            y: [19, 5],
-          },
-          {
-            date: '2024',
-            y: [3, 5],
-          },
-          {
-            date: '2025',
-            y: [8, 5],
-          },
-          {
-            date: '2026',
-            y: [11, 5],
-          },
-          {
-            date: '2027',
-            y: [19, 5],
-          },
-        ]}
-        labels={['Apples', 'Oranges']}
-        labelsToBeHidden={['Oranges']}
-      />
-    </>
+    <div
+      style={{
+        height: '90vh',
+        maxWidth: '712px',
+        margin: '0 auto',
+        padding: '2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <img width='56' alt='undp-logo' src='/undp-logo-blue.svg' />
+      <H3 style={{ textAlign: 'center', paddingTop: '24px' }}>UNDP Design System for React</H3>
+      <P style={{ textAlign: 'center' }}>
+        This visualization library for react, developed by the United Nations Development Programme,
+        offers various interactive visualizations such as graphs, maps, and animated charts. You can
+        access the documentation{' '}
+        <A href='https://dataviz.design.undp.org/' target='_blank' rel='noreferrer'>
+          here
+        </A>
+        .
+      </P>
+      <P
+        style={{
+          textAlign: 'center',
+        }}
+      >
+        For any feedback or inquiries, please feel free to reach out to us at{' '}
+        <A href='mailto:data@undp.org' target='_blank' rel='noreferrer'>
+          data@undp.org
+        </A>
+      </P>
+    </div>
   );
 }
 

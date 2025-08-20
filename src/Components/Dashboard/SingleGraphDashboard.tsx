@@ -667,21 +667,61 @@ export function SingleGraphDashboard(props: Props) {
                           />
                         ) : (
                           <>
-                            <DropdownSelect
-                              options={d.availableValues}
-                              variant={uiMode}
-                              size='sm'
-                              isMulti
-                              isClearable={d.clearable === undefined ? true : d.clearable}
-                              isSearchable
-                              controlShouldRenderValue
-                              filterOption={createFilter(filterConfig)}
-                              onChange={el => {
-                                handleFilterChange(d.filter, el);
-                              }}
-                              value={d.value}
-                              defaultValue={d.defaultValue}
-                            />
+                            {d.ui !== 'radio' ? (
+                              <DropdownSelect
+                                options={d.availableValues}
+                                variant={uiMode}
+                                size='sm'
+                                isMulti
+                                isClearable={d.clearable === undefined ? true : d.clearable}
+                                isSearchable
+                                controlShouldRenderValue
+                                filterOption={createFilter(filterConfig)}
+                                onChange={el => {
+                                  handleFilterChange(d.filter, el);
+                                }}
+                                value={d.value}
+                                defaultValue={d.defaultValue}
+                              />
+                            ) : (
+                              <CheckboxGroup
+                                variant={uiMode}
+                                defaultValue={
+                                  d.defaultValue
+                                    ? (
+                                        d.defaultValue as {
+                                          value: string | number;
+                                          label: string | number;
+                                        }[]
+                                      ).map(el => `${el.value}`)
+                                    : []
+                                }
+                                value={
+                                  d.value
+                                    ? (
+                                        d.value as {
+                                          value: string | number;
+                                          label: string | number;
+                                        }[]
+                                      ).map(el => `${el.value}`)
+                                    : undefined
+                                }
+                                onValueChange={el => {
+                                  handleFilterChange(
+                                    d.filter,
+                                    d.availableValues.filter(v => el.indexOf(`${v.value}`) !== -1),
+                                  );
+                                }}
+                              >
+                                {d.availableValues.map((el, j) => (
+                                  <CheckboxGroupItem
+                                    label={`${el.label}`}
+                                    value={`${el.value}`}
+                                    key={j}
+                                  />
+                                ))}
+                              </CheckboxGroup>
+                            )}
                             {d.allowSelectAll ? (
                               <button
                                 type='button'

@@ -533,6 +533,7 @@ export const getFiltersSchema = (columnList?: string[]) => ({
         ],
       },
       label: { type: 'string' },
+      ui: { type: 'string', enum: ['select', 'radio'] },
       singleSelect: { type: 'boolean' },
     },
     required: ['column'],

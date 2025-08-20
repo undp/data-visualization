@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Source } from '@storybook/blocks';
+import { Source } from '@storybook/addon-docs/blocks';
 
 import { GraphNames } from '@/stories/assets/constants';
 import { GraphDataConfigSelector } from '@/stories/assets/graphDataConfigSelect';

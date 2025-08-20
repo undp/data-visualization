@@ -2,12 +2,21 @@ import path from 'path';
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import eslint from 'vite-plugin-eslint';
+import eslint from '@nabla/vite-plugin-eslint';
 import dts from 'vite-plugin-dts';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [dts({ rollupTypes: true }), react(), eslint(), tailwindcss()],
+  plugins: [
+    dts({
+      include: ['src/'],
+      exclude: ['**/*.mdx', '**/*.test.tsx', 'stories'],
+      rollupTypes: true,
+    }),
+    react(),
+    eslint(),
+    tailwindcss(),
+  ],
   build: {
     cssCodeSplit: false,
     lib: {
@@ -48,5 +57,7 @@ export default defineConfig({
       optionsSuccessStatus: 204,
     },
   },
-  resolve: { alias: { '@': path.resolve(__dirname, './src') } },
+  resolve: {
+    alias: { '@': path.resolve(__dirname, './src') },
+  },
 });

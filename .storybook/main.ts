@@ -9,11 +9,17 @@ const config: StorybookConfig = {
     '../src/stories/Dashboards/PageSections/ComplexDataTypes/*.mdx',
     '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
-  addons: ['@storybook/addon-essentials'],
+  addons: [
+    '@storybook/addon-docs',
+    'storybook/actions',
+    'storybook/viewport',
+    'storybook/highlight',
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},
   },
+  staticDirs: ['../public'],
   managerHead: () => `
     
     <meta charset="utf-8" />
