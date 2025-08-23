@@ -106,6 +106,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of dots on the line */
   showDots?: boolean;
+  /** Toggle visibility of color scale. */
+  showColorScale?: boolean;
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
@@ -211,6 +213,7 @@ export function MultiLineChart(props: Props) {
     dashedLines = [],
     dashSettings = ['5 5'],
     labelsToBeHidden = [],
+    showColorScale = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -295,7 +298,7 @@ export function MultiLineChart(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  {showColorLegendAtTop ? (
+                  {showColorLegendAtTop && showColorScale ? (
                     <ColorLegend
                       colorDomain={labels}
                       colorLegendTitle={colorLegendTitle}
@@ -330,7 +333,7 @@ export function MultiLineChart(props: Props) {
                         labels={labels}
                         tooltip={tooltip}
                         onSeriesMouseOver={onSeriesMouseOver}
-                        showColorLegendAtTop={showColorLegendAtTop}
+                        showColorLegendAtTop={showColorScale ? showColorLegendAtTop : true}
                         showValues={showValues}
                         suffix={suffix}
                         prefix={prefix}

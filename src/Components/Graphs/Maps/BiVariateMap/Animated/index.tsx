@@ -74,7 +74,7 @@ interface Props {
   padding?: string;
 
   // Graph Parameters
-  /** Map data as an object in geoJson format */
+  /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
@@ -101,7 +101,7 @@ interface Props {
   dimmedOpacity?: number;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
-  /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
+  /** Toggle visibility of color scale. */
   showColorScale?: boolean;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
   showAntarctica?: boolean;

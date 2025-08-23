@@ -82,6 +82,9 @@ import {
   dataCardListSettingsSchema,
   radarChartSettingsSchema,
   radarChartDataSchema,
+  bulletChartDataSchema,
+  bulletChartSettingsSchema,
+  threeDGlobeSettingsSchema,
 } from './schemaList';
 
 import { GraphType } from '@/Types';
@@ -138,6 +141,10 @@ export function getDataSchema(graph: GraphType) {
       return areaChartDataSchema;
     case 'choroplethMap':
       return choroplethMapDataSchema;
+    case 'threeDGlobe':
+      return choroplethMapDataSchema;
+    case 'bulletChart':
+      return bulletChartDataSchema;
     case 'biVariateChoroplethMap':
       return biVariateChoroplethMapDataSchema;
     case 'dotDensityMap':
@@ -224,6 +231,10 @@ export function getSettingsSchema(graph: GraphType | 'allGraphs') {
       return stackedAreaChartSettingsSchema;
     case 'choroplethMap':
       return choroplethMapSettingsSchema;
+    case 'threeDGlobe':
+      return threeDGlobeSettingsSchema;
+    case 'bulletChart':
+      return bulletChartSettingsSchema;
     case 'biVariateChoroplethMap':
       return biVariateChoroplethMapSettingsSchema;
     case 'dotDensityMap':
@@ -329,6 +340,8 @@ export function getGraphConfigChartConfigIdEnum(
     case 'histogram':
       return ['value'];
     case 'choroplethMap':
+      return ['x', 'id'];
+    case 'threeDGlobe':
       return ['x', 'id'];
     case 'biVariateChoroplethMap':
       return ['x', 'y', 'id'];

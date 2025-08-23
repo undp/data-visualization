@@ -71,6 +71,8 @@ interface Props {
   rtl: boolean;
   precision: number;
   customLayers: CustomLayerDataType[];
+  highlightedDataPoints: (string | number)[];
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -115,6 +117,8 @@ export function Graph(props: Props) {
     rtl,
     precision,
     customLayers,
+    highlightedDataPoints,
+    dimmedOpacity,
   } = props;
   const dataFormatted = sortBy(
     data.map(d => ({
@@ -259,7 +263,17 @@ export function Graph(props: Props) {
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
             {groupedData[indx].values.map((d, i) => (
-              <motion.g className='undp-viz-low-opacity undp-viz-g-with-hover' key={i}>
+              <motion.g
+                className='undp-viz-g-with-hover'
+                key={i}
+                opacity={
+                  highlightedDataPoints.length !== 0
+                    ? highlightedDataPoints.indexOf(d.label) !== -1
+                      ? 0.85
+                      : dimmedOpacity
+                    : 0.85
+                }
+              >
                 {showLabels ? (
                   <motion.text
                     style={{

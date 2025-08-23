@@ -242,7 +242,7 @@ export function Graph(props: Props) {
             <YTicksAndGridLines
               values={yTicks.filter(d => d !== 0)}
               y={yTicks.filter(d => d !== 0).map(d => y(d))}
-              x1={0 - leftMargin}
+              x1={0}
               x2={graphWidth + margin.right}
               styles={{
                 gridLines: styles?.yAxis?.gridLines,
@@ -262,7 +262,7 @@ export function Graph(props: Props) {
             <Axis
               y1={y(yMinVal < 0 ? 0 : yMinVal)}
               y2={y(yMinVal < 0 ? 0 : yMinVal)}
-              x1={0 - leftMargin}
+              x1={0}
               x2={graphWidth + margin.right}
               label={numberFormattingFunction(
                 yMinVal < 0 ? 0 : yMinVal,

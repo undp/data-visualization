@@ -82,6 +82,8 @@ interface Props {
   refValues?: ReferenceDataType[];
   precision?: number;
   customLayers?: CustomLayerDataType[];
+  highlightedDataPoints?: (string | number)[];
+  dimmedOpacity?: number;
 }
 
 export function AnimatedVerticalDumbbellChart(props: Props) {
@@ -142,6 +144,8 @@ export function AnimatedVerticalDumbbellChart(props: Props) {
     precision = 2,
     customLayers = [],
     showColorScale = true,
+    highlightedDataPoints = [],
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -345,6 +349,8 @@ export function AnimatedVerticalDumbbellChart(props: Props) {
                     refValues={refValues}
                     precision={precision}
                     customLayers={customLayers}
+                    highlightedDataPoints={highlightedDataPoints}
+                    dimmedOpacity={dimmedOpacity}
                   />
                 ) : null}
               </div>

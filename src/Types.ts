@@ -58,7 +58,8 @@ export type GraphTypeForGriddedGraph =
   | 'lineChartWithConfidenceInterval'
   | 'dataCards'
   | 'radarChart'
-  | 'bulletChart';
+  | 'bulletChart'
+  | 'threeDGlobe';
 
 export type GeoHubGraphType = 'geoHubCompareMap' | 'geoHubMap' | 'geoHubMapWithLayerSelection';
 
@@ -699,6 +700,12 @@ export interface MapLegendDataType {
   legend: string | React.ReactNode;
 }
 
+export interface MaterialDataType {
+  color: string;
+  opacity: number;
+  transparent: boolean;
+}
+
 export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
@@ -928,6 +935,12 @@ export interface GraphSettingsDataType {
   dashedLines?: (string | number)[];
   dashSettings?: string[];
   labelsToBeHidden?: (string | number)[];
+  autoRotate?: boolean;
+  enableZoom?: boolean;
+  globeMaterial?: MaterialDataType;
+  categorical?: boolean;
+  atmosphereColor?: string;
+  lineAxisTitle?: string;
 }
 
 export interface InfoBoxDataType {

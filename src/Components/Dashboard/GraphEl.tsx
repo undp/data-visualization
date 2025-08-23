@@ -45,6 +45,7 @@ import { StripChart } from '../Graphs/StripChart';
 import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
 import { RadarChart } from '../Graphs/RadarChart';
 import { BulletChart } from '../Graphs/BulletChart';
+import { ThreeDGlobe } from '../Graphs/Maps/ThreeDGlobe';
 
 import { getValues } from '@/Utils/getValues';
 import { validateDataSchema, validateSettingsSchema } from '@/Utils/validateSchema';
@@ -152,6 +153,7 @@ function GraphEl(props: Props) {
     lineChartWithConfidenceInterval: LineChartWithConfidenceInterval,
     dataCards: DataCards,
     radarChart: RadarChart,
+    threeDGlobe: ThreeDGlobe,
   };
   const getGraphProps = (graphType: GraphType) => {
     switch (graphType) {
@@ -759,6 +761,7 @@ function GraphEl(props: Props) {
           dateFormat: settings?.dateFormat,
           suffix: settings?.suffix,
           prefix: settings?.prefix,
+          showColorScale: settings?.showColorScale,
           labels:
             settings?.labels ||
             (getValues('y', graphDataConfiguration || [], readableHeader || []) as string[]),
@@ -986,6 +989,7 @@ function GraphEl(props: Props) {
               ? settings?.colorLegendTitle
               : getValues('x', graphDataConfiguration || [], readableHeader || []),
           scaleType: settings?.scaleType,
+          categorical: settings?.categorical,
           data: graphData,
           scale: settings?.scale,
           centerPoint: settings?.centerPoint,
@@ -1125,6 +1129,52 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
+        };
+      case 'threeDGlobe':
+        return {
+          theme: settings?.theme,
+          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
+          graphTitle: settings?.graphTitle,
+          mapData: settings?.mapData,
+          graphDescription: settings?.graphDescription,
+          footNote: settings?.footNote,
+          width: settings?.width,
+          height: settings?.height,
+          sources: settings?.sources,
+          colorDomain: settings?.colorDomain as string[] | number[],
+          colors: settings?.colors as string[] | undefined,
+          colorLegendTitle:
+            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
+              ? settings?.colorLegendTitle
+              : getValues('x', graphDataConfiguration || [], readableHeader || []),
+          scaleType: settings?.scaleType,
+          data: graphData,
+          centerPoint: settings?.centerPoint,
+          backgroundColor: settings?.backgroundColor,
+          mapNoDataColor: settings?.mapNoDataColor,
+          mapBorderColor: settings?.mapBorderColor,
+          relativeHeight: settings?.relativeHeight,
+          padding: settings?.padding,
+          tooltip: settings?.tooltip,
+          showColorScale: settings?.showColorScale,
+          graphID: settings?.graphID,
+          dataDownload: settings?.dataDownload,
+          mapProperty: settings?.mapProperty,
+          language: settings?.language,
+          minHeight: settings?.minHeight,
+          ariaLabel: settings?.ariaLabel,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onSeriesMouseClick: (el: any) => {
+            updateFilters?.(el.id);
+          },
+          detailsOnClick: settings?.detailsOnClick,
+          styles: settings?.styles,
+          classNames: settings?.classNames,
+          categorical: settings?.categorical,
+          autoRotate: settings?.autoRotate,
+          globeMaterial: settings?.globeMaterial,
+          atmosphereColor: settings?.atmosphereColor,
+          enableZoom: settings?.enableZoom,
         };
       case 'donutChart':
         return {
@@ -1347,6 +1397,8 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
+          highlightedDataPoints: settings?.highlightedDataPoints,
+          dimmedOpacity: settings?.dimmedOpacity,
         };
       case 'treeMap':
         return {
@@ -1777,6 +1829,8 @@ function GraphEl(props: Props) {
           barSuffix: settings?.barSuffix,
           linePrefix: settings?.lineSuffix,
           barPrefix: settings?.barPrefix,
+          barAxisTitle: settings?.barAxisTitle,
+          lineAxisTitle: settings?.lineAxisTitle,
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
@@ -2005,6 +2059,7 @@ function GraphEl(props: Props) {
           width: settings?.width,
           height: settings?.height,
           sources: settings?.sources,
+          categorical: settings?.categorical,
           colorDomain: settings?.colorDomain as string[] | number[],
           colors: settings?.colors as string[] | undefined,
           colorLegendTitle:
@@ -2208,6 +2263,8 @@ function GraphEl(props: Props) {
           valueColor: settings?.valueColor,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          highlightedDataPoints: settings?.highlightedDataPoints,
+          dimmedOpacity: settings?.dimmedOpacity,
         };
       case 'animatedScatterPlot':
         return {

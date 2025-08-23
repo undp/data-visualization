@@ -275,6 +275,21 @@ export const ChartConfiguration: {
     ],
   },
   {
+    chartID: 'threeDGlobe',
+    configuration: [
+      {
+        id: 'id',
+        required: true,
+        multiple: false,
+      },
+      {
+        id: 'x',
+        required: true,
+        multiple: false,
+      },
+    ],
+  },
+  {
     chartID: 'choroplethMap',
     configuration: [
       {

@@ -31,7 +31,9 @@ export function numberFormattingFunction(
     const tier = Math.floor(Math.log10(Math.abs(num)) / 3);
     if (tier === 0) return num.toString();
     const scaled = num / 10 ** (tier * 3);
-    const formatted = scaled.toFixed(precision || 2).replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1'); // Remove trailing ".0"
+    const formatted = scaled
+      .toFixed(precision === 0 ? 0 : precision || 2)
+      .replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1'); // Remove trailing ".0"
     return formatted + suffixes[tier];
   };
   if (checkIfNullOrUndefined(value)) return 'NA';

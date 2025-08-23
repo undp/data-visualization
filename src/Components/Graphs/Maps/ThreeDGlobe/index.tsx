@@ -1,31 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react';
 
-import WorldMapData from '../../WorldMapData/data.json';
+import WorldMapData from '../WorldMapData/data.json';
 
-import { Graph } from './Graph';
+import Graph from './Graph';
 
-import {
-  BivariateMapDataType,
-  Languages,
-  SourcesDataType,
-  StyleObject,
-  ClassNameObject,
-  MapProjectionTypes,
-  ZoomInteractionTypes,
-  CustomLayerDataType,
-  AnimateDataType,
-} from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { Colors } from '@/Components/ColorPalette';
+import {
+  ChoroplethMapDataType,
+  ClassNameObject,
+  Languages,
+  MaterialDataType,
+  ScaleDataType,
+  SourcesDataType,
+  StyleObject,
+} from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { Colors } from '@/Components/ColorPalette';
+import { getUniqValue } from '@/Utils/getUniqValue';
 import { getJenks } from '@/Utils/getJenks';
 
 interface Props {
   // Data
-  /** Array of data objects. */
-  data: BivariateMapDataType[];
+  /** Array of data objects */
+  data: ChoroplethMapDataType[];
 
   // Titles, Labels, and Sources
   /** Title of the graph */
@@ -40,16 +39,12 @@ interface Props {
   ariaLabel?: string;
 
   // Colors and Styling
-  /** Colors for the choropleth map. Array must be 5x5 */
-  colors?: string[][];
-  /** Title for the first color legend */
-  xColorLegendTitle?: string;
-  /** Title for the second color legend */
-  yColorLegendTitle?: string;
-  /** Domain of x-colors for the map */
-  xDomain?: number[];
-  /** Domain of y-colors for the map */
-  yDomain?: number[];
+  /** Colors for the choropleth map */
+  colors?: string[];
+  /** Domain of colors for the graph */
+  colorDomain?: number[] | string[];
+  /** Title for the color legend */
+  colorLegendTitle?: string;
   /** Color for the areas where data is no available */
   mapNoDataColor?: string;
   /** Background color of the graph */
@@ -75,40 +70,26 @@ interface Props {
   /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
-  /** Scaling factor for the map. Multiplies the scale number to scale. */
-  scale?: number;
-  /** Center point of the map */
-  centerPoint?: [number, number];
-  /** Defines the zoom mode for the map */
-  zoomInteraction?: ZoomInteractionTypes;
-  /** Stroke width of the regions in the map */
-  mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
   mapBorderColor?: string;
-  /** Toggle if the map is a world map */
-  isWorldMap?: boolean;
-  /** Map projection type */
-  mapProjection?: MapProjectionTypes;
-  /** Extend of the allowed zoom in the map */
-  zoomScaleExtend?: [number, number];
-  /** Extend of the allowed panning in the map */
-  zoomTranslateExtend?: [[number, number], [number, number]];
-  /** Countries or regions to be highlighted */
-  highlightedIds?: string[];
-  /** Defines the opacity of the non-highlighted data */
-  dimmedOpacity?: number;
-  /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | AnimateDataType;
-  /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
-  mapProperty?: string;
+  /** Center point of the map */
+  centerPoint?: [number, number];
+  /** Defines if the globe rotates automatically */
+  autoRotate?: number | boolean;
+  /** Defines the material property applied to the sphere of the globe */
+  globeMaterial?: MaterialDataType;
+  /** Defines the colo of the glow around the globe */
+  atmosphereColor?: string;
+  /** Defines if the globe can be zoomed when scrolled */
+  enableZoom?: boolean;
+  /** Scale for the colors */
+  scaleType?: Exclude<ScaleDataType, 'linear'>;
+  /** Toggles if the color scaling is categorical or not */
+  categorical?: boolean;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
-  /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
-  showAntarctica?: boolean;
-  /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
-  customLayers?: CustomLayerDataType[];
-  /** Enable graph download option as png */
-  graphDownload?: boolean;
+  /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
+  mapProperty?: string;
   /** Enable data download option as a csv */
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
@@ -137,67 +118,62 @@ interface Props {
   graphID?: string;
 }
 
-export function BiVariateChoroplethMap(props: Props) {
+/** For using these maps you will have to install [`maplibre`](https://maplibre.org/maplibre-gl-js/docs/#npm) package to your project */
+export function ThreeDGlobe(props: Props) {
   const {
     data,
     mapData,
     graphTitle,
-    colors = Colors.light.bivariateColors.colors05x05,
+    colors,
     sources,
     graphDescription,
     height,
     width,
     footNote = 'The designations employed and the presentation of material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations or UNDP concerning the legal status of any country, territory, city or area or its authorities, or concerning the delimitation of its frontiers or boundaries.',
-    xDomain,
-    yDomain,
-    xColorLegendTitle = 'X Color key',
-    yColorLegendTitle = 'Y Color key',
-    tooltip,
-    scale = 0.95,
-    centerPoint,
+    colorDomain,
+    colorLegendTitle,
+    scaleType = 'threshold',
     padding,
-    mapBorderWidth = 0.5,
     mapNoDataColor = Colors.light.graphNoData,
     backgroundColor = false,
     mapBorderColor = Colors.light.grays['gray-500'],
     relativeHeight,
-    onSeriesMouseOver,
-    isWorldMap = true,
-    zoomScaleExtend = [0.8, 6],
-    zoomTranslateExtend,
+    tooltip,
     graphID,
-    showColorScale = true,
-    highlightedIds = [],
-    onSeriesMouseClick,
     mapProperty = 'ISO3',
-    graphDownload = false,
     dataDownload = false,
-    showAntarctica = false,
     language = 'en',
     minHeight = 0,
     theme = 'light',
     ariaLabel,
-    resetSelectionOnDoubleClick = true,
-    detailsOnClick,
     styles,
     classNames,
-    mapProjection,
-    zoomInteraction = 'button',
-    animate = false,
-    dimmedOpacity = 0.3,
-    customLayers = [],
+    autoRotate = true,
+    enableZoom = true,
+    globeMaterial = {
+      color: '#fff',
+      opacity: 1,
+      transparent: true,
+    },
+    centerPoint = [0, 0],
+    atmosphereColor = '#fff',
+    showColorScale = true,
+    resetSelectionOnDoubleClick = true,
+    detailsOnClick,
+    onSeriesMouseOver,
+    onSeriesMouseClick,
   } = props;
-
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
 
+  const [svgWidth, setSvgWidth] = useState(0);
+  const [svgHeight, setSvgHeight] = useState(0);
+
   const graphDiv = useRef<HTMLDivElement>(null);
-  const graphParentDiv = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].contentRect.width || 760);
+      setSvgWidth(width || entries[0].target.clientWidth || 760);
       setSvgHeight(height || entries[0].target.clientHeight || 480);
     });
     if (graphDiv.current) {
@@ -211,18 +187,36 @@ export function BiVariateChoroplethMap(props: Props) {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
       fetchData.then(d => {
-        setMapShape(d);
+        setMapShape(d.features);
       });
     } else {
-      setMapShape(mapData || WorldMapData);
+      const features = WorldMapData.features.map(d => {
+        if (d.geometry.type === 'Polygon') {
+          const reversed = [...d.geometry.coordinates[0]].reverse();
+          const geometry = { ...d.geometry, coordinates: [reversed] };
+          return { ...d, geometry };
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const coord: any = [];
+        d.geometry.coordinates.forEach(el => {
+          const reversed = [...el[0]].reverse();
+          coord.push([reversed]);
+        });
+        const geometry = { ...d.geometry, coordinates: coord };
+        return { ...d, geometry };
+      });
+      setMapShape(mapData?.features || features);
     }
   }, [mapData]);
 
-  if (xDomain && yDomain)
-    if (xDomain.length !== colors[0].length - 1 || yDomain.length !== colors.length - 1) {
-      console.error("the xDomain and yDomain array length don't match to the color array length");
-      return null;
-    }
+  const domain =
+    colorDomain ||
+    (scaleType === 'categorical'
+      ? getUniqValue(data, 'x')
+      : getJenks(
+          data.map(d => d.x as number | null | undefined),
+          colors?.length || 4,
+        ));
   return (
     <div
       className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
@@ -244,14 +238,11 @@ export function BiVariateChoroplethMap(props: Props) {
           ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
         }}
         id={graphID}
-        ref={graphParentDiv}
         aria-label={
           ariaLabel ||
           `${
             graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is bi-variate choropleth map where geographic areas are colored in proportion to two variables.${
-            graphDescription ? ` ${graphDescription}` : ''
-          }`
+          }This is a map.${graphDescription ? ` ${graphDescription}` : ''}`
         }
       >
         <div
@@ -259,7 +250,7 @@ export function BiVariateChoroplethMap(props: Props) {
           style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
         >
           <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {graphTitle || graphDescription || graphDownload || dataDownload ? (
+            {graphTitle || graphDescription || dataDownload ? (
               <GraphHeader
                 styles={{
                   title: styles?.title,
@@ -272,7 +263,7 @@ export function BiVariateChoroplethMap(props: Props) {
                 graphTitle={graphTitle}
                 graphDescription={graphDescription}
                 width={width}
-                graphDownload={graphDownload ? graphParentDiv.current : undefined}
+                graphDownload={undefined}
                 dataDownload={
                   dataDownload
                     ? data.map(d => d.data).filter(d => d !== undefined).length > 0
@@ -290,31 +281,8 @@ export function BiVariateChoroplethMap(props: Props) {
               {(width || svgWidth) && (height || svgHeight) && mapShape ? (
                 <Graph
                   data={data}
-                  mapData={
-                    showAntarctica
-                      ? mapShape
-                      : {
-                          ...mapShape,
-                          features: mapShape.features.filter(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (el: any) => el.properties.NAME !== 'Antarctica',
-                          ),
-                        }
-                  }
-                  xDomain={
-                    xDomain ||
-                    getJenks(
-                      data.map(d => d.x as number | null | undefined),
-                      colors[0].length,
-                    )
-                  }
-                  yDomain={
-                    yDomain ||
-                    getJenks(
-                      data.map(d => d.y as number | null | undefined),
-                      colors.length,
-                    )
-                  }
+                  polygonData={mapShape}
+                  colorDomain={domain}
                   width={width || svgWidth}
                   height={Math.max(
                     minHeight,
@@ -327,36 +295,39 @@ export function BiVariateChoroplethMap(props: Props) {
                           : (width || svgWidth) * relativeHeight
                         : svgHeight),
                   )}
-                  scale={scale}
-                  centerPoint={centerPoint}
-                  colors={colors}
-                  xColorLegendTitle={xColorLegendTitle}
-                  yColorLegendTitle={yColorLegendTitle}
-                  mapBorderWidth={mapBorderWidth}
+                  colors={
+                    colors ||
+                    (scaleType === 'categorical'
+                      ? Colors[theme].sequentialColors[
+                          `neutralColorsx0${domain.length as 4 | 5 | 6 | 7 | 8 | 9}`
+                        ]
+                      : Colors[theme].sequentialColors[
+                          `neutralColorsx0${(domain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
+                        ])
+                  }
                   mapNoDataColor={mapNoDataColor}
+                  categorical={scaleType === 'categorical'}
                   mapBorderColor={mapBorderColor}
                   tooltip={tooltip}
-                  onSeriesMouseOver={onSeriesMouseOver}
-                  isWorldMap={isWorldMap}
-                  zoomScaleExtend={zoomScaleExtend}
-                  zoomTranslateExtend={zoomTranslateExtend}
-                  onSeriesMouseClick={onSeriesMouseClick}
                   mapProperty={mapProperty}
-                  highlightedIds={highlightedIds}
-                  resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
                   styles={styles}
-                  showColorScale={showColorScale}
                   classNames={classNames}
-                  mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
-                  detailsOnClick={detailsOnClick}
-                  zoomInteraction={zoomInteraction}
-                  animate={
-                    animate === true
-                      ? { duration: 0.5, once: true, amount: 0.5 }
-                      : animate || { duration: 0, once: true, amount: 0 }
+                  autoRotate={autoRotate === true ? 1.5 : autoRotate === false ? 0 : autoRotate}
+                  enableZoom={enableZoom}
+                  globeMaterial={globeMaterial}
+                  atmosphereColor={atmosphereColor}
+                  centerPoint={centerPoint}
+                  colorLegendTitle={colorLegendTitle}
+                  showColorScale={showColorScale}
+                  hoverStrokeColor={
+                    theme === 'light'
+                      ? Colors.light.grays['gray-700']
+                      : Colors.light.grays['gray-300']
                   }
-                  dimmedOpacity={dimmedOpacity}
-                  customLayers={customLayers}
+                  resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                  detailsOnClick={detailsOnClick}
+                  onSeriesMouseOver={onSeriesMouseOver}
+                  onSeriesMouseClick={onSeriesMouseClick}
                 />
               ) : null}
             </div>

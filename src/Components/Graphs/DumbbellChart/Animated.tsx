@@ -98,6 +98,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Data points to highlight. Use the label value from data to highlight the data point */
+  highlightedDataPoints?: (string | number)[];
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggle if the is a arrow head at the end of the connector */
@@ -208,6 +210,7 @@ export function AnimatedDumbbellChart(props: Props) {
     classNames,
     precision,
     showColorScale,
+    highlightedDataPoints,
   } = props;
 
   if (orientation === 'vertical')
@@ -268,6 +271,7 @@ export function AnimatedDumbbellChart(props: Props) {
         classNames={classNames}
         precision={precision}
         showColorScale={showColorScale}
+        highlightedDataPoints={highlightedDataPoints}
       />
     );
   return (
@@ -327,6 +331,7 @@ export function AnimatedDumbbellChart(props: Props) {
       classNames={classNames}
       precision={precision}
       showColorScale={showColorScale}
+      highlightedDataPoints={highlightedDataPoints}
     />
   );
 }

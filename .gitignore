@@ -17,6 +17,7 @@ dist-ssr
 src/*.test.js
 src/serviceWorker.js
 src/setupTests.js
+.eslintcache
 
 # Editor directories and files
 .vscode/*

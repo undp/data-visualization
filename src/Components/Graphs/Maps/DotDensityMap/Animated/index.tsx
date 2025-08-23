@@ -73,7 +73,7 @@ interface Props {
   // Graph Parameters
   /** Maximum radius of the circle */
   radius?: number;
-  /** Map data as an object in geoJson format */
+  /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
   /** Scaling factor for the map. Multiplies the scale number to scale. */

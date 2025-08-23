@@ -1,6 +1,5 @@
 import * as ss from 'simple-statistics';
 import { format } from 'd3-format';
-import uniq from 'lodash.uniq';
 import sortBy from 'lodash.sortby';
 
 import { padNumberArray } from './padArray';
@@ -26,7 +25,7 @@ export function getJenks(data: (number | null | undefined)[], noOfSteps: number)
     d => d,
   );
   const bins =
-    uniq(d1).length < noOfSteps
+    [...new Set(d1)].length < noOfSteps
       ? padNumberArray(d1, noOfSteps).slice(1, -1)
       : ss.jenks(d1, noOfSteps).slice(1, -1);
   const valueArray = bins.map(d => {

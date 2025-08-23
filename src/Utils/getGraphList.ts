@@ -175,6 +175,13 @@ export const GraphList = [
     availableInWideToLongFormat: false,
   },
   {
+    graphName: 'Three-D globe',
+    graphID: 'threeDGlobe',
+    availableInGriddedGraph: true,
+    geoHubMapPresentation: false,
+    availableInWideToLongFormat: false,
+  },
+  {
     graphName: 'Bi-variate choropleth map',
     graphID: 'biVariateChoroplethMap',
     availableInGriddedGraph: true,

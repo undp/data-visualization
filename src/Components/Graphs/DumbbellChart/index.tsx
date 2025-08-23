@@ -107,6 +107,10 @@ interface Props {
   showColorScale?: boolean;
   /** Toggle if the is a arrow head at the end of the connector */
   arrowConnector?: boolean;
+  /** Data points to highlight. Use the label value from data to highlight the data point */
+  highlightedDataPoints?: (string | number)[];
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Stroke width of the connector */
   connectorStrokeWidth?: number;
   /** Title for the  axis */
@@ -211,6 +215,8 @@ export function DumbbellChart(props: Props) {
     precision,
     showColorScale,
     customLayers,
+    highlightedDataPoints,
+    dimmedOpacity,
   } = props;
 
   if (orientation === 'vertical')
@@ -273,6 +279,8 @@ export function DumbbellChart(props: Props) {
         precision={precision}
         showColorScale={showColorScale}
         customLayers={customLayers}
+        highlightedDataPoints={highlightedDataPoints}
+        dimmedOpacity={dimmedOpacity}
       />
     );
   return (
@@ -334,6 +342,8 @@ export function DumbbellChart(props: Props) {
       precision={precision}
       showColorScale={showColorScale}
       customLayers={customLayers}
+      highlightedDataPoints={highlightedDataPoints}
+      dimmedOpacity={dimmedOpacity}
     />
   );
 }

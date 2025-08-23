@@ -2625,6 +2625,11 @@ export const donutChartSettingsSchema = {
 export const dumbbellChartSettingsSchema = {
   type: 'object',
   properties: {
+    highlightedDataPoints: {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+    },
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     customLayers: {
       type: 'array',
       items: {
@@ -2796,6 +2801,11 @@ export const dumbbellChartSettingsSchema = {
 export const animatedDumbbellChartSettingsSchema = {
   type: 'object',
   properties: {
+    highlightedDataPoints: {
+      type: 'array',
+      items: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+    },
+    dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     customLayers: {
       type: 'array',
       items: {
@@ -4649,6 +4659,7 @@ export const choroplethMapSettingsSchema = {
         required: ['layer', 'position'],
       },
     },
+    categorical: { type: 'boolean' },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
     animate: {
       oneOf: [
@@ -4794,6 +4805,107 @@ export const choroplethMapSettingsSchema = {
       enum: ['light', 'dark'],
     },
     resetSelectionOnDoubleClick: { type: 'boolean' },
+  },
+};
+
+export const threeDGlobeSettingsSchema = {
+  type: 'object',
+  properties: {
+    categorical: { type: 'boolean' },
+    styles: { type: 'object' },
+    classNames: { type: 'object' },
+    detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    graphTitle: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    ariaLabel: { type: 'string' },
+    mapData: { oneOf: [{ type: 'object' }, { type: 'string' }] },
+    graphDescription: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    footNote: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+    width: { type: 'number' },
+    height: { type: 'number' },
+    sources: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          source: { type: 'string' },
+          link: { type: 'string' },
+        },
+        required: ['source'],
+      },
+    },
+    colorDomain: {
+      oneOf: [
+        {
+          type: 'array',
+          items: { type: 'number' },
+          minItems: 1,
+        },
+        {
+          type: 'array',
+          items: { type: 'string' },
+          minItems: 1,
+        },
+      ],
+    },
+    colors: {
+      type: 'array',
+      items: { type: 'string' },
+    },
+    colorLegendTitle: { type: 'string' },
+    scaleType: { type: 'string', enum: ['categorical', 'threshold'] },
+    centerPoint: {
+      type: 'array',
+      items: { type: 'number' },
+      minItems: 2,
+      maxItems: 2,
+    },
+    backgroundColor: { oneOf: [{ type: 'string' }, { type: 'boolean' }] },
+    mapNoDataColor: { type: 'string' },
+    mapBorderColor: { type: 'string' },
+    relativeHeight: { type: 'number' },
+    minHeight: { type: 'number' },
+    padding: { type: 'string' },
+    showColorScale: { type: 'boolean' },
+    graphID: { type: 'string' },
+    dataDownload: { type: 'boolean' },
+    mapProperty: { type: 'string' },
+    language: {
+      type: 'string',
+      enum: [
+        'en',
+        'ar',
+        'az',
+        'bn',
+        'cy',
+        'he',
+        'hi',
+        'jp',
+        'ka',
+        'km',
+        'ko',
+        'my',
+        'ne',
+        'zh',
+        'custom',
+      ],
+    },
+    theme: {
+      type: 'string',
+      enum: ['light', 'dark'],
+    },
+    resetSelectionOnDoubleClick: { type: 'boolean' },
+    autoRotate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    atmosphereColor: { type: 'string' },
+    enableZoom: { type: 'boolean' },
+    globeMaterial: {
+      type: 'object',
+      properties: {
+        color: { type: 'string' },
+        opacity: { type: 'number' },
+        transparent: { type: 'boolean' },
+      },
+      required: ['color', 'opacity', 'transparent'],
+    },
   },
 };
 
@@ -5142,6 +5254,7 @@ export const animatedChoroplethMapSettingsSchema = {
       },
     },
     dimmedOpacity: { type: 'number', minimum: 0, maximum: 1 },
+    categorical: { type: 'boolean' },
     styles: { type: 'object' },
     classNames: { type: 'object' },
     detailsOnClick: { oneOf: [{ type: 'string' }, { type: 'object' }] },
@@ -5803,6 +5916,8 @@ export const paretoChartSettingsSchema = {
         required: ['layer', 'position'],
       },
     },
+    lineAxisTitle: { type: 'string' },
+    barAxisTitle: { type: 'string' },
     precision: { type: 'number' },
     animate: {
       oneOf: [
@@ -8223,6 +8338,20 @@ export const SettingsSchema = {
         },
         required: ['layer', 'position'],
       },
+    },
+    categorical: { type: 'boolean' },
+    lineAxisTitle: { type: 'string' },
+    autoRotate: { oneOf: [{ type: 'number' }, { type: 'boolean' }] },
+    atmosphereColor: { type: 'string' },
+    enableZoom: { type: 'boolean' },
+    globeMaterial: {
+      type: 'object',
+      properties: {
+        color: { type: 'string' },
+        opacity: { type: 'number' },
+        transparent: { type: 'boolean' },
+      },
+      required: ['color', 'opacity', 'transparent'],
     },
   },
 };

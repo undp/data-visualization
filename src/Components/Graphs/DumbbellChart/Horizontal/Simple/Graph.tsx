@@ -68,6 +68,8 @@ interface Props {
   animate: AnimateDataType;
   precision: number;
   customLayers: CustomLayerDataType[];
+  highlightedDataPoints: (string | number)[];
+  dimmedOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -111,6 +113,8 @@ export function Graph(props: Props) {
     animate,
     precision,
     customLayers,
+    highlightedDataPoints,
+    dimmedOpacity,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -233,16 +237,28 @@ export function Graph(props: Props) {
           <AnimatePresence>
             {dataWithId.map(d => (
               <motion.g
-                className='undp-viz-low-opacity undp-viz-g-with-hover'
+                className='undp-viz-g-with-hover'
                 key={d.label}
                 variants={{
                   initial: {
                     x: 0,
                     y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
+                    opacity:
+                      highlightedDataPoints.length !== 0
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
                   },
                   whileInView: {
                     x: 0,
                     y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
+                    opacity:
+                      highlightedDataPoints.length !== 0
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
                     transition: { duration: animate.duration },
                   },
                 }}

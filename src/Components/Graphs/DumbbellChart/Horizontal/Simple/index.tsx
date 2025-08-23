@@ -83,6 +83,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   precision?: number;
   customLayers?: CustomLayerDataType[];
+  highlightedDataPoints?: (string | number)[];
+  dimmedOpacity?: number;
 }
 
 export function HorizontalDumbbellChart(props: Props) {
@@ -144,6 +146,8 @@ export function HorizontalDumbbellChart(props: Props) {
     precision = 2,
     customLayers = [],
     showColorScale = true,
+    highlightedDataPoints = [],
+    dimmedOpacity = 0.3,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -328,6 +332,8 @@ export function HorizontalDumbbellChart(props: Props) {
                         }
                         precision={precision}
                         customLayers={customLayers}
+                        highlightedDataPoints={highlightedDataPoints}
+                        dimmedOpacity={dimmedOpacity}
                       />
                     ) : null}
                   </div>
