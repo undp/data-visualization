@@ -1,5 +1,3 @@
-import Ajv from 'ajv';
-
 import { GraphList } from './getGraphList';
 
 import { GraphType } from '@/Types';
@@ -12,24 +10,33 @@ import {
   getSingleGraphJSONSchema,
 } from '@/Schemas/getSchema';
 
-const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
-
 /**
  * Validates the data against the appropriate schema for the given graph type.
  *
  * @param data - The data to validate.
  * @param graph - The graph type for which the data validation is performed.
  *
- * @returns An object with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
+ * @returns A promise with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
  *
  * @example
- * const result = validateDataSchema(data, 'barChart');
- * if (!result.isValid) {
- *   console.error(result.err);
- * }
+ * const result = validateDataSchema(data, 'barChart').then(result => {
+ *  if (!result.isValid) {
+ *    console.error(result.err);
+ *  }
+ * });
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function validateDataSchema(data: any, graph: GraphType) {
+export async function validateDataSchema(data: any, graph: GraphType) {
+  let Ajv;
+  try {
+    Ajv = (await import('ajv')).default;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    console.error(e);
+    throw new Error('AJV is not installed. Please install it to use runtime validation.');
+  }
+
+  const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
   if (
     GraphList.filter(el => el.geoHubMapPresentation)
       .map(el => el.graphID)
@@ -51,7 +58,7 @@ export function validateDataSchema(data: any, graph: GraphType) {
       err: undefined,
     };
 
-  const schema = getDataSchema(graph);
+  const schema = await getDataSchema(graph);
 
   if (!schema)
     return {
@@ -81,17 +88,28 @@ export function validateDataSchema(data: any, graph: GraphType) {
  * @param settings - The settings to validate.
  * @param graph - The graph type for which the settings validation is performed.
  *
- * @returns An object with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
+ * @returns A promise with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
  *
  * @example
- * const result = validateSettingsSchema(settings, 'barChart');
- * if (!result.isValid) {
- *   console.error(result.err);
- * }
+ * const result = validateSettingsSchema(settings, 'barChart').then(result => {
+ *  if (!result.isValid) {
+ *    console.error(result.err);
+ *  }
+ * });
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function validateSettingsSchema(settings: any, graph: GraphType) {
-  const schema = getSettingsSchema(graph);
+export async function validateSettingsSchema(settings: any, graph: GraphType) {
+  let Ajv;
+  try {
+    Ajv = (await import('ajv')).default;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    console.error(e);
+    throw new Error('AJV is not installed. Please install it to use runtime validation.');
+  }
+
+  const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
+  const schema = await getSettingsSchema(graph);
 
   if (!schema)
     return {
@@ -122,15 +140,16 @@ export function validateSettingsSchema(settings: any, graph: GraphType) {
  * @param graph - The graph type for which the configuration validation is performed. Can be one of:
  *                'singleGraphDashboard', 'multiGraphDashboard', 'griddedGraph', or 'multiGraphDashboardWideToLongFormat'.
  *
- * @returns An object with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
+ * @returns A promise with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
  *
  * @example
- * const result = validateConfigSchema(config, 'griddedGraph');
- * if (!result.isValid) {
- *   console.error(result.err);
- * }
+ * const result = validateConfigSchema(config, 'griddedGraph').then(result => {
+ *  if (!result.isValid) {
+ *    console.error(result.err);
+ *  }
+ * });
  */
-export function validateConfigSchema(
+export async function validateConfigSchema(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config: any,
   graph:
@@ -139,6 +158,16 @@ export function validateConfigSchema(
     | 'griddedGraph'
     | 'multiGraphDashboardWideToLongFormat',
 ) {
+  let Ajv;
+  try {
+    Ajv = (await import('ajv')).default;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    console.error(e);
+    throw new Error('AJV is not installed. Please install it to use runtime validation.');
+  }
+
+  const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let schema: any;
   switch (graph) {

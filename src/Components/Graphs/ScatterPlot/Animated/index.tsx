@@ -1,7 +1,8 @@
 import uniqBy from 'lodash.uniqby';
 import { useState, useRef, useEffect } from 'react';
 import { ascending, sort } from 'd3-array';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
 import { cn, SliderUI } from '@undp/design-system-react';
 
 import { Graph } from './Graph';

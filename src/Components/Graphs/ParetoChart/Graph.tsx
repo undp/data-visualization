@@ -9,8 +9,6 @@ import {
   curveStepBefore,
 } from 'd3-shape';
 import { scaleBand, scaleLinear } from 'd3-scale';
-import maxBy from 'lodash.maxby';
-import minBy from 'lodash.minby';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
@@ -142,22 +140,26 @@ export function Graph(props: Props) {
     .domain(dataWithId.map(d => `${d.id}`))
     .range([0, graphWidth])
     .paddingInner(barPadding);
-  const minParam1: number = minBy(dataWithId, d => d.bar)?.bar
-    ? (minBy(dataWithId, d => d.bar)?.bar as number) > 0
-      ? 0
-      : (minBy(dataWithId, d => d.bar)?.bar as number)
-    : 0;
-  const minParam2: number = minBy(dataWithId, d => d.line)?.line
-    ? (minBy(dataWithId, d => d.line)?.line as number) > 0
-      ? 0
-      : (minBy(dataWithId, d => d.line)?.line as number)
-    : 0;
-  const maxParam1: number = maxBy(dataWithId, d => d.bar)?.bar
-    ? (maxBy(dataWithId, d => d.bar)?.bar as number)
-    : 0;
-  const maxParam2: number = maxBy(dataWithId, d => d.line)?.line
-    ? (maxBy(dataWithId, d => d.line)?.line as number)
-    : 0;
+  const minParam1 =
+    Math.min(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null)) !== Infinity
+      ? Math.min(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null)) > 0
+        ? 0
+        : Math.min(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null))
+      : 0;
+  const minParam2 =
+    Math.min(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null)) !== Infinity
+      ? Math.min(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null)) > 0
+        ? 0
+        : Math.min(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null))
+      : 0;
+  const maxParam1 =
+    Math.max(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null)) !== Infinity
+      ? Math.max(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null))
+      : 0;
+  const maxParam2 =
+    Math.max(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null)) !== Infinity
+      ? Math.max(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null))
+      : 0;
 
   const minParam = minParam1 < minParam2 ? minParam1 : minParam2;
   const maxParam = maxParam1 > maxParam2 ? maxParam1 : maxParam2;

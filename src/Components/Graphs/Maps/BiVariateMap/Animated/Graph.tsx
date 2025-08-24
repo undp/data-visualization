@@ -11,7 +11,7 @@ import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { scaleThreshold } from 'd3-scale';
 import sortBy from 'lodash.sortby';
-import { parse } from 'date-fns';
+import { parse } from 'date-fns/parse';
 import { group } from 'd3-array';
 import { Modal, P } from '@undp/design-system-react';
 import bbox from '@turf/bbox';

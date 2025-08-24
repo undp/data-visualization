@@ -56,26 +56,23 @@ The dependencies that are pre-installed wit the library:
     * lodash.flattendeep
     * lodash.intersection
     * lodash.max
-    * lodash.maxby
     * lodash.min
-    * lodash.minby
     * lodash.orderby
     * lodash.sortby
     * lodash.sum
-    * lodash.uniq
     * lodash.uniqby
-* @undp/design-system-react - For UI elements
+* @undp/design-system-react - For UI elements (Peer dependency)
 * maplibre-gl - For Maplibre maps (Peer dependency)
-* pmtiles - For adding pmtiles to Maplibre maps
-* papaparse - For loading and parsing csv from links
+* pmtiles - For adding pmtiles to Maplibre maps (Peer dependency)
+* papaparse - For loading and parsing csv from links (Peer dependency)
 * motion - For creating animations in the animated graphs
-* dnd-kit - For creating comparison maps
+* dnd-kit - For creating comparison maps (Peer dependency)
 * simple-statistics - For statistical functions
 * xss - For cleaning up cross scripting from user-submitted HTML
 * ajv - For schema validation
 * date-fns - For date formatting
 * html-to-image - For downloading div as images
-* dom-to-svg - For downloading div as svg
+* dom-to-svg - For downloading div as svg (Peer dependency)
 * file-saver - For downloading files
 * react-csv - For generating a csv file
 * xlsx - For generating a xlsx file (Optional dependency)

@@ -1,8 +1,6 @@
 import isEqual from 'fast-deep-equal';
 import { useRef, useState } from 'react';
-import maxBy from 'lodash.maxby';
 import { scaleLinear } from 'd3-scale';
-import minBy from 'lodash.minby';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
@@ -101,8 +99,8 @@ export function Graph(props: Props) {
   };
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
-  const minY = Math.min(minBy(data, 'y1')?.y1 as number, minBy(data, 'y2')?.y2 as number);
-  const maxY = Math.max(maxBy(data, 'y1')?.y1 as number, maxBy(data, 'y2')?.y2 as number);
+  const minY = Math.min(Math.min(...data.map(d => d.y1)), Math.min(...data.map(d => d.y2)));
+  const maxY = Math.max(Math.max(...data.map(d => d.y1)), Math.max(...data.map(d => d.y2)));
   const y = scaleLinear()
     .domain([
       checkIfNullOrUndefined(minValue) ? (minY > 0 ? 0 : minY) : (minValue as number),

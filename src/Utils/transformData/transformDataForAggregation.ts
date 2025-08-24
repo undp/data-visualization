@@ -1,7 +1,5 @@
 import uniqBy from 'lodash.uniqby';
 import sum from 'lodash.sum';
-import maxBy from 'lodash.maxby';
-import minBy from 'lodash.minby';
 import flattenDeep from 'lodash.flattendeep';
 
 import { AggregationSettingsDataType } from '@/Types';
@@ -63,10 +61,10 @@ export function transformDataForAggregation(
               )
             : el.aggregationMethod === 'max'
               ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                maxBy(filteredData, (j: any) => j[el.column])[el.column]
+                Math.max(...filteredData.map((j: any) => j[el.column]))
               : el.aggregationMethod === 'min'
                 ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  minBy(filteredData, (j: any) => j[el.column])[el.column]
+                  Math.min(...filteredData.map((j: any) => j[el.column]))
                 : // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   sum(filteredData.map((j: any) => j[el.column]));
       });
@@ -98,10 +96,10 @@ export function transformDataForAggregation(
             )
           : el.aggregationMethod === 'max'
             ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              maxBy(filteredData, (j: any) => j[el.column])[el.column]
+              Math.max(...filteredData.map((j: any) => j[el.column]))
             : el.aggregationMethod === 'min'
               ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                minBy(filteredData, (j: any) => j[el.column])[el.column]
+                Math.min(...filteredData.map((j: any) => j[el.column]))
               : // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 sum(filteredData.map((j: any) => j[el.column]));
     });

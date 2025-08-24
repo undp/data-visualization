@@ -10,7 +10,6 @@ import {
 import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { scaleSqrt } from 'd3-scale';
-import maxBy from 'lodash.maxby';
 import { Modal, P } from '@undp/design-system-react';
 import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
@@ -119,9 +118,12 @@ export function Graph(props: Props) {
   });
   const mapG = useRef<SVGGElement>(null);
   const radiusScale =
-    data.filter(d => d.radius === undefined).length !== data.length
+    data.filter(d => d.radius === undefined || d.radius === null).length !== data.length
       ? scaleSqrt()
-          .domain([0, maxBy(data, 'radius')?.radius as number])
+          .domain([
+            0,
+            Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null)),
+          ])
           .range([0.25, radius])
           .nice()
       : undefined;

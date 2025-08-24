@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { cn } from '@undp/design-system-react';
-
-import WorldMapData from '../../WorldMapData/data.json';
+import { cn, Spinner } from '@undp/design-system-react';
 
 import { Graph } from './Graph';
 
@@ -142,7 +140,7 @@ interface Props {
 export function ChoroplethMap(props: Props) {
   const {
     data,
-    mapData,
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
     graphTitle,
     colors,
     sources,
@@ -214,7 +212,7 @@ export function ChoroplethMap(props: Props) {
         setMapShape(d);
       });
     } else {
-      setMapShape(mapData || WorldMapData);
+      setMapShape(mapData);
     }
   }, [mapData]);
 
@@ -358,7 +356,9 @@ export function ChoroplethMap(props: Props) {
                   }
                   customLayers={customLayers}
                 />
-              ) : null}
+              ) : (
+                <Spinner aria-label='Loading graph' />
+              )}
             </div>
             {sources || footNote ? (
               <GraphFooter

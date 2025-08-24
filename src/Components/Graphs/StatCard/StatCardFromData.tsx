@@ -1,6 +1,4 @@
 import sum from 'lodash.sum';
-import maxBy from 'lodash.maxby';
-import minBy from 'lodash.minby';
 import { cn, H3 } from '@undp/design-system-react';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -196,13 +194,21 @@ export function StatCardFromData(props: Props) {
                           )
                         : aggregationMethod === 'max'
                           ? numberFormattingFunction(
-                              maxBy(data, d => d.value)?.value as number | undefined,
+                              Math.max(
+                                ...data
+                                  .map(d => d.value as number | undefined)
+                                  .filter(d => d !== undefined),
+                              ),
                               precision,
                               prefix,
                               suffix,
                             )
                           : numberFormattingFunction(
-                              minBy(data, d => d.value)?.value as number | undefined,
+                              Math.min(
+                                ...data
+                                  .map(d => d.value as number | undefined)
+                                  .filter(d => d !== undefined),
+                              ),
                               precision,
                               prefix,
                               suffix,
@@ -271,13 +277,21 @@ export function StatCardFromData(props: Props) {
                         )
                       : aggregationMethod === 'max'
                         ? numberFormattingFunction(
-                            maxBy(data, d => d.value)?.value as number | undefined,
+                            Math.max(
+                              ...data
+                                .map(d => d.value as number | undefined)
+                                .filter(d => d !== undefined),
+                            ),
                             precision,
                             prefix,
                             suffix,
                           )
                         : numberFormattingFunction(
-                            minBy(data, d => d.value)?.value as number | undefined,
+                            Math.min(
+                              ...data
+                                .map(d => d.value as number | undefined)
+                                .filter(d => d !== undefined),
+                            ),
                             precision,
                             prefix,
                             suffix,

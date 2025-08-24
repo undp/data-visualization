@@ -1,10 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
 import uniqBy from 'lodash.uniqby';
 import { ascending, sort } from 'd3-array';
-import { cn, SliderUI } from '@undp/design-system-react';
-
-import WorldMapData from '../../WorldMapData/data.json';
+import { cn, SliderUI, Spinner } from '@undp/design-system-react';
 
 import { Graph } from './Graph';
 
@@ -151,7 +150,7 @@ interface Props {
 export function AnimatedChoroplethMap(props: Props) {
   const {
     data,
-    mapData,
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
     graphTitle,
     colors,
     sources,
@@ -226,7 +225,7 @@ export function AnimatedChoroplethMap(props: Props) {
         setMapShape(d);
       });
     } else {
-      setMapShape(mapData || WorldMapData);
+      setMapShape(mapData);
     }
   }, [mapData]);
 
@@ -422,7 +421,9 @@ export function AnimatedChoroplethMap(props: Props) {
                   dimmedOpacity={dimmedOpacity}
                   customLayers={customLayers}
                 />
-              ) : null}
+              ) : (
+                <Spinner aria-label='Loading graph' />
+              )}
             </div>
             {sources || footNote ? (
               <GraphFooter

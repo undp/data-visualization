@@ -5,7 +5,7 @@ import min from 'lodash.min';
 import { useState } from 'react';
 import uniqBy from 'lodash.uniqby';
 import { group } from 'd3-array';
-import { parse } from 'date-fns';
+import { parse } from 'date-fns/parse';
 import sortBy from 'lodash.sortby';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn, Modal } from '@undp/design-system-react';

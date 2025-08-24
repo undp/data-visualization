@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { P, Spinner } from '@undp/design-system-react';
+import { Spinner } from '@undp/design-system-react';
 
 import { MultiGraphDashboardWideToLongFormat } from './MultiGraphDashboardWideToLongFormat';
 
@@ -11,9 +11,9 @@ import {
   StyleObject,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
-import { validateConfigSchema } from '@/Utils/validateSchema';
 
 interface ConfigObject {
+  validateDataAndSettings?: boolean;
   dashboardID?: string;
   dashboardLayout: DashboardFromWideToLongFormatLayoutDataType;
   dataSettings: DataSettingsWideToLongDataType;
@@ -52,20 +52,6 @@ export function MultiGraphDashboardWideToLongFormatFromConfig(props: Props) {
       <div className='w-full flex justify-center p-4'>
         <Spinner />
       </div>
-    );
-  const validationResult = validateConfigSchema(
-    configSettings,
-    'multiGraphDashboardWideToLongFormat',
-  );
-  if (!validationResult.isValid)
-    return (
-      <P
-        size='sm'
-        marginBottom='none'
-        className='p-2 text-center text-accent-dark-red dark:text-accent-red'
-      >
-        {validateConfigSchema(configSettings, 'multiGraphDashboardWideToLongFormat').err}
-      </P>
     );
   return (
     <MultiGraphDashboardWideToLongFormat

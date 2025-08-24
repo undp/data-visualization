@@ -169,6 +169,3 @@ export {
 /* ---------GraphTypes-------------*/
 export type { GraphType, GeoHubGraphType, GraphTypeForGriddedGraph } from '@/Types';
 export { GraphList } from './Utils/getGraphList';
-
-/* ----------Renderers For Vanilla JS-------------*/
-// export { Dashboard, DashboardWithDataTransform, GriddedGraph, Graph } from './Renderer';

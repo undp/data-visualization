@@ -4,7 +4,7 @@ import min from 'lodash.min';
 import isEqual from 'fast-deep-equal';
 import { group } from 'd3-array';
 import uniqBy from 'lodash.uniqby';
-import { parse } from 'date-fns';
+import { parse } from 'date-fns/parse';
 import sortBy from 'lodash.sortby';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn, Modal } from '@undp/design-system-react';

@@ -2,7 +2,6 @@ import { memo, useCallback, useMemo, useEffect, useState, useRef } from 'react';
 import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
 import orderBy from 'lodash.orderby';
 import { scaleSqrt } from 'd3-scale';
-import maxBy from 'lodash.maxby';
 import { extent } from 'd3-array';
 import { cn, Modal, Spinner } from '@undp/design-system-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
@@ -132,12 +131,12 @@ export const Graph = memo((props: Props) => {
   );
 
   const radiusScale = useMemo(() => {
-    return data.filter(d => d.size === undefined).length !== data.length
+    return data.filter(d => d.size === undefined || d.size === null).length !== data.length
       ? scaleSqrt()
           .domain([
             0,
             checkIfNullOrUndefined(maxRadiusValue)
-              ? (maxBy(data, 'size')?.size as number)
+              ? Math.max(...data.map(d => d.size).filter(d => d !== undefined && d !== null))
               : (maxRadiusValue as number),
           ])
           .range([0.25, radius])

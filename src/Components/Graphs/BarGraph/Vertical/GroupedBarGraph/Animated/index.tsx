@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
 import { ascending, sort } from 'd3-array';
 import uniqBy from 'lodash.uniqby';
 import { cn, SliderUI } from '@undp/design-system-react';

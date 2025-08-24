@@ -10,7 +10,7 @@ import {
 import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { scaleThreshold, scaleOrdinal } from 'd3-scale';
-import { parse } from 'date-fns';
+import { parse } from 'date-fns/parse';
 import sortBy from 'lodash.sortby';
 import { group } from 'd3-array';
 import { Modal, P } from '@undp/design-system-react';

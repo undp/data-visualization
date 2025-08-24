@@ -8,9 +8,8 @@ import {
   curveStepBefore,
 } from 'd3-shape';
 import { scaleLinear, scaleTime } from 'd3-scale';
-import maxBy from 'lodash.maxby';
-import minBy from 'lodash.minby';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
@@ -194,14 +193,16 @@ export function Graph(props: Props) {
     : dataFormatted[dataFormatted.length - 1].date;
   const minParam: number = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
-    : minBy(dataFormatted, d => d.y)?.y
-      ? (minBy(dataFormatted, d => d.y)?.y as number) > 0
+    : Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) !==
+        Infinity
+      ? Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) > 0
         ? 0
-        : (minBy(dataFormatted, d => d.y)?.y as number)
+        : Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null))
       : 0;
-  const maxParam: number = maxBy(dataFormatted, d => d.y)?.y
-    ? (maxBy(dataFormatted, d => d.y)?.y as number)
-    : 0;
+  const maxParam: number =
+    Math.max(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) !== Infinity
+      ? Math.max(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null))
+      : 0;
   const x = scaleTime().domain([minYear, maxYear]).range([0, graphWidth]);
   const y = scaleLinear()
     .domain([

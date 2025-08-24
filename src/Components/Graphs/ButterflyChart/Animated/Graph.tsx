@@ -2,7 +2,7 @@ import isEqual from 'fast-deep-equal';
 import { useState } from 'react';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { group } from 'd3-array';
-import { parse } from 'date-fns';
+import { parse } from 'date-fns/parse';
 import sortBy from 'lodash.sortby';
 import uniqBy from 'lodash.uniqby';
 import { AnimatePresence, motion } from 'motion/react';

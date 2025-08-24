@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand } from 'd3-scale';
 import { useState } from 'react';
-import { parse } from 'date-fns';
+import { parse } from 'date-fns/parse';
 import sortBy from 'lodash.sortby';
 import uniqBy from 'lodash.uniqby';
 import { group } from 'd3-array';

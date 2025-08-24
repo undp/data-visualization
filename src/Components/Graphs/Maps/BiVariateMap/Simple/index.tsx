@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { cn } from '@undp/design-system-react';
-
-import WorldMapData from '../../WorldMapData/data.json';
+import { cn, Spinner } from '@undp/design-system-react';
 
 import { Graph } from './Graph';
 
@@ -140,8 +138,8 @@ interface Props {
 export function BiVariateChoroplethMap(props: Props) {
   const {
     data,
-    mapData,
     graphTitle,
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
     colors = Colors.light.bivariateColors.colors05x05,
     sources,
     graphDescription,
@@ -214,7 +212,7 @@ export function BiVariateChoroplethMap(props: Props) {
         setMapShape(d);
       });
     } else {
-      setMapShape(mapData || WorldMapData);
+      setMapShape(mapData);
     }
   }, [mapData]);
 
@@ -358,7 +356,9 @@ export function BiVariateChoroplethMap(props: Props) {
                   dimmedOpacity={dimmedOpacity}
                   customLayers={customLayers}
                 />
-              ) : null}
+              ) : (
+                <Spinner aria-label='Loading graph' />
+              )}
             </div>
             {sources || footNote ? (
               <GraphFooter

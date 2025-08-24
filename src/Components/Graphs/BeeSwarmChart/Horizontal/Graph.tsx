@@ -2,7 +2,6 @@ import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
 import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
 import { useEffect, useRef, useState } from 'react';
-import maxBy from 'lodash.maxby';
 import orderBy from 'lodash.orderby';
 import { cn, Modal, Spinner } from '@undp/design-system-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
@@ -153,12 +152,12 @@ export function Graph(props: Props) {
       : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
 
   const radiusScale =
-    data.filter(d => d.radius === undefined).length !== data.length
+    data.filter(d => d.radius === undefined || d.radius === null).length !== data.length
       ? scaleSqrt()
           .domain([
             0,
             checkIfNullOrUndefined(maxRadiusValue)
-              ? (maxBy(data, 'radius')?.radius as number)
+              ? Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null))
               : (maxRadiusValue as number),
           ])
           .range([0.25, radius])

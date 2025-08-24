@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { P, Spinner } from '@undp/design-system-react';
+import { Spinner } from '@undp/design-system-react';
 
 import { SingleGraphDashboard } from './SingleGraphDashboard';
 
@@ -16,7 +16,6 @@ import {
   HighlightDataPointSettingsDataType,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
-import { validateConfigSchema } from '@/Utils/validateSchema';
 
 interface ConfigObject {
   graphSettings?: GraphSettingsDataType;
@@ -64,17 +63,6 @@ export function SingleGraphDashboardFromConfig(props: Props) {
       <div className='w-full flex justify-center p-4'>
         <Spinner />
       </div>
-    );
-  const validationResult = validateConfigSchema(configSettings, 'singleGraphDashboard');
-  if (!validationResult.isValid)
-    return (
-      <P
-        size='sm'
-        marginBottom='none'
-        className='p-2 text-center text-accent-dark-red dark:text-accent-red'
-      >
-        {validationResult.err}
-      </P>
     );
   return (
     <SingleGraphDashboard

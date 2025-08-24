@@ -8,9 +8,8 @@ import {
   curveStepBefore,
 } from 'd3-shape';
 import { scaleLinear, scaleTime } from 'd3-scale';
-import maxBy from 'lodash.maxby';
-import minBy from 'lodash.minby';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
@@ -165,22 +164,30 @@ export function Graph(props: Props) {
   const maxYear = maxDate
     ? parse(`${maxDate}`, dateFormat, new Date())
     : dataFormatted[dataFormatted.length - 1].date;
-  const minParam1: number = minBy(dataFormatted, d => d.y1)?.y1
-    ? (minBy(dataFormatted, d => d.y1)?.y1 as number) > 0
-      ? 0
-      : (minBy(dataFormatted, d => d.y1)?.y1 as number)
-    : 0;
-  const minParam2: number = minBy(dataFormatted, d => d.y2)?.y2
-    ? (minBy(dataFormatted, d => d.y2)?.y2 as number) > 0
-      ? 0
-      : (minBy(dataFormatted, d => d.y2)?.y2 as number)
-    : 0;
-  const maxParam1: number = maxBy(dataFormatted, d => d.y1)?.y1
-    ? (maxBy(dataFormatted, d => d.y1)?.y1 as number)
-    : 0;
-  const maxParam2: number = maxBy(dataFormatted, d => d.y2)?.y2
-    ? (maxBy(dataFormatted, d => d.y2)?.y2 as number)
-    : 0;
+  const minParam1 =
+    Math.min(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) > 0
+        ? 0
+        : Math.min(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null))
+      : 0;
+  const minParam2 =
+    Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) > 0
+        ? 0
+        : Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null))
+      : 0;
+  const maxParam1 =
+    Math.max(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.max(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null))
+      : 0;
+  const maxParam2 =
+    Math.max(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.max(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null))
+      : 0;
 
   const minParam = minParam1 < minParam2 ? minParam1 : minParam2;
   const maxParam = maxParam1 > maxParam2 ? maxParam1 : maxParam2;

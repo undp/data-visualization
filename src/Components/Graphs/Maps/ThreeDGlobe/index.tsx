@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react';
 
-import WorldMapData from '../WorldMapData/data.json';
-
 import Graph from './Graph';
 
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -122,7 +120,7 @@ interface Props {
 export function ThreeDGlobe(props: Props) {
   const {
     data,
-    mapData,
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
     graphTitle,
     colors,
     sources,
@@ -187,25 +185,32 @@ export function ThreeDGlobe(props: Props) {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
       fetchData.then(d => {
-        setMapShape(d.features);
+        if (
+          mapData ===
+          'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json'
+        ) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const features = d.features.map((el: any) => {
+            if (d.geometry.type === 'Polygon') {
+              const reversed = [...el.geometry.coordinates[0]].reverse();
+              const geometry = { ...el.geometry, coordinates: [reversed] };
+              return { ...el, geometry };
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const coord: any = [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            d.geometry.coordinates.forEach((c: any) => {
+              const reversed = [...c[0]].reverse();
+              coord.push([reversed]);
+            });
+            const geometry = { ...el.geometry, coordinates: coord };
+            return { ...el, geometry };
+          });
+          setMapShape(features);
+        } else setMapShape(d.features);
       });
     } else {
-      const features = WorldMapData.features.map(d => {
-        if (d.geometry.type === 'Polygon') {
-          const reversed = [...d.geometry.coordinates[0]].reverse();
-          const geometry = { ...d.geometry, coordinates: [reversed] };
-          return { ...d, geometry };
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const coord: any = [];
-        d.geometry.coordinates.forEach(el => {
-          const reversed = [...el[0]].reverse();
-          coord.push([reversed]);
-        });
-        const geometry = { ...d.geometry, coordinates: coord };
-        return { ...d, geometry };
-      });
-      setMapShape(mapData?.features || features);
+      setMapShape(mapData.features);
     }
   }, [mapData]);
 

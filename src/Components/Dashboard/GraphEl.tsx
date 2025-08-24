@@ -48,7 +48,6 @@ import { BulletChart } from '../Graphs/BulletChart';
 import { ThreeDGlobe } from '../Graphs/Maps/ThreeDGlobe';
 
 import { getValues } from '@/Utils/getValues';
-import { validateDataSchema, validateSettingsSchema } from '@/Utils/validateSchema';
 import {
   DataTableColumnDataType,
   GraphConfigurationDataType,
@@ -2475,9 +2474,7 @@ function GraphEl(props: Props) {
       } ${settings?.theme || 'light'}`}
       style={{ minHeight: 'inherit' }}
     >
-      {validateSettingsSchema(getGraphProps(graph) || {}, graph).isValid &&
-      validateDataSchema(graphData, graph).isValid &&
-      GraphComponent ? (
+      {GraphComponent ? (
         <GraphComponent {...graphProps} />
       ) : (
         <P
@@ -2485,11 +2482,7 @@ function GraphEl(props: Props) {
           marginBottom='none'
           className='p-2 text-center text-accent-dark-red dark:text-accent-red'
         >
-          {GraphComponent
-            ? validateSettingsSchema(settings || {}, graph).isValid
-              ? `Error in data: ${validateDataSchema(graphData, graph).err}`
-              : `Error in settings: ${validateSettingsSchema(settings || {}, graph).err}`
-            : `Invalid chart type: ${graph}`}
+          {`Invalid chart type: ${graph}`}
         </P>
       )}
     </div>

@@ -1,7 +1,6 @@
 import uniqBy from 'lodash.uniqby';
 import { useState, useRef, useEffect } from 'react';
 import sum from 'lodash.sum';
-import maxBy from 'lodash.maxby';
 import { cn } from '@undp/design-system-react';
 
 import { Graph } from './Graph';
@@ -347,8 +346,11 @@ export function CirclePackingGraph(props: Props) {
                               ) *
                                 (data.filter(d => !checkIfNullOrUndefined(d.size)).length === 0
                                   ? 1
-                                  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                    (maxBy(data, 'size') as any).size)) /
+                                  : Math.max(
+                                      ...data
+                                        .map(d => d.size)
+                                        .filter(d => d !== undefined && d !== null),
+                                    ))) /
                               (data.filter(d => !checkIfNullOrUndefined(d.size)).length === 0
                                 ? data.length
                                 : sum(data.filter(d => d.size).map(d => d.size)) * 1.25)

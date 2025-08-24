@@ -8,7 +8,8 @@ import {
   curveStepBefore,
 } from 'd3-shape';
 import { scaleLinear, scaleTime } from 'd3-scale';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';

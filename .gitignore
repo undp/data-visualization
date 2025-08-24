@@ -18,6 +18,7 @@ src/*.test.js
 src/serviceWorker.js
 src/setupTests.js
 .eslintcache
+stats.html
 
 # Editor directories and files
 .vscode/*

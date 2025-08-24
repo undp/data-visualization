@@ -1,10 +1,8 @@
 import isEqual from 'fast-deep-equal';
 import { useRef, useState } from 'react';
-import maxBy from 'lodash.maxby';
 import orderBy from 'lodash.orderby';
 import { Delaunay } from 'd3-delaunay';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
-import minBy from 'lodash.minby';
 import { linearRegression } from 'simple-statistics';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
@@ -157,12 +155,12 @@ export function Graph(props: Props) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
   const radiusScale =
-    data.filter(d => d.radius === undefined).length !== data.length
+    data.filter(d => d.radius === undefined || d.radius === null).length !== data.length
       ? scaleSqrt()
           .domain([
             0,
             checkIfNullOrUndefined(maxRadiusValue)
-              ? (maxBy(data, 'radius')?.radius as number)
+              ? Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null))
               : (maxRadiusValue as number),
           ])
           .range([0.25, radius])
@@ -177,24 +175,24 @@ export function Graph(props: Props) {
           'desc',
         );
   const xMinVal = checkIfNullOrUndefined(minXValue)
-    ? (minBy(data, 'x')?.x as number) > 0
+    ? Math.min(...data.map(d => d.x).filter(d => d !== undefined && d !== null)) > 0
       ? 0
-      : (minBy(data, 'x')?.x as number)
+      : Math.min(...data.map(d => d.x).filter(d => d !== undefined && d !== null))
     : (minXValue as number);
   const xMaxVal = checkIfNullOrUndefined(maxXValue)
-    ? (maxBy(data, 'x')?.x as number) > 0
-      ? (maxBy(data, 'x')?.x as number)
+    ? Math.max(...data.map(d => d.x).filter(d => d !== undefined && d !== null)) > 0
+      ? Math.max(...data.map(d => d.x).filter(d => d !== undefined && d !== null))
       : 0
     : (maxXValue as number);
   const x = scaleLinear().domain([xMinVal, xMaxVal]).range([0, graphWidth]).nice();
   const yMinVal = checkIfNullOrUndefined(minYValue)
-    ? (minBy(data, 'y')?.y as number) > 0
+    ? Math.min(...data.map(d => d.y).filter(d => d !== undefined && d !== null)) > 0
       ? 0
-      : (minBy(data, 'y')?.y as number)
+      : Math.min(...data.map(d => d.y).filter(d => d !== undefined && d !== null))
     : (minYValue as number);
   const yMaxVal = checkIfNullOrUndefined(maxYValue)
-    ? (maxBy(data, 'y')?.y as number) > 0
-      ? (maxBy(data, 'y')?.y as number)
+    ? Math.max(...data.map(d => d.y).filter(d => d !== undefined && d !== null)) > 0
+      ? Math.max(...data.map(d => d.y).filter(d => d !== undefined && d !== null))
       : 0
     : (maxYValue as number);
   const y = scaleLinear().domain([yMinVal, yMaxVal]).range([graphHeight, 0]).nice();
