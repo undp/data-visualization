@@ -112,7 +112,7 @@ interface Props {
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
   animate?: boolean | AnimateDataType;
-  /** Format of the date in the data object  */
+  /** Format of the date in the data object. Available formats can be found [here](https://date-fns.org/docs/format)  */
   dateFormat?: string;
   /** Title for the Y-axis */
   yAxisTitle?: string;

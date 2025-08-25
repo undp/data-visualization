@@ -98,7 +98,7 @@ interface Props {
   showColorScale?: boolean;
   /** Labels for the lines  */
   labels: [string, string];
-  /** Format of the date in the data object  */
+  /** Format of the date in the data object. Available formats can be found [here](https://date-fns.org/docs/format)  */
   dateFormat?: string;
   /** Highlighted area(square) on the chart  */
   highlightAreaSettings?: HighlightAreaSettingsDataType[];

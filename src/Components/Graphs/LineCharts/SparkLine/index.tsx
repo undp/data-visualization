@@ -71,7 +71,7 @@ interface Props {
   minValue?: number;
 
   // Graph Parameters
-  /** Format of the date in the data object  */
+  /** Format of the date in the data object. Available formats can be found [here](https://date-fns.org/docs/format)  */
   dateFormat?: string;
   /** Toggles the visibility of the area below the line */
   area?: boolean;

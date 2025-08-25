@@ -162,7 +162,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   enabled: boolean;
   showOnlyActiveDate: boolean;
   speed?: number;
-  dateFormat?: string;
+  dateFormat?: string; // Available formats can be found here: https://date-fns.org/docs/format
 }`,
         },
       },
