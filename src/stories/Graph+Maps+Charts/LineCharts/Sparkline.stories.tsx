@@ -14,7 +14,7 @@ import { SparkLine } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof SparkLine>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Sparkline',
+  title: 'Graphs/Line charts/Sparkline',
   component: SparkLine,
   tags: ['autodocs'],
   argTypes: {

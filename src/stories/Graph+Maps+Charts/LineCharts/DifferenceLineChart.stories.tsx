@@ -16,7 +16,7 @@ import { DifferenceLineChart } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof DifferenceLineChart>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Difference line chart',
+  title: 'Graphs/Line charts/Difference line chart',
   component: DifferenceLineChart,
   tags: ['autodocs'],
   argTypes: {

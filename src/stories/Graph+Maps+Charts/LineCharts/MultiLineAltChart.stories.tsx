@@ -16,7 +16,7 @@ import { MultiLineAltChart } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof MultiLineAltChart>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Multi-line chart (Alternative)',
+  title: 'Graphs/Line charts/Multi-line chart (Alternative)',
   component: MultiLineAltChart,
   tags: ['autodocs'],
   argTypes: {

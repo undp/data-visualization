@@ -16,7 +16,7 @@ import { parseValue } from '@/stories/assets/parseValue';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof SimpleLineChart>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Line chart',
+  title: 'Graphs/Line charts/Simple Line chart',
   component: SimpleLineChart,
   tags: ['autodocs'],
   argTypes: {

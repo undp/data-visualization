@@ -16,7 +16,7 @@ import { MultiLineChart } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof MultiLineChart>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Multi-line chart',
+  title: 'Graphs/Line charts/Multi-line chart',
   component: MultiLineChart,
   tags: ['autodocs'],
   argTypes: {

@@ -16,7 +16,7 @@ import { LineChartWithConfidenceInterval } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof LineChartWithConfidenceInterval>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Line chart with interval',
+  title: 'Graphs/Line charts/Line chart with interval',
   component: LineChartWithConfidenceInterval,
   tags: ['autodocs'],
   argTypes: {

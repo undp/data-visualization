@@ -15,7 +15,7 @@ import { DualAxisLineChart } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof DualAxisLineChart>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Dual axis line chart',
+  title: 'Graphs/Line charts/Dual axis line chart',
   component: DualAxisLineChart,
   tags: ['autodocs'],
   argTypes: {
