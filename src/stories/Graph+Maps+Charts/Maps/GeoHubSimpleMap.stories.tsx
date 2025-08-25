@@ -14,7 +14,7 @@ import { GeoHubMap } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof GeoHubMap>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Maps/GeoHub map',
+  title: 'Maps/GeoHub maps/Simple',
   component: GeoHubMap,
   tags: ['autodocs'],
   argTypes: {

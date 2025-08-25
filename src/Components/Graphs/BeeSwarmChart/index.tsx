@@ -70,9 +70,9 @@ interface Props {
   /** Maximum value for the radius of the circle */
   maxRadiusValue?: number;
   /** Minimum value for position of the circle */
-  minPositionValue?: number;
+  minValue?: number;
   /** Maximum value for position of the circle */
-  maxPositionValue?: number;
+  maxValue?: number;
   /** Reference values for comparison */
   refValues?: ReferenceDataType[];
   /** Number of ticks on the axis */
@@ -157,8 +157,8 @@ export function BeeSwarmChart(props: Props) {
     graphID,
     radius,
     maxRadiusValue,
-    maxPositionValue,
-    minPositionValue,
+    maxValue,
+    minValue,
     highlightedDataPoints,
     onSeriesMouseClick,
     graphDownload,
@@ -209,8 +209,8 @@ export function BeeSwarmChart(props: Props) {
         graphID={graphID}
         radius={radius}
         maxRadiusValue={maxRadiusValue}
-        maxPositionValue={maxPositionValue}
-        minPositionValue={minPositionValue}
+        maxValue={maxValue}
+        minValue={minValue}
         highlightedDataPoints={highlightedDataPoints}
         onSeriesMouseClick={onSeriesMouseClick}
         graphDownload={graphDownload}
@@ -259,8 +259,8 @@ export function BeeSwarmChart(props: Props) {
       graphID={graphID}
       radius={radius}
       maxRadiusValue={maxRadiusValue}
-      maxPositionValue={maxPositionValue}
-      minPositionValue={minPositionValue}
+      maxValue={maxValue}
+      minValue={minValue}
       highlightedDataPoints={highlightedDataPoints}
       onSeriesMouseClick={onSeriesMouseClick}
       graphDownload={graphDownload}

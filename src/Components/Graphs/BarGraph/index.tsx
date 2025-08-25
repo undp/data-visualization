@@ -1,9 +1,9 @@
-import { HorizontalBarGraph } from './Horizontal/BarGraph/Simple';
-import { HorizontalGroupedBarGraph } from './Horizontal/GroupedBarGraph/Simple';
-import { HorizontalStackedBarGraph } from './Horizontal/StackedBarGraph/Simple';
-import { VerticalBarGraph } from './Vertical/BarGraph/Simple';
-import { VerticalGroupedBarGraph } from './Vertical/GroupedBarGraph/Simple';
-import { VerticalStackedBarGraph } from './Vertical/StackedBarGraph/Simple';
+import { HorizontalBarGraph } from './Horizontal/BarGraph';
+import { HorizontalGroupedBarGraph } from './Horizontal/GroupedBarGraph';
+import { HorizontalStackedBarGraph } from './Horizontal/StackedBarGraph';
+import { VerticalBarGraph } from './Vertical/BarGraph';
+import { VerticalGroupedBarGraph } from './Vertical/GroupedBarGraph';
+import { VerticalStackedBarGraph } from './Vertical/StackedBarGraph';
 
 import {
   ReferenceDataType,
@@ -15,6 +15,7 @@ import {
   GroupedBarGraphDataType,
   CustomLayerDataType,
   AnimateDataType,
+  TimelineDataType,
 } from '@/Types';
 
 interface Props {
@@ -126,6 +127,8 @@ interface Props {
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
+  /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
+  timeline?: TimelineDataType;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -216,6 +219,7 @@ export function SimpleBarGraph(props: Props) {
     dimmedOpacity,
     precision,
     customLayers,
+    timeline,
   } = props;
 
   if (orientation === 'vertical')
@@ -278,6 +282,7 @@ export function SimpleBarGraph(props: Props) {
         dimmedOpacity={dimmedOpacity}
         precision={precision}
         customLayers={customLayers}
+        timeline={timeline}
       />
     );
   return (
@@ -338,6 +343,7 @@ export function SimpleBarGraph(props: Props) {
       dimmedOpacity={dimmedOpacity}
       precision={precision}
       customLayers={customLayers}
+      timeline={timeline}
     />
   );
 }
@@ -439,6 +445,8 @@ interface GroupedBarChartProps {
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
+  /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
+  timeline?: TimelineDataType;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -523,6 +531,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     precision,
     customLayers,
     showColorScale,
+    timeline,
   } = props;
 
   if (orientation === 'vertical')
@@ -579,6 +588,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
         precision={precision}
         customLayers={customLayers}
         showColorScale={showColorScale}
+        timeline={timeline}
       />
     );
   return (
@@ -634,6 +644,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       precision={precision}
       customLayers={customLayers}
       showColorScale={showColorScale}
+      timeline={timeline}
     />
   );
 }
@@ -739,6 +750,8 @@ interface StackedBarChartProps {
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
+  /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
+  timeline?: TimelineDataType;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -825,6 +838,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     precision,
     customLayers,
     showColorScale,
+    timeline,
   } = props;
 
   if (orientation === 'vertical')
@@ -883,6 +897,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
         precision={precision}
         customLayers={customLayers}
         showColorScale={showColorScale}
+        timeline={timeline}
       />
     );
   return (
@@ -940,6 +955,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       precision={precision}
       customLayers={customLayers}
       showColorScale={showColorScale}
+      timeline={timeline}
     />
   );
 }

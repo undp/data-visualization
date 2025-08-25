@@ -51,8 +51,8 @@ interface Props {
   graphID?: string;
   radius?: number;
   maxRadiusValue?: number;
-  maxPositionValue?: number;
-  minPositionValue?: number;
+  maxValue?: number;
+  minValue?: number;
   highlightedDataPoints?: (string | number)[];
   dimmedOpacity?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -103,8 +103,8 @@ export function VerticalBeeSwarmChart(props: Props) {
     graphID,
     radius = 5,
     maxRadiusValue,
-    maxPositionValue,
-    minPositionValue,
+    maxValue,
+    minValue,
     highlightedDataPoints = [],
     onSeriesMouseClick,
     graphDownload = false,
@@ -278,8 +278,8 @@ export function VerticalBeeSwarmChart(props: Props) {
                         startFromZero={false}
                         radius={radius}
                         maxRadiusValue={maxRadiusValue}
-                        maxPositionValue={maxPositionValue}
-                        minPositionValue={minPositionValue}
+                        maxValue={maxValue}
+                        minValue={minValue}
                         highlightedDataPoints={highlightedDataPoints}
                         onSeriesMouseClick={onSeriesMouseClick}
                         resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}

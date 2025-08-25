@@ -116,7 +116,7 @@ interface Props {
   graphID?: string;
 }
 
-/** For using these maps you will have to install [`maplibre`](https://maplibre.org/maplibre-gl-js/docs/#npm) package to your project */
+/** For using these maps you will have to install [`three`](https://threejs.org/manual/) and [react-globe.gl](https://www.npmjs.com/package/react-globe.gl) package to your project */
 export function ThreeDGlobe(props: Props) {
   const {
     data,

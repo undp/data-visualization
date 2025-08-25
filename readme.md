@@ -55,28 +55,31 @@ The dependencies that are pre-installed wit the library:
 * Various Lodash libraries - For array and data manipulation
     * lodash.flattendeep
     * lodash.intersection
-    * lodash.max
-    * lodash.min
     * lodash.orderby
     * lodash.sortby
     * lodash.sum
     * lodash.uniqby
-* @undp/design-system-react - For UI elements (Peer dependency)
-* maplibre-gl - For Maplibre maps (Peer dependency)
-* pmtiles - For adding pmtiles to Maplibre maps (Peer dependency)
-* papaparse - For loading and parsing csv from links (Peer dependency)
 * motion - For creating animations in the animated graphs
-* dnd-kit - For creating comparison maps (Peer dependency)
+* papaparse - For loading and parsing csv from links
 * simple-statistics - For statistical functions
 * xss - For cleaning up cross scripting from user-submitted HTML
-* ajv - For schema validation
 * date-fns - For date formatting
 * html-to-image - For downloading div as images
-* dom-to-svg - For downloading div as svg (Peer dependency)
-* file-saver - For downloading files
 * react-csv - For generating a csv file
-* xlsx - For generating a xlsx file (Optional dependency)
+
+__Required peer dependencies__ 
 * React (of course!) (Peer dependency)
+* React-dom (of course!) (Peer dependency)
+* @undp/design-system-react - For UI elements (Peer dependency)
+
+__Optional peer dependencies__ 
+* maplibre-gl - For Maplibre maps (Peer optional dependency: only needed when using GeoHub maps)
+* pmtiles - For adding pmtiles to Maplibre maps (Peer optional dependency: only needed when using GeoHub maps)
+* dnd-kit - For creating comparison maps (Peer optional dependency: only needed when using GeoHub compare maps)
+* ajv - For schema validation (Peer optional dependency: only needed when validating schemas for good developer experience)
+* dom-to-svg - For downloading div as svg (Peer optional dependency: only needed when using SVG download functionality)
+* file-saver - For downloading files (Peer optional dependency: only needed when using XLSX download functionality)
+* xlsx - For generating a xlsx file (Optional dependency: only needed when using XLSX download functionality)
 
 ### How to add a new chart or graph
 
@@ -86,11 +89,14 @@ Adding a new chart or graph to the library requires multiple steps:
 * Add the missing settings  to `GraphSettingsDataType` in `./src/Types.tsx`
 * Add the graph configuration settings in `./src/Utils/transformData/graphConfig.ts`
 * Add the graph to the list in `./src/Utils/getGraphList.tsx`
-* Add the data schema for the graph and graph settings schema to the `./src/Schemas/schemaList.tsx`. Also add the graph to the `getGraphConfigChartConfigIdEnum` variable in the same file.
-* Also add the missing properties to the `SettingSchema` in `./src/Schemas/schemaList.tsx`
-* Add the data schema and settings schema to the `getDataSchema` and `getSettingsSchema` functions in `./src/Schemas/getSchema.tsx`
+* Add the file names in the next step to the `getDataSchema` and `getSettingsSchema` functions in `./src/Schemas/getSchema.tsx`
 * Add the graph to the `graphComponent` and `getGraphProps` functions in `./src/Components/Dashboard/GraphEl.tsx`
 * Finally add an export in `./src/index.ts`
+
+Adding schema
+__Schemas are in different repo: [undp-viz-library-schema](https://github.com/UNDP-Data/undp-viz-library-schemas)
+* Add the data schema for the graph and graph settings schema to the `dataSchema` folder.
+* Also add the missing properties to the `SettingSchema` in `settingSchema` folder
 
 Adding documentation and stories in storybook:
 * Add a new story in `./src/stories/Graph+Map+Chart` folder

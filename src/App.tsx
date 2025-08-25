@@ -1,43 +1,124 @@
-import { A, H3, P } from '@undp/design-system-react';
 import './styles/styles.css';
 import '@undp/design-system-react/style.css';
+import { SimpleBarGraph } from './Components/Graphs/BarGraph';
 
 function App() {
   return (
-    <div
-      style={{
-        height: '90vh',
-        maxWidth: '712px',
-        margin: '0 auto',
-        padding: '2rem',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+    <SimpleBarGraph
+      filterNA={false}
+      data={[
+        {
+          date: '2020',
+          label: 'Category 1',
+          size: 7,
+        },
+        {
+          date: '2021',
+          label: 'Category 1',
+          size: -12,
+        },
+        {
+          date: '2022',
+          label: 'Category 1',
+          size: 5,
+        },
+        {
+          date: '2023',
+          label: 'Category 1',
+          size: 14,
+        },
+        {
+          date: '2024',
+          label: 'Category 1',
+          size: 9,
+        },
+        {
+          date: '2020',
+          label: 'Category 2',
+          size: 8,
+        },
+        {
+          date: '2021',
+          label: 'Category 2',
+          size: 15,
+        },
+        {
+          date: '2022',
+          label: 'Category 2',
+          size: 6,
+        },
+        {
+          date: '2023',
+          label: 'Category 2',
+          size: 13,
+        },
+        {
+          date: '2024',
+          label: 'Category 2',
+          size: 10,
+        },
+        {
+          date: '2020',
+          label: 'Category 3',
+          size: 9,
+        },
+        {
+          date: '2021',
+          label: 'Category 3',
+          size: 14,
+        },
+        {
+          date: '2022',
+          label: 'Category 3',
+          size: 8,
+        },
+        {
+          date: '2023',
+          label: 'Category 3',
+          size: 17,
+        },
+        {
+          date: '2024',
+          label: 'Category 3',
+          size: 12,
+        },
+        {
+          date: '2020',
+          label: 'Category 4',
+          size: 10,
+        },
+        {
+          date: '2021',
+          label: 'Category 4',
+          size: 11,
+        },
+        {
+          date: '2022',
+          label: 'Category 4',
+          size: 13,
+        },
+        {
+          date: '2023',
+          label: 'Category 4',
+          size: undefined,
+        },
+        {
+          date: '2024',
+          label: 'Category 4',
+          size: 7,
+        },
+      ]}
+      timeline={{
+        enabled: true,
+        autoplay: false,
+        showOnlyActiveDate: true,
+        speed: 1000,
       }}
-    >
-      <img width='56' alt='undp-logo' src='/undp-logo-blue.svg' />
-      <H3 style={{ textAlign: 'center', paddingTop: '24px' }}>UNDP Design System for React</H3>
-      <P style={{ textAlign: 'center' }}>
-        This visualization library for react, developed by the United Nations Development Programme,
-        offers various interactive visualizations such as graphs, maps, and animated charts. You can
-        access the documentation{' '}
-        <A href='https://dataviz.design.undp.org/' target='_blank' rel='noreferrer'>
-          here
-        </A>
-        .
-      </P>
-      <P
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        For any feedback or inquiries, please feel free to reach out to us at{' '}
-        <A href='mailto:data@undp.org' target='_blank' rel='noreferrer'>
-          data@undp.org
-        </A>
-      </P>
-    </div>
+      animate
+      sortData='desc'
+      onSeriesMouseClick={function WJ() {}}
+      onSeriesMouseOver={function WJ() {}}
+    />
   );
 }
 

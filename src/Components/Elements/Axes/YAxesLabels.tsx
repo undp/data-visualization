@@ -33,13 +33,12 @@ export function YAxesLabels(props: Props) {
     <motion.foreignObject
       width={width}
       height={height}
+      x={x}
       variants={{
         initial: {
-          x,
           y,
         },
         whileInView: {
-          x,
           y,
           transition: { duration: animate.duration },
         },

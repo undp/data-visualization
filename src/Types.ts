@@ -45,15 +45,6 @@ export type GraphTypeForGriddedGraph =
   | 'dataTable'
   | 'statCard'
   | 'unitChart'
-  | 'animatedScatterPlot'
-  | 'animatedBarChart'
-  | 'animatedStackedBarChart'
-  | 'animatedGroupedBarChart'
-  | 'animatedChoroplethMap'
-  | 'animatedBiVariateChoroplethMap'
-  | 'animatedDotDensityMap'
-  | 'animatedDumbbellChart'
-  | 'animatedButterflyChart'
   | 'sankeyChart'
   | 'lineChartWithConfidenceInterval'
   | 'dataCards'
@@ -109,11 +100,8 @@ export interface ButterflyChartDataType {
   label: string | number;
   leftBar?: number | null;
   rightBar?: number | null;
+  date?: string | number;
   data?: object;
-}
-
-export interface ButterflyChartWithDateDataType extends ButterflyChartDataType {
-  date: string | number;
 }
 
 export interface AxesStyleObject {
@@ -164,6 +152,7 @@ export interface ClassNameObject {
 
 export interface BarGraphDataType {
   label: string | number;
+  date?: string | number;
   size?: number | null;
   color?: string | null;
   data?: object;
@@ -183,30 +172,17 @@ export interface AnimateDataType {
   amount: 'some' | 'all' | number;
 }
 
-export interface BarGraphWithDateDataType extends BarGraphDataType {
-  date: string | number;
-}
-
 export interface GroupedBarGraphDataType {
   label: string | number;
   size: (number | null)[];
+  date?: string | number;
   data?: object;
-}
-
-export interface GroupedBarGraphWithDateDataType extends GroupedBarGraphDataType {
-  date: string | number;
 }
 
 export interface DumbbellChartDataType {
   x: (number | null)[];
   label: string;
-  data?: object;
-}
-
-export interface DumbbellChartWithDateDataType {
-  x: (number | null)[];
-  date: string | number;
-  label: string;
+  date?: string | number;
   data?: object;
 }
 
@@ -231,13 +207,7 @@ export interface HistogramDataType {
 export interface ChoroplethMapDataType {
   x?: number | string | null;
   id: string;
-  data?: object;
-}
-
-export interface ChoroplethMapWithDateDataType {
-  x?: number | string | null;
-  id: string;
-  date: string | number;
+  date?: string | number;
   data?: object;
 }
 
@@ -245,14 +215,7 @@ export interface BivariateMapDataType {
   x?: number | null;
   y?: number | null;
   id: string;
-  data?: object;
-}
-
-export interface BivariateMapWithDateDataType {
-  x?: number | null;
-  y?: number | null;
-  id: string;
-  date: string | number;
+  date?: string | number;
   data?: object;
 }
 
@@ -293,19 +256,10 @@ export interface AreaChartDataType {
 export interface ScatterPlotDataType {
   x?: number | null;
   y?: number | null;
+  date?: string | number;
   radius?: number | null;
   color?: string | null;
-  label?: string | number | null;
-  data?: object;
-}
-
-export interface ScatterPlotWithDateDataType {
-  date: string | number;
   label: string | number;
-  x?: number | null;
-  y?: number | null;
-  radius?: number | null;
-  color?: string | null;
   data?: object;
 }
 
@@ -336,11 +290,8 @@ export interface DotDensityMapDataType {
   radius?: number;
   color?: string | number;
   label?: string | number;
+  date?: string | number;
   data?: object;
-}
-
-export interface DotDensityMapWithDateDataType extends DotDensityMapDataType {
-  date: string | number;
 }
 
 export interface SlopeChartDataType {
@@ -706,6 +657,14 @@ export interface MaterialDataType {
   transparent: boolean;
 }
 
+export interface TimelineDataType {
+  autoplay: boolean;
+  enabled: boolean;
+  showOnlyActiveDate: boolean;
+  speed?: number;
+  dateFormat?: string;
+}
+
 export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
@@ -742,8 +701,6 @@ export interface GraphSettingsDataType {
   sortData?: 'desc' | 'asc';
   dataDownload?: boolean;
   maxRadiusValue?: number;
-  maxPositionValue?: number;
-  minPositionValue?: number;
   leftBarTitle?: string;
   rightBarTitle?: string;
   barColors?: [string, string];
@@ -941,6 +898,7 @@ export interface GraphSettingsDataType {
   categorical?: boolean;
   atmosphereColor?: string;
   lineAxisTitle?: string;
+  timeline?: TimelineDataType;
 }
 
 export interface InfoBoxDataType {

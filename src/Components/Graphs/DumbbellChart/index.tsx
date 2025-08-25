@@ -1,5 +1,5 @@
-import { HorizontalDumbbellChart } from './Horizontal/Simple';
-import { VerticalDumbbellChart } from './Vertical/Simple';
+import { HorizontalDumbbellChart } from './Horizontal';
+import { VerticalDumbbellChart } from './Vertical';
 
 import {
   SourcesDataType,
@@ -10,6 +10,7 @@ import {
   ReferenceDataType,
   CustomLayerDataType,
   AnimateDataType,
+  TimelineDataType,
 } from '@/Types';
 
 interface Props {
@@ -84,9 +85,9 @@ interface Props {
   /** Suffix for values */
   suffix?: string;
   /** Maximum value for the chart */
-  maxPositionValue?: number;
+  maxValue?: number;
   /** Minimum value for the chart */
-  minPositionValue?: number;
+  minValue?: number;
   /** Truncate labels by specified length */
   truncateBy?: number;
   /** Reference values for comparison */
@@ -125,6 +126,8 @@ interface Props {
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
+  /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
+  timeline?: TimelineDataType;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -184,8 +187,8 @@ export function DumbbellChart(props: Props) {
     graphID,
     suffix,
     prefix,
-    maxPositionValue,
-    minPositionValue,
+    maxValue,
+    minValue,
     onSeriesMouseClick,
     graphDownload,
     dataDownload,
@@ -217,6 +220,7 @@ export function DumbbellChart(props: Props) {
     customLayers,
     highlightedDataPoints,
     dimmedOpacity,
+    timeline,
   } = props;
 
   if (orientation === 'vertical')
@@ -249,8 +253,8 @@ export function DumbbellChart(props: Props) {
         graphID={graphID}
         suffix={suffix}
         prefix={prefix}
-        maxPositionValue={maxPositionValue}
-        minPositionValue={minPositionValue}
+        maxValue={maxValue}
+        minValue={minValue}
         onSeriesMouseClick={onSeriesMouseClick}
         graphDownload={graphDownload}
         dataDownload={dataDownload}
@@ -281,6 +285,7 @@ export function DumbbellChart(props: Props) {
         customLayers={customLayers}
         highlightedDataPoints={highlightedDataPoints}
         dimmedOpacity={dimmedOpacity}
+        timeline={timeline}
       />
     );
   return (
@@ -312,8 +317,8 @@ export function DumbbellChart(props: Props) {
       graphID={graphID}
       suffix={suffix}
       prefix={prefix}
-      maxPositionValue={maxPositionValue}
-      minPositionValue={minPositionValue}
+      maxValue={maxValue}
+      minValue={minValue}
       onSeriesMouseClick={onSeriesMouseClick}
       graphDownload={graphDownload}
       dataDownload={dataDownload}
@@ -344,6 +349,7 @@ export function DumbbellChart(props: Props) {
       customLayers={customLayers}
       highlightedDataPoints={highlightedDataPoints}
       dimmedOpacity={dimmedOpacity}
+      timeline={timeline}
     />
   );
 }

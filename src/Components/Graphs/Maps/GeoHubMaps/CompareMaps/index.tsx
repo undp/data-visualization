@@ -59,7 +59,7 @@ interface Props {
   graphID?: string;
 }
 
-/** For using these maps you will have to install [`maplibre`](https://maplibre.org/maplibre-gl-js/docs/#npm) package to your project */
+/** For using these maps you will have to install [`maplibre`](https://maplibre.org/maplibre-gl-js/docs/#npm), [pmtiles](https://www.npmjs.com/package/pmtiles), [dnd-kit/core](https://www.npmjs.com/package/@dnd-kit/core), and [dnd-kit/modifier](https://www.npmjs.com/package/@dnd-kit/modifiers) package to your project */
 export function GeoHubCompareMaps(props: Props) {
   const {
     graphTitle,

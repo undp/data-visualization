@@ -22,6 +22,11 @@ export const ChartConfiguration: {
         required: false,
         multiple: false,
       },
+      {
+        id: 'date',
+        required: false,
+        multiple: false,
+      },
     ],
   },
   {
@@ -82,6 +87,11 @@ export const ChartConfiguration: {
         multiple: true,
         required: true,
       },
+      {
+        id: 'date',
+        required: false,
+        multiple: false,
+      },
     ],
   },
   {
@@ -97,69 +107,9 @@ export const ChartConfiguration: {
         multiple: true,
         required: true,
       },
-    ],
-  },
-  {
-    chartID: 'animatedBarChart',
-    configuration: [
       {
-        id: 'label',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'size',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'color',
+        id: 'date',
         required: false,
-        multiple: false,
-      },
-      {
-        id: 'date',
-        required: true,
-        multiple: false,
-      },
-    ],
-  },
-  {
-    chartID: 'animatedStackedBarChart',
-    configuration: [
-      {
-        id: 'label',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'size',
-        multiple: true,
-        required: true,
-      },
-      {
-        id: 'date',
-        required: true,
-        multiple: false,
-      },
-    ],
-  },
-  {
-    chartID: 'animatedGroupedBarChart',
-    configuration: [
-      {
-        id: 'label',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'size',
-        multiple: true,
-        required: true,
-      },
-      {
-        id: 'date',
-        required: true,
         multiple: false,
       },
     ],
@@ -302,6 +252,11 @@ export const ChartConfiguration: {
         required: true,
         multiple: false,
       },
+      {
+        id: 'date',
+        required: false,
+        multiple: false,
+      },
     ],
   },
   {
@@ -320,6 +275,11 @@ export const ChartConfiguration: {
       {
         id: 'y',
         required: true,
+        multiple: false,
+      },
+      {
+        id: 'date',
+        required: false,
         multiple: false,
       },
     ],
@@ -352,84 +312,9 @@ export const ChartConfiguration: {
         required: false,
         multiple: false,
       },
-    ],
-  },
-  {
-    chartID: 'animatedChoroplethMap',
-    configuration: [
-      {
-        id: 'id',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'x',
-        required: true,
-        multiple: false,
-      },
       {
         id: 'date',
-        required: true,
-        multiple: false,
-      },
-    ],
-  },
-  {
-    chartID: 'animatedBiVariateChoroplethMap',
-    configuration: [
-      {
-        id: 'id',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'x',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'y',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'date',
-        required: true,
-        multiple: false,
-      },
-    ],
-  },
-  {
-    chartID: 'animatedDotDensityMap',
-    configuration: [
-      {
-        id: 'lat',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'long',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'label',
-        multiple: false,
         required: false,
-      },
-      {
-        id: 'color',
-        multiple: false,
-        required: false,
-      },
-      {
-        id: 'radius',
-        required: false,
-        multiple: false,
-      },
-      {
-        id: 'date',
-        required: true,
         multiple: false,
       },
     ],
@@ -502,39 +387,9 @@ export const ChartConfiguration: {
         required: true,
         multiple: false,
       },
-    ],
-  },
-  {
-    chartID: 'animatedScatterPlot',
-    configuration: [
-      {
-        id: 'x',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'y',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'radius',
-        required: false,
-        multiple: false,
-      },
-      {
-        id: 'color',
-        required: false,
-        multiple: false,
-      },
-      {
-        id: 'label',
-        required: true,
-        multiple: false,
-      },
       {
         id: 'date',
-        required: true,
+        required: false,
         multiple: false,
       },
     ],
@@ -552,24 +407,9 @@ export const ChartConfiguration: {
         multiple: true,
         required: true,
       },
-    ],
-  },
-  {
-    chartID: 'animatedDumbbellChart',
-    configuration: [
-      {
-        id: 'label',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'x',
-        multiple: true,
-        required: true,
-      },
       {
         id: 'date',
-        required: true,
+        required: false,
         multiple: false,
       },
     ],
@@ -727,29 +567,9 @@ export const ChartConfiguration: {
         required: true,
         multiple: false,
       },
-    ],
-  },
-  {
-    chartID: 'animatedButterflyChart',
-    configuration: [
-      {
-        id: 'label',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'leftBar',
-        required: true,
-        multiple: false,
-      },
-      {
-        id: 'rightBar',
-        required: true,
-        multiple: false,
-      },
       {
         id: 'date',
-        required: true,
+        required: false,
         multiple: false,
       },
     ],

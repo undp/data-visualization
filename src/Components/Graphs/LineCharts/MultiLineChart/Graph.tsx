@@ -13,8 +13,6 @@ import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
-import min from 'lodash.min';
-import max from 'lodash.max';
 import { cn } from '@undp/design-system-react';
 import { motion, useInView } from 'motion/react';
 
@@ -216,14 +214,34 @@ export function Graph(props: Props) {
     ? parse(`${maxDate}`, dateFormat, new Date())
     : dataFormatted[dataFormatted.length - 1].date;
   const minParam: number = checkIfNullOrUndefined(minValue)
-    ? min(dataFormatted.map(d => min(d.y)))
-      ? (min(dataFormatted.map(d => min(d.y))) as number) > 0
+    ? Math.min(
+        ...dataFormatted.map(d =>
+          Math.min(...(d.y.filter(el => !checkIfNullOrUndefined(el)) as number[])),
+        ),
+      )
+      ? Math.min(
+          ...dataFormatted.map(d =>
+            Math.min(...(d.y.filter(el => !checkIfNullOrUndefined(el)) as number[])),
+          ),
+        ) > 0
         ? 0
-        : (min(dataFormatted.map(d => min(d.y))) as number)
+        : Math.min(
+            ...dataFormatted.map(d =>
+              Math.min(...(d.y.filter(el => !checkIfNullOrUndefined(el)) as number[])),
+            ),
+          )
       : 0
     : (minValue as number);
-  const maxParam: number = (max(dataFormatted.map(d => max(d.y))) as number)
-    ? (max(dataFormatted.map(d => max(d.y))) as number)
+  const maxParam: number = Math.max(
+    ...dataFormatted.map(d =>
+      Math.max(...(d.y.filter(el => !checkIfNullOrUndefined(el)) as number[])),
+    ),
+  )
+    ? Math.max(
+        ...dataFormatted.map(d =>
+          Math.max(...(d.y.filter(el => !checkIfNullOrUndefined(el)) as number[])),
+        ),
+      )
     : 0;
 
   const x = scaleTime().domain([minYear, maxYear]).range([0, graphWidth]);

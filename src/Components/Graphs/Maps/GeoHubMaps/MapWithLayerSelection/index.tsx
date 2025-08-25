@@ -72,7 +72,7 @@ interface Props {
   graphID?: string;
 }
 
-/** For using these maps you will have to install [`maplibre`](https://maplibre.org/maplibre-gl-js/docs/#npm) package to your project */
+/** For using these maps you will have to install [`maplibre`](https://maplibre.org/maplibre-gl-js/docs/#npm) and [pmtiles](https://www.npmjs.com/package/pmtiles) package to your project */
 export function GeoHubMapWithLayerSelection(props: Props) {
   const {
     mapStyle,

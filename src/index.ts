@@ -22,15 +22,15 @@ export { MultiLineAltChart } from './Components/Graphs/LineCharts/MultiLineAltCh
 export { DifferenceLineChart } from './Components/Graphs/LineCharts/DifferenceLineChart';
 export { SparkLine } from './Components/Graphs/LineCharts/SparkLine';
 // Maps
-export { BiVariateChoroplethMap } from './Components/Graphs/Maps/BiVariateMap/Simple';
-export { ChoroplethMap } from './Components/Graphs/Maps/ChoroplethMap/Simple';
-export { DotDensityMap } from './Components/Graphs/Maps/DotDensityMap/Simple';
+export { BiVariateChoroplethMap } from './Components/Graphs/Maps/BiVariateMap';
+export { ChoroplethMap } from './Components/Graphs/Maps/ChoroplethMap';
+export { DotDensityMap } from './Components/Graphs/Maps/DotDensityMap';
 export { ThreeDGlobe } from './Components/Graphs/Maps/ThreeDGlobe';
 export { GeoHubMap } from './Components/Graphs/Maps/GeoHubMaps/SimpleMap';
 export { GeoHubCompareMaps } from './Components/Graphs/Maps/GeoHubMaps/CompareMaps';
 export { GeoHubMapWithLayerSelection } from './Components/Graphs/Maps/GeoHubMaps/MapWithLayerSelection';
 // Scatter Plot
-export { ScatterPlot } from './Components/Graphs/ScatterPlot/Simple';
+export { ScatterPlot } from './Components/Graphs/ScatterPlot';
 // Slope Chart
 export { SlopeChart } from './Components/Graphs/SlopeChart';
 // BUllet chart
@@ -54,7 +54,7 @@ export { StripChart } from './Components/Graphs/StripChart';
 // Pareto Chart
 export { ParetoChart } from './Components/Graphs/ParetoChart';
 // Butterfly Chart
-export { ButterflyChart } from './Components/Graphs/ButterflyChart/Simple';
+export { ButterflyChart } from './Components/Graphs/ButterflyChart';
 // Histogram
 export { Histogram } from './Components/Graphs/Histogram';
 // Sankey Chart
@@ -72,22 +72,6 @@ export { MultiGraphDashboardFromConfig } from './Components/Dashboard/MultiGraph
 export { MultiGraphDashboardWideToLongFormatFromConfig } from './Components/Dashboard/MultiGraphDashboardWideToLongFormatFromConfig';
 export { SingleGraphDashboardFromConfig } from './Components/Dashboard/SingleGraphDashboardFromConfig';
 export { GriddedGraphsFromConfig } from './Components/Dashboard/GriddedGraphsFromConfig';
-// Animated Bar Graphs
-export {
-  AnimatedBarGraph,
-  AnimatedGroupedBarGraph,
-  AnimatedStackedBarGraph,
-} from './Components/Graphs/BarGraph/Animated';
-// Animated Butterfly Chart
-export { AnimatedButterflyChart } from './Components/Graphs/ButterflyChart/Animated';
-// Animated Dumbbell chart
-export { AnimatedDumbbellChart } from './Components/Graphs/DumbbellChart/Animated';
-// Animated Maps
-export { AnimatedBiVariateChoroplethMap } from './Components/Graphs/Maps/BiVariateMap/Animated';
-export { AnimatedChoroplethMap } from './Components/Graphs/Maps/ChoroplethMap/Animated';
-export { AnimatedDotDensityMap } from './Components/Graphs/Maps/DotDensityMap/Animated';
-// Animated Scatter Plot
-export { AnimatedScatterPlot } from './Components/Graphs/ScatterPlot/Animated';
 
 /* ------- All Button ------- */
 // Utility Buttons

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
-import min from 'lodash.min';
 import {
   CheckboxGroup,
   CheckboxGroupItem,
@@ -632,10 +631,12 @@ export function GriddedGraphs(props: Props) {
                       key={i}
                       style={{
                         width: `calc(${
-                          100 / (noOfColumns || (min([4, gridOption.length || 0]) as number))
+                          100 /
+                          (noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number))
                         }% - ${
-                          ((noOfColumns || (min([4, gridOption.length || 0]) as number)) - 1) /
-                          (noOfColumns || (min([4, gridOption.length || 0]) as number))
+                          ((noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number)) -
+                            1) /
+                          (noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number))
                         }rem)`,
                         minWidth: checkIfNullOrUndefined(minGraphWidth)
                           ? '280px'

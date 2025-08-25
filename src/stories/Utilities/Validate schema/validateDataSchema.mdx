@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Utilities/Validate schema/validateDataSchema" />
+
+# validateDataSchema
+
+Validates the data against the appropriate schema for the given graph type.
+
+_This should be used a development tool._ 
+
+__For this to work you will have to install `ajv` package to your project__
+
+```ts
+function validateDataSchema(data: any, graph: GraphType): Promise
+```
+
+## Parameters
+
+- `data` - The data to validate.
+- `graph` -  The graph type for which the data validation is performed.
+
+## Returns
+
+A promise with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
+
+## Example Usage
+
+```js
+// Example of how to use the function
+validateDataSchema(data, 'barChart')
+    .then(validityCheck => console.log(validityCheck))
+    .catch(error => console.error('Error:', error));

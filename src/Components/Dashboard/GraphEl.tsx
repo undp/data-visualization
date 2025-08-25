@@ -1,7 +1,6 @@
 import { P } from '@undp/design-system-react';
 
-import { AnimatedButterflyChart } from '../Graphs/ButterflyChart/Animated';
-import { ButterflyChart } from '../Graphs/ButterflyChart/Simple';
+import { ButterflyChart } from '../Graphs/ButterflyChart';
 import { CirclePackingGraph } from '../Graphs/CirclePackingGraph';
 import { DataTable } from '../Graphs/DataTable';
 import { DonutChart } from '../Graphs/DonutChart';
@@ -12,17 +11,13 @@ import { SimpleLineChart } from '../Graphs/LineCharts/LineChart';
 import { MultiLineChart } from '../Graphs/LineCharts/MultiLineChart';
 import { MultiLineAltChart } from '../Graphs/LineCharts/MultiLineAltChart';
 import { SparkLine } from '../Graphs/LineCharts/SparkLine';
-import { AnimatedBiVariateChoroplethMap } from '../Graphs/Maps/BiVariateMap/Animated';
-import { BiVariateChoroplethMap } from '../Graphs/Maps/BiVariateMap/Simple';
-import { AnimatedChoroplethMap } from '../Graphs/Maps/ChoroplethMap/Animated';
-import { ChoroplethMap } from '../Graphs/Maps/ChoroplethMap/Simple';
-import { AnimatedDotDensityMap } from '../Graphs/Maps/DotDensityMap/Animated';
-import { DotDensityMap } from '../Graphs/Maps/DotDensityMap/Simple';
+import { BiVariateChoroplethMap } from '../Graphs/Maps/BiVariateMap';
+import { ChoroplethMap } from '../Graphs/Maps/ChoroplethMap';
+import { DotDensityMap } from '../Graphs/Maps/DotDensityMap';
 import { GeoHubCompareMaps } from '../Graphs/Maps/GeoHubMaps/CompareMaps';
 import { GeoHubMap } from '../Graphs/Maps/GeoHubMaps/SimpleMap';
 import { ParetoChart } from '../Graphs/ParetoChart';
-import { AnimatedScatterPlot } from '../Graphs/ScatterPlot/Animated';
-import { ScatterPlot } from '../Graphs/ScatterPlot/Simple';
+import { ScatterPlot } from '../Graphs/ScatterPlot';
 import { SlopeChart } from '../Graphs/SlopeChart';
 import { AreaChart } from '../Graphs/StackedAreaChart';
 import { StatCardFromData } from '../Graphs/StatCard/StatCardFromData';
@@ -35,12 +30,6 @@ import { LineChartWithConfidenceInterval } from '../Graphs/LineCharts/LineChartW
 import { DataCards } from '../Graphs/DataCards';
 import { SimpleBarGraph, GroupedBarGraph, StackedBarGraph } from '../Graphs/BarGraph';
 import { DumbbellChart } from '../Graphs/DumbbellChart';
-import { AnimatedDumbbellChart } from '../Graphs/DumbbellChart/Animated';
-import {
-  AnimatedBarGraph,
-  AnimatedGroupedBarGraph,
-  AnimatedStackedBarGraph,
-} from '../Graphs/BarGraph/Animated';
 import { StripChart } from '../Graphs/StripChart';
 import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
 import { RadarChart } from '../Graphs/RadarChart';
@@ -137,15 +126,6 @@ function GraphEl(props: Props) {
     geoHubCompareMap: GeoHubCompareMaps,
     geoHubMap: GeoHubMap,
     unitChart: UnitChart,
-    animatedScatterPlot: AnimatedScatterPlot,
-    animatedBarChart: AnimatedBarGraph,
-    animatedStackedBarChart: AnimatedStackedBarGraph,
-    animatedGroupedBarChart: AnimatedGroupedBarGraph,
-    animatedChoroplethMap: AnimatedChoroplethMap,
-    animatedBiVariateChoroplethMap: AnimatedBiVariateChoroplethMap,
-    animatedDotDensityMap: AnimatedDotDensityMap,
-    animatedDumbbellChart: AnimatedDumbbellChart,
-    animatedButterflyChart: AnimatedButterflyChart,
     differenceLineChart: DifferenceLineChart,
     geoHubMapWithLayerSelection: GeoHubMapWithLayerSelection,
     sankeyChart: SankeyChart,
@@ -158,6 +138,7 @@ function GraphEl(props: Props) {
     switch (graphType) {
       case 'barChart':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -224,6 +205,7 @@ function GraphEl(props: Props) {
         };
       case 'groupedBarChart':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -278,6 +260,7 @@ function GraphEl(props: Props) {
         };
       case 'stackedBarChart':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -331,179 +314,6 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
-        };
-      case 'animatedBarChart':
-        return {
-          customLayers: settings?.customLayers,
-          precision: settings?.precision,
-          theme: settings?.theme,
-          dimmedOpacity: settings?.dimmedOpacity,
-          orientation: settings?.orientation,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          data: graphData,
-          colors: settings?.colors as string | string[] | undefined,
-          graphTitle: settings?.graphTitle,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          height: settings?.height,
-          width: settings?.width,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
-          sources: settings?.sources,
-          barPadding: settings?.barPadding,
-          showValues: settings?.showValues,
-          showTicks: settings?.showTicks,
-          leftMargin: settings?.leftMargin,
-          rightMargin: settings?.rightMargin,
-          truncateBy: settings?.truncateBy,
-          colorDomain: settings?.colorDomain,
-          colorLegendTitle:
-            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
-              ? settings?.colorLegendTitle
-              : getValues('color', graphDataConfiguration || [], readableHeader || []),
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          topMargin: settings?.topMargin,
-          bottomMargin: settings?.bottomMargin,
-          relativeHeight: settings?.relativeHeight,
-          showLabels: settings?.showLabels,
-          showColorScale: settings?.showColorScale,
-          maxValue: settings?.maxValue,
-          minValue: settings?.minValue,
-          tooltip: settings?.tooltip,
-          refValues: settings?.refValues,
-          graphID: settings?.graphID,
-          highlightedDataPoints: settings?.highlightedDataPoints,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          sortData: settings?.sortData,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          showNAColor: settings?.showNAColor,
-          autoPlay: settings?.autoPlay,
-          autoSort: settings?.autoSort,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          maxBarThickness: settings?.maxBarThickness,
-          minBarThickness: settings?.minBarThickness,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          barAxisTitle: settings?.barAxisTitle,
-          noOfTicks: settings?.noOfTicks,
-          valueColor: settings?.valueColor,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-        };
-      case 'animatedGroupedBarChart':
-        return {
-          customLayers: settings?.customLayers,
-          precision: settings?.precision,
-          theme: settings?.theme,
-          orientation: settings?.orientation,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          data: graphData,
-          colors: settings?.colors as string[] | undefined,
-          graphTitle: settings?.graphTitle,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          showColorScale: settings?.showColorScale,
-          height: settings?.height,
-          sources: settings?.sources,
-          barPadding: settings?.barPadding,
-          showTicks: settings?.showTicks,
-          truncateBy: settings?.truncateBy,
-          colorDomain:
-            settings?.colorDomain ||
-            (getValues('size', graphDataConfiguration || [], readableHeader || []) as string[]),
-          colorLegendTitle: settings?.colorLegendTitle,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
-          showValues: settings?.showValues,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          leftMargin: settings?.leftMargin,
-          rightMargin: settings?.rightMargin,
-          topMargin: settings?.topMargin,
-          showLabels: settings?.showLabels,
-          bottomMargin: settings?.bottomMargin,
-          relativeHeight: settings?.relativeHeight,
-          tooltip: settings?.tooltip,
-          refValues: settings?.refValues,
-          graphID: settings?.graphID,
-          maxValue: settings?.maxValue,
-          minValue: settings?.minValue,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          maxBarThickness: settings?.maxBarThickness,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          barAxisTitle: settings?.barAxisTitle,
-          noOfTicks: settings?.noOfTicks,
-          valueColor: settings?.valueColor,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-        };
-      case 'animatedStackedBarChart':
-        return {
-          customLayers: settings?.customLayers,
-          precision: settings?.precision,
-          theme: settings?.theme,
-          orientation: settings?.orientation,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          data: graphData,
-          colors: settings?.colors as string[] | undefined,
-          graphTitle: settings?.graphTitle,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          showColorScale: settings?.showColorScale,
-          sources: settings?.sources,
-          barPadding: settings?.barPadding,
-          showTicks: settings?.showTicks,
-          leftMargin: settings?.leftMargin,
-          rightMargin: settings?.rightMargin,
-          truncateBy: settings?.truncateBy,
-          colorDomain:
-            settings?.colorDomain ||
-            (getValues('size', graphDataConfiguration || [], readableHeader || []) as string[]),
-          colorLegendTitle: settings?.colorLegendTitle,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          topMargin: settings?.topMargin,
-          bottomMargin: settings?.bottomMargin,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
-          showValues: settings?.showValues,
-          showLabels: settings?.showLabels,
-          relativeHeight: settings?.relativeHeight,
-          tooltip: settings?.tooltip,
-          refValues: settings?.refValues,
-          graphID: settings?.graphID,
-          maxValue: settings?.maxValue,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          maxBarThickness: settings?.maxBarThickness,
-          minBarThickness: settings?.minBarThickness,
-          sortParameter: settings?.sortParameter,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          barAxisTitle: settings?.barAxisTitle,
-          noOfTicks: settings?.noOfTicks,
-          valueColor: settings?.valueColor,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
         };
       case 'bulletChart':
         return {
@@ -969,6 +779,7 @@ function GraphEl(props: Props) {
         };
       case 'choroplethMap':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1024,6 +835,7 @@ function GraphEl(props: Props) {
         };
       case 'biVariateChoroplethMap':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1081,6 +893,7 @@ function GraphEl(props: Props) {
         };
       case 'dotDensityMap':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1090,6 +903,7 @@ function GraphEl(props: Props) {
           mapProjection: settings?.mapProjection,
           graphDescription: settings?.graphDescription,
           footNote: settings?.footNote,
+          maxRadiusValue: settings?.maxRadiusValue,
           width: settings?.width,
           height: settings?.height,
           radius: settings?.radius,
@@ -1267,6 +1081,7 @@ function GraphEl(props: Props) {
         };
       case 'scatterPlot':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1339,6 +1154,7 @@ function GraphEl(props: Props) {
         };
       case 'dumbbellChart':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1374,8 +1190,8 @@ function GraphEl(props: Props) {
           showLabels: settings?.showLabels,
           tooltip: settings?.tooltip,
           graphID: settings?.graphID,
-          maxPositionValue: settings?.maxPositionValue,
-          minPositionValue: settings?.minPositionValue,
+          maxValue: settings?.maxValue,
+          minValue: settings?.minValue,
           graphDownload: settings?.graphDownload,
           dataDownload: settings?.dataDownload,
           suffix: settings?.suffix,
@@ -1635,8 +1451,8 @@ function GraphEl(props: Props) {
           graphID: settings?.graphID,
           radius: settings?.radius,
           maxRadiusValue: settings?.maxRadiusValue,
-          maxPositionValue: settings?.maxPositionValue,
-          minPositionValue: settings?.minPositionValue,
+          maxValue: settings?.maxValue,
+          minValue: settings?.minValue,
           highlightedDataPoints: settings?.highlightedDataPoints,
           graphDownload: settings?.graphDownload,
           dataDownload: settings?.dataDownload,
@@ -1652,6 +1468,7 @@ function GraphEl(props: Props) {
         };
       case 'butterflyChart':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1988,349 +1805,6 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
-        };
-      case 'animatedBiVariateChoroplethMap':
-        return {
-          customLayers: settings?.customLayers,
-          theme: settings?.theme,
-          dimmedOpacity: settings?.dimmedOpacity,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          data: graphData,
-          mapData: settings?.mapData,
-          mapProjection: settings?.mapProjection,
-          graphTitle: settings?.graphTitle,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          sources: settings?.sources,
-          xColorLegendTitle:
-            Object.keys(settings || {}).indexOf('xColorLegendTitle') !== -1
-              ? settings?.xColorLegendTitle
-              : getValues('x', graphDataConfiguration || [], readableHeader || []),
-          yColorLegendTitle:
-            Object.keys(settings || {}).indexOf('yColorLegendTitle') !== -1
-              ? settings?.yColorLegendTitle
-              : getValues('y', graphDataConfiguration || [], readableHeader || []),
-          xDomain: settings?.xDomain as [number, number, number, number],
-          yDomain: settings?.yDomain as [number, number, number, number],
-          colors: settings?.colors as string[][] | undefined,
-          scale: settings?.scale,
-          centerPoint: settings?.centerPoint,
-          backgroundColor: settings?.backgroundColor,
-          mapBorderWidth: settings?.mapBorderWidth,
-          mapNoDataColor: settings?.mapNoDataColor,
-          padding: settings?.padding,
-          mapBorderColor: settings?.mapBorderColor,
-          relativeHeight: settings?.relativeHeight,
-          tooltip: settings?.tooltip,
-          isWorldMap: settings?.isWorldMap,
-          zoomScaleExtend: settings?.zoomScaleExtend,
-          zoomTranslateExtend: settings?.zoomTranslateExtend,
-          graphID: settings?.graphID,
-          highlightedIds: settings?.highlightedIds,
-          mapProperty: settings?.mapProperty,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          showAntarctica: settings?.showAntarctica,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-          zoomInteraction: settings?.zoomInteraction,
-        };
-      case 'animatedChoroplethMap':
-        return {
-          customLayers: settings?.customLayers,
-          theme: settings?.theme,
-          dimmedOpacity: settings?.dimmedOpacity,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          graphTitle: settings?.graphTitle,
-          mapData: settings?.mapData,
-          mapProjection: settings?.mapProjection,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          sources: settings?.sources,
-          categorical: settings?.categorical,
-          colorDomain: settings?.colorDomain as string[] | number[],
-          colors: settings?.colors as string[] | undefined,
-          colorLegendTitle:
-            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
-              ? settings?.colorLegendTitle
-              : getValues('x', graphDataConfiguration || [], readableHeader || []),
-          scaleType: settings?.scaleType,
-          data: graphData,
-          scale: settings?.scale,
-          centerPoint: settings?.centerPoint,
-          backgroundColor: settings?.backgroundColor,
-          mapBorderWidth: settings?.mapBorderWidth,
-          mapNoDataColor: settings?.mapNoDataColor,
-          mapBorderColor: settings?.mapBorderColor,
-          relativeHeight: settings?.relativeHeight,
-          padding: settings?.padding,
-          isWorldMap: settings?.isWorldMap,
-          tooltip: settings?.tooltip,
-          showColorScale: settings?.showColorScale,
-          zoomScaleExtend: settings?.zoomScaleExtend,
-          zoomTranslateExtend: settings?.zoomTranslateExtend,
-          graphID: settings?.graphID,
-          highlightedIds: settings?.highlightedIds,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          mapProperty: settings?.mapProperty,
-          showAntarctica: settings?.showAntarctica,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-          zoomInteraction: settings?.zoomInteraction,
-        };
-      case 'animatedDotDensityMap':
-        return {
-          customLayers: settings?.customLayers,
-          theme: settings?.theme,
-          dimmedOpacity: settings?.dimmedOpacity,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          graphTitle: settings?.graphTitle,
-          mapData: settings?.mapData,
-          mapProjection: settings?.mapProjection,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          radius: settings?.radius,
-          sources: settings?.sources,
-          colors: settings?.colors as string | string[] | undefined,
-          colorDomain: settings?.colorDomain,
-          colorLegendTitle:
-            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
-              ? settings?.colorLegendTitle
-              : getValues('color', graphDataConfiguration || [], readableHeader || []),
-          data: graphData,
-          scale: settings?.scale,
-          centerPoint: settings?.centerPoint,
-          backgroundColor: settings?.backgroundColor,
-          mapBorderWidth: settings?.mapBorderWidth,
-          mapNoDataColor: settings?.mapNoDataColor,
-          mapBorderColor: settings?.mapBorderColor,
-          padding: settings?.padding,
-          showLabels: settings?.showLabels,
-          relativeHeight: settings?.relativeHeight,
-          isWorldMap: settings?.isWorldMap,
-          tooltip: settings?.tooltip,
-          showColorScale: settings?.showColorScale,
-          zoomScaleExtend: settings?.zoomScaleExtend,
-          zoomTranslateExtend: settings?.zoomTranslateExtend,
-          graphID: settings?.graphID,
-          highlightedDataPoints: settings?.highlightedDataPoints,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          showAntarctica: settings?.showAntarctica,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-          zoomInteraction: settings?.zoomInteraction,
-        };
-      case 'animatedButterflyChart':
-        return {
-          customLayers: settings?.customLayers,
-          precision: settings?.precision,
-          theme: settings?.theme,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          data: graphData,
-          graphTitle: settings?.graphTitle,
-          graphDescription: settings?.graphDescription,
-          leftBarTitle:
-            Object.keys(settings || {}).indexOf('leftBarTitle') !== -1
-              ? settings?.leftBarTitle
-              : getValues('leftBar', graphDataConfiguration || [], readableHeader || []),
-          rightBarTitle:
-            Object.keys(settings || {}).indexOf('rightBarTitle') !== -1
-              ? settings?.rightBarTitle
-              : getValues('rightBar', graphDataConfiguration || [], readableHeader || []),
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          sources: settings?.sources,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          leftMargin: settings?.leftMargin,
-          rightMargin: settings?.rightMargin,
-          topMargin: settings?.topMargin,
-          bottomMargin: settings?.bottomMargin,
-          barColors: settings?.barColors,
-          relativeHeight: settings?.relativeHeight,
-          tooltip: settings?.tooltip,
-          graphID: settings?.graphID,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          barPadding: settings?.barPadding,
-          truncateBy: settings?.truncateBy,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
-          showTicks: settings?.showTicks,
-          showValues: settings?.showValues,
-          centerGap: settings?.centerGap,
-          maxValue: settings?.maxValue,
-          minValue: settings?.minValue,
-          showColorScale: settings?.showColorScale,
-          refValues: settings?.refValues,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-        };
-      case 'animatedDumbbellChart':
-        return {
-          customLayers: settings?.customLayers,
-          precision: settings?.precision,
-          theme: settings?.theme,
-          orientation: settings?.orientation,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          data: graphData,
-          showColorScale: settings?.showColorScale,
-          colors: settings?.colors as string[] | undefined,
-          graphTitle: settings?.graphTitle,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          refValues: settings?.refValues,
-          sources: settings?.sources,
-          barPadding: settings?.barPadding,
-          showTicks: settings?.showTicks,
-          leftMargin: settings?.leftMargin,
-          rightMargin: settings?.rightMargin,
-          topMargin: settings?.topMargin,
-          bottomMargin: settings?.bottomMargin,
-          truncateBy: settings?.truncateBy,
-          colorDomain:
-            settings?.colorDomain ||
-            (getValues('x', graphDataConfiguration || [], readableHeader || []) as string[]),
-          colorLegendTitle: settings?.colorLegendTitle,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          radius: settings?.radius,
-          relativeHeight: settings?.relativeHeight,
-          showValues: settings?.showValues,
-          showLabels: settings?.showLabels,
-          tooltip: settings?.tooltip,
-          graphID: settings?.graphID,
-          maxPositionValue: settings?.maxPositionValue,
-          minPositionValue: settings?.minPositionValue,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          sortParameter: settings?.sortParameter,
-          arrowConnector: settings?.arrowConnector,
-          connectorStrokeWidth: settings?.connectorStrokeWidth,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          maxBarThickness: settings?.maxBarThickness,
-          minBarThickness: settings?.minBarThickness,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          axisTitle: settings?.axisTitle,
-          noOfTicks: settings?.noOfTicks,
-          valueColor: settings?.valueColor,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-          highlightedDataPoints: settings?.highlightedDataPoints,
-          dimmedOpacity: settings?.dimmedOpacity,
-        };
-      case 'animatedScatterPlot':
-        return {
-          customLayers: settings?.customLayers,
-          precision: settings?.precision,
-          theme: settings?.theme,
-          dimmedOpacity: settings?.dimmedOpacity,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          data: graphData,
-          graphTitle: settings?.graphTitle,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          sources: settings?.sources,
-          showLabels: settings?.showLabels,
-          colors: settings?.colors as string | string[] | undefined,
-          colorDomain: settings?.colorDomain,
-          colorLegendTitle:
-            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
-              ? settings?.colorLegendTitle
-              : getValues('color', graphDataConfiguration || [], readableHeader || []),
-          radius: settings?.radius,
-          xAxisTitle: settings?.xAxisTitle,
-          yAxisTitle: settings?.yAxisTitle,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          leftMargin: settings?.leftMargin,
-          rightMargin: settings?.rightMargin,
-          topMargin: settings?.topMargin,
-          bottomMargin: settings?.bottomMargin,
-          relativeHeight: settings?.relativeHeight,
-          tooltip: settings?.tooltip,
-          refXValues: settings?.refXValues,
-          refYValues: settings?.refYValues,
-          highlightedDataPoints: settings?.highlightedDataPoints,
-          highlightAreaSettings: settings?.highlightAreaSettings as
-            | HighlightAreaSettingsForScatterPlotDataType[]
-            | undefined,
-          showColorScale: settings?.showColorScale,
-          graphID: settings?.graphID,
-          maxRadiusValue: settings?.maxRadiusValue,
-          maxXValue: settings?.maxXValue,
-          minXValue: settings?.minXValue,
-          maxYValue: settings?.maxYValue,
-          minYValue: settings?.minYValue,
-          graphDownload: settings?.graphDownload,
-          dataDownload: settings?.dataDownload,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          showNAColor: settings?.showNAColor,
-          autoPlay: settings?.autoPlay,
-          showOnlyActiveDate: settings?.showOnlyActiveDate,
-          dateFormat: settings?.dateFormat,
-          customHighlightAreaSettings: settings?.customHighlightAreaSettings,
-          annotations: settings?.annotations,
-          ariaLabel: settings?.ariaLabel,
-          detailsOnClick: settings?.detailsOnClick,
-          noOfXTicks: settings?.noOfXTicks,
-          noOfYTicks: settings?.noOfYTicks,
-          labelColor: settings?.labelColor,
-          xSuffix: settings?.xSuffix,
-          ySuffix: settings?.ySuffix,
-          xPrefix: settings?.xPrefix,
-          yPrefix: settings?.yPrefix,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
         };
       case 'sankeyChart':
         return {

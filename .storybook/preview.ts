@@ -18,9 +18,9 @@ const preview: Preview = {
         order: [
           'Getting started',
           'Graphs',
+          ['Bar graph', '*'],
           'Maps',
-          'Animated graphs',
-          'Animated maps',
+          ['Choropleth map', 'Dot density map', 'GeoHub maps', ['Simple', '*']],
           'Dashboard',
           [
             'Single graphs with filters',
@@ -46,7 +46,9 @@ const preview: Preview = {
             ],
             '*',
           ],
+          'Scroll story',
           'Utilities',
+          ['Colors', 'Data fetching', 'Data transformation', 'Downloads', 'Validate schema', '*'],
           ['Data fetching', 'Data transformation', 'Colors', 'Downloads', '*'],
           '*',
         ],

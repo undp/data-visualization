@@ -15,7 +15,7 @@ import { ChoroplethMap } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof ChoroplethMap>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Maps/Choropleth map',
+  title: 'Maps/Choropleth map/Uni-variate/Simple',
   component: ChoroplethMap,
   tags: ['autodocs'],
   argTypes: {
@@ -26,6 +26,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
           detail: `{
   x?: number | string | null;
   id: string;
+  date?: string | number; //The date key is needed when time line feature needs to be used
   data?: object; //The data key in the object is used when downloading data and can be used to show additional points in mouseover
 }`,
         },
@@ -193,6 +194,22 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         type: { summary: "'light' | 'dark'" },
         defaultValue: { summary: 'light' },
       },
+    },
+    timeline: {
+      control: 'object',
+      table: {
+        type: {
+          summary: 'TimelineDataType',
+          detail: `{
+  autoplay: boolean;
+  enabled: boolean;
+  showOnlyActiveDate: boolean;
+  speed?: number;
+  dateFormat?: string;
+}`,
+        },
+      },
+      defaultValue: { summary: '{ enabled: false, autoplay: false, showOnlyActiveDate: true }' },
     },
   },
   args: {

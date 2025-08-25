@@ -3,8 +3,6 @@ import isEqual from 'fast-deep-equal';
 import { lineRadial, curveLinearClosed, curveCardinalClosed } from 'd3-shape';
 import { useRef, useState } from 'react';
 import { cn, Modal } from '@undp/design-system-react';
-import max from 'lodash.max';
-import min from 'lodash.min';
 import { scaleLinear } from 'd3-scale';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
@@ -116,15 +114,31 @@ export function Graph(props: Props) {
 
   const maxVal = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
-    : Math.max(...data.map(d => max(d.values.filter(l => !checkIfNullOrUndefined(l))) || 0)) < 0
+    : Math.max(
+          ...data.map(d =>
+            Math.max(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ),
+        ) < 0
       ? 0
-      : Math.max(...data.map(d => max(d.values.filter(l => !checkIfNullOrUndefined(l))) || 0));
+      : Math.max(
+          ...data.map(d =>
+            Math.max(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ),
+        );
 
   const minVal = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
-    : Math.min(...data.map(d => min(d.values.filter(l => !checkIfNullOrUndefined(l))) || 0)) >= 0
+    : Math.min(
+          ...data.map(d =>
+            Math.min(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ),
+        ) >= 0
       ? 0
-      : Math.min(...data.map(d => min(d.values.filter(l => !checkIfNullOrUndefined(l))) || 0));
+      : Math.min(
+          ...data.map(d =>
+            Math.min(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ),
+        );
   const scale = scaleLinear().domain([minVal, maxVal]).range([0, radiusWithoutMargin]).nice();
   const ticksArray = scale.ticks(noOfTicks);
   const lineShape = lineRadial<number>()

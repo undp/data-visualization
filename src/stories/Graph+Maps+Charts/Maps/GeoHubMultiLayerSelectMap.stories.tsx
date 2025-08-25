@@ -14,7 +14,7 @@ import { GeoHubMapWithLayerSelection } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof GeoHubMapWithLayerSelection>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Maps/GeoHub map with layer selection',
+  title: 'Maps/GeoHub maps/Map with layer selection',
   component: GeoHubMapWithLayerSelection,
   tags: ['autodocs'],
   argTypes: {

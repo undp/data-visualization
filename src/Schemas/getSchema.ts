@@ -23,12 +23,6 @@ export function getDataSchemaLink(graph: GraphType) {
       return 'dataSchema/stackedBarGraphDataSchema.json';
     case 'groupedBarChart':
       return 'dataSchema/groupedBarGraphDataSchema.json';
-    case 'animatedBarChart':
-      return 'dataSchema/animatedBarGraphDataSchema.json';
-    case 'animatedStackedBarChart':
-      return 'dataSchema/animatedStackedBarGraphDataSchema.json';
-    case 'animatedGroupedBarChart':
-      return 'dataSchema/animatedGroupedBarGraphDataSchema.json';
     case 'lineChart':
       return 'dataSchema/lineChartDataSchema.json';
     case 'dualAxisLineChart':
@@ -51,24 +45,14 @@ export function getDataSchemaLink(graph: GraphType) {
       return 'dataSchema/biVariateChoroplethMapDataSchema.json';
     case 'dotDensityMap':
       return 'dataSchema/dotDensityMapDataSchema.json';
-    case 'animatedChoroplethMap':
-      return 'dataSchema/animatedChoroplethMapDataSchema.json';
-    case 'animatedBiVariateChoroplethMap':
-      return 'dataSchema/animatedBiVariateChoroplethMapDataSchema.json';
-    case 'animatedDotDensityMap':
-      return 'dataSchema/animatedDotDensityMapDataSchema.json';
     case 'donutChart':
       return 'dataSchema/donutChartDataSchema.json';
     case 'slopeChart':
       return 'dataSchema/slopeChartDataSchema.json';
     case 'scatterPlot':
       return 'dataSchema/scatterPlotDataSchema.json';
-    case 'animatedScatterPlot':
-      return 'dataSchema/animatedScatterPlotDataSchema.json';
     case 'dumbbellChart':
       return 'dataSchema/dumbbellChartDataSchema.json';
-    case 'animatedDumbbellChart':
-      return 'dataSchema/animatedDumbbellChartDataSchema.json';
     case 'treeMap':
       return 'dataSchema/treeMapDataSchema.json';
     case 'circlePacking':
@@ -81,8 +65,6 @@ export function getDataSchemaLink(graph: GraphType) {
       return 'dataSchema/beeSwarmChartDataSchema.json';
     case 'butterflyChart':
       return 'dataSchema/butterflyChartDataSchema.json';
-    case 'animatedButterflyChart':
-      return 'dataSchema/animatedButterflyChartDataSchema.json';
     case 'histogram':
       return 'dataSchema/histogramDataSchema.json';
     case 'sparkLine':
@@ -113,12 +95,6 @@ export function getSettingsSchemaLink(graph: GraphType | 'allGraphs') {
       return 'settingsSchema/stackedBarChartSettingsSchema.json';
     case 'groupedBarChart':
       return 'settingsSchema/groupedBarChartSettingsSchema.json';
-    case 'animatedBarChart':
-      return 'settingsSchema/animatedSimpleBarChartSettingsSchema.json';
-    case 'animatedStackedBarChart':
-      return 'settingsSchema/animatedStackedBarChartSettingsSchema.json';
-    case 'animatedGroupedBarChart':
-      return 'settingsSchema/animatedGroupedBarChartSettingsSchema.json';
     case 'lineChart':
       return 'settingsSchema/lineChartSettingsSchema.json';
     case 'dualAxisLineChart':
@@ -141,24 +117,14 @@ export function getSettingsSchemaLink(graph: GraphType | 'allGraphs') {
       return 'settingsSchema/biVariateChoroplethMapSettingsSchema.json';
     case 'dotDensityMap':
       return 'settingsSchema/dotDensityMapSettingsSchema.json';
-    case 'animatedChoroplethMap':
-      return 'settingsSchema/animatedChoroplethMapSettingsSchema.json';
-    case 'animatedBiVariateChoroplethMap':
-      return 'settingsSchema/animatedBiVariateChoroplethMapSettingsSchema.json';
-    case 'animatedDotDensityMap':
-      return 'settingsSchema/animatedDotDensityMapSettingsSchema.json';
     case 'donutChart':
       return 'settingsSchema/donutChartSettingsSchema.json';
     case 'slopeChart':
       return 'settingsSchema/slopeChartSettingsSchema.json';
     case 'scatterPlot':
       return 'settingsSchema/scatterPlotSettingsSchema.json';
-    case 'animatedScatterPlot':
-      return 'settingsSchema/animatedScatterPlotSettingsSchema.json';
     case 'dumbbellChart':
       return 'settingsSchema/dumbbellChartSettingsSchema.json';
-    case 'animatedDumbbellChart':
-      return 'settingsSchema/animatedDumbbellChartSettingsSchema.json';
     case 'treeMap':
       return 'settingsSchema/treeMapSettingsSchema.json';
     case 'circlePacking':
@@ -171,8 +137,6 @@ export function getSettingsSchemaLink(graph: GraphType | 'allGraphs') {
       return 'settingsSchema/beeSwarmChartSettingsSchema.json';
     case 'butterflyChart':
       return 'settingsSchema/butterflyChartSettingsSchema.json';
-    case 'animatedButterflyChart':
-      return 'settingsSchema/animatedButterflyChartSettingsSchema.json';
     case 'histogram':
       return 'settingsSchema/histogramSettingsSchema.json';
     case 'sparkLine':
@@ -230,44 +194,30 @@ export function getGraphConfigChartConfigIdEnum(
 ) {
   switch (chartType) {
     case 'barChart':
-      return ['label', 'size', 'color'];
+      return ['label', 'size', 'color', 'date'];
     case 'bulletChart':
       return ['label', 'size', 'target', 'qualitativeRange'];
-    case 'animatedBarChart':
-      return ['label', 'size', 'color', 'date'];
     case 'treeMap':
       return ['label', 'size', 'color'];
     case 'circlePacking':
       return ['label', 'size', 'color'];
     case 'butterflyChart':
-      return ['label', 'leftBar', 'rightBar'];
-    case 'groupedBarChart':
-      return ['label', 'size'];
-    case 'stackedBarChart':
-      return ['label', 'size'];
-    case 'animatedButterflyChart':
       return ['label', 'leftBar', 'rightBar', 'date'];
-    case 'animatedGroupedBarChart':
+    case 'groupedBarChart':
       return ['label', 'size', 'date'];
-    case 'animatedStackedBarChart':
+    case 'stackedBarChart':
       return ['label', 'size', 'date'];
     case 'dumbbellChart':
-      return ['x', 'label'];
-    case 'animatedDumbbellChart':
       return ['x', 'label', 'date'];
     case 'donutChart':
       return ['size', 'label'];
     case 'histogram':
       return ['value'];
     case 'choroplethMap':
-      return ['x', 'id'];
+      return ['x', 'id', 'date'];
     case 'threeDGlobe':
       return ['x', 'id'];
     case 'biVariateChoroplethMap':
-      return ['x', 'y', 'id'];
-    case 'animatedChoroplethMap':
-      return ['x', 'id', 'date'];
-    case 'animatedBiVariateChoroplethMap':
       return ['x', 'y', 'id', 'date'];
     case 'lineChart':
       return ['date', 'y'];
@@ -280,16 +230,12 @@ export function getGraphConfigChartConfigIdEnum(
     case 'stackedAreaChart':
       return ['date', 'y'];
     case 'scatterPlot':
-      return ['x', 'y', 'radius', 'color', 'label'];
-    case 'animatedScatterPlot':
       return ['x', 'y', 'radius', 'color', 'label', 'date'];
     case 'dualAxisLineChart':
       return ['date', 'y1', 'y2'];
     case 'paretoChart':
       return ['label', 'bar', 'line'];
     case 'dotDensityMap':
-      return ['lat', 'long', 'radius', 'color', 'label'];
-    case 'animatedDotDensityMap':
       return ['lat', 'long', 'radius', 'color', 'label', 'date'];
     case 'slopeChart':
       return ['y1', 'y2', 'color', 'label'];

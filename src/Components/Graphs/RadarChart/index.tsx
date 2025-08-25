@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import min from 'lodash.min';
 import { cn } from '@undp/design-system-react';
 import uniqBy from 'lodash.uniqby';
 
@@ -202,17 +201,19 @@ export function RadarChart(props: Props) {
       setSvgWidth(width || entries[0].target.clientWidth || 420);
       setSvgHeight(height || entries[0].target.clientHeight || 420);
       setGraphRadius(
-        (min([
-          width || entries[0].target.clientWidth || 620,
-          height || entries[0].target.clientHeight || 480,
-        ]) || 420) / 2,
+        (Math.min(
+          ...[
+            width || entries[0].target.clientWidth || 620,
+            height || entries[0].target.clientHeight || 480,
+          ],
+        ) || 420) / 2,
       );
     });
     if (graphDiv.current) {
       setSvgHeight(graphDiv.current.clientHeight || 420);
       setSvgWidth(graphDiv.current.clientWidth || 420);
       setGraphRadius(
-        (min([graphDiv.current.clientWidth, graphDiv.current.clientHeight]) || 420) / 2,
+        (Math.min(...[graphDiv.current.clientWidth, graphDiv.current.clientHeight]) || 420) / 2,
       );
       if (!width || !radius) resizeObserver.observe(graphDiv.current);
     }

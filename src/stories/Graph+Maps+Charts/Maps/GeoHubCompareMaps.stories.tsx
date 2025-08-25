@@ -14,7 +14,7 @@ import { GeoHubCompareMaps } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof GeoHubCompareMaps>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Maps/GeoHub maps with comparison',
+  title: 'Maps/GeoHub maps/Maps with comparison',
   component: GeoHubCompareMaps,
   tags: ['autodocs'],
   argTypes: {

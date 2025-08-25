@@ -16,7 +16,7 @@ import { ScatterPlot } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof ScatterPlot>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Scatter plot',
+  title: 'Graphs/Scatter plot/Simple',
   component: ScatterPlot,
   tags: ['autodocs'],
   argTypes: {
@@ -28,6 +28,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   label: string; 
   size: number;
   color?: string;
+  date?: string | number; //The date key is needed when time line feature needs to be used
   data?: object; //The data key in the object is used when downloading data and can be used to show additional points in mouseover
 }`,
         },
@@ -227,17 +228,33 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: 'light' },
       },
     },
+    timeline: {
+      control: 'object',
+      table: {
+        type: {
+          summary: 'TimelineDataType',
+          detail: `{
+  autoplay: boolean;
+  enabled: boolean;
+  showOnlyActiveDate: boolean;
+  speed?: number;
+  dateFormat?: string;
+}`,
+        },
+      },
+      defaultValue: { summary: '{ enabled: false, autoplay: false, showOnlyActiveDate: true }' },
+    },
   },
   args: {
     data: [
-      { x: 1, y: 3 },
-      { x: 2, y: 8 },
-      { x: 3, y: 11 },
-      { x: 4, y: 19 },
-      { x: 5, y: 3 },
-      { x: 6, y: 8 },
-      { x: 7, y: 11 },
-      { x: 8, y: 19 },
+      { x: 1, y: 3, label: 'Point 1' },
+      { x: 2, y: 8, label: 'Point 2' },
+      { x: 3, y: 11, label: 'Point 3' },
+      { x: 4, y: 19, label: 'Point 4' },
+      { x: 5, y: 3, label: 'Point 5' },
+      { x: 6, y: 8, label: 'Point 6' },
+      { x: 7, y: 11, label: 'Point 7' },
+      { x: 8, y: 19, label: 'Point 8' },
     ],
   },
   render: ({

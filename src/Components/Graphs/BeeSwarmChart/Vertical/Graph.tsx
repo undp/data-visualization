@@ -54,8 +54,8 @@ interface Props {
   startFromZero: boolean;
   radius: number;
   maxRadiusValue?: number;
-  maxPositionValue?: number;
-  minPositionValue?: number;
+  maxValue?: number;
+  minValue?: number;
   highlightedDataPoints: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
@@ -93,8 +93,8 @@ export function Graph(props: Props) {
     startFromZero,
     radius,
     maxRadiusValue,
-    maxPositionValue,
-    minPositionValue,
+    maxValue,
+    minValue,
     highlightedDataPoints,
     onSeriesMouseClick,
     resetSelectionOnDoubleClick,
@@ -136,14 +136,14 @@ export function Graph(props: Props) {
           'radius',
           'desc',
         );
-  const yMaxValue = !checkIfNullOrUndefined(maxPositionValue)
-    ? (maxPositionValue as number)
+  const yMaxValue = !checkIfNullOrUndefined(maxValue)
+    ? (maxValue as number)
     : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) < 0 &&
         !startFromZero
       ? 0
       : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
-  const yMinValue = !checkIfNullOrUndefined(minPositionValue)
-    ? (minPositionValue as number)
+  const yMinValue = !checkIfNullOrUndefined(minValue)
+    ? (minValue as number)
     : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) >=
           0 && !startFromZero
       ? 0

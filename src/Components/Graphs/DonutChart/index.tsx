@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import min from 'lodash.min';
 import sortBy from 'lodash.sortby';
 import { cn, P } from '@undp/design-system-react';
 
@@ -169,17 +168,19 @@ export function DonutChart(props: Props) {
       setSvgWidth(width || entries[0].target.clientWidth || 420);
       setSvgHeight(height || entries[0].target.clientHeight || 420);
       setDonutRadius(
-        (min([
-          width || entries[0].target.clientWidth || 620,
-          height || entries[0].target.clientHeight || 480,
-        ]) || 420) / 2,
+        (Math.min(
+          ...[
+            width || entries[0].target.clientWidth || 620,
+            height || entries[0].target.clientHeight || 480,
+          ],
+        ) || 420) / 2,
       );
     });
     if (graphDiv.current) {
       setSvgHeight(graphDiv.current.clientHeight || 420);
       setSvgWidth(graphDiv.current.clientWidth || 420);
       setDonutRadius(
-        (min([graphDiv.current.clientWidth, graphDiv.current.clientHeight]) || 420) / 2,
+        (Math.min(...[graphDiv.current.clientWidth, graphDiv.current.clientHeight]) || 420) / 2,
       );
       if (!width || !radius) resizeObserver.observe(graphDiv.current);
     }

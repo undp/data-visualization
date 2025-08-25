@@ -2,20 +2,18 @@ import sortBy from 'lodash.sortby';
 import { parse } from 'date-fns/parse';
 
 import {
-  BarGraphWithDateDataType,
-  ButterflyChartWithDateDataType,
-  DumbbellChartWithDateDataType,
-  GroupedBarGraphWithDateDataType,
-  ScatterPlotWithDateDataType,
+  BarGraphDataType,
+  ButterflyChartDataType,
+  DumbbellChartDataType,
+  GroupedBarGraphDataType,
+  ScatterPlotDataType,
 } from '@/Types';
 
-export function ensureCompleteDataForBarChart(
-  data: BarGraphWithDateDataType[],
-  dateFormat: string,
-) {
+export function ensureCompleteDataForBarChart(data: BarGraphDataType[], dateFormat: string) {
   // Extract unique labels and dates
   const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date)));
+  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
@@ -51,13 +49,13 @@ export function ensureCompleteDataForBarChart(
 }
 
 export function ensureCompleteDataForStackedBarChart(
-  data: GroupedBarGraphWithDateDataType[],
+  data: GroupedBarGraphDataType[],
   dateFormat: string,
 ) {
   // Extract unique labels and dates
   const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date)));
-
+  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  if (dates.length === 0) return data;
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,12 +81,13 @@ export function ensureCompleteDataForStackedBarChart(
 }
 
 export function ensureCompleteDataForButterFlyChart(
-  data: ButterflyChartWithDateDataType[],
+  data: ButterflyChartDataType[],
   dateFormat: string,
 ) {
   // Extract unique labels and dates
   const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date)));
+  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
@@ -115,13 +114,11 @@ export function ensureCompleteDataForButterFlyChart(
   return sortBy(completeData, d => parse(`${d.date}`, dateFormat || 'yyyy', new Date()));
 }
 
-export function ensureCompleteDataForScatterPlot(
-  data: ScatterPlotWithDateDataType[],
-  dateFormat: string,
-) {
+export function ensureCompleteDataForScatterPlot(data: ScatterPlotDataType[], dateFormat: string) {
   // Extract unique labels and dates
   const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date)));
+  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
@@ -159,12 +156,13 @@ export function ensureCompleteDataForScatterPlot(
 }
 
 export function ensureCompleteDataForDumbbellChart(
-  data: DumbbellChartWithDateDataType[],
+  data: DumbbellChartDataType[],
   dateFormat: string,
 ) {
   // Extract unique labels and dates
   const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date)));
+  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(

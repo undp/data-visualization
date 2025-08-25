@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Utilities/Validate schema/validateConfigSchema" />
+
+# validateConfigSchema
+
+Validates the configuration against the appropriate schema for the given graph type. This does not validate graphTitle, graphDescription, footNote, tooltip, detailsOnClick or cardTemplate in the graphSettings. 
+
+_This should be used a development tool._ 
+
+__For this to work you will have to install `ajv` package to your project__
+
+```ts
+function validateConfigSchema(config: any, graph: GraphType): Promise
+```
+
+## Parameters
+
+- `config` - The configuration to validate.
+- `graph` -  The graph type for which the configuration validation is performed. Can be one of: `singleGraphDashboard`, `multiGraphDashboard`, `griddedGraph`, or `multiGraphDashboardWideToLongFormat`.
+
+## Returns
+
+A promise with `isValid` indicating the validation result and `err` containing any error messages if the validation fails.
+
+## Example Usage
+
+```js
+// Example of how to use the function
+validateConfigSchema(data, 'singleGraphDashboard')
+    .then(validityCheck => console.log(validityCheck))
+    .catch(error => console.error('Error:', error));

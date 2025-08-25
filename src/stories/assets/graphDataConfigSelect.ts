@@ -14,6 +14,10 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 3',
     chartConfigId: 'color',
+  },
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Data table': `// No configuration required`,
@@ -27,6 +31,11 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 4',
     chartConfigId: 'label',
+  },
+  // ----Not required objects---- //
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Grouped bar graph': `[
@@ -38,6 +47,11 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 4',
     chartConfigId: 'label',
+  },
+  // ----Not required objects---- //
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Bullet chart': `[
@@ -171,6 +185,11 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 2',
     chartConfigId: 'id',
+  },
+  // ----Not required objects---- //
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Bi-variate choropleth map': `[
@@ -186,6 +205,11 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 3',
     chartConfigId: 'id',
+  },
+  // ----Not required objects---- //
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Dot density map': `[
@@ -210,6 +234,10 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 5',
     chartConfigId: 'label',
+  },
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Donut graph': `[
@@ -265,6 +293,10 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 5',
     chartConfigId: 'label',
+  },
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Dumbbell graph': `[
@@ -276,6 +308,11 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 4',
     chartConfigId: 'label',
+  },
+  // ----Not required objects---- //
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Tree map': `[
@@ -374,6 +411,11 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 3',
     chartConfigId: 'rightBar',
+  },
+  // ----Not required objects---- //
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
   }
 ]`,
     'Sankey chart': `[
@@ -440,180 +482,6 @@ export function GraphDataConfigSelector(graph: string) {
   {
     columnId: 'Column 2',
     chartConfigId: 'value',
-  }
-]`,
-    'Bar graph (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: 'Column 1',
-    chartConfigId: 'size',
-  },
-  {
-    columnId: 'Column 2',
-    chartConfigId: 'label',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'date',
-  },
-  // ----Not required objects---- //
-  {
-    columnId: 'Column 3',
-    chartConfigId: 'color',
-  }
-]`,
-    'Stacked bar graph (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: ['Column 1', 'Column 2', 'Column 3'],
-    chartConfigId: 'size',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'label',
-  },
-  {
-    columnId: 'Column 5',
-    chartConfigId: 'date',
-  }
-]`,
-    'Grouped bar graph (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: ['Column 1', 'Column 2', 'Column 3'],
-    chartConfigId: 'size',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'label',
-  },
-  {
-    columnId: 'Column 5',
-    chartConfigId: 'date',
-  }
-]`,
-    'Butterfly chart (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: 'Column 1',
-    chartConfigId: 'label',
-  },
-  {
-    columnId: 'Column 2',
-    chartConfigId: 'leftBar',
-  },
-  {
-    columnId: 'Column 3',
-    chartConfigId: 'rightBar',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'date',
-  }
-]`,
-    'Dumbbell graph (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: ['Column 1', 'Column 2', 'Column 3'],
-    chartConfigId: 'x',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'label',
-  },
-  {
-    columnId: 'Column 5',
-    chartConfigId: 'date',
-  }
-]`,
-    'Choropleth map (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: 'Column 1',
-    chartConfigId: 'x',
-  },
-  {
-    columnId: 'Column 2',
-    chartConfigId: 'id',
-  },
-  {
-    columnId: 'Column 3',
-    chartConfigId: 'date',
-  }
-]`,
-    'Bi-variate choropleth map (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: 'Column 1',
-    chartConfigId: 'x',
-  },
-  {
-    columnId: 'Column 2',
-    chartConfigId: 'y',
-  },
-  {
-    columnId: 'Column 3',
-    chartConfigId: 'id',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'date',
-  }
-]`,
-    'Dot density map (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: 'Column 1',
-    chartConfigId: 'lat',
-  },
-  {
-    columnId: 'Column 2',
-    chartConfigId: 'long',
-  },
-  {
-    columnId: 'Column 6',
-    chartConfigId: 'date',
-  },
-  // ----Not required objects---- //
-  {
-    columnId: 'Column 3',
-    chartConfigId: 'color',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'radius',
-  },
-  {
-    columnId: 'Column 5',
-    chartConfigId: 'label',
-  }
-]`,
-    'Scatter plot (animated)': `[
-  // ----Required objects---- //
-  {
-    columnId: 'Column 1',
-    chartConfigId: 'x',
-  },
-  {
-    columnId: 'Column 2',
-    chartConfigId: 'y',
-  },
-  {
-    columnId: 'Column 6',
-    chartConfigId: 'date',
-  },
-  // ----Not required objects---- //
-  {
-    columnId: 'Column 3',
-    chartConfigId: 'color',
-  },
-  {
-    columnId: 'Column 4',
-    chartConfigId: 'radius',
-  },
-  {
-    columnId: 'Column 5',
-    chartConfigId: 'label',
   }
 ]`,
     'Stacked area chart': `[

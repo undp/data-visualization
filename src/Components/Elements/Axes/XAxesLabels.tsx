@@ -33,14 +33,13 @@ export function XAxesLabels(props: Props) {
     <motion.foreignObject
       width={width}
       height={height}
+      y={y}
       variants={{
         initial: {
           x,
-          y,
         },
         whileInView: {
           x,
-          y,
           transition: { duration: animate.duration },
         },
       }}
