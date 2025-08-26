@@ -945,6 +945,7 @@ function GraphEl(props: Props) {
         };
       case 'threeDGlobe':
         return {
+          highlightedIds: settings?.highlightedIds,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           graphTitle: settings?.graphTitle,

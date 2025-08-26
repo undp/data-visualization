@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { cn } from '@undp/design-system-react';
+import { cn, Spinner } from '@undp/design-system-react';
 
 import Graph from './Graph';
 
@@ -88,6 +88,8 @@ interface Props {
   showColorScale?: boolean;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
+  /** Countries or regions to be highlighted */
+  highlightedIds?: string[];
   /** Enable data download option as a csv */
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
@@ -120,7 +122,7 @@ interface Props {
 export function ThreeDGlobe(props: Props) {
   const {
     data,
-    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-simplified.json',
     graphTitle,
     colors,
     sources,
@@ -151,15 +153,16 @@ export function ThreeDGlobe(props: Props) {
     globeMaterial = {
       color: '#fff',
       opacity: 1,
-      transparent: true,
+      transparent: false,
     },
     centerPoint = [0, 0],
-    atmosphereColor = '#fff',
+    atmosphereColor = '#999',
     showColorScale = true,
     resetSelectionOnDoubleClick = true,
     detailsOnClick,
     onSeriesMouseOver,
     onSeriesMouseClick,
+    highlightedIds = [],
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -187,11 +190,11 @@ export function ThreeDGlobe(props: Props) {
       fetchData.then(d => {
         if (
           mapData ===
-          'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json'
+          'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-simplified.json'
         ) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const features = d.features.map((el: any) => {
-            if (d.geometry.type === 'Polygon') {
+            if (el.geometry.type === 'Polygon') {
               const reversed = [...el.geometry.coordinates[0]].reverse();
               const geometry = { ...el.geometry, coordinates: [reversed] };
               return { ...el, geometry };
@@ -199,7 +202,7 @@ export function ThreeDGlobe(props: Props) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const coord: any = [];
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            d.geometry.coordinates.forEach((c: any) => {
+            el.geometry.coordinates.forEach((c: any) => {
               const reversed = [...c[0]].reverse();
               coord.push([reversed]);
             });
@@ -329,12 +332,32 @@ export function ThreeDGlobe(props: Props) {
                       ? Colors.light.grays['gray-700']
                       : Colors.light.grays['gray-300']
                   }
+                  highlightedIds={highlightedIds}
                   resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
                   detailsOnClick={detailsOnClick}
                   onSeriesMouseOver={onSeriesMouseOver}
                   onSeriesMouseClick={onSeriesMouseClick}
                 />
-              ) : null}
+              ) : (
+                <div
+                  style={{
+                    height: `${Math.max(
+                      minHeight,
+                      height ||
+                        (relativeHeight
+                          ? minHeight
+                            ? (width || svgWidth) * relativeHeight > minHeight
+                              ? (width || svgWidth) * relativeHeight
+                              : minHeight
+                            : (width || svgWidth) * relativeHeight
+                          : svgHeight),
+                    )}px`,
+                  }}
+                  className='flex items-center justify-center'
+                >
+                  <Spinner aria-label='Loading graph' />
+                </div>
+              )}
             </div>
             {sources || footNote ? (
               <GraphFooter

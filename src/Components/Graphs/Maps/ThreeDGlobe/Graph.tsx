@@ -38,6 +38,7 @@ interface Props {
   hoverStrokeColor: string;
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   resetSelectionOnDoubleClick: boolean;
+  highlightedIds: string[];
 }
 
 function Graph(props: Props) {
@@ -67,6 +68,7 @@ function Graph(props: Props) {
     onSeriesMouseClick,
     onSeriesMouseOver,
     resetSelectionOnDoubleClick,
+    highlightedIds,
   } = props;
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -114,19 +116,44 @@ function Graph(props: Props) {
         ref={globeEl}
         lineHoverPrecision={0}
         polygonsData={polygonData}
-        polygonAltitude={() => 0.005}
+        polygonAltitude={(polygon: any) =>
+          highlightedIds.includes(polygon?.properties?.[mapProperty])
+            ? 0.1
+            : polygon?.properties?.[mapProperty] === mouseOverData?.id
+              ? 0.01
+              : 0.005
+        }
         polygonCapColor={(polygon: any) => {
-          const val = data.find(el => el.id === polygon.properties[mapProperty])?.x;
-          return val === null || val === undefined ? mapNoDataColor : colorScale(val as any);
+          const id = polygon?.properties?.[mapProperty];
+          const val = data.find(el => el.id === id)?.x;
+          if (val !== undefined && val !== null) {
+            return colorScale(val as any);
+          }
+          return mapNoDataColor;
         }}
-        polygonSideColor={() => 'rgba(0, 100, 0, 0.01)'}
+        polygonSideColor={(polygon: any) => {
+          const id = polygon?.properties?.[mapProperty];
+          const val = data.find(el => el.id === id)?.x;
+          const color = val !== undefined && val !== null ? colorScale(val as any) : mapNoDataColor;
+          return highlightedIds.includes(polygon?.properties?.[mapProperty])
+            ? color
+            : 'rgba(100,100,100,0)';
+        }}
         polygonStrokeColor={(polygon: any) =>
-          polygon.properties[mapProperty] === mouseOverData?.id ? hoverStrokeColor : mapBorderColor
+          polygon?.properties?.[mapProperty] === mouseOverData?.id
+            ? hoverStrokeColor
+            : mapBorderColor
         }
         onPolygonClick={(polygon: any) => {
-          const clickedData = data.find(el => el.id === polygon.properties[mapProperty]);
+          const clickedData = polygon?.properties?.[mapProperty]
+            ? data.find(el => el.id === polygon?.properties?.[mapProperty])
+            : undefined;
           if (onSeriesMouseClick || detailsOnClick) {
-            if (isEqual(mouseClickData, clickedData) && resetSelectionOnDoubleClick) {
+            if (
+              isEqual(mouseClickData, clickedData) &&
+              resetSelectionOnDoubleClick &&
+              clickedData
+            ) {
               setMouseClickData(undefined);
               onSeriesMouseClick?.(undefined);
             } else {
@@ -140,8 +167,11 @@ function Graph(props: Props) {
         width={width}
         height={height}
         onPolygonHover={(polygon: any) => {
-          setMouseOverData(data.find(el => el.id === polygon.properties[mapProperty]));
-          onSeriesMouseOver?.(data.find(el => el.id === polygon.properties[mapProperty]));
+          const hoverData = polygon?.properties?.[mapProperty]
+            ? data.find(el => el.id === polygon?.properties?.[mapProperty])
+            : undefined;
+          setMouseOverData(hoverData);
+          onSeriesMouseOver?.(hoverData);
         }}
         atmosphereColor={atmosphereColor}
         globeMaterial={materials}
@@ -154,6 +184,7 @@ function Graph(props: Props) {
             });
           }
         }}
+        polygonsTransitionDuration={100}
       />
       {showColorScale === false ? null : (
         <div className='absolute left-4 bottom-4'>

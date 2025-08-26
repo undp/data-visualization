@@ -430,7 +430,24 @@ export function DotDensityMap(props: Props) {
                   }
                 />
               ) : (
-                <Spinner aria-label='Loading graph' />
+                <div
+                  style={{
+                    height: `${Math.max(
+                      minHeight,
+                      height ||
+                        (relativeHeight
+                          ? minHeight
+                            ? (width || svgWidth) * relativeHeight > minHeight
+                              ? (width || svgWidth) * relativeHeight
+                              : minHeight
+                            : (width || svgWidth) * relativeHeight
+                          : svgHeight),
+                    )}px`,
+                  }}
+                  className='flex items-center justify-center'
+                >
+                  <Spinner aria-label='Loading graph' />
+                </div>
               )}
             </div>
             {sources || footNote ? (
