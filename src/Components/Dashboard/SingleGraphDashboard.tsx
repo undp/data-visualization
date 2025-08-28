@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
+import isEqual from 'fast-deep-equal';
 import {
   CheckboxGroup,
   CheckboxGroupItem,
@@ -143,6 +144,10 @@ export function SingleGraphDashboard(props: Props) {
     { label: string | number; value: string | number }[]
   >([]);
   const graphParentDiv = useRef<HTMLDivElement>(null);
+
+  const prevGraphDataConfigRef = useRef<GraphConfigurationDataType[] | undefined>(
+    graphDataConfiguration,
+  );
   const [filterSettings, setFilterSettings] = useState<FilterSettingsDataType[]>([]);
 
   const filterConfig = useMemo(
@@ -259,9 +264,11 @@ export function SingleGraphDashboard(props: Props) {
   }, [filteredData, highlightDataPointSettings]);
 
   useEffect(() => {
-    setGraphConfig(graphDataConfiguration);
+    if (!isEqual(prevGraphDataConfigRef.current, graphDataConfiguration)) {
+      setGraphConfig(graphDataConfiguration);
+      prevGraphDataConfigRef.current = graphDataConfiguration;
+    }
   }, [graphDataConfiguration]);
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFilterChange = useCallback((filter: string, values: any) => {
     setFilterSettings(prev => prev.map(f => (f.filter === filter ? { ...f, value: values } : f)));

@@ -1,50 +1,43 @@
 import './styles/styles.css';
 import '@undp/design-system-react/style.css';
-import { ThreeDGlobe } from './Components/Graphs/Maps/ThreeDGlobe';
+import { A, H3, P } from '@undp/design-system-react';
 
 function App() {
   return (
-    <ThreeDGlobe
-      data={[
-        {
-          id: 'IND',
-          x: 1,
-        },
-        {
-          id: 'FIN',
-          x: 2,
-        },
-        {
-          id: 'IDN',
-          x: 3,
-        },
-        {
-          id: 'ZAF',
-          x: 4,
-        },
-        {
-          id: 'PER',
-          x: 5,
-        },
-        {
-          id: 'PAK',
-          x: 6,
-        },
-        {
-          id: 'USA',
-          x: 7,
-        },
-        {
-          id: 'SWE',
-          x: 8,
-        },
-        {
-          id: 'RUS',
-          x: 10,
-        },
-      ]}
-      highlightedIds={['IND', 'USA']}
-    />
+    <div
+      style={{
+        height: '90vh',
+        maxWidth: '712px',
+        margin: '0 auto',
+        padding: '2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <img width='56' alt='undp-logo' src='/undp-logo-blue.svg' />
+      <H3 style={{ textAlign: 'center', paddingTop: '24px' }}>UNDP Data Visualization Library</H3>
+      <P style={{ textAlign: 'center' }}>
+        This visualization library for react, developed by the United Nations Development Programme,
+        offers various interactive visualizations such as graphs, maps, and animated charts. You can
+        access the documentation{' '}
+        <A href='https://dataviz.design.undp.org/' target='_blank' rel='noreferrer'>
+          here
+        </A>
+        .
+      </P>
+      <P
+        style={{
+          textAlign: 'center',
+        }}
+      >
+        For any feedback or inquiries, please feel free to reach out to us at{' '}
+        <A href='mailto:data@undp.org' target='_blank' rel='noreferrer'>
+          data@undp.org
+        </A>
+      </P>
+    </div>
   );
 }
 
