@@ -436,7 +436,15 @@ export function DataTable(props: Props) {
                                                     }
                                                   : {}),
                                               }}
-                                            >{`${el.prefix || ''}${element}${el.suffix || ''}`}</P>
+                                            >
+                                              {numberFormattingFunction(
+                                                element,
+                                                naLabel,
+                                                precision,
+                                                el.prefix,
+                                                el.suffix,
+                                              )}
+                                            </P>
                                           ))}
                                       </div>
                                     ) : (
@@ -477,10 +485,26 @@ export function DataTable(props: Props) {
                                               }
                                             : {}),
                                         }}
-                                      >{`${el.prefix || ''}${d[el.columnId]}${el.suffix || ''}`}</P>
+                                      >
+                                        {numberFormattingFunction(
+                                          d[el.columnId],
+                                          naLabel,
+                                          precision,
+                                          el.prefix,
+                                          el.suffix,
+                                        )}
+                                      </P>
                                     )
                                   ) : (
-                                    <div>{d[el.columnId]}</div>
+                                    <div>
+                                      {numberFormattingFunction(
+                                        d[el.columnId],
+                                        naLabel,
+                                        precision,
+                                        el.prefix,
+                                        el.suffix,
+                                      )}
+                                    </div>
                                   )}
                                 </div>
                               </td>
