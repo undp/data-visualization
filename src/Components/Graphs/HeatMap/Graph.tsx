@@ -267,9 +267,7 @@ export function Graph(props: Props) {
                               ...(styles?.graphObjectValues || {}),
                             }}
                           >
-                            {typeof d.value === 'string'
-                              ? `${prefix} ${d.value} ${suffix}`
-                              : numberFormattingFunction(d.value, precision, prefix, suffix)}
+                            {numberFormattingFunction(d.value, 'NA', precision, prefix, suffix)}
                           </p>
                         </div>
                       </foreignObject>

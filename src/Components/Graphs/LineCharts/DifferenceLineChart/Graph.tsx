@@ -353,6 +353,7 @@ export function Graph(props: Props) {
                 x2={graphWidth + margin.right}
                 label={numberFormattingFunction(
                   minParam < 0 ? 0 : minParam,
+                  'NA',
                   precision,
                   prefix,
                   suffix,
@@ -600,12 +601,12 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.y1, precision, prefix, suffix)}
+                        {numberFormattingFunction(d.y1, 'NA', precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </>
                 ) : null}
-                {d.y2 !== undefined ? (
+                {!checkIfNullOrUndefined(d.y2) ? (
                   <>
                     {showDots ? (
                       <motion.circle
@@ -662,7 +663,7 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.y2, precision, prefix, suffix)}
+                        {numberFormattingFunction(d.y2, 'NA', precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </>

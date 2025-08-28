@@ -87,6 +87,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
+  naLabel: string;
 }
 
 interface FormattedDataType {
@@ -134,6 +135,7 @@ export function Graph(props: Props) {
     showLabels,
     dimmedOpacity,
     precision,
+    naLabel,
     customLayers,
   } = props;
   const svgRef = useRef(null);
@@ -333,6 +335,7 @@ export function Graph(props: Props) {
               x2={graphWidth + margin.right}
               label={numberFormattingFunction(
                 minParam < 0 ? 0 : minParam,
+                'NA',
                 precision,
                 prefix,
                 suffix,
@@ -584,7 +587,7 @@ export function Graph(props: Props) {
                   ...(styles?.graphObjectValues || {}),
                 }}
               >
-                {numberFormattingFunction(mouseOverData.y, precision, prefix, suffix)}
+                {numberFormattingFunction(mouseOverData.y, naLabel, precision, prefix, suffix)}
               </text>
             ) : null}
           </motion.g>

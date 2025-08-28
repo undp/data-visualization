@@ -57,6 +57,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   minValueLeftBar: number;
   minValueRightBar: number;
+  naLabel: string;
 }
 
 export function Graph(props: Props) {
@@ -93,6 +94,7 @@ export function Graph(props: Props) {
     customLayers,
     minValueLeftBar,
     minValueRightBar,
+    naLabel,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -258,7 +260,7 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.rightBar, precision, prefix, suffix)}
+                        {numberFormattingFunction(d.rightBar, naLabel, precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </motion.g>
@@ -410,7 +412,7 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.rightBar, precision, prefix, suffix)}
+                        {numberFormattingFunction(d.rightBar, naLabel, precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                   </motion.g>

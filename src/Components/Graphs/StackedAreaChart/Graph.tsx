@@ -262,6 +262,7 @@ export function Graph(props: Props) {
                 x2={graphWidth + margin.right}
                 label={numberFormattingFunction(
                   minParam < 0 ? 0 : minParam,
+                  'NA',
                   precision,
                   prefix,
                   suffix,

@@ -230,7 +230,7 @@ export function Graph(props: Props) {
                       )}
                       style={styles?.xAxis?.labels}
                     >
-                      {numberFormattingFunction(d, precision)}
+                      {numberFormattingFunction(d, 'NA', precision)}
                     </p>
                   </div>
                 </foreignObject>
@@ -411,7 +411,7 @@ export function Graph(props: Props) {
                                 animate={isInView ? 'whileInView' : 'initial'}
                                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
                               >
-                                {numberFormattingFunction(el, precision)}
+                                {numberFormattingFunction(el, 'NA', precision)}
                               </motion.text>
                             ) : null}
                           </>

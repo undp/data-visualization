@@ -899,6 +899,7 @@ export interface GraphSettingsDataType {
   atmosphereColor?: string;
   lineAxisTitle?: string;
   timeline?: TimelineDataType;
+  naLabel?: string;
 }
 
 export interface InfoBoxDataType {

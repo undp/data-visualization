@@ -2,6 +2,7 @@ import { cn } from '@undp/design-system-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { AnimateDataType } from '@/Types';
+import { generateRandomString } from '@/Utils/generateRandomString';
 
 interface Props {
   color?: string;
@@ -9,6 +10,8 @@ interface Props {
   y2: number;
   x1: number;
   x2: number;
+  graphWidth: number;
+  graphHeight: number;
   className?: string;
   style?: React.CSSProperties;
   animate: AnimateDataType;
@@ -16,11 +19,19 @@ interface Props {
 }
 
 export function RegressionLine(props: Props) {
-  const { color, x1, x2, y1, y2, className, style, animate, isInView } = props;
+  const { color, x1, x2, y1, y2, className, style, animate, isInView, graphWidth, graphHeight } =
+    props;
+  const id = generateRandomString(8);
   return (
     <g>
+      <defs>
+        <clipPath id={id}>
+          <rect x='0' y='0' width={graphWidth} height={graphHeight} />
+        </clipPath>
+      </defs>
       <AnimatePresence>
         <motion.line
+          clipPath={`url(#${id})`}
           className={cn(
             'undp-ref-line',
             !color ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300' : undefined,

@@ -291,7 +291,7 @@ export function Graph(props: Props) {
                     ...(styles?.yAxis?.labels || {}),
                   }}
                 >
-                  {numberFormattingFunction(d, precision, linePrefixes[0], lineSuffixes[0])}
+                  {numberFormattingFunction(d, 'NA', precision, linePrefixes[0], lineSuffixes[0])}
                 </text>
               </g>
             ))}
@@ -339,7 +339,7 @@ export function Graph(props: Props) {
                   }}
                   className={cn('text-xs', classNames?.yAxis?.labels)}
                 >
-                  {numberFormattingFunction(d, precision, linePrefixes[1], lineSuffixes[1])}
+                  {numberFormattingFunction(d, 'NA', precision, linePrefixes[1], lineSuffixes[1])}
                 </text>
               </g>
             ))}
@@ -547,6 +547,7 @@ export function Graph(props: Props) {
                       >
                         {numberFormattingFunction(
                           d.y1,
+                          'NA',
                           precision,
                           linePrefixes[0],
                           lineSuffixes[0],
@@ -620,6 +621,7 @@ export function Graph(props: Props) {
                       >
                         {numberFormattingFunction(
                           d.y2,
+                          'NA',
                           precision,
                           linePrefixes[1],
                           lineSuffixes[1],

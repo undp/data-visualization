@@ -208,6 +208,7 @@ export function Graph(props: Props) {
                   x2={graphWidth + margin.right}
                   label={numberFormattingFunction(
                     yMinValue < 0 ? 0 : yMinValue,
+                    'NA',
                     precision,
                     prefix,
                     suffix,

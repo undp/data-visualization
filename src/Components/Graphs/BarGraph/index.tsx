@@ -105,6 +105,8 @@ interface Props {
   showValues?: boolean;
   /** Custom order for labels */
   labelOrder?: string[];
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
@@ -220,6 +222,7 @@ export function SimpleBarGraph(props: Props) {
     precision,
     customLayers,
     timeline,
+    naLabel,
   } = props;
 
   if (orientation === 'vertical')
@@ -344,6 +347,7 @@ export function SimpleBarGraph(props: Props) {
       precision={precision}
       customLayers={customLayers}
       timeline={timeline}
+      naLabel={naLabel}
     />
   );
 }
@@ -441,6 +445,8 @@ interface GroupedBarChartProps {
   showColorScale?: boolean;
   /** Title for the bar axis */
   barAxisTitle?: string;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -532,6 +538,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     customLayers,
     showColorScale,
     timeline,
+    naLabel,
   } = props;
 
   if (orientation === 'vertical')
@@ -589,6 +596,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
         customLayers={customLayers}
         showColorScale={showColorScale}
         timeline={timeline}
+        naLabel={naLabel}
       />
     );
   return (
@@ -645,6 +653,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       customLayers={customLayers}
       showColorScale={showColorScale}
       timeline={timeline}
+      naLabel={naLabel}
     />
   );
 }
@@ -740,6 +749,8 @@ interface StackedBarChartProps {
   showColorScale?: boolean;
   /** Title for the bar axis */
   barAxisTitle?: string;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Parameter to sort the data. If a number is provided, it refers to the index of the size array to determine which value to sort by. If set to total, it sorts by the sum of all the values. */
   sortParameter?: number | 'total';
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
@@ -839,6 +850,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     customLayers,
     showColorScale,
     timeline,
+    naLabel,
   } = props;
 
   if (orientation === 'vertical')
@@ -898,6 +910,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
         customLayers={customLayers}
         showColorScale={showColorScale}
         timeline={timeline}
+        naLabel={naLabel}
       />
     );
   return (
@@ -956,6 +969,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       customLayers={customLayers}
       showColorScale={showColorScale}
       timeline={timeline}
+      naLabel={naLabel}
     />
   );
 }

@@ -67,7 +67,7 @@ export function YTicksAndGridLines(props: Props) {
                 classNames?.labels,
               )}
             >
-              {numberFormattingFunction(values[i], precision, prefix, suffix)}
+              {numberFormattingFunction(values[i], 'NA', precision, prefix, suffix)}
             </text>
           ) : null}
         </g>

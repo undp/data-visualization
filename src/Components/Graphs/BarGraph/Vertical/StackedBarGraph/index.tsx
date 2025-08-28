@@ -89,6 +89,7 @@ interface Props {
   precision?: number;
   customLayers?: CustomLayerDataType[];
   timeline?: TimelineDataType;
+  naLabel?: string;
 }
 
 export function VerticalStackedBarGraph(props: Props) {
@@ -147,6 +148,7 @@ export function VerticalStackedBarGraph(props: Props) {
     precision = 2,
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
+    naLabel = 'NA',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -403,6 +405,7 @@ export function VerticalStackedBarGraph(props: Props) {
                         colorDomain={colorDomain}
                         precision={precision}
                         customLayers={customLayers}
+                        naLabel={naLabel}
                       />
                     ) : null}
                   </div>

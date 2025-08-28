@@ -348,6 +348,7 @@ export function Graph(props: Props) {
                               {numberFormattingFunction(
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 (d.data as any).value,
+                                'NA',
                                 precision,
                                 prefix,
                                 suffix,

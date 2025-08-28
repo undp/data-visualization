@@ -181,6 +181,7 @@ export function StatCardFromData(props: Props) {
                     : aggregationMethod === 'sum'
                       ? numberFormattingFunction(
                           sum(data.map(d => d.value)),
+                          'NA',
                           precision,
                           prefix,
                           suffix,
@@ -188,6 +189,7 @@ export function StatCardFromData(props: Props) {
                       : aggregationMethod === 'average'
                         ? numberFormattingFunction(
                             parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
+                            'NA',
                             precision,
                             prefix,
                             suffix,
@@ -199,6 +201,7 @@ export function StatCardFromData(props: Props) {
                                   .map(d => d.value as number | undefined)
                                   .filter(d => d !== undefined),
                               ),
+                              'NA',
                               precision,
                               prefix,
                               suffix,
@@ -209,6 +212,7 @@ export function StatCardFromData(props: Props) {
                                   .map(d => d.value as number | undefined)
                                   .filter(d => d !== undefined),
                               ),
+                              'NA',
                               precision,
                               prefix,
                               suffix,
@@ -264,6 +268,7 @@ export function StatCardFromData(props: Props) {
                   : aggregationMethod === 'sum'
                     ? numberFormattingFunction(
                         sum(data.map(d => d.value)),
+                        'NA',
                         precision,
                         prefix,
                         suffix,
@@ -271,6 +276,7 @@ export function StatCardFromData(props: Props) {
                     : aggregationMethod === 'average'
                       ? numberFormattingFunction(
                           parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
+                          'NA',
                           precision,
                           prefix,
                           suffix,
@@ -282,6 +288,7 @@ export function StatCardFromData(props: Props) {
                                 .map(d => d.value as number | undefined)
                                 .filter(d => d !== undefined),
                             ),
+                            'NA',
                             precision,
                             prefix,
                             suffix,
@@ -292,6 +299,7 @@ export function StatCardFromData(props: Props) {
                                 .map(d => d.value as number | undefined)
                                 .filter(d => d !== undefined),
                             ),
+                            'NA',
                             precision,
                             prefix,
                             suffix,

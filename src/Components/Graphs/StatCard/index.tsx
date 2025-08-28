@@ -155,9 +155,7 @@ export function BasicStatCard(props: Props) {
                     letterSpacing: '0.05rem',
                   }}
                 >
-                  {typeof value === 'string'
-                    ? `${prefix}${value}${suffix}`
-                    : numberFormattingFunction(value, precision, prefix, suffix)}{' '}
+                  {numberFormattingFunction(value, 'NA', precision, prefix, suffix)}{' '}
                   {year ? (
                     <span
                       className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'
@@ -201,9 +199,7 @@ export function BasicStatCard(props: Props) {
                   letterSpacing: '0.05rem',
                 }}
               >
-                {typeof value === 'string'
-                  ? `${prefix}${value}${suffix}`
-                  : numberFormattingFunction(value, precision, prefix, suffix)}{' '}
+                {numberFormattingFunction(value, 'NA', precision, prefix, suffix)}{' '}
                 {year ? (
                   <span
                     className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'

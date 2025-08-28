@@ -63,6 +63,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: AnimateDataType;
   precision: number;
+  naLabel: string;
   customLayers: CustomLayerDataType[];
 }
 interface DataFormattedType {
@@ -104,6 +105,7 @@ export function Graph(props: Props) {
     animate,
     precision,
     customLayers,
+    naLabel,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -222,7 +224,7 @@ export function Graph(props: Props) {
                     ...(styles?.yAxis?.labels || {}),
                   }}
                 >
-                  {numberFormattingFunction(d, precision, barPrefix, barSuffix)}
+                  {numberFormattingFunction(d, naLabel, precision, barPrefix, barSuffix)}
                 </text>
               </g>
             ))}
@@ -272,7 +274,7 @@ export function Graph(props: Props) {
                   }}
                   className={cn('text-xs', classNames?.yAxis?.labels)}
                 >
-                  {numberFormattingFunction(d, precision, linePrefix, lineSuffix)}
+                  {numberFormattingFunction(d, naLabel, precision, linePrefix, lineSuffix)}
                 </text>
               </g>
             ))}
@@ -395,7 +397,7 @@ export function Graph(props: Props) {
                       className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                       dy={d.bar ? (d.bar >= 0 ? '-5px' : '1em') : '-5px'}
                     >
-                      {numberFormattingFunction(d.bar, precision, barPrefix, barSuffix)}
+                      {numberFormattingFunction(d.bar, naLabel, precision, barPrefix, barSuffix)}
                     </motion.text>
                   ) : null}
                   {showLabels ? (
@@ -534,7 +536,13 @@ export function Graph(props: Props) {
                         className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                         dy='-5px'
                       >
-                        {numberFormattingFunction(d.line, precision, linePrefix, lineSuffix)}
+                        {numberFormattingFunction(
+                          d.line,
+                          naLabel,
+                          precision,
+                          linePrefix,
+                          lineSuffix,
+                        )}
                       </motion.text>
                     ) : null}
                   </g>

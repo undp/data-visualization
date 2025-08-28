@@ -115,6 +115,8 @@ interface Props {
   highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Title for the bar axis */
   barAxisTitle?: string;
   /** Sorting order for data. This is overwritten by labelOrder prop. */
@@ -219,6 +221,7 @@ export function BulletChart(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    naLabel,
   } = props;
 
   if (orientation === 'vertical')
@@ -283,6 +286,7 @@ export function BulletChart(props: Props) {
         animate={animate}
         dimmedOpacity={dimmedOpacity}
         precision={precision}
+        naLabel={naLabel}
       />
     );
   return (
@@ -346,6 +350,7 @@ export function BulletChart(props: Props) {
       animate={animate}
       dimmedOpacity={dimmedOpacity}
       precision={precision}
+      naLabel={naLabel}
     />
   );
 }

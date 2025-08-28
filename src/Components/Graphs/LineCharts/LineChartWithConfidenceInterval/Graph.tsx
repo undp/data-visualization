@@ -14,7 +14,7 @@ import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
-import { linearRegression } from 'simple-statistics';
+import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import { cn } from '@undp/design-system-react';
 import { motion, useInView } from 'motion/react';
 
@@ -282,6 +282,7 @@ export function Graph(props: Props) {
       .filter(d => !checkIfNullOrUndefined(d.date) && !checkIfNullOrUndefined(d.y))
       .map(d => [x(d.date), y(d.y as number)]),
   );
+  const predict = linearRegressionLine(regressionLineParam);
   return (
     <>
       <motion.svg
@@ -335,6 +336,7 @@ export function Graph(props: Props) {
               x2={graphWidth + margin.right}
               label={numberFormattingFunction(
                 minParam < 0 ? 0 : minParam,
+                'NA',
                 precision,
                 prefix,
                 suffix,
@@ -595,7 +597,7 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.y, precision, prefix, suffix)}
+                        {numberFormattingFunction(d.y, 'NA', precision, prefix, suffix)}
                       </motion.text>
                     ) : null}
                     {showIntervalValues ? (
@@ -624,7 +626,7 @@ export function Graph(props: Props) {
                           initial='initial'
                           animate={isInView ? 'whileInView' : 'initial'}
                         >
-                          {numberFormattingFunction(d.yMin, precision, prefix, suffix)}
+                          {numberFormattingFunction(d.yMin, 'NA', precision, prefix, suffix)}
                         </motion.text>
                         <motion.text
                           dy={-8}
@@ -650,7 +652,7 @@ export function Graph(props: Props) {
                           initial='initial'
                           animate={isInView ? 'whileInView' : 'initial'}
                         >
-                          {numberFormattingFunction(d.yMax, precision, prefix, suffix)}
+                          {numberFormattingFunction(d.yMax, 'NA', precision, prefix, suffix)}
                         </motion.text>
                       </>
                     ) : null}
@@ -751,14 +753,12 @@ export function Graph(props: Props) {
           <g>
             {regressionLine ? (
               <RegressionLine
-                x1={
-                  regressionLineParam.b > graphHeight
-                    ? (graphHeight - regressionLineParam.b) / regressionLineParam.m
-                    : 0
-                }
+                x1={0}
                 x2={graphWidth}
-                y1={regressionLineParam.b > graphHeight ? graphHeight : regressionLineParam.b}
-                y2={regressionLineParam.m * graphWidth + regressionLineParam.b}
+                y1={predict(0)}
+                y2={predict(graphWidth)}
+                graphHeight={graphHeight}
+                graphWidth={graphWidth}
                 className={classNames?.regLine}
                 style={styles?.regLine}
                 color={typeof regressionLine === 'string' ? regressionLine : undefined}

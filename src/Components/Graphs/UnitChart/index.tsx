@@ -236,7 +236,7 @@ export function UnitChart(props: Props) {
                           >
                             {d.label}:{' '}
                             <span className='font-bold'>
-                              {numberFormattingFunction(d.value, precision)}
+                              {numberFormattingFunction(d.value, 'NA', precision)}
                             </span>
                           </P>
                         </div>

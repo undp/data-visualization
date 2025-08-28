@@ -239,7 +239,7 @@ export function Graph(props: Props) {
                               ...styles?.graphObjectValues,
                             }}
                           >
-                            {numberFormattingFunction(d.value, precision, prefix, suffix)}
+                            {numberFormattingFunction(d.value, 'NA', precision, prefix, suffix)}
                           </P>
                         ) : null}
                       </div>
@@ -317,7 +317,7 @@ export function Graph(props: Props) {
                               ...styles?.graphObjectValues,
                             }}
                           >
-                            {numberFormattingFunction(d.value, precision, prefix, suffix)}
+                            {numberFormattingFunction(d.value, 'NA', precision, prefix, suffix)}
                           </P>
                         ) : null}
                       </div>

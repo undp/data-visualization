@@ -16,7 +16,7 @@ function getDescendantProp(data: any, desc: string) {
 
   Handlebars.registerHelper('formatNumber', value => {
     if (typeof value === 'string') return value;
-    return numberFormattingFunction(value);
+    return numberFormattingFunction(value, '-');
   });
   Handlebars.registerHelper('mathExpression', expression => {
     const tempTemplate = Handlebars.compile(expression);
@@ -28,7 +28,7 @@ function getDescendantProp(data: any, desc: string) {
     const tempTemplate = Handlebars.compile(expression);
     const exp = tempTemplate(data);
     const result = mexp.eval(exp);
-    return numberFormattingFunction(result);
+    return numberFormattingFunction(result, '-');
   });
 
   marked.setOptions({ renderer });

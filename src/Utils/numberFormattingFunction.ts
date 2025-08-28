@@ -21,11 +21,13 @@ import { checkIfNullOrUndefined } from './checkIfNullOrUndefined';
  */
 
 export function numberFormattingFunction(
-  value: number | undefined | null,
+  value: number | string | undefined | null,
+  naLabel?: string,
   precision?: number,
   prefix?: string,
   suffix?: string,
 ) {
+  if (typeof value === 'string') return `${prefix || ''}${value}${suffix || ''}`;
   const formatNumberToReadableString = (num: number) => {
     const suffixes = ['', 'K', 'M', 'B', 'T'];
     const tier = Math.floor(Math.log10(Math.abs(num)) / 3);
@@ -36,7 +38,7 @@ export function numberFormattingFunction(
       .replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1'); // Remove trailing ".0"
     return formatted + suffixes[tier];
   };
-  if (checkIfNullOrUndefined(value)) return 'NA';
+  if (checkIfNullOrUndefined(value)) return naLabel || 'NA';
   if (
     (value as number) < 10000 &&
     (value as number) > -10000 &&
@@ -45,7 +47,9 @@ export function numberFormattingFunction(
     return `${prefix || ''}${value}${suffix || ''}`;
   return `${prefix || ''}${
     Math.abs(value as number) < 1000
-      ? (value as number).toFixed(precision || 2).replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
+      ? (value as number)
+          .toFixed(precision === 0 ? 0 : precision || 2)
+          .replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1')
       : formatNumberToReadableString(value as number)
   }${suffix || ''}`;
 }

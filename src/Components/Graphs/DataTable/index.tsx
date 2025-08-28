@@ -64,6 +64,8 @@ interface Props {
   columnData: DataTableColumnDataType[];
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
 
@@ -107,6 +109,7 @@ export function DataTable(props: Props) {
     styles,
     classNames,
     minWidth,
+    naLabel = 'NA',
     precision = 2,
   } = props;
   const [columnSortBy, setColumnSortBy] = useState<string | undefined>(undefined);
@@ -379,6 +382,7 @@ export function DataTable(props: Props) {
                                     >
                                       {numberFormattingFunction(
                                         d[el.columnId],
+                                        naLabel,
                                         precision,
                                         el.prefix,
                                         el.suffix,

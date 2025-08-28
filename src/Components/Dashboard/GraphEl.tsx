@@ -202,6 +202,7 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           filterNA: settings?.filterNA,
           animate: settings?.animate,
+          naLabel: settings?.naLabel,
         };
       case 'groupedBarChart':
         return {
@@ -257,6 +258,7 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
+          naLabel: settings?.naLabel,
         };
       case 'stackedBarChart':
         return {
@@ -314,6 +316,7 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
+          naLabel: settings?.naLabel,
         };
       case 'bulletChart':
         return {
@@ -384,6 +387,7 @@ function GraphEl(props: Props) {
           targetColor: settings?.targetColor,
           measureBarWidthFactor: settings?.measureBarWidthFactor,
           animate: settings?.animate,
+          naLabel: settings?.naLabel,
         };
       case 'lineChart':
         return {
@@ -615,6 +619,7 @@ function GraphEl(props: Props) {
         };
       case 'multiLineAltChart':
         return {
+          naLabel: settings?.naLabel,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1469,6 +1474,7 @@ function GraphEl(props: Props) {
         };
       case 'butterflyChart':
         return {
+          naLabel: settings?.naLabel,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -1599,6 +1605,7 @@ function GraphEl(props: Props) {
         };
       case 'paretoChart':
         return {
+          naLabel: settings?.naLabel,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1654,6 +1661,7 @@ function GraphEl(props: Props) {
         };
       case 'dataTable':
         return {
+          naLabel: settings?.naLabel,
           precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,

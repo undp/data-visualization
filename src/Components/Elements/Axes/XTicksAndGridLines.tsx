@@ -70,7 +70,7 @@ export function XTicksAndGridLines(props: Props) {
             >
               {typeof values[i] === 'string'
                 ? values[i]
-                : numberFormattingFunction(values[i], precision, prefix, suffix)}
+                : numberFormattingFunction(values[i], 'NA', precision, prefix, suffix)}
             </text>
           ) : null}
         </g>

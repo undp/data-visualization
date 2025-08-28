@@ -184,7 +184,13 @@ export function Graph(props: Props) {
             y2={y(minValue < 0 ? 0 : minValue)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(minValue < 0 ? 0 : minValue, precision, prefix, suffix)}
+            label={numberFormattingFunction(
+              minValue < 0 ? 0 : minValue,
+              'NA',
+              precision,
+              prefix,
+              suffix,
+            )}
             labelPos={{
               x: 0 - leftMargin,
               dx: 0,
@@ -413,7 +419,7 @@ export function Graph(props: Props) {
                             initial='initial'
                             animate={isInView ? 'whileInView' : 'initial'}
                           >
-                            {numberFormattingFunction(el, precision, prefix, suffix)}
+                            {numberFormattingFunction(el, 'NA', precision, prefix, suffix)}
                           </motion.text>
                         ) : null}
                       </>

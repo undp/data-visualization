@@ -165,7 +165,7 @@ export function Graph(props: Props) {
                           : dimmedOpacity
                         : highlightedDataPoints.length !== 0
                           ? highlightedDataPoints.indexOf(d.label) !== -1
-                            ? 0.85
+                            ? 0.95
                             : dimmedOpacity
                           : dotOpacity,
                       transition: { duration: animate.duration },
@@ -332,7 +332,7 @@ export function Graph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.position, precision, prefix, suffix)}
+                        {numberFormattingFunction(d.position, 'NA', precision, prefix, suffix)}
                       </motion.text>
                     ) : null
                   ) : null}
@@ -354,7 +354,7 @@ export function Graph(props: Props) {
                 )}
                 dy='1em'
               >
-                {numberFormattingFunction(x.invert(tick), precision, prefix, suffix)}
+                {numberFormattingFunction(x.invert(tick), 'NA', precision, prefix, suffix)}
               </text>
             ))}
           </AnimatePresence>

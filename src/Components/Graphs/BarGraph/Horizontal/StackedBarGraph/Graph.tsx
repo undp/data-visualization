@@ -65,6 +65,7 @@ interface Props {
   colorDomain: string[];
   precision: number;
   customLayers: CustomLayerDataType[];
+  naLabel: string;
 }
 
 export function Graph(props: Props) {
@@ -105,6 +106,7 @@ export function Graph(props: Props) {
     colorDomain,
     precision,
     customLayers,
+    naLabel,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -299,7 +301,8 @@ export function Graph(props: Props) {
                               opacity:
                                 el &&
                                 x(el) /
-                                  numberFormattingFunction(el, precision, prefix, suffix).length >
+                                  numberFormattingFunction(el, naLabel, precision, prefix, suffix)
+                                    .length >
                                   12
                                   ? 1
                                   : 0,
@@ -310,7 +313,7 @@ export function Graph(props: Props) {
                           initial='initial'
                           animate={isInView ? 'whileInView' : 'initial'}
                         >
-                          {numberFormattingFunction(el, precision, prefix, suffix)}
+                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix)}
                         </motion.text>
                       ) : null}
                     </motion.g>
@@ -367,6 +370,7 @@ export function Graph(props: Props) {
                     >
                       {numberFormattingFunction(
                         sum(d.size.filter(element => element)),
+                        naLabel,
                         precision,
                         prefix,
                         suffix,

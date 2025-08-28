@@ -112,6 +112,8 @@ interface Props {
   showColorScale?: boolean;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedLines?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
@@ -205,6 +207,7 @@ export function MultiLineAltChart(props: Props) {
     dimmedOpacity = 0.3,
     precision = 2,
     customLayers = [],
+    naLabel = 'NA',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -380,6 +383,7 @@ export function MultiLineAltChart(props: Props) {
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                         customLayers={customLayers}
+                        naLabel={naLabel}
                       />
                     ) : null}
                   </div>

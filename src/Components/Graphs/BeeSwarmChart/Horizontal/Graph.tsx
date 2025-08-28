@@ -210,6 +210,7 @@ export function Graph(props: Props) {
                   y2={graphHeight + margin.bottom}
                   label={numberFormattingFunction(
                     xMinValue < 0 ? 0 : xMinValue,
+                    'NA',
                     precision,
                     prefix,
                     suffix,

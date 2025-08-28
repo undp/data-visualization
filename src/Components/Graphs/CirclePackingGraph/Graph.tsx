@@ -347,7 +347,7 @@ export const Graph = memo((props: Props) => {
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
                     />
-                    {showLabel && (
+                    {(showLabel || showValues) && d.size !== undefined && d.size !== null && (
                       <motion.g
                         variants={{
                           initial: { opacity: 0 },
@@ -411,7 +411,7 @@ export const Graph = memo((props: Props) => {
                                   color: getTextColorBasedOnBgColor(circleColor),
                                 }}
                               >
-                                {numberFormattingFunction(d.size, precision, prefix, suffix)}
+                                {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
                               </p>
                             )}
                           </div>

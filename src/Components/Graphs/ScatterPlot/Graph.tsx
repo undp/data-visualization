@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import orderBy from 'lodash.orderby';
 import { Delaunay } from 'd3-delaunay';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
-import { linearRegression } from 'simple-statistics';
+import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import { cn, Modal } from '@undp/design-system-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
@@ -180,6 +180,7 @@ export function Graph(props: Props) {
       .filter(d => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
       .map(d => [x(d.x as number), y(d.y as number)]),
   );
+  const predict = linearRegressionLine(regressionLineParam);
   return (
     <>
       <motion.svg
@@ -236,6 +237,7 @@ export function Graph(props: Props) {
               x2={graphWidth + margin.right}
               label={numberFormattingFunction(
                 minYValue < 0 ? 0 : minYValue,
+                'NA',
                 precision,
                 yPrefix,
                 ySuffix,
@@ -291,6 +293,7 @@ export function Graph(props: Props) {
               y2={graphHeight}
               label={numberFormattingFunction(
                 minXValue < 0 ? 0 : minXValue,
+                'NA',
                 precision,
                 xPrefix,
                 xSuffix,
@@ -385,7 +388,7 @@ export function Graph(props: Props) {
                             : highlightedDataPoints.length !== 0
                               ? highlightedDataPoints.indexOf(d.label || '') !== -1
                                 ? 1
-                                : 0.5
+                                : dimmedOpacity
                               : 1,
                       },
                       whileInView: {
@@ -404,7 +407,7 @@ export function Graph(props: Props) {
                             : highlightedDataPoints.length !== 0
                               ? highlightedDataPoints.indexOf(d.label || '') !== -1
                                 ? 1
-                                : 0.5
+                                : dimmedOpacity
                               : 1,
                         transition: { duration: animate.duration },
                       },
@@ -665,14 +668,12 @@ export function Graph(props: Props) {
             </g>
             {regressionLine ? (
               <RegressionLine
-                x1={
-                  regressionLineParam.b > graphHeight
-                    ? (graphHeight - regressionLineParam.b) / regressionLineParam.m
-                    : 0
-                }
+                x1={0}
                 x2={graphWidth}
-                y1={regressionLineParam.b > graphHeight ? graphHeight : regressionLineParam.b}
-                y2={regressionLineParam.m * graphWidth + regressionLineParam.b}
+                y1={predict(0)}
+                y2={predict(graphWidth)}
+                graphHeight={graphHeight}
+                graphWidth={graphWidth}
                 className={classNames?.regLine}
                 style={styles?.regLine}
                 color={typeof regressionLine === 'string' ? regressionLine : undefined}

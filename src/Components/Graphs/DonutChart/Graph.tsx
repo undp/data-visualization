@@ -88,6 +88,7 @@ export function Graph(props: Props) {
                       : data.findIndex(d => d.label === mainText.label) !== -1
                         ? numberFormattingFunction(
                             data[data.findIndex(d => d.label === mainText.label)].size,
+                            'NA',
                             precision,
                             mainText.prefix,
                             mainText.suffix,

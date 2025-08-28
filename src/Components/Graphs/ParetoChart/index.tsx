@@ -99,6 +99,8 @@ interface Props {
   barAxisTitle?: string;
   /** Title for the line axis */
   lineAxisTitle?: string;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
@@ -184,6 +186,7 @@ export function ParetoChart(props: Props) {
     animate = false,
     precision = 2,
     customLayers = [],
+    naLabel = 'NA',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -329,6 +332,7 @@ export function ParetoChart(props: Props) {
                         }
                         precision={precision}
                         customLayers={customLayers}
+                        naLabel={naLabel}
                       />
                     ) : null}
                   </div>

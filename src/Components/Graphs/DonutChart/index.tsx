@@ -294,7 +294,7 @@ export function DonutChart(props: Props) {
                             >
                               {d.label}:{' '}
                               <span className='font-bold' style={{ fontSize: 'inherit' }}>
-                                {numberFormattingFunction(d.size, precision, prefix, suffix)}
+                                {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
                               </span>
                             </P>
                           </div>

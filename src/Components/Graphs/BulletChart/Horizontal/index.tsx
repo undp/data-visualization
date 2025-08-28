@@ -87,6 +87,7 @@ interface Props {
   dimmedOpacity?: number;
   precision?: number;
   customLayers?: CustomLayerDataType[];
+  naLabel?: string;
 }
 
 export function HorizontalBulletChart(props: Props) {
@@ -151,6 +152,7 @@ export function HorizontalBulletChart(props: Props) {
     dimmedOpacity = 0.3,
     precision = 2,
     customLayers = [],
+    naLabel = 'NA',
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -327,6 +329,7 @@ export function HorizontalBulletChart(props: Props) {
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                         customLayers={customLayers}
+                        naLabel={naLabel}
                       />
                     ) : null}
                   </div>

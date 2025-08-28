@@ -409,7 +409,7 @@ export function Graph(props: Props) {
                             initial='initial'
                             animate={isInView ? 'whileInView' : 'initial'}
                           >
-                            {numberFormattingFunction(el, precision, prefix, suffix)}
+                            {numberFormattingFunction(el, 'NA', precision, prefix, suffix)}
                           </motion.text>
                         ) : null}
                       </>
