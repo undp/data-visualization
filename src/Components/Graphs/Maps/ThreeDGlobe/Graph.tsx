@@ -39,6 +39,11 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   resetSelectionOnDoubleClick: boolean;
   highlightedIds: string[];
+  altitude: number;
+  globeOffset: [number, number];
+  polygonAltitude: number;
+  centerLng: number;
+  centerLat: number;
 }
 
 function Graph(props: Props) {
@@ -69,6 +74,11 @@ function Graph(props: Props) {
     onSeriesMouseOver,
     resetSelectionOnDoubleClick,
     highlightedIds,
+    altitude,
+    globeOffset,
+    polygonAltitude,
+    centerLng,
+    centerLat,
   } = props;
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -92,10 +102,10 @@ function Graph(props: Props) {
       if (mouseOverData) {
         globeEl.current.controls().autoRotate = false;
       } else {
-        globeEl.current.controls().autoRotate = true;
+        globeEl.current.controls().autoRotate = autoRotate === 0 ? false : true;
       }
     }
-  }, [mouseOverData]);
+  }, [mouseOverData, autoRotate]);
 
   useEffect(() => {
     const canvas = globeEl.current?.renderer().domElement;
@@ -109,11 +119,19 @@ function Graph(props: Props) {
     return () => canvas.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  useEffect(() => {
+    if (globeEl.current) {
+      globeEl.current.pointOfView({ lat: centerLat, lng: centerLng, altitude }, 1000);
+    }
+  }, [altitude, centerLng, centerLat]);
   const materials = new THREE.MeshLambertMaterial(globeMaterial);
   return (
     <div className='relative'>
       <Globe
         ref={globeEl}
+        width={width}
+        height={height}
+        globeOffset={globeOffset}
         lineHoverPrecision={0}
         polygonsData={polygonData}
         polygonAltitude={(polygon: any) =>
@@ -121,7 +139,7 @@ function Graph(props: Props) {
             ? 0.1
             : polygon?.properties?.[mapProperty] === mouseOverData?.id
               ? 0.01
-              : 0.005
+              : polygonAltitude
         }
         polygonCapColor={(polygon: any) => {
           const id = polygon?.properties?.[mapProperty];
@@ -164,8 +182,6 @@ function Graph(props: Props) {
           setMouseClickData(clickedData);
           onSeriesMouseClick?.(clickedData);
         }}
-        width={width}
-        height={height}
         onPolygonHover={(polygon: any) => {
           const hoverData = polygon?.properties?.[mapProperty]
             ? data.find(el => el.id === polygon?.properties?.[mapProperty])
@@ -176,6 +192,7 @@ function Graph(props: Props) {
         atmosphereColor={atmosphereColor}
         globeMaterial={materials}
         backgroundColor='rgba(0, 0, 0, 0)'
+        polygonsTransitionDuration={100}
         onGlobeReady={() => {
           if (globeEl.current) {
             globeEl.current.pointOfView({
@@ -184,7 +201,6 @@ function Graph(props: Props) {
             });
           }
         }}
-        polygonsTransitionDuration={100}
       />
       {showColorScale === false ? null : (
         <div className='absolute left-4 bottom-4'>

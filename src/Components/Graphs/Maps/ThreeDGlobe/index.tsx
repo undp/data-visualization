@@ -80,6 +80,12 @@ interface Props {
   atmosphereColor?: string;
   /** Defines if the globe can be zoomed when scrolled */
   enableZoom?: boolean;
+  /** Position offset of the globe relative to the canvas center */
+  globeOffset?: [number, number];
+  /** Defines the camera distance from Earth. This helps in defining the default size of the globe. Smaller = closer camera therefore the globe is bigger) */
+  altitude?: number;
+  /** Defines the spacing between the country shape polygon with the sphere */
+  polygonAltitude?: number;
   /** Scale for the colors */
   scaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Toggles if the color scaling is categorical or not */
@@ -163,6 +169,9 @@ export function ThreeDGlobe(props: Props) {
     onSeriesMouseOver,
     onSeriesMouseClick,
     highlightedIds = [],
+    altitude = 1,
+    globeOffset = [0, 0],
+    polygonAltitude = 0.01,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -289,6 +298,7 @@ export function ThreeDGlobe(props: Props) {
               {(width || svgWidth) && (height || svgHeight) && mapShape ? (
                 <Graph
                   data={data}
+                  globeOffset={globeOffset}
                   polygonData={mapShape}
                   colorDomain={domain}
                   width={width || svgWidth}
@@ -337,6 +347,10 @@ export function ThreeDGlobe(props: Props) {
                   detailsOnClick={detailsOnClick}
                   onSeriesMouseOver={onSeriesMouseOver}
                   onSeriesMouseClick={onSeriesMouseClick}
+                  altitude={altitude}
+                  polygonAltitude={polygonAltitude}
+                  centerLat={centerPoint[0]}
+                  centerLng={centerPoint[1]}
                 />
               ) : (
                 <div
