@@ -950,7 +950,10 @@ function GraphEl(props: Props) {
         };
       case 'threeDGlobe':
         return {
+          globeOffset: settings?.globeOffset,
+          polygonAltitude: settings?.polygonAltitude,
           highlightedIds: settings?.highlightedIds,
+          scale: settings?.scale,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           graphTitle: settings?.graphTitle,

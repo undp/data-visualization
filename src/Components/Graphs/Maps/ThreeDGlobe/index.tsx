@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { cn, Spinner } from '@undp/design-system-react';
+import * as THREE from 'three';
 
 import Graph from './Graph';
 
@@ -9,7 +10,6 @@ import {
   ChoroplethMapDataType,
   ClassNameObject,
   Languages,
-  MaterialDataType,
   ScaleDataType,
   SourcesDataType,
   StyleObject,
@@ -75,7 +75,7 @@ interface Props {
   /** Defines if the globe rotates automatically */
   autoRotate?: number | boolean;
   /** Defines the material property applied to the sphere of the globe */
-  globeMaterial?: MaterialDataType;
+  globeMaterial?: THREE.MeshPhongMaterialProperties;
   /** Defines the colo of the glow around the globe */
   atmosphereColor?: string;
   /** Defines if the globe can be zoomed when scrolled */
@@ -83,7 +83,7 @@ interface Props {
   /** Position offset of the globe relative to the canvas center */
   globeOffset?: [number, number];
   /** Defines the camera distance from Earth. This helps in defining the default size of the globe. Smaller = closer camera therefore the globe is bigger) */
-  altitude?: number;
+  scale?: number;
   /** Defines the spacing between the country shape polygon with the sphere */
   polygonAltitude?: number;
   /** Scale for the colors */
@@ -156,11 +156,7 @@ export function ThreeDGlobe(props: Props) {
     classNames,
     autoRotate = true,
     enableZoom = true,
-    globeMaterial = {
-      color: '#fff',
-      opacity: 1,
-      transparent: false,
-    },
+    globeMaterial,
     centerPoint = [0, 0],
     atmosphereColor = '#999',
     showColorScale = true,
@@ -169,7 +165,7 @@ export function ThreeDGlobe(props: Props) {
     onSeriesMouseOver,
     onSeriesMouseClick,
     highlightedIds = [],
-    altitude = 1,
+    scale = 1,
     globeOffset = [0, 0],
     polygonAltitude = 0.01,
   } = props;
@@ -347,7 +343,7 @@ export function ThreeDGlobe(props: Props) {
                   detailsOnClick={detailsOnClick}
                   onSeriesMouseOver={onSeriesMouseOver}
                   onSeriesMouseClick={onSeriesMouseClick}
-                  altitude={altitude}
+                  scale={scale}
                   polygonAltitude={polygonAltitude}
                   centerLat={centerPoint[0]}
                   centerLng={centerPoint[1]}

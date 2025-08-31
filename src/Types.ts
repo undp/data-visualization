@@ -900,6 +900,8 @@ export interface GraphSettingsDataType {
   lineAxisTitle?: string;
   timeline?: TimelineDataType;
   naLabel?: string;
+  globeOffset?: [number, number];
+  polygonAltitude?: number;
 }
 
 export interface InfoBoxDataType {

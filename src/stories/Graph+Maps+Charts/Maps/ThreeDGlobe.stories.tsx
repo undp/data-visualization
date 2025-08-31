@@ -97,6 +97,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '[number, number]' } },
     },
+    globeOffset: {
+      control: 'text',
+      table: { type: { summary: '[number, number]' } },
+    },
     detailsOnClick: {
       control: 'text',
       table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
@@ -139,6 +143,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: 'en' },
       },
     },
+    globeMaterial: {
+      control: 'object',
+      table: {
+        type: {
+          summary: 'THREE.MeshPhongMaterialProperties',
+          detail:
+            'Learn more about the properties here: https://threejs.org/docs/#api/en/materials/MeshPhongMaterial',
+        },
+      },
+    },
     theme: {
       control: 'inline-radio',
       options: ['light', 'dark'],
@@ -160,12 +174,21 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { id: 'SWE', x: 8 },
     ],
   },
-  render: ({ colors, backgroundColor, highlightedIds, colorDomain, centerPoint, ...args }) => {
+  render: ({
+    colors,
+    backgroundColor,
+    highlightedIds,
+    colorDomain,
+    centerPoint,
+    globeOffset,
+    ...args
+  }) => {
     return (
       <ThreeDGlobe
         colors={parseValue(colors)}
         highlightedIds={parseValue(highlightedIds)}
         centerPoint={parseValue(centerPoint)}
+        globeOffset={parseValue(globeOffset)}
         colorDomain={parseValue(colorDomain)}
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor

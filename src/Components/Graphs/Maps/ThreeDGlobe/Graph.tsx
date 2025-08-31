@@ -6,7 +6,7 @@ import { scaleOrdinal, scaleThreshold } from 'd3-scale';
 import * as THREE from 'three';
 import { Modal, P } from '@undp/design-system-react';
 
-import { ChoroplethMapDataType, ClassNameObject, MaterialDataType, StyleObject } from '@/Types';
+import { ChoroplethMapDataType, ClassNameObject, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { X } from '@/Components/Icons';
@@ -21,7 +21,7 @@ interface Props {
   colorDomain: number[] | string[];
   colors: string[];
   height: number;
-  globeMaterial: MaterialDataType;
+  globeMaterial?: THREE.MeshPhongMaterialProperties;
   polygonData: any;
   mapProperty: string;
   mapBorderColor: string;
@@ -39,7 +39,7 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   resetSelectionOnDoubleClick: boolean;
   highlightedIds: string[];
-  altitude: number;
+  scale: number;
   globeOffset: [number, number];
   polygonAltitude: number;
   centerLng: number;
@@ -74,7 +74,7 @@ function Graph(props: Props) {
     onSeriesMouseOver,
     resetSelectionOnDoubleClick,
     highlightedIds,
-    altitude,
+    scale,
     globeOffset,
     polygonAltitude,
     centerLng,
@@ -121,10 +121,15 @@ function Graph(props: Props) {
 
   useEffect(() => {
     if (globeEl.current) {
-      globeEl.current.pointOfView({ lat: centerLat, lng: centerLng, altitude }, 1000);
+      globeEl.current.pointOfView({ lat: centerLat, lng: centerLng, altitude: scale }, 1000);
     }
-  }, [altitude, centerLng, centerLat]);
-  const materials = new THREE.MeshLambertMaterial(globeMaterial);
+  }, [scale, centerLng, centerLat]);
+  const materials = new THREE.MeshLambertMaterial({
+    color: '#fff',
+    opacity: 1,
+    transparent: false,
+    ...(globeMaterial || {}),
+  });
   return (
     <div className='relative'>
       <Globe
