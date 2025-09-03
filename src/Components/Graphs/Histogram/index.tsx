@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { bin } from 'd3-array';
-import { Spinner } from '@undp/design-system-react';
+import { Spinner } from '@undp/design-system-react/Spinner';
 
 import { CirclePackingGraph } from '../CirclePackingGraph';
 import { TreeMapGraph } from '../TreeMapGraph';

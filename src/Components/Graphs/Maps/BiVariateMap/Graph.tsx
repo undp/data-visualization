@@ -12,7 +12,8 @@ import {
 import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { scaleThreshold } from 'd3-scale';
-import { Modal, P } from '@undp/design-system-react';
+import { Modal } from '@undp/design-system-react/Modal';
+import { P } from '@undp/design-system-react/Typography';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {

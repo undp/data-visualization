@@ -1,12 +1,13 @@
-import { GraphType } from '@/Types';
-import { GraphList } from '@/Utils/getGraphList';
+import { GeoHubGraphType, GraphType, ThreeDGraphType } from '@/Types';
+import { graphList } from '@/Utils/getGraphList';
 
 const BASE_URL =
   'https://raw.githubusercontent.com/UNDP-Data/undp-viz-library-schemas/refs/heads/main/';
 
-export function getDataSchemaLink(graph: GraphType) {
+export function getDataSchemaLink(graph: GraphType | ThreeDGraphType | GeoHubGraphType) {
   if (
-    GraphList.filter(el => el.geoHubMapPresentation)
+    graphList
+      .filter(el => el.geoHubMapPresentation)
       .map(el => el.graphID)
       .indexOf(graph) !== -1
   )
@@ -87,7 +88,9 @@ export function getDataSchemaLink(graph: GraphType) {
   }
 }
 
-export function getSettingsSchemaLink(graph: GraphType | 'allGraphs') {
+export function getSettingsSchemaLink(
+  graph: GraphType | ThreeDGraphType | GeoHubGraphType | 'allGraphs',
+) {
   switch (graph) {
     case 'barChart':
       return 'settingsSchema/simpleBarChartSettingsSchema.json';
@@ -190,7 +193,7 @@ export async function getSettingsSchema(graph: GraphType | 'allGraphs') {
 }
 
 export function getGraphConfigChartConfigIdEnum(
-  chartType?: GraphType | 'dashboardWideToLong' | 'dashboard',
+  chartType?: GraphType | ThreeDGraphType | 'dashboardWideToLong' | 'dashboard',
 ) {
   switch (chartType) {
     case 'barChart':
@@ -572,7 +575,8 @@ export const getSingleGraphJSONSchema = async (columnList?: string[], graphType?
   const settingsSchema = await getSettingsSchema(graphType || 'allGraphs');
   if (
     graphType &&
-    GraphList.filter(el => el.geoHubMapPresentation)
+    graphList
+      .filter(el => el.geoHubMapPresentation)
       .map(el => el.graphID)
       .indexOf(graphType) !== -1
   )
@@ -582,7 +586,7 @@ export const getSingleGraphJSONSchema = async (columnList?: string[], graphType?
         graphSettings: settingsSchema,
         graphType: {
           type: 'string',
-          enum: GraphList.filter(el => el.geoHubMapPresentation).map(el => el.graphID),
+          enum: graphList.filter(el => el.geoHubMapPresentation).map(el => el.graphID),
         },
         debugMode: { type: 'boolean' },
         theme: { type: 'string', enum: ['dark', 'light'] },
@@ -685,7 +689,7 @@ export const getSingleGraphJSONSchema = async (columnList?: string[], graphType?
       styles: { type: 'object' },
       graphType: {
         type: 'string',
-        enum: GraphList.map(el => el.graphID),
+        enum: graphList.map(el => el.graphID),
       },
       noOfFiltersPerRow: { type: 'number' },
       dataTransform: getDataTransformSchema(columnList),
@@ -777,7 +781,7 @@ export const getGriddedGraphJSONSchema = async (columnList?: string[], graphType
       noOfFiltersPerRow: { type: 'number' },
       graphType: {
         type: 'string',
-        enum: GraphList.filter(el => el.availableInGriddedGraph !== false).map(el => el.graphID),
+        enum: graphList.filter(el => el.availableInGriddedGraph !== false).map(el => el.graphID),
       },
       uiMode: {
         type: 'string',
@@ -834,7 +838,7 @@ export const getDashboardJSONSchema = async (columnList?: string[]) => {
                         'dashboard',
                       ),
                       graphType: {
-                        enum: GraphList.map(el => el.graphID),
+                        enum: graphList.map(el => el.graphID),
                         type: 'string',
                       },
                       settings: settingsSchema,
@@ -911,9 +915,9 @@ export const getDashboardWideToLongFormatJSONSchema = async () => {
                         'dashboardWideToLong',
                       ),
                       graphType: {
-                        enum: GraphList.filter(el => el.availableInWideToLongFormat).map(
-                          el => el.graphID,
-                        ),
+                        enum: graphList
+                          .filter(el => el.availableInWideToLongFormat)
+                          .map(el => el.graphID),
                         type: 'string',
                       },
                       settings: settingsSchema,

@@ -63,14 +63,21 @@ export { SankeyChart } from './Components/Graphs/SankeyChart';
 export { RadarChart } from './Components/Graphs/RadarChart';
 // Dashboard
 export { MultiGraphDashboard } from './Components/Dashboard/MultiGraphDashboard';
+export { PerformanceIntensiveMultiGraphDashboard } from './Components/Dashboard/PerformanceIntensive/MultiGraphDashboard';
 export { MultiGraphDashboardWideToLongFormat } from './Components/Dashboard/MultiGraphDashboardWideToLongFormat';
 export { SingleGraphDashboard } from './Components/Dashboard/SingleGraphDashboard';
+export { SingleGraphDashboardGeoHubMaps } from './Components/Dashboard/PerformanceIntensive/SingleGraphDashboardGeoHubMaps';
+export { SingleGraphDashboardThreeDGraphs } from './Components/Dashboard/PerformanceIntensive/SingleGraphDashboardThreeDGraphs';
 export { GriddedGraphs } from './Components/Dashboard/GriddedGraphs';
 export { ScrollStory } from './Components/Dashboard/ScrollStory';
+export { PerformanceIntensiveScrollStory } from './Components/Dashboard/PerformanceIntensive/ScrollStory';
 // Dashboard from Config Files
 export { MultiGraphDashboardFromConfig } from './Components/Dashboard/MultiGraphDashboardFromConfig';
+export { PerformanceIntensiveMultiGraphDashboardFromConfig } from './Components/Dashboard/PerformanceIntensive/MultiGraphDashboardFromConfig';
 export { MultiGraphDashboardWideToLongFormatFromConfig } from './Components/Dashboard/MultiGraphDashboardWideToLongFormatFromConfig';
 export { SingleGraphDashboardFromConfig } from './Components/Dashboard/SingleGraphDashboardFromConfig';
+export { SingleGraphDashboardGeoHubMapsFromConfig } from './Components/Dashboard/PerformanceIntensive/SingleGraphDashboardGeoHubMapsFromConfig';
+export { SingleGraphDashboardThreeDGraphsFromConfig } from './Components/Dashboard/PerformanceIntensive/SingleGraphDashboardThreeDGraphsFromConfig';
 export { GriddedGraphsFromConfig } from './Components/Dashboard/GriddedGraphsFromConfig';
 
 /* ------- All Button ------- */
@@ -152,4 +159,4 @@ export {
 
 /* ---------GraphTypes-------------*/
 export type { GraphType, GeoHubGraphType, GraphTypeForGriddedGraph } from '@/Types';
-export { GraphList } from './Utils/getGraphList';
+export { graphList } from './Utils/getGraphList';

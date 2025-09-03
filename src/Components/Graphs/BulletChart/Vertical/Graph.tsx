@@ -1,7 +1,8 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand } from 'd3-scale';
 import { useRef, useState } from 'react';
-import { cn, Modal } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { Modal } from '@undp/design-system-react/Modal';
 import sum from 'lodash.sum';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 

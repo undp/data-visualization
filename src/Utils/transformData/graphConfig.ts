@@ -1,7 +1,7 @@
-import { GraphTypeForGriddedGraph } from '@/Types';
+import { GraphType, ThreeDGraphType } from '@/Types';
 
 export const ChartConfiguration: {
-  chartID: GraphTypeForGriddedGraph;
+  chartID: GraphType | ThreeDGraphType;
   configuration: { id: string; required: boolean; multiple: boolean }[];
 }[] = [
   {

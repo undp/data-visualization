@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import sortBy from 'lodash.sortby';
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
 

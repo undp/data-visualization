@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 import uniqBy from 'lodash.uniqby';
 
 import { Graph } from './Graph';

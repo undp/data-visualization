@@ -1,4 +1,4 @@
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 
 interface Props {
   text?: string;

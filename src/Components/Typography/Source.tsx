@@ -1,4 +1,5 @@
-import { A, cn, P } from '@undp/design-system-react';
+import { A, P } from '@undp/design-system-react/Typography';
+import { cn } from '@undp/design-system-react/cn';
 
 import { SourcesDataType } from '@/Types';
 

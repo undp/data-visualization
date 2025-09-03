@@ -1,5 +1,5 @@
 import { NumberValue } from 'd3-scale';
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 import { motion } from 'motion/react';
 
 import { getPathFromPoints } from '@/Utils/getPathFromPoints';

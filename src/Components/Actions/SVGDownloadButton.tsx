@@ -1,4 +1,4 @@
-import { Button } from '@undp/design-system-react';
+import { Button } from '@undp/design-system-react/Button';
 import { JSX } from 'react';
 
 import { svgDownload } from '@/Utils/svgDownload';

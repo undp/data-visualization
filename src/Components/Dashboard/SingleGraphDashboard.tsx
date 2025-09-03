@@ -2,18 +2,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
 import isEqual from 'fast-deep-equal';
-import {
-  CheckboxGroup,
-  CheckboxGroupItem,
-  cn,
-  createFilter,
-  DropdownSelect,
-  Label,
-  P,
-  RadioGroup,
-  RadioGroupItem,
-  Spinner,
-} from '@undp/design-system-react';
+import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
+import { cn } from '@undp/design-system-react/cn';
+import { CheckboxGroup, CheckboxGroupItem } from '@undp/design-system-react/CheckboxGroup';
+import { P } from '@undp/design-system-react/Typography';
+import { RadioGroup, RadioGroupItem } from '@undp/design-system-react/RadioGroup';
+import { Spinner } from '@undp/design-system-react/Spinner';
+import { Label } from '@undp/design-system-react/Label';
 
 import GraphEl from './GraphEl';
 
@@ -43,7 +38,7 @@ import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { filterData } from '@/Utils/transformData/filterData';
 import { checkIfMultiple } from '@/Utils/checkIfMultiple';
 import { transformColumnsToArray } from '@/Utils/transformData/transformColumnsToArray';
-import { GraphList } from '@/Utils/getGraphList';
+import { graphList } from '@/Utils/getGraphList';
 import { transformDefaultValue } from '@/Utils/transformDataForSelect';
 
 interface Props {
@@ -68,7 +63,6 @@ interface Props {
   debugMode?: boolean;
   uiMode?: 'light' | 'normal';
   updateFilters?: (_d: string) => void;
-  theme?: 'dark' | 'light';
 }
 
 const addMinAndMax = (config: GraphConfigurationDataType[]) => {
@@ -126,7 +120,6 @@ export function SingleGraphDashboard(props: Props) {
     noOfFiltersPerRow = 4,
     updateFilters,
     uiMode = 'normal',
-    theme = 'light',
     highlightDataPointSettings,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -159,12 +152,7 @@ export function SingleGraphDashboard(props: Props) {
     [],
   );
   const fetchDataHandler = useCallback(async () => {
-    if (
-      graphType !== 'geoHubMap' &&
-      graphType !== 'geoHubCompareMap' &&
-      graphType !== 'geoHubMapWithLayerSelection' &&
-      dataSettings
-    ) {
+    if (dataSettings) {
       try {
         const fetchData = dataSettings.dataURL
           ? typeof dataSettings.dataURL === 'string'
@@ -217,7 +205,7 @@ export function SingleGraphDashboard(props: Props) {
         console.error('Data fetching error:', error);
       }
     }
-  }, [dataSettings, graphType, filters, debugMode]);
+  }, [dataSettings, filters, debugMode]);
   useEffect(() => {
     fetchDataHandler();
   }, [fetchDataHandler]);
@@ -244,12 +232,7 @@ export function SingleGraphDashboard(props: Props) {
   }, [dataSelectionOptions, graphDataConfiguration]);
 
   useEffect(() => {
-    if (
-      graphType !== 'geoHubMap' &&
-      graphType !== 'geoHubCompareMap' &&
-      graphType !== 'geoHubMapWithLayerSelection' &&
-      dataFromFile
-    ) {
+    if (dataFromFile) {
       setData(filteredData);
     }
   }, [filteredData, graphType, dataFromFile]);
@@ -280,30 +263,20 @@ export function SingleGraphDashboard(props: Props) {
       graphType === 'lineChartWithConfidenceInterval' && graphConfig
         ? addMinAndMax(graphConfig)
         : graphConfig;
-    const d =
-      graphType !== 'geoHubMap' &&
-      graphType !== 'geoHubCompareMap' &&
-      graphType !== 'geoHubMapWithLayerSelection'
-        ? transformDataForGraph(
-            dataTransform
-              ? transformDataForAggregation(
-                  filterData(data, dataFilters || []),
-                  dataTransform.keyColumn,
-                  dataTransform.aggregationColumnsSetting,
-                )
-              : filterData(data, dataFilters || []),
-            graphType,
-            config,
+    const d = transformDataForGraph(
+      dataTransform
+        ? transformDataForAggregation(
+            filterData(data, dataFilters || []),
+            dataTransform.keyColumn,
+            dataTransform.aggregationColumnsSetting,
           )
-        : undefined;
+        : filterData(data, dataFilters || []),
+      graphType,
+      config,
+    );
     return d;
   }, [graphType, graphConfig, data, dataFilters, dataTransform]);
-  if (
-    !dataSettings &&
-    graphType !== 'geoHubMap' &&
-    graphType !== 'geoHubCompareMap' &&
-    graphType !== 'geoHubMapWithLayerSelection'
-  )
+  if (!dataSettings)
     return (
       <P size='xs' className='text-center text-accent-dark-red dark:text-accent-red p-2'>
         Please make sure either `dataSettings` props are present as they are required for data.
@@ -311,7 +284,7 @@ export function SingleGraphDashboard(props: Props) {
     );
   return (
     <div
-      className={`${theme || graphSettings?.theme || 'light'} flex ${
+      className={`${graphSettings?.theme || 'light'} flex ${
         graphSettings?.width ? 'w-fit grow-0' : 'w-full grow'
       }${graphSettings?.height ? '' : ' h-full'}`}
       dir={graphSettings?.language === 'he' || graphSettings?.language === 'ar' ? 'rtl' : undefined}
@@ -347,7 +320,8 @@ export function SingleGraphDashboard(props: Props) {
         >
           <div className='flex flex-col w-full gap-4 grow justify-between'>
             {data ||
-            GraphList.filter(el => el.geoHubMapPresentation)
+            graphList
+              .filter(el => el.geoHubMapPresentation)
               .map(el => el.graphID)
               .indexOf(graphType) !== -1 ? (
               <>
@@ -803,7 +777,7 @@ export function SingleGraphDashboard(props: Props) {
                     dataDownload: false,
                     backgroundColor: undefined,
                     padding: '0',
-                    theme: graphSettings?.theme || theme,
+                    theme: graphSettings?.theme,
                     ...(highlightedDataPointList
                       ? {
                           highlightedDataPoints: highlightedDataPointList,

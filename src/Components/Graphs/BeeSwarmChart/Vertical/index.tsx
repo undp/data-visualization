@@ -1,6 +1,6 @@
 import uniqBy from 'lodash.uniqby';
 import { useState, useRef, useEffect } from 'react';
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
 
@@ -12,7 +12,6 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
-  AnimateDataType,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -70,7 +69,6 @@ interface Props {
   noOfTicks?: number;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  animate?: boolean | AnimateDataType;
   precision?: number;
   customLayers?: CustomLayerDataType[];
 }
@@ -121,7 +119,6 @@ export function VerticalBeeSwarmChart(props: Props) {
     styles,
     classNames,
     noOfTicks,
-    animate = false,
     dimmedOpacity = 0.3,
     precision = 2,
     customLayers = [],
@@ -289,11 +286,6 @@ export function VerticalBeeSwarmChart(props: Props) {
                         suffix={suffix}
                         prefix={prefix}
                         noOfTicks={noOfTicks || 5}
-                        animate={
-                          animate === true
-                            ? { duration: 0.5, once: true, amount: 0.5 }
-                            : animate || { duration: 0, once: true, amount: 0 }
-                        }
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                         customLayers={customLayers}

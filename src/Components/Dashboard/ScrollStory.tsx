@@ -4,7 +4,12 @@ import { useRef, useState } from 'react';
 
 import { SingleGraphDashboard } from './SingleGraphDashboard';
 
-import { ChaptersDataType, InfoBoxDataType, SectionsArrDataType } from '@/Types';
+import {
+  ChaptersDataType,
+  GraphTypeForGriddedGraph,
+  InfoBoxDataType,
+  SectionsArrDataType,
+} from '@/Types';
 
 interface Props {
   /** Defines if the information is shown as overlay or on the side */
@@ -21,7 +26,7 @@ interface Props {
   infoBackgroundColor?: string;
 }
 
-/** ScrollStory is a scrollytelling container component that reveals content step-by-step as the user scrolls through the page. */
+/** ScrollStory is a scrollytelling container component that reveals content step-by-step as the user scrolls through the page. This does not include GeoHub maps and 3-D graph; for those please use `PerformanceIntensiveScrollStory`. */
 export function ScrollStory(props: Props) {
   const {
     chapters,
@@ -61,7 +66,7 @@ export function ScrollStory(props: Props) {
         }}
       >
         <SingleGraphDashboard
-          graphType={sectionsArr[activeIndex].graphType}
+          graphType={sectionsArr[activeIndex].graphType as GraphTypeForGriddedGraph}
           dataSettings={sectionsArr[activeIndex].dataSettings}
           graphSettings={sectionsArr[activeIndex].graphSettings}
           graphDataConfiguration={sectionsArr[activeIndex].graphDataConfiguration}

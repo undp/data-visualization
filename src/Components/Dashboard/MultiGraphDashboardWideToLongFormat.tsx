@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { createFilter, DropdownSelect, Label, Spinner } from '@undp/design-system-react';
+import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
+import { Label } from '@undp/design-system-react/Label';
+import { Spinner } from '@undp/design-system-react/Spinner';
 
 import { SingleGraphDashboard } from './SingleGraphDashboard';
 

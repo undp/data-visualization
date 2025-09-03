@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spinner } from '@undp/design-system-react';
+import { Spinner } from '@undp/design-system-react/Spinner';
 
 import { MultiGraphDashboardWideToLongFormat } from './MultiGraphDashboardWideToLongFormat';
 

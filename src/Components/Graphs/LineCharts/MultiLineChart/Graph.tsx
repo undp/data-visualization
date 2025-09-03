@@ -13,7 +13,7 @@ import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
 import sortBy from 'lodash.sortby';
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 import { motion, useInView } from 'motion/react';
 
 import {

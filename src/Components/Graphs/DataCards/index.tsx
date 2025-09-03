@@ -2,7 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
 import sortBy from 'lodash.sortby';
-import { cn, createFilter, DropdownSelect, P, Pagination, Search } from '@undp/design-system-react';
+import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
+import { cn } from '@undp/design-system-react/cn';
+import { P } from '@undp/design-system-react/Typography';
+import { Pagination } from '@undp/design-system-react/Pagination';
+import { Search } from '@undp/design-system-react/Search';
 
 import { Graph } from './Graph';
 

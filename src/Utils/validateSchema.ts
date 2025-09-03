@@ -1,4 +1,4 @@
-import { GraphList } from './getGraphList';
+import { graphList } from './getGraphList';
 
 import { GraphType } from '@/Types';
 import {
@@ -38,7 +38,8 @@ export async function validateDataSchema(data: any, graph: GraphType) {
 
   const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
   if (
-    GraphList.filter(el => el.geoHubMapPresentation)
+    graphList
+      .filter(el => el.geoHubMapPresentation)
       .map(el => el.graphID)
       .indexOf(graph) !== -1
   )

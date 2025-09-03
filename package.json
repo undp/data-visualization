@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "1.2.8",
+  "version": "1.4.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "browser": "./dist/index.umd.js",
@@ -18,8 +18,379 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./BarGraph": {
+      "types": "./dist/BarGraph.d.ts",
+      "import": "./dist/BarGraph.js",
+      "require": "./dist/BarGraph.cjs"
+    },
+    "./ButterflyChart": {
+      "types": "./dist/ButterflyChart.d.ts",
+      "import": "./dist/ButterflyChart.js",
+      "require": "./dist/ButterflyChart.cjs"
+    },
+    "./CirclePackingGraph": {
+      "types": "./dist/CirclePackingGraph.d.ts",
+      "import": "./dist/CirclePackingGraph.js",
+      "require": "./dist/CirclePackingGraph.cjs"
+    },
+    "./DonutChart": {
+      "types": "./dist/DonutChart.d.ts",
+      "import": "./dist/DonutChart.js",
+      "require": "./dist/DonutChart.cjs"
+    },
+    "./DumbbellChart": {
+      "types": "./dist/DumbbellChart.d.ts",
+      "import": "./dist/DumbbellChart.js",
+      "require": "./dist/DumbbellChart.cjs"
+    },
+    "./BeeSwarmChart": {
+      "types": "./dist/BeeSwarmChart.d.ts",
+      "import": "./dist/BeeSwarmChart.js",
+      "require": "./dist/BeeSwarmChart.cjs"
+    },
+    "./ScatterPlot": {
+      "types": "./dist/ScatterPlot.d.ts",
+      "import": "./dist/ScatterPlot.js",
+      "require": "./dist/ScatterPlot.cjs"
+    },
+    "./SlopeChart": {
+      "types": "./dist/SlopeChart.d.ts",
+      "import": "./dist/SlopeChart.js",
+      "require": "./dist/SlopeChart.cjs"
+    },
+    "./BulletChart": {
+      "types": "./dist/BulletChart.d.ts",
+      "import": "./dist/BulletChart.js",
+      "require": "./dist/BulletChart.cjs"
+    },
+    "./AreaChart": {
+      "types": "./dist/AreaChart.d.ts",
+      "import": "./dist/AreaChart.js",
+      "require": "./dist/AreaChart.cjs"
+    },
+    "./TreeMapGraph": {
+      "types": "./dist/TreeMapGraph.d.ts",
+      "import": "./dist/TreeMapGraph.js",
+      "require": "./dist/TreeMapGraph.cjs"
+    },
+    "./UnitChart": {
+      "types": "./dist/UnitChart.d.ts",
+      "import": "./dist/UnitChart.js",
+      "require": "./dist/UnitChart.cjs"
+    },
+    "./HeatMap": {
+      "types": "./dist/HeatMap.d.ts",
+      "import": "./dist/HeatMap.js",
+      "require": "./dist/HeatMap.cjs"
+    },
+    "./StripChart": {
+      "types": "./dist/StripChart.d.ts",
+      "import": "./dist/StripChart.js",
+      "require": "./dist/StripChart.cjs"
+    },
+    "./ParetoChart": {
+      "types": "./dist/ParetoChart.d.ts",
+      "import": "./dist/ParetoChart.js",
+      "require": "./dist/ParetoChart.cjs"
+    },
+    "./Histogram": {
+      "types": "./dist/Histogram.d.ts",
+      "import": "./dist/Histogram.js",
+      "require": "./dist/Histogram.cjs"
+    },
+    "./SankeyChart": {
+      "types": "./dist/SankeyChart.d.ts",
+      "import": "./dist/SankeyChart.js",
+      "require": "./dist/SankeyChart.cjs"
+    },
+    "./RadarChart": {
+      "types": "./dist/RadarChart.d.ts",
+      "import": "./dist/RadarChart.js",
+      "require": "./dist/RadarChart.cjs"
+    },
+    "./DualAxisLineChart": {
+      "types": "./dist/DualAxisLineChart.d.ts",
+      "import": "./dist/DualAxisLineChart.js",
+      "require": "./dist/DualAxisLineChart.cjs"
+    },
+    "./LineChartWithConfidenceInterval": {
+      "types": "./dist/LineChartWithConfidenceInterval.d.ts",
+      "import": "./dist/LineChartWithConfidenceInterval.js",
+      "require": "./dist/LineChartWithConfidenceInterval.cjs"
+    },
+    "./SimpleLineChart": {
+      "types": "./dist/SimpleLineChart.d.ts",
+      "import": "./dist/SimpleLineChart.js",
+      "require": "./dist/SimpleLineChart.cjs"
+    },
+    "./MultiLineChart": {
+      "types": "./dist/MultiLineChart.d.ts",
+      "import": "./dist/MultiLineChart.js",
+      "require": "./dist/MultiLineChart.cjs"
+    },
+    "./MultiLineAltChart": {
+      "types": "./dist/MultiLineAltChart.d.ts",
+      "import": "./dist/MultiLineAltChart.js",
+      "require": "./dist/MultiLineAltChart.cjs"
+    },
+    "./DifferenceLineChart": {
+      "types": "./dist/DifferenceLineChart.d.ts",
+      "import": "./dist/DifferenceLineChart.js",
+      "require": "./dist/DifferenceLineChart.cjs"
+    },
+    "./SparkLine": {
+      "types": "./dist/SparkLine.d.ts",
+      "import": "./dist/SparkLine.js",
+      "require": "./dist/SparkLine.cjs"
+    },
+    "./BiVariateChoroplethMap": {
+      "types": "./dist/BiVariateChoroplethMap.d.ts",
+      "import": "./dist/BiVariateChoroplethMap.js",
+      "require": "./dist/BiVariateChoroplethMap.cjs"
+    },
+    "./ChoroplethMap": {
+      "types": "./dist/ChoroplethMap.d.ts",
+      "import": "./dist/ChoroplethMap.js",
+      "require": "./dist/ChoroplethMap.cjs"
+    },
+    "./DotDensityMap": {
+      "types": "./dist/DotDensityMap.d.ts",
+      "import": "./dist/DotDensityMap.js",
+      "require": "./dist/DotDensityMap.cjs"
+    },
+    "./ThreeDGlobe": {
+      "types": "./dist/ThreeDGlobe.d.ts",
+      "import": "./dist/ThreeDGlobe.js",
+      "require": "./dist/ThreeDGlobe.cjs"
+    },
+    "./GeoHubMap": {
+      "types": "./dist/GeoHubMap.d.ts",
+      "import": "./dist/GeoHubMap.js",
+      "require": "./dist/GeoHubMap.cjs"
+    },
+    "./GeoHubCompareMaps": {
+      "types": "./dist/GeoHubCompareMaps.d.ts",
+      "import": "./dist/GeoHubCompareMaps.js",
+      "require": "./dist/GeoHubCompareMaps.cjs"
+    },
+    "./GeoHubMapWithLayerSelection": {
+      "types": "./dist/GeoHubMapWithLayerSelection.d.ts",
+      "import": "./dist/GeoHubMapWithLayerSelection.js",
+      "require": "./dist/GeoHubMapWithLayerSelection.cjs"
+    },
+    "./BasicStatCard": {
+      "types": "./dist/BasicStatCard.d.ts",
+      "import": "./dist/BasicStatCard.js",
+      "require": "./dist/BasicStatCard.cjs"
+    },
+    "./StatCardFromData": {
+      "types": "./dist/StatCardFromData.d.ts",
+      "import": "./dist/StatCardFromData.js",
+      "require": "./dist/StatCardFromData.cjs"
+    },
+    "./DataTable": {
+      "types": "./dist/DataTable.d.ts",
+      "import": "./dist/DataTable.js",
+      "require": "./dist/DataTable.cjs"
+    },
+    "./DataCards": {
+      "types": "./dist/DataCards.d.ts",
+      "import": "./dist/DataCards.js",
+      "require": "./dist/DataCards.cjs"
+    },
+    "./MultiGraphDashboard": {
+      "types": "./dist/MultiGraphDashboard.d.ts",
+      "import": "./dist/MultiGraphDashboard.js",
+      "require": "./dist/MultiGraphDashboard.cjs"
+    },
+    "./PerformanceIntensiveMultiGraphDashboard": {
+      "types": "./dist/PerformanceIntensiveMultiGraphDashboard.d.ts",
+      "import": "./dist/PerformanceIntensiveMultiGraphDashboard.js",
+      "require": "./dist/PerformanceIntensiveMultiGraphDashboard.cjs"
+    },
+    "./MultiGraphDashboardWideToLongFormat": {
+      "types": "./dist/MultiGraphDashboardWideToLongFormat.d.ts",
+      "import": "./dist/MultiGraphDashboardWideToLongFormat.js",
+      "require": "./dist/MultiGraphDashboardWideToLongFormat.cjs"
+    },
+    "./SingleGraphDashboard": {
+      "types": "./dist/SingleGraphDashboard.d.ts",
+      "import": "./dist/SingleGraphDashboard.js",
+      "require": "./dist/SingleGraphDashboard.cjs"
+    },
+    "./SingleGraphDashboardGeoHubMaps": {
+      "types": "./dist/SingleGraphDashboardGeoHubMaps.d.ts",
+      "import": "./dist/SingleGraphDashboardGeoHubMaps.js",
+      "require": "./dist/SingleGraphDashboardGeoHubMaps.cjs"
+    },
+    "./SingleGraphDashboardThreeDGraphs": {
+      "types": "./dist/SingleGraphDashboardThreeDGraphs.d.ts",
+      "import": "./dist/SingleGraphDashboardThreeDGraphs.js",
+      "require": "./dist/SingleGraphDashboardThreeDGraphs.cjs"
+    },
+    "./GriddedGraphs": {
+      "types": "./dist/GriddedGraphs.d.ts",
+      "import": "./dist/GriddedGraphs.js",
+      "require": "./dist/GriddedGraphs.cjs"
+    },
+    "./ScrollStory": {
+      "types": "./dist/ScrollStory.d.ts",
+      "import": "./dist/ScrollStory.js",
+      "require": "./dist/ScrollStory.cjs"
+    },
+    "./PerformanceIntensiveScrollStory": {
+      "types": "./dist/PerformanceIntensiveScrollStory.d.ts",
+      "import": "./dist/PerformanceIntensiveScrollStory.js",
+      "require": "./dist/PerformanceIntensiveScrollStory.cjs"
+    },
+    "./MultiGraphDashboardFromConfig": {
+      "types": "./dist/MultiGraphDashboardFromConfig.d.ts",
+      "import": "./dist/MultiGraphDashboardFromConfig.js",
+      "require": "./dist/MultiGraphDashboardFromConfig.cjs"
+    },
+    "./PerformanceIntensiveMultiGraphDashboardFromConfig": {
+      "types": "./dist/PerformanceIntensiveMultiGraphDashboardFromConfig.d.ts",
+      "import": "./dist/PerformanceIntensiveMultiGraphDashboardFromConfig.js",
+      "require": "./dist/PerformanceIntensiveMultiGraphDashboardFromConfig.cjs"
+    },
+    "./MultiGraphDashboardWideToLongFormatFromConfig": {
+      "types": "./dist/MultiGraphDashboardWideToLongFormatFromConfig.d.ts",
+      "import": "./dist/MultiGraphDashboardWideToLongFormatFromConfig.js",
+      "require": "./dist/MultiGraphDashboardWideToLongFormatFromConfig.cjs"
+    },
+    "./SingleGraphDashboardFromConfig": {
+      "types": "./dist/SingleGraphDashboardFromConfig.d.ts",
+      "import": "./dist/SingleGraphDashboardFromConfig.js",
+      "require": "./dist/SingleGraphDashboardFromConfig.cjs"
+    },
+    "./SingleGraphDashboardGeoHubMapsFromConfig": {
+      "types": "./dist/SingleGraphDashboardGeoHubMapsFromConfig.d.ts",
+      "import": "./dist/SingleGraphDashboardGeoHubMapsFromConfig.js",
+      "require": "./dist/SingleGraphDashboardGeoHubMapsFromConfig.cjs"
+    },
+    "./SingleGraphDashboardThreeDGraphsFromConfig": {
+      "types": "./dist/SingleGraphDashboardThreeDGraphsFromConfig.d.ts",
+      "import": "./dist/SingleGraphDashboardThreeDGraphsFromConfig.js",
+      "require": "./dist/SingleGraphDashboardThreeDGraphsFromConfig.cjs"
+    },
+    "./GriddedGraphsFromConfig": {
+      "types": "./dist/GriddedGraphsFromConfig.d.ts",
+      "import": "./dist/GriddedGraphsFromConfig.js",
+      "require": "./dist/GriddedGraphsFromConfig.cjs"
+    },
+    "./ExcelDownloadButton": {
+      "types": "./dist/ExcelDownloadButton.d.ts",
+      "import": "./dist/ExcelDownloadButton.js",
+      "require": "./dist/ExcelDownloadButton.cjs"
+    },
+    "./ImageDownloadButton": {
+      "types": "./dist/ImageDownloadButton.d.ts",
+      "import": "./dist/ImageDownloadButton.js",
+      "require": "./dist/ImageDownloadButton.cjs"
+    },
+    "./SVGDownloadButton": {
+      "types": "./dist/SVGDownloadButton.d.ts",
+      "import": "./dist/SVGDownloadButton.js",
+      "require": "./dist/SVGDownloadButton.cjs"
+    },
+    "./CsvDownloadButton": {
+      "types": "./dist/CsvDownloadButton.d.ts",
+      "import": "./dist/CsvDownloadButton.js",
+      "require": "./dist/CsvDownloadButton.cjs"
+    },
+    "./CopyTextButton": {
+      "types": "./dist/CopyTextButton.d.ts",
+      "import": "./dist/CopyTextButton.js",
+      "require": "./dist/CopyTextButton.cjs"
+    },
+    "./Colors": {
+      "types": "./dist/Colors.d.ts",
+      "import": "./dist/Colors.js",
+      "require": "./dist/Colors.cjs"
+    },
+    "./ColorLegend": {
+      "types": "./dist/ColorLegend.d.ts",
+      "import": "./dist/ColorLegend.js",
+      "require": "./dist/ColorLegend.cjs"
+    },
+    "./ColorLegendWithMouseOver": {
+      "types": "./dist/ColorLegendWithMouseOver.d.ts",
+      "import": "./dist/ColorLegendWithMouseOver.js",
+      "require": "./dist/ColorLegendWithMouseOver.cjs"
+    },
+    "./LinearColorLegend": {
+      "types": "./dist/LinearColorLegend.d.ts",
+      "import": "./dist/LinearColorLegend.js",
+      "require": "./dist/LinearColorLegend.cjs"
+    },
+    "./ThresholdColorLegendWithMouseOver": {
+      "types": "./dist/ThresholdColorLegendWithMouseOver.d.ts",
+      "import": "./dist/ThresholdColorLegendWithMouseOver.js",
+      "require": "./dist/ThresholdColorLegendWithMouseOver.cjs"
+    },
+    "./GraphFooter": {
+      "types": "./dist/GraphFooter.d.ts",
+      "import": "./dist/GraphFooter.js",
+      "require": "./dist/GraphFooter.cjs"
+    },
+    "./GraphHeader": {
+      "types": "./dist/GraphHeader.d.ts",
+      "import": "./dist/GraphHeader.js",
+      "require": "./dist/GraphHeader.cjs"
+    },
+    "./FootNote": {
+      "types": "./dist/FootNote.d.ts",
+      "import": "./dist/FootNote.js",
+      "require": "./dist/FootNote.cjs"
+    },
+    "./GraphDescription": {
+      "types": "./dist/GraphDescription.d.ts",
+      "import": "./dist/GraphDescription.js",
+      "require": "./dist/GraphDescription.cjs"
+    },
+    "./GraphTitle": {
+      "types": "./dist/GraphTitle.d.ts",
+      "import": "./dist/GraphTitle.js",
+      "require": "./dist/GraphTitle.cjs"
+    },
+    "./Source": {
+      "types": "./dist/Source.d.ts",
+      "import": "./dist/Source.js",
+      "require": "./dist/Source.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    },
+    "./fetchAndParseData": {
+      "types": "./dist/fetchAndParseData.d.ts",
+      "import": "./dist/fetchAndParseData.js",
+      "require": "./dist/fetchAndParseData.cjs"
+    },
+    "./transformData": {
+      "types": "./dist/transformData.d.ts",
+      "import": "./dist/transformData.js",
+      "require": "./dist/transformData.cjs"
+    },
+    "./validateSchema": {
+      "types": "./dist/validateSchema.d.ts",
+      "import": "./dist/validateSchema.js",
+      "require": "./dist/validateSchema.cjs"
+    },
+    "./getSchema": {
+      "types": "./dist/getSchema.d.ts",
+      "import": "./dist/getSchema.js",
+      "require": "./dist/getSchema.cjs"
+    },
+    "./Types": {
+      "types": "./dist/Types.d.ts",
+      "import": "./dist/Types.js",
+      "require": "./dist/Types.cjs"
     },
     "./style.css": {
       "import": "./dist/style.css",
@@ -94,7 +465,7 @@
   "peerDependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
-    "@undp/design-system-react": "^1.1.0",
+    "@undp/design-system-react": "^1.2.6",
     "ajv": "^8.17.1",
     "dom-to-svg": "^0.12.2",
     "file-saver": "^2.0.5",

@@ -1,10 +1,10 @@
 import { checkDataConfigValidity } from '../checkDataValidity';
 import { checkIfNullOrUndefined } from '../checkIfNullOrUndefined';
-import { GraphList } from '../getGraphList';
+import { graphList } from '../getGraphList';
 
 import { ChartConfiguration } from './graphConfig';
 
-import { GraphConfigurationDataType, GraphType } from '@/Types';
+import { GraphConfigurationDataType, GraphType, ThreeDGraphType } from '@/Types';
 /**
  * Transforms the input data into a format suitable for graph visualization based on the given graph type and configuration.
  *
@@ -41,11 +41,12 @@ import { GraphConfigurationDataType, GraphType } from '@/Types';
 export function transformDataForGraph(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any,
-  graph: GraphType,
+  graph: GraphType | ThreeDGraphType,
   config?: GraphConfigurationDataType[],
 ) {
   if (
-    GraphList.filter(el => el.geoHubMapPresentation)
+    graphList
+      .filter(el => el.geoHubMapPresentation)
       .map(el => el.graphID)
       .indexOf(graph) !== -1
   )

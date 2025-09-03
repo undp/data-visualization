@@ -1,18 +1,11 @@
 import uniqBy from 'lodash.uniqby';
 import { useState, useRef, useEffect } from 'react';
 import sum from 'lodash.sum';
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
 
-import {
-  Languages,
-  SourcesDataType,
-  StyleObject,
-  ClassNameObject,
-  TreeMapDataType,
-  AnimateDataType,
-} from '@/Types';
+import { Languages, SourcesDataType, StyleObject, ClassNameObject, TreeMapDataType } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
@@ -94,8 +87,6 @@ interface Props {
   highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
-  /** Toggles if the graph animates in when loaded.  */
-  animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Enable graph download option as png */
@@ -170,7 +161,6 @@ export function CirclePackingGraph(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    animate = false,
     dimmedOpacity = 0.3,
     precision = 2,
   } = props;
@@ -361,11 +351,6 @@ export function CirclePackingGraph(props: Props) {
                         detailsOnClick={detailsOnClick}
                         styles={styles}
                         classNames={classNames}
-                        animate={
-                          animate === true
-                            ? { duration: 0.5, once: true, amount: 0.5 }
-                            : animate || { duration: 0, once: true, amount: 0 }
-                        }
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
                       />

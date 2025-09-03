@@ -1,4 +1,5 @@
-import { cn, H3 } from '@undp/design-system-react';
+import { H3 } from '@undp/design-system-react/Typography';
+import { cn } from '@undp/design-system-react/cn';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';

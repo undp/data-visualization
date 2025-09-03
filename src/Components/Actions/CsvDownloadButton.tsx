@@ -1,5 +1,5 @@
 import { CSVLink } from 'react-csv';
-import { Button } from '@undp/design-system-react';
+import { Button } from '@undp/design-system-react/Button';
 import { JSX } from 'react';
 
 import { FileDown } from '@/Components/Icons';

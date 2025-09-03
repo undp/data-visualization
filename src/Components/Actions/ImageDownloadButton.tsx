@@ -1,5 +1,5 @@
-import { Button } from '@undp/design-system-react';
 import { JSX } from 'react';
+import { Button } from '@undp/design-system-react/Button';
 
 import { imageDownload } from '@/Utils/imageDownload';
 import { ImageDown } from '@/Components/Icons';

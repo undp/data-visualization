@@ -2,7 +2,8 @@ import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand, scaleOrdinal, scaleThreshold } from 'd3-scale';
 import { useRef, useState } from 'react';
 import uniqBy from 'lodash.uniqby';
-import { cn, Modal } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { Modal } from '@undp/design-system-react/Modal';
 import { motion, useInView } from 'motion/react';
 
 import {

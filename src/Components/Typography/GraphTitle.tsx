@@ -1,4 +1,5 @@
-import { cn, H5, P } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { H5, P } from '@undp/design-system-react/Typography';
 import React from 'react';
 
 interface Props {

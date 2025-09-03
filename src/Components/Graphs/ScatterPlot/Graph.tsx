@@ -4,7 +4,8 @@ import orderBy from 'lodash.orderby';
 import { Delaunay } from 'd3-delaunay';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
 import { linearRegression, linearRegressionLine } from 'simple-statistics';
-import { cn, Modal } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { Modal } from '@undp/design-system-react/Modal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {

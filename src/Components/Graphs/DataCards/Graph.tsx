@@ -1,4 +1,4 @@
-import { Modal } from '@undp/design-system-react';
+import { Modal } from '@undp/design-system-react/Modal';
 import { useState } from 'react';
 
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';

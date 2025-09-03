@@ -2,7 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import uniqBy from 'lodash.uniqby';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
-import { cn, SliderUI, Spinner } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { SliderUI } from '@undp/design-system-react/SliderUI';
+import { Spinner } from '@undp/design-system-react/Spinner';
 import { ascending, sort } from 'd3-array';
 
 import { Graph } from './Graph';

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { cn, Spinner } from '@undp/design-system-react';
+import { Spinner } from '@undp/design-system-react/Spinner';
 import * as THREE from 'three';
+import { cn } from '@undp/design-system-react/cn';
 
 import Graph from './Graph';
 

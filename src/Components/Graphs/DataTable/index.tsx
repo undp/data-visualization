@@ -3,7 +3,8 @@ import isEqual from 'fast-deep-equal';
 import { useEffect, useState } from 'react';
 import sortBy from 'lodash.sortby';
 import intersection from 'lodash.intersection';
-import { cn, P } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { P } from '@undp/design-system-react/Typography';
 
 import {
   DataTableColumnDataType,

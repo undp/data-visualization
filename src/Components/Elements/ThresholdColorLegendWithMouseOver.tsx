@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { cn, P } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { P } from '@undp/design-system-react/Typography';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 

@@ -49,12 +49,13 @@ export type GraphTypeForGriddedGraph =
   | 'lineChartWithConfidenceInterval'
   | 'dataCards'
   | 'radarChart'
-  | 'bulletChart'
-  | 'threeDGlobe';
+  | 'bulletChart';
 
 export type GeoHubGraphType = 'geoHubCompareMap' | 'geoHubMap' | 'geoHubMapWithLayerSelection';
 
-export type GraphType = GraphTypeForGriddedGraph | GeoHubGraphType;
+export type ThreeDGraphType = 'threeDGlobe';
+
+export type GraphType = GraphTypeForGriddedGraph;
 
 export type ZoomInteractionTypes = 'scroll' | 'ctrlScroll' | 'button' | 'noZoom';
 
@@ -431,8 +432,7 @@ export interface DataFilterDataType {
   excludeValues?: (string | number | boolean | null | undefined)[];
 }
 
-export type DashboardColumnDataType = {
-  graphType: GraphType;
+export interface DashboardColumnDataWithoutGraphType {
   attachedFilter?: string;
   columnWidth?: number;
   dataTransform?: {
@@ -444,7 +444,16 @@ export type DashboardColumnDataType = {
   dataSelectionOptions?: DataSelectionDataType[];
   advancedDataSelectionOptions?: AdvancedDataSelectionDataType[];
   settings?: GraphSettingsDataType;
-};
+}
+
+export interface DashboardColumnDataType extends DashboardColumnDataWithoutGraphType {
+  graphType: GraphType;
+}
+
+export interface PerformanceIntensiveDashboardColumnDataType
+  extends DashboardColumnDataWithoutGraphType {
+  graphType: GraphType | ThreeDGraphType | GeoHubGraphType;
+}
 
 export type StatCardsFromDataSheetDataType = {
   value: number | string;
@@ -470,17 +479,26 @@ export type HighlightDataPointSettingsDataType = {
   width?: string;
 };
 
-export type DashboardLayoutDataType = {
+export interface DashboardLayoutDataWithoutRowsType {
   title?: string;
   description?: string;
   padding?: string;
   backgroundColor?: string | boolean;
   language?: Languages;
+}
+export interface DashboardLayoutDataType extends DashboardLayoutDataWithoutRowsType {
   rows: {
     columns: DashboardColumnDataType[];
     height?: number;
   }[];
-};
+}
+export interface PerformanceIntensiveDashboardLayoutDataType
+  extends DashboardLayoutDataWithoutRowsType {
+  rows: {
+    columns: PerformanceIntensiveDashboardColumnDataType[];
+    height?: number;
+  }[];
+}
 
 export type DashboardFromWideToLongFormatColumnDataType = {
   graphType: 'donutChart' | 'barChart' | 'unitChart' | 'treeMap' | 'circlePacking';
@@ -923,12 +941,20 @@ export interface ChaptersDataType {
   sections: SectionsDataType[];
 }
 
+export interface PerformanceIntensiveChaptersDataType {
+  dataSettings: DataSettingsDataType;
+  graphSettings: GraphSettingsDataType;
+  graphType: GraphType | GeoHubGraphType | ThreeDGraphType;
+  graphDataConfiguration?: GraphConfigurationDataType[];
+  sections: SectionsDataType[];
+}
+
 export interface SectionsArrDataType {
   chapter: number;
   section: number;
   dataSettings: DataSettingsDataType;
   graphSettings: GraphSettingsDataType;
-  graphType: GraphType;
+  graphType: GraphType | GeoHubGraphType | ThreeDGraphType;
   graphDataConfiguration: GraphConfigurationDataType[];
   infoBox: InfoBoxDataType;
 }

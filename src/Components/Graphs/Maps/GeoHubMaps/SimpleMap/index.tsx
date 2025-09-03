@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { DropdownSelect, cn, createFilter } from '@undp/design-system-react';
+import { DropdownSelect, createFilter } from '@undp/design-system-react/DropdownSelect';
+import { cn } from '@undp/design-system-react/cn';
 
 import { GeoHubMultipleMap } from './GeoHubMultipleMap';
 import { GeoHubSingleMap } from './GeoHubSingleMap';

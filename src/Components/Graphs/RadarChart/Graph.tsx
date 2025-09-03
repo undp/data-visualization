@@ -2,7 +2,8 @@
 import isEqual from 'fast-deep-equal';
 import { lineRadial, curveLinearClosed, curveCardinalClosed } from 'd3-shape';
 import { useRef, useState } from 'react';
-import { cn, Modal } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { Modal } from '@undp/design-system-react/Modal';
 import { scaleLinear } from 'd3-scale';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 

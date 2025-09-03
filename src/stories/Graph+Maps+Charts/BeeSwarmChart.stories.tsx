@@ -96,16 +96,6 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     refValues: { table: { type: { detail: REF_VALUE_OBJECT } } },
     noOfTicks: { table: { defaultValue: { summary: '5' } } },
     // Graph parameters
-    animate: {
-      control: 'text',
-      table: {
-        type: {
-          summary: 'boolean | {duration: number; once: boolean; amount: `some` | `all` | number}',
-          detail:
-            'duration defines the time of the animation. once defines if the animation is triggered every time the element is in the view port. amount defines the amount of an element that should enter the viewport to be considered "entered". Either "some", "all" or a number between 0 and 1. ',
-        },
-      },
-    },
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'true' } } },
@@ -172,20 +162,9 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { label: '2024 Q4', position: 19 },
     ],
   },
-  render: ({ colors, highlightedDataPoints, backgroundColor, colorDomain, animate, ...args }) => {
+  render: ({ colors, highlightedDataPoints, backgroundColor, colorDomain, ...args }) => {
     return (
       <BeeSwarmChart
-        animate={
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (animate as any) === 'false' || animate === false
-            ? false
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (animate as any) === 'true' || animate === true
-              ? true
-              : animate
-                ? parseValue(animate)
-                : animate
-        }
         colors={parseValue(colors, colors)}
         highlightedDataPoints={parseValue(highlightedDataPoints)}
         colorDomain={parseValue(colorDomain)}

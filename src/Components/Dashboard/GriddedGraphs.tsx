@@ -1,16 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
-import {
-  CheckboxGroup,
-  CheckboxGroupItem,
-  createFilter,
-  DropdownSelect,
-  Label,
-  RadioGroup,
-  RadioGroupItem,
-  Spinner,
-} from '@undp/design-system-react';
+import { CheckboxGroup, CheckboxGroupItem } from '@undp/design-system-react/CheckboxGroup';
+import { Spinner } from '@undp/design-system-react/Spinner';
+import { RadioGroup, RadioGroupItem } from '@undp/design-system-react/RadioGroup';
+import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
+import { Label } from '@undp/design-system-react/Label';
 
 import GraphEl from './GraphEl';
 

@@ -1,4 +1,4 @@
-export const GraphList = [
+export const graphList = [
   {
     graphName: 'Bar graph',
     graphID: 'barChart',
@@ -21,27 +21,6 @@ export const GraphList = [
     availableInWideToLongFormat: false,
   },
   {
-    graphName: 'Animated bar chart',
-    graphID: 'animatedBarChart',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
-    graphName: 'Animated stacked bar chart',
-    graphID: 'animatedStackedBarChart',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
-    graphName: 'Animated grouped bar chart',
-    graphID: 'animatedGroupedBarChart',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
     graphName: 'Bee swarm chart',
     graphID: 'beeSwarmChart',
     availableInGriddedGraph: true,
@@ -51,13 +30,6 @@ export const GraphList = [
   {
     graphName: 'Butterfly chart',
     graphID: 'butterflyChart',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
-    graphName: 'Animated butterfly chart',
-    graphID: 'animatedButterflyChart',
     availableInGriddedGraph: true,
     geoHubMapPresentation: false,
     availableInWideToLongFormat: false,
@@ -93,13 +65,6 @@ export const GraphList = [
   {
     graphName: 'Dumbbell chart',
     graphID: 'dumbbellChart',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
-    graphName: 'Animated dumbbell chart',
-    graphID: 'animatedDumbbellChart',
     availableInGriddedGraph: true,
     geoHubMapPresentation: false,
     availableInWideToLongFormat: false,
@@ -196,27 +161,6 @@ export const GraphList = [
     availableInWideToLongFormat: false,
   },
   {
-    graphName: 'Animated choropleth map',
-    graphID: 'animatedChoroplethMap',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
-    graphName: 'Animated bi-variate choropleth map',
-    graphID: 'animatedBiVariateChoroplethMap',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
-    graphName: 'Animated dot density map',
-    graphID: 'animatedDotDensityMap',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
     graphName: 'GeoHub map with comparison',
     graphID: 'geoHubCompareMap',
     availableInGriddedGraph: false,
@@ -247,13 +191,6 @@ export const GraphList = [
   {
     graphName: 'Scatter plot',
     graphID: 'scatterPlot',
-    availableInGriddedGraph: true,
-    geoHubMapPresentation: false,
-    availableInWideToLongFormat: false,
-  },
-  {
-    graphName: 'Animated scatter plot',
-    graphID: 'animatedScatterPlot',
     availableInGriddedGraph: true,
     geoHubMapPresentation: false,
     availableInWideToLongFormat: false,

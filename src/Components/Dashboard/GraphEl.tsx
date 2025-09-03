@@ -1,4 +1,4 @@
-import { P } from '@undp/design-system-react';
+import { P } from '@undp/design-system-react/Typography';
 
 import { ButterflyChart } from '../Graphs/ButterflyChart';
 import { CirclePackingGraph } from '../Graphs/CirclePackingGraph';
@@ -14,8 +14,6 @@ import { SparkLine } from '../Graphs/LineCharts/SparkLine';
 import { BiVariateChoroplethMap } from '../Graphs/Maps/BiVariateMap';
 import { ChoroplethMap } from '../Graphs/Maps/ChoroplethMap';
 import { DotDensityMap } from '../Graphs/Maps/DotDensityMap';
-import { GeoHubCompareMaps } from '../Graphs/Maps/GeoHubMaps/CompareMaps';
-import { GeoHubMap } from '../Graphs/Maps/GeoHubMaps/SimpleMap';
 import { ParetoChart } from '../Graphs/ParetoChart';
 import { ScatterPlot } from '../Graphs/ScatterPlot';
 import { SlopeChart } from '../Graphs/SlopeChart';
@@ -24,7 +22,6 @@ import { StatCardFromData } from '../Graphs/StatCard/StatCardFromData';
 import { TreeMapGraph } from '../Graphs/TreeMapGraph';
 import { UnitChart } from '../Graphs/UnitChart';
 import { DifferenceLineChart } from '../Graphs/LineCharts/DifferenceLineChart';
-import { GeoHubMapWithLayerSelection } from '../Graphs/Maps/GeoHubMaps/MapWithLayerSelection';
 import { SankeyChart } from '../Graphs/SankeyChart';
 import { LineChartWithConfidenceInterval } from '../Graphs/LineCharts/LineChartWithConfidenceInterval';
 import { DataCards } from '../Graphs/DataCards';
@@ -34,7 +31,6 @@ import { StripChart } from '../Graphs/StripChart';
 import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
 import { RadarChart } from '../Graphs/RadarChart';
 import { BulletChart } from '../Graphs/BulletChart';
-import { ThreeDGlobe } from '../Graphs/Maps/ThreeDGlobe';
 
 import { getValues } from '@/Utils/getValues';
 import {
@@ -123,16 +119,12 @@ function GraphEl(props: Props) {
     paretoChart: ParetoChart,
     dataTable: DataTable,
     statCard: StatCardFromData,
-    geoHubCompareMap: GeoHubCompareMaps,
-    geoHubMap: GeoHubMap,
     unitChart: UnitChart,
     differenceLineChart: DifferenceLineChart,
-    geoHubMapWithLayerSelection: GeoHubMapWithLayerSelection,
     sankeyChart: SankeyChart,
     lineChartWithConfidenceInterval: LineChartWithConfidenceInterval,
     dataCards: DataCards,
     radarChart: RadarChart,
-    threeDGlobe: ThreeDGlobe,
   };
   const getGraphProps = (graphType: GraphType) => {
     switch (graphType) {
@@ -948,56 +940,6 @@ function GraphEl(props: Props) {
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
         };
-      case 'threeDGlobe':
-        return {
-          globeOffset: settings?.globeOffset,
-          polygonAltitude: settings?.polygonAltitude,
-          highlightedIds: settings?.highlightedIds,
-          scale: settings?.scale,
-          theme: settings?.theme,
-          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
-          graphTitle: settings?.graphTitle,
-          mapData: settings?.mapData,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          width: settings?.width,
-          height: settings?.height,
-          sources: settings?.sources,
-          colorDomain: settings?.colorDomain as string[] | number[],
-          colors: settings?.colors as string[] | undefined,
-          colorLegendTitle:
-            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
-              ? settings?.colorLegendTitle
-              : getValues('x', graphDataConfiguration || [], readableHeader || []),
-          scaleType: settings?.scaleType,
-          data: graphData,
-          centerPoint: settings?.centerPoint,
-          backgroundColor: settings?.backgroundColor,
-          mapNoDataColor: settings?.mapNoDataColor,
-          mapBorderColor: settings?.mapBorderColor,
-          relativeHeight: settings?.relativeHeight,
-          padding: settings?.padding,
-          tooltip: settings?.tooltip,
-          showColorScale: settings?.showColorScale,
-          graphID: settings?.graphID,
-          dataDownload: settings?.dataDownload,
-          mapProperty: settings?.mapProperty,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onSeriesMouseClick: (el: any) => {
-            updateFilters?.(el.id);
-          },
-          detailsOnClick: settings?.detailsOnClick,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-          categorical: settings?.categorical,
-          autoRotate: settings?.autoRotate,
-          globeMaterial: settings?.globeMaterial,
-          atmosphereColor: settings?.atmosphereColor,
-          enableZoom: settings?.enableZoom,
-        };
       case 'donutChart':
         return {
           precision: settings?.precision,
@@ -1712,79 +1654,6 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           layout: settings?.layout,
-        };
-      case 'geoHubCompareMap':
-        return {
-          theme: settings?.theme,
-          graphTitle: settings?.graphTitle,
-          sources: settings?.sources,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          width: settings?.width,
-          height: settings?.height,
-          relativeHeight: settings?.relativeHeight,
-          graphID: settings?.graphID,
-          mapStyles: settings?.mapStyles as [string, string],
-          center: settings?.center,
-          zoomLevel: settings?.zoomLevel,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          ariaLabel: settings?.ariaLabel,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-          mapLegend: settings?.mapLegend,
-        };
-      case 'geoHubMap':
-        return {
-          theme: settings?.theme,
-          mapStyle: settings?.mapStyle,
-          center: settings?.center,
-          zoomLevel: settings?.zoomLevel,
-          graphTitle: settings?.graphTitle,
-          sources: settings?.sources,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          width: settings?.width,
-          height: settings?.height,
-          relativeHeight: settings?.relativeHeight,
-          graphID: settings?.graphID,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          includeLayers: settings?.includeLayers,
-          excludeLayers: settings?.excludeLayers,
-          ariaLabel: settings?.ariaLabel,
-          uiMode: settings?.uiMode,
-          styles: settings?.styles,
-          classNames: settings?.classNames,
-          mapLegend: settings?.mapLegend,
-        };
-      case 'geoHubMapWithLayerSelection':
-        return {
-          theme: settings?.theme,
-          mapStyle: settings?.mapStyle,
-          center: settings?.center,
-          zoomLevel: settings?.zoomLevel,
-          graphTitle: settings?.graphTitle,
-          sources: settings?.sources,
-          graphDescription: settings?.graphDescription,
-          footNote: settings?.footNote,
-          backgroundColor: settings?.backgroundColor,
-          padding: settings?.padding,
-          width: settings?.width,
-          height: settings?.height,
-          relativeHeight: settings?.relativeHeight,
-          graphID: settings?.graphID,
-          language: settings?.language,
-          minHeight: settings?.minHeight,
-          layerSelection: settings?.layerSelection,
-          excludeLayers: settings?.excludeLayers,
-          ariaLabel: settings?.ariaLabel,
-          uiMode: settings?.uiMode,
-          mapLegend: settings?.mapLegend,
         };
       case 'unitChart':
         return {

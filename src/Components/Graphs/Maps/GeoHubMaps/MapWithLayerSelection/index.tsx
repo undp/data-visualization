@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import flattenDeep from 'lodash.flattendeep';
-import { cn, createFilter, DropdownSelect } from '@undp/design-system-react';
+import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
+import { cn } from '@undp/design-system-react/cn';
 
 import { MapEl } from './MapEl';
 

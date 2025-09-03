@@ -1,4 +1,4 @@
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 import { motion } from 'motion/react';
 
 import { AnimateDataType } from '@/Types';
@@ -17,7 +17,7 @@ interface RefLineYProps {
     line?: React.CSSProperties;
     text?: React.CSSProperties;
   };
-  animate: AnimateDataType;
+  animate?: AnimateDataType;
   isInView: boolean;
 }
 
@@ -27,14 +27,14 @@ export function RefLineY(props: RefLineYProps) {
   return (
     <motion.g
       key={`${x1}-${x2}-${y}`}
-      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+      exit={{ opacity: 0, transition: { duration: animate?.duration || 0 } }}
       variants={{
         initial: {
           opacity: 0,
         },
         whileInView: {
           opacity: 1,
-          transition: { duration: animate.duration },
+          transition: { duration: animate?.duration || 0 },
         },
       }}
       initial='initial'
@@ -91,7 +91,7 @@ interface RefLineXProps {
     line?: React.CSSProperties;
     text?: React.CSSProperties;
   };
-  animate: AnimateDataType;
+  animate?: AnimateDataType;
   isInView: boolean;
 }
 
@@ -101,14 +101,14 @@ export function RefLineX(props: RefLineXProps) {
   return (
     <motion.g
       key={`${y1}-${y2}-${x}`}
-      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+      exit={{ opacity: 0, transition: { duration: animate?.duration || 0 } }}
       variants={{
         initial: {
           opacity: 0,
         },
         whileInView: {
           opacity: 1,
-          transition: { duration: animate.duration },
+          transition: { duration: animate?.duration || 0 },
         },
       }}
       initial='initial'

@@ -1,4 +1,4 @@
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 import { createPortal } from 'react-dom';
 
 import { string2HTML } from '@/Utils/string2HTML';

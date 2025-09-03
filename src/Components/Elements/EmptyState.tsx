@@ -1,4 +1,4 @@
-import { P } from '@undp/design-system-react';
+import { P } from '@undp/design-system-react/Typography';
 
 import { Alert } from '@/Components/Icons';
 

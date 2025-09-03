@@ -1,7 +1,8 @@
 import isEqual from 'fast-deep-equal';
 import { useRef, useState } from 'react';
 import { scaleBand, scaleLinear } from 'd3-scale';
-import { cn, Modal } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { Modal } from '@undp/design-system-react/Modal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {

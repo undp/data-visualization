@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
-import { createFilter, DropdownSelect, Label } from '@undp/design-system-react';
+import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
+import { Label } from '@undp/design-system-react/Label';
 
 import { SingleGraphDashboard } from './SingleGraphDashboard';
 

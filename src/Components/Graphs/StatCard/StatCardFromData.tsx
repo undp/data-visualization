@@ -1,5 +1,6 @@
 import sum from 'lodash.sum';
-import { cn, H3 } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
+import { H3 } from '@undp/design-system-react/Typography';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';

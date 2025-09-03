@@ -1,4 +1,4 @@
-import { cn } from '@undp/design-system-react';
+import { cn } from '@undp/design-system-react/cn';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { AnimateDataType } from '@/Types';

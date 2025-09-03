@@ -1,7 +1,9 @@
 import { stratify, treemap } from 'd3-hierarchy';
 import { useRef, useState } from 'react';
-import { P, Modal, cn } from '@undp/design-system-react';
+import { P } from '@undp/design-system-react/Typography';
 import { AnimatePresence, motion, useInView } from 'motion/react';
+import { Modal } from '@undp/design-system-react/Modal';
+import { cn } from '@undp/design-system-react/cn';
 
 import { AnimateDataType, ClassNameObject, Languages, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';

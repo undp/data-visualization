@@ -4,7 +4,8 @@ import isEqual from 'fast-deep-equal';
 import { useEffect, useRef, useState } from 'react';
 import { scaleOrdinal, scaleThreshold } from 'd3-scale';
 import * as THREE from 'three';
-import { Modal, P } from '@undp/design-system-react';
+import { Modal } from '@undp/design-system-react/Modal';
+import { P } from '@undp/design-system-react/Typography';
 
 import { ChoroplethMapDataType, ClassNameObject, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';

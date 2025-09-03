@@ -1,4 +1,6 @@
-import { Button, Toaster, useToast } from '@undp/design-system-react';
+import { Button } from '@undp/design-system-react/Button';
+import { Toaster } from '@undp/design-system-react/Toaster';
+import { useToast } from '@undp/design-system-react/ToasterHooks';
 
 import { Copy } from '@/Components/Icons';
 
