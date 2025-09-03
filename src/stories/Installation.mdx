@@ -1,0 +1,70 @@
+import { Meta, Source, Canvas, Story } from '@storybook/addon-docs/blocks';
+import { H3, H4, P, Code, H6 } from '@undp/design-system-react/Typography';
+import { Separator } from '@undp/design-system-react/Separator';
+import { Spacer } from '@undp/design-system-react/Spacer';
+import githubLogo from "./assets/Github-logo.svg";
+import dsIcon from "./assets/DS-icon.svg";
+import figmaIcon from "./assets/Figma-icon.svg";
+import sendIcon from "./assets/Send-icon.svg";
+import npmIcon from "./assets/npm-logo.svg";
+import '@undp/design-system-react/style.css';
+
+<Meta title="Getting started/Installation" />
+
+# Installation
+
+### Using the library in React projects
+
+Before starting, it is recommended to correctly install and configure [Node.js](https://nodejs.org/en/download) v18 or above.
+
+We also assumes that you have intermediate knowledge about HTML, CSS, and JavaScript/TypeScript, and React. Starting out is straightforward.
+      
+### Installing with NPM
+
+Start by installing UNDP Visualization Library as a node module and save it as a dependency in your package.json:
+```
+npm install @undp/data-viz `--save`
+```
+
+### Peer dependencies
+This package requires several peer dependencies that you need to install in your project.
+
+__Required__
+
+* `react` `^19.1.0`
+* `react-dom` `^19.1.0`
+* `@undp/design-system-react` `^1.2.7`
+
+__Feature-Specific__
+
+Depending on what features you use, you may also need:
+* Drag & Drop (for Geohub compare map)
+  * `@dnd-kit/core`
+  * `@dnd-kit/modifiers`
+* Schema validation
+  * `ajv`
+* Map visualizations (for Geohub maps)
+  * `maplibre-gl`
+  * `pmtiles`
+* 3D globe visualizations
+  * `three`
+  * `react-globe.gl`
+* Tailwind utilities
+  * `tailwind-animate`
+  * `tailwind-merge`
+  * `tailwindcss-animate`
+* For SVG download
+  * `dom-to-svg`
+  * `file-saver`
+* For tooltip (if formatting using handlebars)
+  * `handlebars`
+  * `marked`
+  * `math-expression-evaluator`
+
+__Quick install__
+
+If you want every feature specific dependencies:
+
+```
+npm install @dnd-kit/core @dnd-kit/modifiers ajv dom-to-svg file-saver handlebars maplibre-gl marked math-expression-evaluator pmtiles react-globe.gl tailwind-animate tailwind-merge tailwindcss-animate three
+```

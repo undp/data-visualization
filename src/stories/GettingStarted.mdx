@@ -36,14 +36,20 @@ Start by installing UNDP Visualization Library as a node module and save it as a
 npm install @undp/data-viz `--save`
 ```
 
-### Import
+### Usage
 
 It is recommended to import what you need and the use it.
 
 It is also recommended to import the css because some setting expect the CSS to be imported to look good. You can import the css file like this:
+
 ```
 import '@undp/data-viz/dist/style.css';
 ```
+
+__🌲 Tree Shaking__
+
+This library is fully **tree-shakable**, meaning you can import only the components you need. Your bundler (Vite, Webpack, Rollup, etc.) will automatically remove unused code.
+
 
 ### Recommendation
 
