@@ -669,12 +669,6 @@ export interface MapLegendDataType {
   legend: string | React.ReactNode;
 }
 
-export interface MaterialDataType {
-  color: string;
-  opacity: number;
-  transparent: boolean;
-}
-
 export interface TimelineDataType {
   autoplay: boolean;
   enabled: boolean;
@@ -912,7 +906,7 @@ export interface GraphSettingsDataType {
   labelsToBeHidden?: (string | number)[];
   autoRotate?: boolean;
   enableZoom?: boolean;
-  globeMaterial?: MaterialDataType;
+  globeMaterial?: any;
   categorical?: boolean;
   atmosphereColor?: string;
   lineAxisTitle?: string;
@@ -920,6 +914,9 @@ export interface GraphSettingsDataType {
   naLabel?: string;
   globeOffset?: [number, number];
   polygonAltitude?: number;
+  atmosphereAltitude?: number;
+  globeCurvatureResolution?: number;
+  lightColor?: string;
 }
 
 export interface InfoBoxDataType {

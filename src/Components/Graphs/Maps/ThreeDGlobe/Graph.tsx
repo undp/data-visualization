@@ -22,7 +22,7 @@ interface Props {
   colorDomain: number[] | string[];
   colors: string[];
   height: number;
-  globeMaterial?: THREE.MeshPhongMaterialProperties;
+  globeMaterial?: THREE.Material;
   polygonData: any;
   mapProperty: string;
   mapBorderColor: string;
@@ -45,6 +45,9 @@ interface Props {
   polygonAltitude: number;
   centerLng: number;
   centerLat: number;
+  atmosphereAltitude: number;
+  globeCurvatureResolution: number;
+  lightColor: string;
 }
 
 function Graph(props: Props) {
@@ -80,6 +83,9 @@ function Graph(props: Props) {
     polygonAltitude,
     centerLng,
     centerLat,
+    atmosphereAltitude,
+    globeCurvatureResolution,
+    lightColor,
   } = props;
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -125,12 +131,13 @@ function Graph(props: Props) {
       globeEl.current.pointOfView({ lat: centerLat, lng: centerLng, altitude: scale }, 1000);
     }
   }, [scale, centerLng, centerLat]);
-  const materials = new THREE.MeshLambertMaterial({
-    color: '#fff',
-    opacity: 1,
-    transparent: false,
-    ...(globeMaterial || {}),
-  });
+  const materials =
+    globeMaterial ||
+    new THREE.MeshPhysicalMaterial({
+      color: '#FFF',
+      roughness: 0.5,
+      reflectivity: 1.2,
+    });
   return (
     <div className='relative'>
       <Globe
@@ -196,6 +203,8 @@ function Graph(props: Props) {
           onSeriesMouseOver?.(hoverData);
         }}
         atmosphereColor={atmosphereColor}
+        atmosphereAltitude={atmosphereAltitude}
+        globeCurvatureResolution={globeCurvatureResolution}
         globeMaterial={materials}
         backgroundColor='rgba(0, 0, 0, 0)'
         polygonsTransitionDuration={100}
@@ -205,6 +214,28 @@ function Graph(props: Props) {
               lat: centerPoint[0],
               lng: centerPoint[1],
             });
+            const scene = globeEl.current.scene();
+            setTimeout(() => {
+              scene.children
+                .filter(d => d.type === 'DirectionalLight')
+                .map(d => {
+                  scene.remove(d);
+                });
+              const ambientLight = new THREE.AmbientLight(lightColor, 0.2);
+              scene.add(ambientLight);
+
+              const polygons = scene.children[3]?.children[0]?.children[4]?.children || [];
+              polygons.forEach(d => {
+                const line = d.children[1];
+                line.renderOrder = 2;
+              });
+            }, 300);
+            const light = new THREE.DirectionalLight(0xffffff, 0.1);
+            const camera = globeEl.current.camera();
+            light.position.set(0, 0, 1);
+            camera.add(light);
+            scene.add(camera);
+            scene.fog = new THREE.Fog(lightColor, 150, 300);
           }
         }}
       />

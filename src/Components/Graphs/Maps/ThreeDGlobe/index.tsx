@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import * as THREE from 'three';
 import { cn } from '@undp/design-system-react/cn';
+import Globe from 'react-globe.gl';
 
 import Graph from './Graph';
 
@@ -20,7 +21,8 @@ import { Colors } from '@/Components/ColorPalette';
 import { getUniqValue } from '@/Utils/getUniqValue';
 import { getJenks } from '@/Utils/getJenks';
 
-interface Props {
+type GlobeProps = React.ComponentProps<typeof Globe>;
+interface Props extends Partial<Omit<GlobeProps, 'backgroundColor'>> {
   // Data
   /** Array of data objects */
   data: ChoroplethMapDataType[];
@@ -76,7 +78,7 @@ interface Props {
   /** Defines if the globe rotates automatically */
   autoRotate?: number | boolean;
   /** Defines the material property applied to the sphere of the globe */
-  globeMaterial?: THREE.MeshPhongMaterialProperties;
+  globeMaterial?: THREE.Material;
   /** Defines the colo of the glow around the globe */
   atmosphereColor?: string;
   /** Defines if the globe can be zoomed when scrolled */
@@ -93,6 +95,12 @@ interface Props {
   categorical?: boolean;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
+  /** The max altitude of the atmosphere, in terms of globe radius units. */
+  atmosphereAltitude?: number;
+  /** Resolution in angular degrees of the sphere curvature. The finer the resolution, the more the globe is fragmented into smaller faces to approximate the spheric surface, at the cost of performance. */
+  globeCurvatureResolution?: number;
+  /** Defines the color of the light and atmosphere. */
+  lightColor?: string;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
   /** Countries or regions to be highlighted */
@@ -169,6 +177,9 @@ export function ThreeDGlobe(props: Props) {
     scale = 1,
     globeOffset = [0, 0],
     polygonAltitude = 0.01,
+    globeCurvatureResolution = 4,
+    atmosphereAltitude = 0.15,
+    lightColor = '#dce9fe',
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -348,6 +359,9 @@ export function ThreeDGlobe(props: Props) {
                   polygonAltitude={polygonAltitude}
                   centerLat={centerPoint[0]}
                   centerLng={centerPoint[1]}
+                  atmosphereAltitude={atmosphereAltitude}
+                  globeCurvatureResolution={globeCurvatureResolution}
+                  lightColor={lightColor}
                 />
               ) : (
                 <div
