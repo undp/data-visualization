@@ -131,10 +131,8 @@ function Graph(props: Props) {
   }, [scale, centerLng, centerLat]);
   const materials =
     globeMaterial ||
-    new THREE.MeshPhysicalMaterial({
+    new THREE.MeshBasicMaterial({
       color: '#FFF',
-      roughness: 0.5,
-      reflectivity: 1.2,
     });
   useEffect(() => {
     if (!globeEl.current) return;
@@ -152,6 +150,8 @@ function Graph(props: Props) {
         if (line) line.renderOrder = 2;
       });
     }, 300);
+
+    scene.fog = new THREE.Fog(lightColor, 150, 300);
   }, [lightColor]);
   return (
     <div className='relative'>

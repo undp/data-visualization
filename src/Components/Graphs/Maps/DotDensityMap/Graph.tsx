@@ -491,13 +491,13 @@ export function Graph(props: Props) {
           <div className='absolute left-4 top-4 flex flex-col'>
             <button
               onClick={() => handleZoom('in')}
-              className='leading-0 px-2 py-3.5 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+              className='leading-0 px-2 py-3.5 text-primary-gray-700 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
             >
               +
             </button>
             <button
               onClick={() => handleZoom('out')}
-              className='leading-0 px-2 py-3.5 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+              className='leading-0 px-2 py-3.5 text-primary-gray-700 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
             >
               –
             </button>
