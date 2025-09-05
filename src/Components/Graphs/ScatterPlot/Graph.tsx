@@ -644,7 +644,8 @@ export function Graph(props: Props) {
                     ? d.xCoordinate
                       ? x(d.xCoordinate as number) + (d.xOffset || 0)
                       : 0 + (d.xOffset || 0)
-                    : graphWidth -
+                    : graphWidth +
+                      margin.right -
                       (d.xCoordinate
                         ? x(d.xCoordinate as number) + (d.xOffset || 0)
                         : 0 + (d.xOffset || 0)),

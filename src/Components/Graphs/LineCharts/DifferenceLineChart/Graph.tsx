@@ -269,7 +269,7 @@ export function Graph(props: Props) {
           bisectCenter(
             dataFormatted.map(d => d.date),
             x.invert(pointer(event)[0]),
-            1,
+            0,
           )
         ];
       setMouseOverData(selectedData || dataFormatted[dataFormatted.length - 1]);
@@ -737,7 +737,8 @@ export function Graph(props: Props) {
                   ? d.xCoordinate
                     ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
                     : 0 + (d.xOffset || 0)
-                  : graphWidth -
+                  : graphWidth +
+                    margin.right -
                     (d.xCoordinate
                       ? x(parse(`${d.xCoordinate}`, dateFormat, new Date())) + (d.xOffset || 0)
                       : 0 + (d.xOffset || 0)),

@@ -230,7 +230,7 @@ export function Graph(props: Props) {
           bisectCenter(
             dataFormatted.map(d => d.date),
             x.invert(pointer(event)[0]),
-            1,
+            0,
           )
         ];
       setMouseOverData(selectedData || dataFormatted[dataFormatted.length - 1]);
