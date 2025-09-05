@@ -148,6 +148,11 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: "'number' | 'diff'" } },
     },
+    sortData: {
+      control: 'inline-radio',
+      options: ['asc', 'desc'],
+      table: { type: { summary: "'asc' | 'desc'" } },
+    },
     language: {
       control: 'select',
       options: LANGUAGE_OPTIONS,

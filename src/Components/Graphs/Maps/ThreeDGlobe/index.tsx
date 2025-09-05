@@ -342,7 +342,6 @@ export function ThreeDGlobe(props: Props) {
                   enableZoom={enableZoom}
                   globeMaterial={globeMaterial}
                   atmosphereColor={atmosphereColor}
-                  centerPoint={centerPoint}
                   colorLegendTitle={colorLegendTitle}
                   showColorScale={showColorScale}
                   hoverStrokeColor={

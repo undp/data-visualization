@@ -753,6 +753,8 @@ interface StackedBarChartProps {
   naLabel?: string;
   /** Parameter to sort the data. If a number is provided, it refers to the index of the size array to determine which value to sort by. If set to total, it sorts by the sum of all the values. */
   sortParameter?: number | 'total';
+  /** Sorting order for data. This is overwritten by labelOrder prop. */
+  sortData?: 'asc' | 'desc';
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
@@ -833,6 +835,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     minHeight,
     maxBarThickness,
     sortParameter,
+    sortData,
     maxNumberOfBars,
     minBarThickness,
     ariaLabel,
@@ -894,6 +897,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
         minHeight={minHeight}
         maxBarThickness={maxBarThickness}
         sortParameter={sortParameter}
+        sortData={sortData}
         maxNumberOfBars={maxNumberOfBars}
         minBarThickness={minBarThickness}
         ariaLabel={ariaLabel}
@@ -953,6 +957,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       minHeight={minHeight}
       maxBarThickness={maxBarThickness}
       sortParameter={sortParameter}
+      sortData={sortData}
       maxNumberOfBars={maxNumberOfBars}
       minBarThickness={minBarThickness}
       ariaLabel={ariaLabel}

@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import sortBy from 'lodash.sortby';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { cn } from '@undp/design-system-react/cn';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { ascending, sort } from 'd3-array';
 import uniqBy from 'lodash.uniqby';
+import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
 
@@ -95,6 +95,7 @@ interface Props {
   highlightedDataPoints?: (string | number)[];
   dimmedOpacity?: number;
   timeline?: TimelineDataType;
+  sortData?: 'asc' | 'desc';
 }
 
 export function HorizontalDumbbellChart(props: Props) {
@@ -159,6 +160,7 @@ export function HorizontalDumbbellChart(props: Props) {
     highlightedDataPoints = [],
     dimmedOpacity = 0.3,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
+    sortData,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -320,7 +322,7 @@ export function HorizontalDumbbellChart(props: Props) {
                         data={
                           sortParameter !== undefined
                             ? sortParameter === 'diff'
-                              ? sortBy(
+                              ? orderBy(
                                   ensureCompleteDataForDumbbellChart(
                                     data,
                                     timeline.dateFormat || 'yyyy',
@@ -340,10 +342,9 @@ export function HorizontalDumbbellChart(props: Props) {
                                     checkIfNullOrUndefined(d.x[0])
                                       ? -Infinity
                                       : (d.x[d.x.length - 1] as number) - (d.x[0] as number),
-                                )
-                                  .reverse()
-                                  .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                              : sortBy(
+                                  [sortData || 'asc'],
+                                ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                              : orderBy(
                                   ensureCompleteDataForDumbbellChart(
                                     data,
                                     timeline.dateFormat || 'yyyy',
@@ -362,9 +363,8 @@ export function HorizontalDumbbellChart(props: Props) {
                                     checkIfNullOrUndefined(d.x[sortParameter])
                                       ? -Infinity
                                       : d.x[sortParameter],
-                                )
-                                  .reverse()
-                                  .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                                  [sortData || 'asc'],
+                                ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                             : ensureCompleteDataForDumbbellChart(
                                 data,
                                 timeline.dateFormat || 'yyyy',

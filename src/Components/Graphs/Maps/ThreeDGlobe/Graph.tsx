@@ -33,7 +33,6 @@ interface Props {
   onSeriesMouseOver?: (_d: any) => void;
   onSeriesMouseClick?: (_d: any) => void;
   mapNoDataColor: string;
-  centerPoint: [number, number];
   colorLegendTitle?: string;
   showColorScale: boolean;
   hoverStrokeColor: string;
@@ -69,7 +68,6 @@ function Graph(props: Props) {
     styles,
     classNames,
     mapNoDataColor,
-    centerPoint,
     colorLegendTitle,
     showColorScale,
     hoverStrokeColor,
@@ -138,6 +136,23 @@ function Graph(props: Props) {
       roughness: 0.5,
       reflectivity: 1.2,
     });
+  useEffect(() => {
+    if (!globeEl.current) return;
+
+    const scene = globeEl.current.scene();
+    scene.children
+      .filter(d => d.type === 'DirectionalLight' || d.type === 'AmbientLight')
+      .forEach(d => scene.remove(d));
+    const ambientLight = new THREE.AmbientLight(lightColor, 0.2);
+    scene.add(ambientLight);
+    setTimeout(() => {
+      const polygons = scene.children[3]?.children[0]?.children[4]?.children || [];
+      polygons.forEach(d => {
+        const line = d.children[1];
+        if (line) line.renderOrder = 2;
+      });
+    }, 300);
+  }, [lightColor]);
   return (
     <div className='relative'>
       <Globe
@@ -211,8 +226,8 @@ function Graph(props: Props) {
         onGlobeReady={() => {
           if (globeEl.current) {
             globeEl.current.pointOfView({
-              lat: centerPoint[0],
-              lng: centerPoint[1],
+              lat: centerLat,
+              lng: centerLng,
             });
             const scene = globeEl.current.scene();
             setTimeout(() => {
@@ -235,7 +250,6 @@ function Graph(props: Props) {
             light.position.set(0, 0, 1);
             camera.add(light);
             scene.add(camera);
-            scene.fog = new THREE.Fog(lightColor, 150, 300);
           }
         }}
       />

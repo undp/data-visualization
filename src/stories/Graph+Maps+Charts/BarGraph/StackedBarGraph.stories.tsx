@@ -160,6 +160,11 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: 'en' },
       },
     },
+    sortData: {
+      control: 'inline-radio',
+      options: ['asc', 'desc'],
+      table: { type: { summary: "'asc' | 'desc'" } },
+    },
     theme: {
       control: 'inline-radio',
       options: ['light', 'dark'],

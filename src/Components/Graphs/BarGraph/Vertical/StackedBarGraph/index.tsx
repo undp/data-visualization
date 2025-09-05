@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import sortBy from 'lodash.sortby';
 import sum from 'lodash.sum';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
@@ -7,6 +6,7 @@ import { cn } from '@undp/design-system-react/cn';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { ascending, sort } from 'd3-array';
 import uniqBy from 'lodash.uniqby';
+import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
 
@@ -74,6 +74,7 @@ interface Props {
   theme?: 'light' | 'dark';
   maxBarThickness?: number;
   sortParameter?: number | 'total';
+  sortData?: 'asc' | 'desc';
   maxNumberOfBars?: number;
   minBarThickness?: number;
   ariaLabel?: string;
@@ -150,6 +151,7 @@ export function VerticalStackedBarGraph(props: Props) {
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     naLabel = 'NA',
+    sortData,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -302,7 +304,7 @@ export function VerticalStackedBarGraph(props: Props) {
                         data={
                           sortParameter !== undefined
                             ? sortParameter === 'total'
-                              ? sortBy(
+                              ? orderBy(
                                   ensureCompleteDataForStackedBarChart(
                                     data,
                                     timeline.dateFormat || 'yyyy',
@@ -320,8 +322,9 @@ export function VerticalStackedBarGraph(props: Props) {
                                       filterNA ? !d.size.every(item => item == null) : d,
                                     ),
                                   d => sum(d.size.filter(el => !checkIfNullOrUndefined(el))),
+                                  [sortData || 'asc'],
                                 ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                              : sortBy(
+                              : orderBy(
                                   ensureCompleteDataForStackedBarChart(
                                     data,
                                     timeline.dateFormat || 'yyyy',
@@ -342,6 +345,7 @@ export function VerticalStackedBarGraph(props: Props) {
                                     checkIfNullOrUndefined(d.size[sortParameter])
                                       ? -Infinity
                                       : d.size[sortParameter],
+                                  [sortData || 'asc'],
                                 ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                             : ensureCompleteDataForStackedBarChart(
                                 data,

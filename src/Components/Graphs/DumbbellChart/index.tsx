@@ -118,6 +118,8 @@ interface Props {
   axisTitle?: string;
   /** Sorting order for data. If this is a number then data is sorted by value at that index x array in the data props. If this is diff then data is sorted by the difference of the last and first element in the x array in the data props. This is overwritten by labelOrder prop */
   sortParameter?: number | 'diff';
+  /** Sorting order for data. This is overwritten by labelOrder prop. */
+  sortData?: 'asc' | 'desc';
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
@@ -221,6 +223,7 @@ export function DumbbellChart(props: Props) {
     highlightedDataPoints,
     dimmedOpacity,
     timeline,
+    sortData,
   } = props;
 
   if (orientation === 'vertical')
@@ -286,6 +289,7 @@ export function DumbbellChart(props: Props) {
         highlightedDataPoints={highlightedDataPoints}
         dimmedOpacity={dimmedOpacity}
         timeline={timeline}
+        sortData={sortData}
       />
     );
   return (
@@ -350,6 +354,7 @@ export function DumbbellChart(props: Props) {
       highlightedDataPoints={highlightedDataPoints}
       dimmedOpacity={dimmedOpacity}
       timeline={timeline}
+      sortData={sortData}
     />
   );
 }

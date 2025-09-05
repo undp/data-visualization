@@ -106,6 +106,11 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'number',
       table: { defaultValue: { summary: '999' } },
     },
+    sortData: {
+      control: 'inline-radio',
+      options: ['asc', 'desc'],
+      table: { type: { summary: "'asc' | 'desc'" } },
+    },
     refValues: { table: { type: { detail: REF_VALUE_OBJECT } } },
     noOfTicks: { table: { defaultValue: { summary: '5' } } },
 
