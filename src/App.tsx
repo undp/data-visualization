@@ -1,6 +1,6 @@
 import { A, H3, P } from '@undp/design-system-react/Typography';
-import './styles/styles.css';
 import '@undp/design-system-react/style.css';
+import './styles/styles.css';
 
 function App() {
   return (
