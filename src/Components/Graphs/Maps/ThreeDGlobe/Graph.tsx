@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Globe, { GlobeMethods } from 'react-globe.gl';
 import isEqual from 'fast-deep-equal';
@@ -159,6 +158,8 @@ function Graph(props: Props) {
     <div className='relative'>
       <Globe
         ref={globeEl}
+        height={height}
+        width={width}
         globeOffset={globeOffset}
         lineHoverPrecision={0}
         polygonsData={polygonData}
