@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Globe, { GlobeMethods } from 'react-globe.gl';
 import isEqual from 'fast-deep-equal';
@@ -7,7 +8,7 @@ import * as THREE from 'three';
 import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
 
-import { ChoroplethMapDataType, ClassNameObject, StyleObject } from '@/Types';
+import { ChoroplethMapDataType, ClassNameObject, FogDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { X } from '@/Components/Icons';
@@ -47,6 +48,7 @@ interface Props {
   atmosphereAltitude: number;
   globeCurvatureResolution: number;
   lightColor: string;
+  fogSettings?: FogDataType;
 }
 
 function Graph(props: Props) {
@@ -84,6 +86,7 @@ function Graph(props: Props) {
     atmosphereAltitude,
     globeCurvatureResolution,
     lightColor,
+    fogSettings,
   } = props;
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -96,18 +99,17 @@ function Graph(props: Props) {
         .domain(colorDomain as number[])
         .range(colors);
   useEffect(() => {
-    if (globeEl?.current) {
-      globeEl.current.controls().autoRotate = autoRotate === 0 ? false : true;
+    if (globeEl.current) {
       globeEl.current.controls().enableZoom = enableZoom;
-      globeEl.current.controls().autoRotateSpeed = autoRotate;
     }
-  }, [autoRotate, enableZoom]);
+  }, [enableZoom]);
   useEffect(() => {
     if (globeEl.current) {
       if (mouseOverData) {
         globeEl.current.controls().autoRotate = false;
       } else {
         globeEl.current.controls().autoRotate = autoRotate === 0 ? false : true;
+        globeEl.current.controls().autoRotateSpeed = autoRotate;
       }
     }
   }, [mouseOverData, autoRotate]);
@@ -150,15 +152,13 @@ function Graph(props: Props) {
         if (line) line.renderOrder = 2;
       });
     }, 300);
-
-    scene.fog = new THREE.Fog(lightColor, 150, 300);
-  }, [lightColor]);
+    if (fogSettings)
+      scene.fog = new THREE.Fog(fogSettings.color, fogSettings.near, fogSettings.far);
+  }, [lightColor, scale, fogSettings]);
   return (
     <div className='relative'>
       <Globe
         ref={globeEl}
-        width={width}
-        height={height}
         globeOffset={globeOffset}
         lineHoverPrecision={0}
         polygonsData={polygonData}

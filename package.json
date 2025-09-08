@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "browser": "./dist/index.umd.js",
@@ -542,7 +542,6 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^4.1.1",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/rollup": "^3.1.1",
     "@nabla/vite-plugin-eslint": "^2.0.6",

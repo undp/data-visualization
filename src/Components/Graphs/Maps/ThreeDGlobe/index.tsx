@@ -11,6 +11,7 @@ import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import {
   ChoroplethMapDataType,
   ClassNameObject,
+  FogDataType,
   Languages,
   ScaleDataType,
   SourcesDataType,
@@ -101,6 +102,8 @@ interface Props extends Partial<Omit<GlobeProps, 'backgroundColor'>> {
   globeCurvatureResolution?: number;
   /** Defines the color of the light and atmosphere. */
   lightColor?: string;
+  /** Defines fog settings for the scene. */
+  fogSettings?: FogDataType;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
   /** Countries or regions to be highlighted */
@@ -180,6 +183,7 @@ export function ThreeDGlobe(props: Props) {
     globeCurvatureResolution = 4,
     atmosphereAltitude = 0.15,
     lightColor = '#dce9fe',
+    fogSettings,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -361,6 +365,7 @@ export function ThreeDGlobe(props: Props) {
                   atmosphereAltitude={atmosphereAltitude}
                   globeCurvatureResolution={globeCurvatureResolution}
                   lightColor={lightColor}
+                  fogSettings={fogSettings}
                 />
               ) : (
                 <div

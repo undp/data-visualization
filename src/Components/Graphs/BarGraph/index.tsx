@@ -425,6 +425,10 @@ interface GroupedBarChartProps {
   truncateBy?: number;
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
+  /** Parameter to sort the data. If a number is provided, it refers to the index of the size array to determine which value to sort by. If set to total, it sorts by the sum of all the values. */
+  sortParameter?: number | 'total';
+  /** Sorting order for data. This is overwritten by labelOrder prop. */
+  sortData?: 'asc' | 'desc';
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
   /** Reference values for comparison */
@@ -522,6 +526,8 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     labelOrder,
     minHeight,
     theme,
+    sortParameter,
+    sortData,
     maxBarThickness,
     ariaLabel,
     resetSelectionOnDoubleClick,
@@ -564,6 +570,8 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
         backgroundColor={backgroundColor}
         leftMargin={leftMargin}
         rightMargin={rightMargin}
+        sortParameter={sortParameter}
+        sortData={sortData}
         topMargin={topMargin}
         bottomMargin={bottomMargin}
         showLabels={showLabels}
@@ -604,6 +612,8 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       data={data}
       graphTitle={graphTitle}
       colors={colors}
+      sortParameter={sortParameter}
+      sortData={sortData}
       sources={sources}
       graphDescription={graphDescription}
       barPadding={barPadding}

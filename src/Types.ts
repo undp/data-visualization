@@ -677,6 +677,12 @@ export interface TimelineDataType {
   dateFormat?: string;
 }
 
+export interface FogDataType {
+  color: string;
+  near: number;
+  far: number;
+}
+
 export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
@@ -917,6 +923,7 @@ export interface GraphSettingsDataType {
   atmosphereAltitude?: number;
   globeCurvatureResolution?: number;
   lightColor?: string;
+  fogSetting?: FogDataType;
 }
 
 export interface InfoBoxDataType {

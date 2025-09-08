@@ -203,6 +203,8 @@ function GraphEl(props: Props) {
           precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
+          sortParameter: settings?.sortParameter,
+          sortData: settings?.sortData,
           data: graphData,
           colors: settings?.colors as string[] | undefined,
           graphTitle: settings?.graphTitle,

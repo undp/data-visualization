@@ -111,6 +111,7 @@ function ThreeDGraphEl(props: Props) {
           atmosphereAltitude: settings?.atmosphereAltitude,
           globeCurvatureResolution: settings?.globeCurvatureResolution,
           lightColor: settings?.lightColor,
+          fogSettings: settings?.fogSetting,
         };
       default:
         return {};

@@ -5,6 +5,8 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import uniqBy from 'lodash.uniqby';
 import { ascending, sort } from 'd3-array';
+import orderBy from 'lodash.orderby';
+import sum from 'lodash.sum';
 
 import { Graph } from './Graph';
 
@@ -54,6 +56,8 @@ interface Props {
   showLabels?: boolean;
   bottomMargin?: number;
   relativeHeight?: number;
+  sortParameter?: number | 'total';
+  sortData?: 'asc' | 'desc';
   showColorScale?: boolean;
   minHeight?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -144,6 +148,8 @@ export function HorizontalGroupedBarGraph(props: Props) {
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     naLabel = 'NA',
+    sortParameter,
+    sortData,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -296,20 +302,57 @@ export function HorizontalGroupedBarGraph(props: Props) {
                   <div className='w-full grow leading-0' ref={graphDiv} aria-label='Graph area'>
                     {(width || svgWidth) && (height || svgHeight) ? (
                       <Graph
-                        data={ensureCompleteDataForStackedBarChart(
-                          data,
-                          timeline.dateFormat || 'yyyy',
-                        )
-                          .filter(d =>
-                            timeline.enabled
-                              ? d.date ===
-                                format(
-                                  new Date(uniqDatesSorted[index]),
-                                  timeline.dateFormat || 'yyyy',
+                        data={
+                          sortParameter !== undefined
+                            ? sortParameter === 'total'
+                              ? orderBy(
+                                  ensureCompleteDataForStackedBarChart(
+                                    data,
+                                    timeline.dateFormat || 'yyyy',
+                                  )
+                                    .filter(d =>
+                                      timeline.enabled
+                                        ? d.date ===
+                                          format(
+                                            new Date(uniqDatesSorted[index]),
+                                            timeline.dateFormat || 'yyyy',
+                                          )
+                                        : d,
+                                    )
+                                    .filter(d =>
+                                      filterNA ? !d.size.every(item => item == null) : d,
+                                    ),
+                                  d => sum(d.size.filter(el => !checkIfNullOrUndefined(el))),
+                                  [sortData || 'asc'],
                                 )
-                              : d,
-                          )
-                          .filter(d => (filterNA ? !d.size.every(item => item == null) : d))}
+                              : orderBy(
+                                  ensureCompleteDataForStackedBarChart(
+                                    data,
+                                    timeline.dateFormat || 'yyyy',
+                                  )
+                                    .filter(d =>
+                                      timeline.enabled
+                                        ? d.date ===
+                                          format(
+                                            new Date(uniqDatesSorted[index]),
+                                            timeline.dateFormat || 'yyyy',
+                                          )
+                                        : d,
+                                    )
+                                    .filter(d =>
+                                      filterNA ? !d.size.every(item => item == null) : d,
+                                    ),
+                                  d =>
+                                    checkIfNullOrUndefined(d.size[sortParameter])
+                                      ? -Infinity
+                                      : d.size[sortParameter],
+                                  [sortData || 'asc'],
+                                )
+                            : ensureCompleteDataForStackedBarChart(
+                                data,
+                                timeline.dateFormat || 'yyyy',
+                              ).filter(d => (filterNA ? !d.size.every(item => item == null) : d))
+                        }
                         barColors={colors}
                         width={width || svgWidth}
                         height={Math.max(
