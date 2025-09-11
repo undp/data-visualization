@@ -95,6 +95,10 @@ interface Props {
   curveType?: CurveTypes;
   /** Enables same axis for bars and line */
   sameAxes?: boolean;
+  /** Toggle visibility of color scale. */
+  showColorScale?: boolean;
+  /** Toggle visibility of labels of the axis. */
+  showAxisLabels?: boolean;
   /** Title for the bar axis */
   barAxisTitle?: string;
   /** Title for the line axis */
@@ -187,6 +191,8 @@ export function ParetoChart(props: Props) {
     precision = 2,
     customLayers = [],
     naLabel = 'NA',
+    showColorScale = true,
+    showAxisLabels = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -271,15 +277,17 @@ export function ParetoChart(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  <ColorLegend
-                    colorDomain={[barAxisTitle, lineAxisTitle]}
-                    colors={[
-                      barColor || Colors[theme].categoricalColors.colors[0],
-                      lineColor || Colors[theme].categoricalColors.colors[1],
-                    ]}
-                    colorLegendTitle={colorLegendTitle}
-                    showNAColor={false}
-                  />
+                  {showColorScale ? null : (
+                    <ColorLegend
+                      colorDomain={[barAxisTitle, lineAxisTitle]}
+                      colors={[
+                        barColor || Colors[theme].categoricalColors.colors[0],
+                        lineColor || Colors[theme].categoricalColors.colors[1],
+                      ]}
+                      colorLegendTitle={colorLegendTitle}
+                      showNAColor={false}
+                    />
+                  )}
                   <div
                     className='flex flex-col grow justify-center leading-0'
                     ref={graphDiv}
@@ -333,6 +341,7 @@ export function ParetoChart(props: Props) {
                         precision={precision}
                         customLayers={customLayers}
                         naLabel={naLabel}
+                        showAxisLabels={showAxisLabels}
                       />
                     ) : null}
                   </div>

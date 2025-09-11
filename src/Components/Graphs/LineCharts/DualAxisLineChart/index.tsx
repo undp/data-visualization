@@ -94,8 +94,10 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Enables same axis for the 2 lines */
   sameAxes?: boolean;
-  /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
+  /** Toggle visibility of color scale. */
   showColorScale?: boolean;
+  /** Toggle visibility of labels of the axis. */
+  showAxisLabels?: boolean;
   /** Labels for the lines  */
   labels: [string, string];
   /** Format of the date in the data object. Available formats can be found [here](https://date-fns.org/docs/format)  */
@@ -180,6 +182,7 @@ export function DualAxisLineChart(props: Props) {
     classNames,
     precision = 2,
     customLayers = [],
+    showAxisLabels = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -322,6 +325,7 @@ export function DualAxisLineChart(props: Props) {
                         classNames={classNames}
                         precision={precision}
                         customLayers={customLayers}
+                        showAxisLabels={showAxisLabels}
                       />
                     ) : null}
                   </div>

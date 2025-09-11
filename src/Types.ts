@@ -924,6 +924,7 @@ export interface GraphSettingsDataType {
   globeCurvatureResolution?: number;
   lightColor?: string;
   fogSetting?: FogDataType;
+  showAxisLabels?: boolean;
 }
 
 export interface InfoBoxDataType {

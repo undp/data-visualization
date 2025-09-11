@@ -66,6 +66,7 @@ interface Props {
   precision: number;
   naLabel: string;
   customLayers: CustomLayerDataType[];
+  showAxisLabels: boolean;
 }
 interface DataFormattedType {
   id: string;
@@ -107,6 +108,7 @@ export function Graph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    showAxisLabels,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -237,16 +239,20 @@ export function Graph(props: Props) {
               classNames={{ axis: classNames?.xAxis?.axis }}
               styles={{ axis: { stroke: barColor, ...(styles?.xAxis?.axis || {}) } }}
             />
-            <AxisTitle
-              x={10 - margin.left}
-              y={graphHeight / 2}
-              style={{ fill: barColor, ...(styles?.yAxis?.title || {}) }}
-              className={classNames?.yAxis?.title}
-              text={
-                axisTitles[0].length > 100 ? `${axisTitles[0].substring(0, 100)}...` : axisTitles[0]
-              }
-              rotate90
-            />
+            {showAxisLabels ? (
+              <AxisTitle
+                x={10 - margin.left}
+                y={graphHeight / 2}
+                style={{ fill: barColor, ...(styles?.yAxis?.title || {}) }}
+                className={classNames?.yAxis?.title}
+                text={
+                  axisTitles[0].length > 100
+                    ? `${axisTitles[0].substring(0, 100)}...`
+                    : axisTitles[0]
+                }
+                rotate90
+              />
+            ) : null}
           </g>
           <g>
             {y2Ticks.map((d, i) => (
@@ -287,16 +293,20 @@ export function Graph(props: Props) {
               classNames={{ axis: classNames?.xAxis?.axis }}
               styles={{ axis: { stroke: lineColor, ...(styles?.xAxis?.axis || {}) } }}
             />
-            <AxisTitle
-              x={graphWidth + margin.right - 15}
-              y={graphHeight / 2}
-              style={{ fill: lineColor, ...(styles?.yAxis?.title || {}) }}
-              className={classNames?.yAxis?.title}
-              text={
-                axisTitles[1].length > 100 ? `${axisTitles[1].substring(0, 100)}...` : axisTitles[1]
-              }
-              rotate90
-            />
+            {showAxisLabels ? (
+              <AxisTitle
+                x={graphWidth + margin.right - 15}
+                y={graphHeight / 2}
+                style={{ fill: lineColor, ...(styles?.yAxis?.title || {}) }}
+                className={classNames?.yAxis?.title}
+                text={
+                  axisTitles[1].length > 100
+                    ? `${axisTitles[1].substring(0, 100)}...`
+                    : axisTitles[1]
+                }
+                rotate90
+              />
+            ) : null}
           </g>
           <Axis
             y1={sameAxes ? y1(0) : graphHeight}
