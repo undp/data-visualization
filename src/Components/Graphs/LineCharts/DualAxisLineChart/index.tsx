@@ -268,7 +268,7 @@ export function DualAxisLineChart(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  {showColorScale ? null : (
+                  {!showColorScale ? null : (
                     <ColorLegend
                       colorDomain={labels}
                       colorLegendTitle={colorLegendTitle}

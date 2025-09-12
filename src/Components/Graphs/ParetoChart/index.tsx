@@ -278,7 +278,7 @@ export function ParetoChart(props: Props) {
                 <EmptyState />
               ) : (
                 <>
-                  {showColorScale ? null : (
+                  {!showColorScale ? null : (
                     <ColorLegend
                       colorDomain={[barAxisTitle, lineAxisTitle]}
                       colors={[

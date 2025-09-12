@@ -499,7 +499,7 @@ function GraphEl(props: Props) {
         };
       case 'dualAxisLineChart':
         return {
-          showAxisLabel: settings?.showAxisLabels,
+          showAxisLabels: settings?.showAxisLabels,
           showColorScale: settings?.showColorScale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -1556,7 +1556,7 @@ function GraphEl(props: Props) {
         };
       case 'paretoChart':
         return {
-          showAxisLabel: settings?.showAxisLabels,
+          showAxisLabels: settings?.showAxisLabels,
           showColorScale: settings?.showColorScale,
           naLabel: settings?.naLabel,
           customLayers: settings?.customLayers,
