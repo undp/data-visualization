@@ -212,6 +212,7 @@ export function HorizontalGroupedBarGraph(props: Props) {
                 ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
                 : ''
           }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
+          width ? 'w-fit' : 'w-full',
           classNames?.graphContainer,
         )}
         style={{

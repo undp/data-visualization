@@ -170,6 +170,7 @@ export function DataTable(props: Props) {
                 ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
                 : ''
           }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'} w-full`,
+          width ? 'w-fit' : 'w-full',
           classNames?.graphContainer,
         )}
         style={{

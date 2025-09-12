@@ -47,7 +47,6 @@
     "dataDownload": true,
     "sortData": "desc",
     "language": "en",
-    "theme": "light",
-    "fillContainer": false
+    "theme": "light"
   }
 }
