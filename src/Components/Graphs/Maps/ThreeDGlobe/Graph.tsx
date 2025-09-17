@@ -1,13 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Globe, { GlobeMethods } from 'react-globe.gl';
 import isEqual from 'fast-deep-equal';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { scaleOrdinal, scaleThreshold } from 'd3-scale';
 import * as THREE from 'three';
 import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
+import centerOfMass from '@turf/center-of-mass';
 
-import { ChoroplethMapDataType, ClassNameObject, FogDataType, StyleObject } from '@/Types';
+import {
+  ChoroplethMapDataType,
+  ClassNameObject,
+  FogDataType,
+  LightConfig,
+  StyleObject,
+} from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { X } from '@/Components/Icons';
@@ -23,6 +30,7 @@ interface Props {
   colors: string[];
   height: number;
   globeMaterial?: THREE.Material;
+  lights: LightConfig[];
   polygonData: any;
   mapProperty: string;
   mapBorderColor: string;
@@ -46,10 +54,88 @@ interface Props {
   centerLat: number;
   atmosphereAltitude: number;
   globeCurvatureResolution: number;
-  lightColor: string;
   fogSettings?: FogDataType;
+  highlightedAltitude: number;
 }
 
+function createLightFromConfig(config: LightConfig): THREE.Light {
+  let light: THREE.Light;
+
+  switch (config.type) {
+    case 'ambient':
+      light = new THREE.AmbientLight(config.color, config.intensity);
+      break;
+    case 'directional':
+      light = new THREE.DirectionalLight(config.color, config.intensity);
+      if (config.position) {
+        if (config.position === 'camera') light.position.set(0, 0, 0);
+        else light.position.set(config.position.x, config.position.y, config.position.z);
+      }
+      if (config.target || config.position === 'camera') {
+        (light as THREE.SpotLight).target.position.set(
+          config.target?.x || 0,
+          config.target?.y || 0,
+          config.target?.z === undefined ? -1 : config.target.z,
+        );
+      }
+      if (config.castShadow) {
+        (light as THREE.DirectionalLight).castShadow = true;
+        if (config.shadow) {
+          (light as THREE.DirectionalLight).shadow.mapSize.width = config.shadow.mapSize.width;
+          (light as THREE.DirectionalLight).shadow.mapSize.height = config.shadow.mapSize.height;
+          (light as THREE.DirectionalLight).shadow.camera.near = config.shadow.camera.near;
+          (light as THREE.DirectionalLight).shadow.camera.far = config.shadow.camera.far;
+        }
+      }
+      break;
+    case 'point':
+      light = new THREE.PointLight(
+        config.color,
+        config.intensity,
+        config.distance || 0,
+        config.decay || 2,
+      );
+      if (config.position) {
+        if (config.position === 'camera') light.position.set(0, 0, 0);
+        else light.position.set(config.position.x, config.position.y, config.position.z);
+      }
+      break;
+    case 'spot':
+      light = new THREE.SpotLight(
+        config.color,
+        config.intensity,
+        config.distance || 0,
+        config.angle || Math.PI / 3,
+        config.penumbra || 0,
+        config.decay || 2,
+      );
+      if (config.position) {
+        if (config.position === 'camera') light.position.set(0, 0, 0);
+        else light.position.set(config.position.x, config.position.y, config.position.z);
+      }
+      if (config.target || config.position === 'camera') {
+        (light as THREE.SpotLight).target.position.set(
+          config.target?.x || 0,
+          config.target?.y || 0,
+          config.target?.z || 0,
+        );
+      }
+      if (config.castShadow) {
+        (light as THREE.SpotLight).castShadow = true;
+        if (config.shadow) {
+          (light as THREE.SpotLight).shadow.mapSize.width = config.shadow.mapSize.width;
+          (light as THREE.SpotLight).shadow.mapSize.height = config.shadow.mapSize.height;
+          (light as THREE.SpotLight).shadow.camera.near = config.shadow.camera.near;
+          (light as THREE.SpotLight).shadow.camera.far = config.shadow.camera.far;
+        }
+      }
+      break;
+    default:
+      throw new Error('Unknown light type');
+  }
+
+  return light;
+}
 function Graph(props: Props) {
   const {
     width,
@@ -84,11 +170,16 @@ function Graph(props: Props) {
     centerLat,
     atmosphereAltitude,
     globeCurvatureResolution,
-    lightColor,
     fogSettings,
+    lights,
+    highlightedAltitude,
   } = props;
+  const [globeReady, setGlobeReady] = useState(false);
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
+  const [mouseClickCentroid, setMouseClickCentroid] = useState<[number, number] | undefined>(
+    undefined,
+  );
   const [showLegend, setShowLegend] = useState(!(width < 680));
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [mouseOverData, setMouseOverData] = useState<ChoroplethMapDataType | undefined>(undefined);
@@ -104,14 +195,22 @@ function Graph(props: Props) {
   }, [enableZoom]);
   useEffect(() => {
     if (globeEl.current) {
-      if (mouseOverData) {
+      if (mouseOverData || mouseClickData) {
         globeEl.current.controls().autoRotate = false;
       } else {
         globeEl.current.controls().autoRotate = autoRotate === 0 ? false : true;
         globeEl.current.controls().autoRotateSpeed = autoRotate;
       }
     }
-  }, [mouseOverData, autoRotate]);
+  }, [mouseOverData, mouseClickData, autoRotate]);
+  useEffect(() => {
+    if (globeEl.current && mouseClickCentroid) {
+      globeEl.current.pointOfView(
+        { lat: mouseClickCentroid[1], lng: mouseClickCentroid[0], altitude: scale },
+        1000,
+      );
+    }
+  }, [mouseClickCentroid, scale]);
 
   useEffect(() => {
     const canvas = globeEl.current?.renderer().domElement;
@@ -135,25 +234,47 @@ function Graph(props: Props) {
     new THREE.MeshBasicMaterial({
       color: '#FFF',
     });
-  useEffect(() => {
+  const setupCustomLighting = useCallback(() => {
     if (!globeEl.current) return;
 
     const scene = globeEl.current.scene();
-    scene.children
-      .filter(d => d.type === 'DirectionalLight' || d.type === 'AmbientLight')
-      .forEach(d => scene.remove(d));
-    const ambientLight = new THREE.AmbientLight(lightColor, 0.2);
-    scene.add(ambientLight);
-    setTimeout(() => {
-      const polygons = scene.children[3]?.children[0]?.children[4]?.children || [];
-      polygons.forEach(d => {
-        const line = d.children[1];
-        if (line) line.renderOrder = 2;
-      });
-    }, 300);
-    if (fogSettings)
+    const camera = globeEl.current.camera();
+
+    let lightsAndObjToRemove: THREE.Object3D[] = [];
+    scene.traverse(obj => {
+      if (obj instanceof THREE.Light) {
+        lightsAndObjToRemove.push(obj);
+      }
+    });
+    lightsAndObjToRemove = [...lightsAndObjToRemove, ...camera.children];
+    lightsAndObjToRemove.forEach(light => light.parent?.remove(light));
+
+    const lightConfig = lights.map(config => createLightFromConfig(config));
+    lightConfig.forEach((light, i) => {
+      if (lights[i].type !== 'ambient' && lights[i].position === 'camera') {
+        camera.add(light);
+        if (lights[i].type !== 'point') {
+          camera.add((light as THREE.DirectionalLight | THREE.SpotLight).target);
+        }
+      } else {
+        scene.add(light);
+      }
+    });
+
+    if (fogSettings) {
       scene.fog = new THREE.Fog(fogSettings.color, fogSettings.near, fogSettings.far);
-  }, [lightColor, scale, fogSettings]);
+    }
+  }, [lights, fogSettings]);
+
+  const handleGlobeReady = useCallback(() => {
+    setGlobeReady(true);
+    setupCustomLighting();
+  }, [setupCustomLighting]);
+  useEffect(() => {
+    if (globeReady) {
+      setupCustomLighting();
+    }
+  }, [globeReady, setupCustomLighting]);
   return (
     <div className='relative'>
       <Globe
@@ -165,9 +286,10 @@ function Graph(props: Props) {
         polygonsData={polygonData}
         polygonAltitude={(polygon: any) =>
           highlightedIds.includes(polygon?.properties?.[mapProperty])
-            ? 0.1
-            : polygon?.properties?.[mapProperty] === mouseOverData?.id
-              ? 0.01
+            ? highlightedAltitude
+            : polygon?.properties?.[mapProperty] === mouseOverData?.id ||
+                polygon?.properties?.[mapProperty] === mouseClickData?.id
+              ? highlightedAltitude
               : polygonAltitude
         }
         polygonCapColor={(polygon: any) => {
@@ -191,6 +313,9 @@ function Graph(props: Props) {
             ? hoverStrokeColor
             : mapBorderColor
         }
+        onGlobeClick={() => {
+          setMouseClickData(undefined);
+        }}
         onPolygonClick={(polygon: any) => {
           const clickedData = polygon?.properties?.[mapProperty]
             ? data.find(el => el.id === polygon?.properties?.[mapProperty])
@@ -203,13 +328,14 @@ function Graph(props: Props) {
             ) {
               setMouseClickData(undefined);
               onSeriesMouseClick?.(undefined);
+              setMouseClickCentroid(undefined);
             } else {
               setMouseClickData(clickedData);
               onSeriesMouseClick?.(clickedData);
+              const [lng, lat] = centerOfMass(polygon).geometry.coordinates;
+              setMouseClickCentroid([lng, lat]);
             }
           }
-          setMouseClickData(clickedData);
-          onSeriesMouseClick?.(clickedData);
         }}
         onPolygonHover={(polygon: any) => {
           const hoverData = polygon?.properties?.[mapProperty]
@@ -232,25 +358,15 @@ function Graph(props: Props) {
             });
             const scene = globeEl.current.scene();
             setTimeout(() => {
-              scene.children
-                .filter(d => d.type === 'DirectionalLight')
-                .map(d => {
-                  scene.remove(d);
-                });
-              const ambientLight = new THREE.AmbientLight(lightColor, 0.2);
-              scene.add(ambientLight);
-
               const polygons = scene.children[3]?.children[0]?.children[4]?.children || [];
               polygons.forEach(d => {
                 const line = d.children[1];
                 line.renderOrder = 2;
               });
             }, 300);
-            const light = new THREE.DirectionalLight(0xffffff, 0.1);
             const camera = globeEl.current.camera();
-            light.position.set(0, 0, 1);
-            camera.add(light);
             scene.add(camera);
+            handleGlobeReady();
           }
         }}
       />

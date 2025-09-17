@@ -110,8 +110,9 @@ function ThreeDGraphEl(props: Props) {
           enableZoom: settings?.enableZoom,
           atmosphereAltitude: settings?.atmosphereAltitude,
           globeCurvatureResolution: settings?.globeCurvatureResolution,
-          lightColor: settings?.lightColor,
           fogSettings: settings?.fogSetting,
+          lights: settings?.lights,
+          highlightedAltitude: settings?.highlightedAltitude,
         };
       default:
         return {};

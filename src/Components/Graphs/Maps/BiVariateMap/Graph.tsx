@@ -1,6 +1,6 @@
 import isEqual from 'fast-deep-equal';
 import bbox from '@turf/bbox';
-import centroid from '@turf/centroid';
+import centerOfMass from '@turf/center-of-mass';
 import { useEffect, useRef, useState } from 'react';
 import {
   geoAlbersUsa,
@@ -164,7 +164,7 @@ export function Graph(props: Props) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bounds = bbox(mapData as any);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const center = centroid(mapData as any);
+  const center = centerOfMass(mapData as any);
   const lonDiff = bounds[2] - bounds[0];
   const latDiff = bounds[3] - bounds[1];
   const scaleX = (((width * 190) / 960) * 360) / lonDiff;

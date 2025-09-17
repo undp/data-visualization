@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import * as THREE from 'three';
 import { cn } from '@undp/design-system-react/cn';
-import Globe from 'react-globe.gl';
 
 import Graph from './Graph';
 
@@ -13,6 +12,7 @@ import {
   ClassNameObject,
   FogDataType,
   Languages,
+  LightConfig,
   ScaleDataType,
   SourcesDataType,
   StyleObject,
@@ -22,8 +22,7 @@ import { Colors } from '@/Components/ColorPalette';
 import { getUniqValue } from '@/Utils/getUniqValue';
 import { getJenks } from '@/Utils/getJenks';
 
-type GlobeProps = React.ComponentProps<typeof Globe>;
-interface Props extends Partial<Omit<GlobeProps, 'backgroundColor'>> {
+interface Props {
   // Data
   /** Array of data objects */
   data: ChoroplethMapDataType[];
@@ -80,6 +79,8 @@ interface Props extends Partial<Omit<GlobeProps, 'backgroundColor'>> {
   autoRotate?: number | boolean;
   /** Defines the material property applied to the sphere of the globe */
   globeMaterial?: THREE.Material;
+  /** Defines the lights for the 3D scene */
+  lights?: LightConfig[];
   /** Defines the colo of the glow around the globe */
   atmosphereColor?: string;
   /** Defines if the globe can be zoomed when scrolled */
@@ -100,14 +101,14 @@ interface Props extends Partial<Omit<GlobeProps, 'backgroundColor'>> {
   atmosphereAltitude?: number;
   /** Resolution in angular degrees of the sphere curvature. The finer the resolution, the more the globe is fragmented into smaller faces to approximate the spheric surface, at the cost of performance. */
   globeCurvatureResolution?: number;
-  /** Defines the color of the light and atmosphere. */
-  lightColor?: string;
   /** Defines fog settings for the scene. */
   fogSettings?: FogDataType;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
   /** Countries or regions to be highlighted */
   highlightedIds?: string[];
+  /** Defines the altitude of the highlighted countries or the countries on mouseover. */
+  highlightedAltitude?: number;
   /** Enable data download option as a csv */
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
@@ -177,13 +178,26 @@ export function ThreeDGlobe(props: Props) {
     onSeriesMouseOver,
     onSeriesMouseClick,
     highlightedIds = [],
+    highlightedAltitude = 0.1,
     scale = 1,
     globeOffset = [0, 0],
     polygonAltitude = 0.01,
     globeCurvatureResolution = 4,
     atmosphereAltitude = 0.15,
-    lightColor = '#dce9fe',
     fogSettings,
+    lights = [
+      {
+        type: 'ambient',
+        color: 0x404040,
+        intensity: 0.4,
+      },
+      {
+        type: 'directional',
+        color: 0xffffff,
+        intensity: 1,
+        position: { x: 5, y: 10, z: 5 },
+      },
+    ],
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -365,8 +379,9 @@ export function ThreeDGlobe(props: Props) {
                   centerLng={centerPoint[1]}
                   atmosphereAltitude={atmosphereAltitude}
                   globeCurvatureResolution={globeCurvatureResolution}
-                  lightColor={lightColor}
                   fogSettings={fogSettings}
+                  lights={lights}
+                  highlightedAltitude={highlightedAltitude}
                 />
               ) : (
                 <div

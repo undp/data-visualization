@@ -84,7 +84,7 @@ export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
   return (
     <>
       {areaSettings.map((d, i) => (
-        <motion.g key={`${i}`}>
+        <motion.g key={`highlight_area_${i}`}>
           {d.coordinates.filter(el => el === null).length === 4 ? null : (
             <motion.g>
               <motion.rect

@@ -194,6 +194,7 @@ export function Graph(props: Props) {
         <g transform={`translate(${margin.left},${margin.top})`}>
           <AnimatePresence>
             <HighlightAreaForScatterPlot
+              key='highlight-area'
               areaSettings={highlightAreaSettings}
               width={graphWidth}
               height={graphHeight}
@@ -203,6 +204,7 @@ export function Graph(props: Props) {
               isInView={isInView}
             />
             <CustomArea
+              key='custom-area'
               areaSettings={customHighlightAreaSettings}
               scaleX={x}
               scaleY={y}
@@ -332,7 +334,7 @@ export function Graph(props: Props) {
               .map((d, i) => {
                 return (
                   <path
-                    key={`${d.label || i}`}
+                    key={`tesselation_${d.label || i}`}
                     d={voronoiDiagram.renderCell(dataOrdered.findIndex(el => el.id === d.id))}
                     opacity={0}
                     onMouseEnter={event => {

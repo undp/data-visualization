@@ -683,6 +683,66 @@ export interface FogDataType {
   far: number;
 }
 
+interface Position {
+  x: number;
+  y: number;
+  z: number;
+}
+
+interface ShadowConfig {
+  mapSize: {
+    width: number;
+    height: number;
+  };
+  camera: {
+    near: number;
+    far: number;
+  };
+}
+
+interface BaseLightConfig {
+  type: string;
+  color: number;
+  intensity: number;
+}
+
+interface AmbientLightConfig extends BaseLightConfig {
+  type: 'ambient';
+}
+
+interface DirectionalLightConfig extends BaseLightConfig {
+  type: 'directional';
+  target?: Position;
+  castShadow?: boolean;
+  shadow?: ShadowConfig;
+  position?: Position | 'camera';
+}
+
+interface PointLightConfig extends BaseLightConfig {
+  type: 'point';
+  distance?: number;
+  decay?: number;
+  position?: Position | 'camera';
+}
+
+interface SpotLightConfig extends BaseLightConfig {
+  type: 'spot';
+  target?: Position;
+  distance?: number;
+  angle?: number;
+  penumbra?: number;
+  decay?: number;
+  castShadow?: boolean;
+  shadow?: ShadowConfig;
+  position?: Position | 'camera';
+}
+
+export type LightConfig =
+  | AmbientLightConfig
+  | DirectionalLightConfig
+  | PointLightConfig
+  | SpotLightConfig;
+
 export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
@@ -922,9 +982,10 @@ export interface GraphSettingsDataType {
   polygonAltitude?: number;
   atmosphereAltitude?: number;
   globeCurvatureResolution?: number;
-  lightColor?: string;
+  lights?: LightConfig[];
   fogSetting?: FogDataType;
   showAxisLabels?: boolean;
+  highlightedAltitude?: number;
 }
 
 export interface InfoBoxDataType {

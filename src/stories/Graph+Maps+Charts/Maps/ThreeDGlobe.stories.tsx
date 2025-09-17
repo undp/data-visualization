@@ -76,6 +76,92 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    fogSettings: {
+      control: 'object',
+      table: {
+        type: {
+          summary: 'FogDataType',
+          detail: `{
+  color: string;
+  near: number;
+  far: number;
+}`,
+        },
+      },
+    },
+    lights: {
+      control: 'object',
+      table: {
+        type: {
+          summary: 'LightConfig[]',
+          detail: `{
+  type: 'ambient';
+  color: number;
+  intensity: number;
+} | {
+  type: 'directional';
+  color: number;
+  intensity: number;
+  target?: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  castShadow?: boolean;
+  shadow?: {
+    mapSize: {
+      width: number;
+      height: number;
+    };
+    camera: {
+      near: number;
+      far: number;
+    };
+  };
+  position?: {
+    x: number;
+    y: number;
+    z: number;
+  } | 'camera';
+} | {
+  type: 'point';
+  color: number;
+  intensity: number;
+  distance?: number;
+  decay?: number;
+  position?: {
+    x: number;
+    y: number;
+    z: number;
+  } | 'camera';
+} | {
+  type: 'ambient';
+  color: number;
+  intensity: number;
+  distance?: number;
+  angle?: number;
+  penumbra?: number;
+  decay?: number;
+  castShadow?: boolean;
+  shadow?: {
+    mapSize: {
+      width: number;
+      height: number;
+    };
+    camera: {
+      near: number;
+      far: number;
+    };
+  };
+  position?: {
+    x: number;
+    y: number;
+    z: number;
+  } | 'camera';
+}`,
+        },
+      },
+    },
     backgroundColor: {
       control: 'text',
       table: {
