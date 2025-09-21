@@ -286,6 +286,7 @@ export function SimpleBarGraph(props: Props) {
         precision={precision}
         customLayers={customLayers}
         timeline={timeline}
+        naLabel={naLabel}
       />
     );
   return (
@@ -343,6 +344,7 @@ export function SimpleBarGraph(props: Props) {
       valueColor={valueColor}
       classNames={classNames}
       filterNA={filterNA}
+      animate={animate}
       dimmedOpacity={dimmedOpacity}
       precision={precision}
       customLayers={customLayers}
