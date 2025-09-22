@@ -1,5 +1,5 @@
-import sortBy from 'lodash.sortby';
 import { parse } from 'date-fns/parse';
+import orderBy from 'lodash.orderby';
 
 import {
   BarGraphDataType,
@@ -45,7 +45,11 @@ export function ensureCompleteDataForBarChart(data: BarGraphDataType[], dateForm
     });
   });
 
-  return sortBy(completeData, d => parse(`${d.date}`, dateFormat || 'yyyy', new Date()));
+  return orderBy(
+    completeData,
+    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    ['asc'],
+  );
 }
 
 export function ensureCompleteDataForStackedBarChart(
@@ -77,7 +81,11 @@ export function ensureCompleteDataForStackedBarChart(
     });
   });
 
-  return sortBy(completeData, d => parse(`${d.date}`, dateFormat || 'yyyy', new Date()));
+  return orderBy(
+    completeData,
+    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    ['asc'],
+  );
 }
 
 export function ensureCompleteDataForButterFlyChart(
@@ -111,7 +119,11 @@ export function ensureCompleteDataForButterFlyChart(
     });
   });
 
-  return sortBy(completeData, d => parse(`${d.date}`, dateFormat || 'yyyy', new Date()));
+  return orderBy(
+    completeData,
+    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    ['asc'],
+  );
 }
 
 export function ensureCompleteDataForScatterPlot(data: ScatterPlotDataType[], dateFormat: string) {
@@ -152,7 +164,11 @@ export function ensureCompleteDataForScatterPlot(data: ScatterPlotDataType[], da
     });
   });
 
-  return sortBy(completeData, d => parse(`${d.date}`, dateFormat || 'yyyy', new Date()));
+  return orderBy(
+    completeData,
+    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    ['asc'],
+  );
 }
 
 export function ensureCompleteDataForDumbbellChart(
@@ -185,5 +201,9 @@ export function ensureCompleteDataForDumbbellChart(
     });
   });
 
-  return sortBy(completeData, d => parse(`${d.date}`, dateFormat || 'yyyy', new Date()));
+  return orderBy(
+    completeData,
+    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    ['asc'],
+  );
 }

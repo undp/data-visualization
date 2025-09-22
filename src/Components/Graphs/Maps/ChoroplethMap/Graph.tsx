@@ -32,7 +32,7 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { X } from '@/Components/Icons';
 
 interface Props {
-  colorDomain: number[] | string[];
+  colorDomain: (number | string)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData: any;
   width: number;

@@ -4,7 +4,6 @@ import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { ascending, sort } from 'd3-array';
-import uniqBy from 'lodash.uniqby';
 
 import { Graph } from './Graph';
 
@@ -28,6 +27,7 @@ import { Pause, Play } from '@/Components/Icons';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { ensureCompleteDataForButterFlyChart } from '@/Utils/ensureCompleteData';
+import { uniqBy } from '@/Utils/uniqBy';
 
 function getMinMax(
   data: ButterflyChartDataType[],
@@ -231,10 +231,9 @@ export function ButterflyChart(props: Props) {
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
   const uniqDatesSorted = sort(
-    uniqBy(
-      data.filter(d => d.date !== undefined && d.date !== null),
-      d => d.date,
-    ).map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+    uniqBy(data, 'date', true).map(d =>
+      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
+    ),
     (a, b) => ascending(a, b),
   );
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);

@@ -1,6 +1,4 @@
-import uniqBy from 'lodash.uniqby';
 import flattenDeep from 'lodash.flattendeep';
-import sortBy from 'lodash.sortby';
 
 /**
  * Extracts unique values from a specified column in a CSV dataset.
@@ -24,19 +22,16 @@ export function getUniqValue(
 ) {
   if (csvData.length === 0) return [];
   if (typeof csvData[0][column] !== 'object') {
-    const uniqValues = sortBy(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      uniqBy(csvData, (d: any) => d[column]),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (d: any) => d[column],
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ).map((d: any) => d[column]);
-    return uniqValues;
-  }
-  const values = sortBy(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    uniqBy(flattenDeep(csvData.map((d: any) => d[column])), el => el),
-    (d: string | number) => d,
+    const uniqValues = [...new Set(csvData.map((d: any) => d[column]))].sort((a: any, b: any) =>
+      a < b ? -1 : a > b ? 1 : 0,
+    );
+    return uniqValues as (string | number)[];
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const values = [...new Set(flattenDeep(csvData.map((d: any) => d[column])))].sort(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (a: any, b: any) => (a < b ? -1 : a > b ? 1 : 0),
   );
-  return values;
+  return values as (string | number)[];
 }

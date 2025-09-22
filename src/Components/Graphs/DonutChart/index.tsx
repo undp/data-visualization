@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import sortBy from 'lodash.sortby';
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
+import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
 
@@ -188,12 +188,7 @@ export function DonutChart(props: Props) {
     return () => resizeObserver.disconnect();
   }, [width, height, radius]);
 
-  const sortedData =
-    sortData === 'asc'
-      ? sortBy(data, d => d.size)
-      : sortData === 'desc'
-        ? sortBy(data, d => d.size).reverse()
-        : data;
+  const sortedData = sortData ? orderBy(data, ['size'], [sortData]) : data;
 
   return (
     <div
@@ -331,13 +326,7 @@ export function DonutChart(props: Props) {
                       {radius || donutRadius ? (
                         <Graph
                           mainText={mainText}
-                          data={
-                            sortData === 'asc'
-                              ? sortBy(data, d => d.size)
-                              : sortData === 'desc'
-                                ? sortBy(data, d => d.size).reverse()
-                                : data
-                          }
+                          data={sortedData}
                           colors={colors}
                           radius={radius || donutRadius}
                           subNote={subNote}

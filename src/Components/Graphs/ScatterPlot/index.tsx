@@ -1,4 +1,3 @@
-import uniqBy from 'lodash.uniqby';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { useState, useRef, useEffect } from 'react';
@@ -31,6 +30,7 @@ import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { Pause, Play } from '@/Components/Icons';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { ensureCompleteDataForScatterPlot } from '@/Utils/ensureCompleteData';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   // Data
@@ -245,10 +245,9 @@ export function ScatterPlot(props: Props) {
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
   const uniqDatesSorted = sort(
-    uniqBy(
-      data.filter(d => d.date !== undefined && d.date !== null),
-      d => d.date,
-    ).map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+    uniqBy(data, 'date', true).map(d =>
+      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
+    ),
     (a, b) => ascending(a, b),
   );
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
@@ -389,13 +388,7 @@ export function ScatterPlot(props: Props) {
                       colors={
                         (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
                       }
-                      colorDomain={
-                        colorDomain ||
-                        (uniqBy(
-                          data.filter(el => el.color),
-                          'color',
-                        ).map(d => d.color) as string[])
-                      }
+                      colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
                       setSelectedColor={setSelectedColor}
                       showNAColor={showNAColor}
                     />
@@ -434,11 +427,7 @@ export function ScatterPlot(props: Props) {
                         colorDomain={
                           data.filter(el => el.color).length === 0
                             ? []
-                            : colorDomain ||
-                              (uniqBy(
-                                data.filter(el => el.color),
-                                'color',
-                              ).map(d => d.color) as string[])
+                            : colorDomain || (uniqBy(data, 'color', true) as string[])
                         }
                         colors={
                           data.filter(el => el.color).length === 0

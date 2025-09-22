@@ -5,7 +5,6 @@ import { Spinner } from '@undp/design-system-react/Spinner';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { ascending, sort } from 'd3-array';
-import uniqBy from 'lodash.uniqby';
 
 import { Graph } from './Graph';
 
@@ -30,6 +29,7 @@ import { getUniqValue } from '@/Utils/getUniqValue';
 import { getJenks } from '@/Utils/getJenks';
 import { Pause, Play } from '@/Components/Icons';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   // Data
@@ -202,10 +202,9 @@ export function ChoroplethMap(props: Props) {
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
   const uniqDatesSorted = sort(
-    uniqBy(
-      data.filter(d => d.date !== undefined && d.date !== null),
-      d => d.date,
-    ).map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+    uniqBy(data, 'date', true).map(d =>
+      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
+    ),
     (a, b) => ascending(a, b),
   );
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import isEqual from 'fast-deep-equal';
 import { useEffect, useState } from 'react';
-import sortBy from 'lodash.sortby';
 import intersection from 'lodash.intersection';
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
+import orderBy from 'lodash.orderby';
 
 import {
   DataTableColumnDataType,
@@ -147,11 +147,7 @@ export function DataTable(props: Props) {
       if (filter) dataFiltered.push(d);
     });
     if (columnSortBy && data) {
-      setSortedData(
-        sortDirection === 'asc'
-          ? sortBy(dataFiltered, [columnSortBy])
-          : sortBy(dataFiltered, [columnSortBy]).reverse(),
-      );
+      setSortedData(orderBy(dataFiltered, [columnSortBy], [sortDirection]));
     } else {
       setSortedData(dataFiltered);
     }

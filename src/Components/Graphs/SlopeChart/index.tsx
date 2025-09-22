@@ -1,4 +1,3 @@
-import uniqBy from 'lodash.uniqby';
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@undp/design-system-react/cn';
 
@@ -19,6 +18,7 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   // Data
@@ -267,13 +267,7 @@ export function SlopeChart(props: Props) {
                       colors={
                         (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
                       }
-                      colorDomain={
-                        colorDomain ||
-                        (uniqBy(
-                          data.filter(el => el.color),
-                          'color',
-                        ).map(d => d.color) as string[])
-                      }
+                      colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
                       setSelectedColor={setSelectedColor}
                       showNAColor={showNAColor}
                     />
@@ -303,11 +297,7 @@ export function SlopeChart(props: Props) {
                         colorDomain={
                           data.filter(el => el.color).length === 0
                             ? []
-                            : colorDomain ||
-                              (uniqBy(
-                                data.filter(el => el.color),
-                                'color',
-                              ).map(d => d.color) as string[])
+                            : colorDomain || (uniqBy(data, 'color', true) as string[])
                         }
                         colors={
                           data.filter(el => el.color).length === 0

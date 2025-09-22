@@ -26,7 +26,7 @@ interface Props {
   autoRotate: number;
   enableZoom: boolean;
   categorical: boolean;
-  colorDomain: number[] | string[];
+  colorDomain: (number | string)[];
   colors: string[];
   height: number;
   globeMaterial?: THREE.Material;

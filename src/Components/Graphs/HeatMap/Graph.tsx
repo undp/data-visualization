@@ -1,7 +1,6 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand, scaleOrdinal, scaleThreshold } from 'd3-scale';
 import { useRef, useState } from 'react';
-import uniqBy from 'lodash.uniqby';
 import { cn } from '@undp/design-system-react/cn';
 import { Modal } from '@undp/design-system-react/Modal';
 import { motion, useInView } from 'motion/react';
@@ -20,6 +19,7 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { string2HTML } from '@/Utils/string2HTML';
 import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
 import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   data: HeatMapDataType[];
@@ -103,8 +103,8 @@ export function Graph(props: Props) {
   const [eventY, setEventY] = useState<number | undefined>(undefined);
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
-  const columns = uniqBy(data, d => d.column).map(d => d.column);
-  const rows = uniqBy(data, d => d.row).map(d => d.row);
+  const columns = uniqBy(data, 'column', true) as string[];
+  const rows = uniqBy(data, 'row', true) as string[];
   const y = scaleBand().domain(rows).range([0, graphHeight]);
   const barHeight = y.bandwidth();
   const x = scaleBand().domain(columns).range([0, graphWidth]);

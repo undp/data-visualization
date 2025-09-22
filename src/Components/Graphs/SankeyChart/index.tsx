@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import uniqBy from 'lodash.uniqby';
-import sortBy from 'lodash.sortby';
 import sum from 'lodash.sum';
 import { cn } from '@undp/design-system-react/cn';
+import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
 
@@ -21,6 +20,7 @@ import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { Colors } from '@/Components/ColorPalette';
 import { generateRandomString } from '@/Utils/generateRandomString';
 import { EmptyState } from '@/Components/Elements/EmptyState';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   // Data
@@ -203,54 +203,50 @@ export function SankeyChart(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const sourceNodes = uniqBy(data, 'source').map(d => ({
-      name: `source_${d.source}`,
+    const sourceNodes = uniqBy(data, 'source', true).map(d => ({
+      name: `source_${d}`,
       type: 'source' as const,
-      label: `${d.source}`,
+      label: `${d}`,
       color:
         typeof sourceColors === 'string' || !sourceColors
           ? sourceColors || Colors.graphMainColor
           : sourceColors[
-              (sourceColorDomain || uniqBy(data, 'source').map(el => `${el.source}`)).findIndex(
-                el => `${el}` === `${d.source}`,
+              (sourceColorDomain || uniqBy(data, 'source', true)).findIndex(
+                el => `${el}` === `${d}`,
               ) > sourceColors.length
                 ? sourceColors.length - 1
-                : (sourceColorDomain || uniqBy(data, 'source').map(el => `${el.source}`)).findIndex(
-                    el => `${el}` === `${d.source}`,
+                : (sourceColorDomain || uniqBy(data, 'source', true)).findIndex(
+                    el => `${el}` === `${d}`,
                   )
             ],
-      totalValue: sum(data.filter(el => `${el.source}` === `${d.source}`).map(el => el.value)),
+      totalValue: sum(data.filter(el => `${el.source}` === `${d}`).map(el => el.value)),
     }));
     const sourceNodesSorted =
-      sortNodes === 'asc'
-        ? sortBy(sourceNodes, d => d.totalValue)
-        : sortNodes === 'desc'
-          ? sortBy(sourceNodes, d => d.totalValue).reverse()
-          : sourceNodes;
-    const targetNodes = uniqBy(data, 'target').map(d => ({
-      name: `target_${d.target}`,
+      sortNodes === 'asc' || sortNodes === 'desc'
+        ? orderBy(sourceNodes, ['totalValue'], [sortNodes])
+        : sourceNodes;
+    const targetNodes = uniqBy(data, 'target', true).map(d => ({
+      name: `target_${d}`,
       type: 'target' as const,
-      label: `${d.target}`,
+      label: `${d}`,
       color:
         typeof targetColors === 'string' || !targetColors
           ? targetColors || Colors.graphMainColor
           : targetColors[
-              (targetColorDomain || uniqBy(data, 'target').map(el => `${el.target}`)).findIndex(
-                el => `${el}` === `${d.target}`,
+              (targetColorDomain || uniqBy(data, 'target', true)).findIndex(
+                el => `${el}` === `${d}`,
               ) > targetColors.length
                 ? targetColors.length - 1
-                : (targetColorDomain || uniqBy(data, 'target').map(el => `${el.target}`)).findIndex(
-                    el => `${el}` === `${d.target}`,
+                : (targetColorDomain || uniqBy(data, 'target', true)).findIndex(
+                    el => `${el}` === `${d}`,
                   )
             ],
-      totalValue: sum(data.filter(el => `${el.target}` === `${d.target}`).map(el => el.value)),
+      totalValue: sum(data.filter(el => `${el.target}` === `${d}`).map(el => el.value)),
     }));
     const targetNodesSorted =
-      sortNodes === 'asc'
-        ? sortBy(targetNodes, d => d.totalValue)
-        : sortNodes === 'desc'
-          ? sortBy(targetNodes, d => d.totalValue).reverse()
-          : targetNodes;
+      sortNodes === 'asc' || sortNodes === 'desc'
+        ? orderBy(targetNodes, ['totalValue'], [sortNodes])
+        : targetNodes;
 
     const nodes = [...sourceNodesSorted, ...targetNodesSorted];
     setSankeyData({

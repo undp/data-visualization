@@ -4,7 +4,6 @@ import { parse } from 'date-fns/parse';
 import { cn } from '@undp/design-system-react/cn';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { ascending, sort } from 'd3-array';
-import uniqBy from 'lodash.uniqby';
 import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
@@ -29,6 +28,7 @@ import { EmptyState } from '@/Components/Elements/EmptyState';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { Pause, Play } from '@/Components/Icons';
 import { ensureCompleteDataForDumbbellChart } from '@/Utils/ensureCompleteData';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   data: DumbbellChartDataType[];
@@ -167,10 +167,9 @@ export function VerticalDumbbellChart(props: Props) {
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
   const uniqDatesSorted = sort(
-    uniqBy(
-      data.filter(d => d.date !== undefined && d.date !== null),
-      d => d.date,
-    ).map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+    uniqBy(data, 'date', true).map(d =>
+      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
+    ),
     (a, b) => ascending(a, b),
   );
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);

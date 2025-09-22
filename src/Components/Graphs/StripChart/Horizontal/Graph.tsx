@@ -1,10 +1,10 @@
 import isEqual from 'fast-deep-equal';
 import { useRef, useState } from 'react';
 import { scaleLinear } from 'd3-scale';
-import sortBy from 'lodash.sortby';
 import { cn } from '@undp/design-system-react/cn';
 import { Modal } from '@undp/design-system-react/Modal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
+import orderBy from 'lodash.orderby';
 
 import {
   AnimateDataType,
@@ -116,10 +116,16 @@ export function Graph(props: Props) {
 
   const dataWithId = data.map((d, i) => ({ ...d, id: `${i}` }));
 
-  const sortedData = sortBy(dataWithId, item => {
-    const index = (highlightedDataPoints || []).indexOf(item.label);
-    return index === -1 ? Infinity : index;
-  }).reverse();
+  const sortedData = orderBy(
+    dataWithId,
+    [
+      item => {
+        const index = (highlightedDataPoints || []).indexOf(item.label);
+        return index === -1 ? Infinity : index;
+      },
+    ],
+    ['desc'],
+  );
   const xMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
     : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) < 0

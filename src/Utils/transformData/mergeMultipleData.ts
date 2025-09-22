@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import groupBy from 'lodash.groupby';
 
 function standardizeId(data: any, idColumnName: string) {
   return data.map((item: any) => {
@@ -7,6 +6,18 @@ function standardizeId(data: any, idColumnName: string) {
     newItem['~id'] = newItem[idColumnName];
     return newItem;
   });
+}
+type Grouped<T> = {
+  [key: string]: T[];
+};
+
+function groupBy<T extends Record<string, any>>(array: T[], key: keyof T): Grouped<T> {
+  return array.reduce((acc, item) => {
+    const k = String(item[key]);
+    if (!acc[k]) acc[k] = [];
+    acc[k].push(item);
+    return acc;
+  }, {} as Grouped<T>);
 }
 
 function flattenArray(dataSets: any) {

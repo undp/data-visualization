@@ -1,8 +1,5 @@
-export function uniqBy(
-  obj: Record<string, string | number | boolean | null | undefined>[],
-  key: string,
-  filterNully = false,
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function uniqBy<T extends Record<string, any>>(obj: T[], key: keyof T, filterNully = false) {
   const defaultValue = obj
     .map(d => d[key])
     .filter(d => (filterNully ? d != null && d !== undefined : true));

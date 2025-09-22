@@ -13,10 +13,10 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
-import sortBy from 'lodash.sortby';
 import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import { cn } from '@undp/design-system-react/cn';
 import { motion, useInView } from 'motion/react';
+import orderBy from 'lodash.orderby';
 
 import {
   AnimateDataType,
@@ -178,7 +178,7 @@ export function Graph(props: Props) {
     right: rightMargin,
   };
   const MouseoverRectRef = useRef(null);
-  const dataFormatted: FormattedDataType[] = sortBy(
+  const dataFormatted: FormattedDataType[] = orderBy(
     data
       .filter(d => !checkIfNullOrUndefined(d.y))
       .map(d => ({
@@ -188,7 +188,8 @@ export function Graph(props: Props) {
         yMax: checkIfNullOrUndefined(d.yMax) ? (d.y as number) : (d.yMax as number),
         data: d.data,
       })),
-    'date',
+    ['date'],
+    ['asc'],
   );
   const highlightAreaSettingsFormatted = highlightAreaSettings.map(d => ({
     ...d,

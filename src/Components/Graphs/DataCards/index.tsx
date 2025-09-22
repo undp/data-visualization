@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
-import sortBy from 'lodash.sortby';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
 import { Pagination } from '@undp/design-system-react/Pagination';
 import { Search } from '@undp/design-system-react/Search';
+import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
 
@@ -228,7 +228,7 @@ export function DataCards(props: Props) {
         ),
     );
     if (sortedBy) {
-      setCardData(sortBy(filteredData, sortedBy?.value, sortedBy?.type));
+      setCardData(orderBy(filteredData, [sortedBy.value], [sortedBy.type]));
     } else {
       setCardData(filteredData);
     }

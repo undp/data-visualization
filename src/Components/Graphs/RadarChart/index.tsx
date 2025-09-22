@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
-import uniqBy from 'lodash.uniqby';
 
 import { Graph } from './Graph';
 
@@ -18,6 +17,7 @@ import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   // Data
@@ -295,13 +295,7 @@ export function RadarChart(props: Props) {
                       colors={
                         (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
                       }
-                      colorDomain={
-                        colorDomain ||
-                        (uniqBy(
-                          data.filter(el => el.color),
-                          'color',
-                        ).map(d => d.color) as string[])
-                      }
+                      colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
                       setSelectedColor={setSelectedColor}
                       showNAColor={showNAColor}
                     />
@@ -343,13 +337,7 @@ export function RadarChart(props: Props) {
                           }
                           radius={radius || graphRadius}
                           tooltip={tooltip}
-                          colorDomain={
-                            colorDomain ||
-                            (uniqBy(
-                              data.filter(el => el.color),
-                              'color',
-                            ).map(d => d.color) as string[])
-                          }
+                          colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
                           onSeriesMouseOver={onSeriesMouseOver}
                           onSeriesMouseClick={onSeriesMouseClick}
                           styles={styles}

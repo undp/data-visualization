@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import sortBy from 'lodash.sortby';
 import { cn } from '@undp/design-system-react/cn';
+import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
 
@@ -256,23 +256,22 @@ export function HorizontalBulletChart(props: Props) {
                     {(width || svgWidth) && (height || svgHeight) ? (
                       <Graph
                         data={
-                          sortData === 'asc'
-                            ? sortBy(
+                          sortData
+                            ? orderBy(
                                 data.filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
-                                d => d.size,
+                                [
+                                  d =>
+                                    d.size === undefined
+                                      ? sortData === 'asc'
+                                        ? -Infinity
+                                        : Infinity
+                                      : d.size,
+                                ],
+                                [sortData],
                               ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                            : sortData === 'desc'
-                              ? sortBy(
-                                  data.filter(d =>
-                                    filterNA ? !checkIfNullOrUndefined(d.size) : d,
-                                  ),
-                                  d => d.size,
-                                )
-                                  .reverse()
-                                  .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                              : data
-                                  .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
-                                  .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                            : data
+                                .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
+                                .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                         }
                         barColor={barColor}
                         targetColor={targetColor}

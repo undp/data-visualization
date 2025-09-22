@@ -12,11 +12,11 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
-import sortBy from 'lodash.sortby';
+import { ascending, sort } from 'd3-array';
 import { cn } from '@undp/design-system-react/cn';
-import uniqBy from 'lodash.uniqby';
 import { Delaunay } from 'd3-delaunay';
 import { motion, useInView } from 'motion/react';
+import orderBy from 'lodash.orderby';
 
 import {
   AnimateDataType,
@@ -43,6 +43,7 @@ import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLine
 import { CustomArea } from '@/Components/Elements/HighlightArea/customArea';
 import { HighlightArea } from '@/Components/Elements/HighlightArea';
 import { Colors } from '@/Components/ColorPalette';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   // Data
@@ -166,24 +167,19 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  const dataFormatted = sortBy(
+  const dataFormatted = orderBy(
     data.map(d => ({
       ...d,
       date: parse(`${d.date}`, dateFormat, new Date()),
     })),
-    'date',
+    ['date'],
+    ['asc'],
   ).filter(d => !checkIfNullOrUndefined(d.y));
-  const labels = uniqBy(dataFormatted, d => d.label).map(d => d.label);
-  const dates = uniqBy(
-    sortBy(
-      data.map(d => ({
-        ...d,
-        date: parse(`${d.date}`, dateFormat, new Date()),
-      })),
-      'date',
-    ),
-    d => d.date,
-  ).map(d => d.date);
+  const labels = uniqBy(dataFormatted, 'label', true) as (string | number)[];
+  const dates = sort(
+    uniqBy(data, 'date', true).map(d => parse(`${d}`, dateFormat, new Date())),
+    (a, b) => ascending(a, b),
+  );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -196,9 +192,10 @@ export function Graph(props: Props) {
   };
   const MouseoverRectRef = useRef(null);
   const lineArray = labels.map(d =>
-    sortBy(
+    orderBy(
       dataFormatted.filter(el => el.label == d),
-      'date',
+      ['date'],
+      ['asc'],
     ),
   );
   const highlightAreaSettingsFormatted = highlightAreaSettings.map(d => ({

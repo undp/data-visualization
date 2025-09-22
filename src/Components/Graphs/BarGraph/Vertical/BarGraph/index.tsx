@@ -1,11 +1,10 @@
-import uniqBy from 'lodash.uniqby';
 import { useEffect, useRef, useState } from 'react';
-import sortBy from 'lodash.sortby';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { cn } from '@undp/design-system-react/cn';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { ascending, sort } from 'd3-array';
+import orderBy from 'lodash.orderby';
 
 import { Graph } from './Graph';
 
@@ -29,6 +28,7 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Pause, Play } from '@/Components/Icons';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { ensureCompleteDataForBarChart } from '@/Utils/ensureCompleteData';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   data: BarGraphDataType[];
@@ -163,10 +163,9 @@ export function VerticalBarGraph(props: Props) {
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
   const uniqDatesSorted = sort(
-    uniqBy(
-      data.filter(d => d.date !== undefined && d.date !== null),
-      d => d.date,
-    ).map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+    uniqBy(data, 'date', true).map(d =>
+      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
+    ),
     (a, b) => ascending(a, b),
   );
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
@@ -304,13 +303,7 @@ export function VerticalBarGraph(props: Props) {
                       colors={
                         (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
                       }
-                      colorDomain={
-                        colorDomain ||
-                        (uniqBy(
-                          data.filter(el => el.color),
-                          'color',
-                        ).map(d => d.color) as string[])
-                      }
+                      colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
                       setSelectedColor={setSelectedColor}
                       showNAColor={showNAColor}
                     />
@@ -323,8 +316,8 @@ export function VerticalBarGraph(props: Props) {
                     {(width || svgWidth) && (height || svgHeight) ? (
                       <Graph
                         data={
-                          sortData === 'asc'
-                            ? sortBy(
+                          sortData
+                            ? orderBy(
                                 ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
                                   .filter(d =>
                                     timeline.enabled
@@ -336,37 +329,28 @@ export function VerticalBarGraph(props: Props) {
                                       : d,
                                   )
                                   .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
-                                d => d.size,
+                                [
+                                  d =>
+                                    d.size === undefined
+                                      ? sortData === 'asc'
+                                        ? -Infinity
+                                        : Infinity
+                                      : d.size,
+                                ],
+                                [sortData],
                               ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                            : sortData === 'desc'
-                              ? sortBy(
-                                  ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
-                                    .filter(d =>
-                                      timeline.enabled
-                                        ? d.date ===
-                                          format(
-                                            new Date(uniqDatesSorted[index]),
-                                            timeline.dateFormat || 'yyyy',
-                                          )
-                                        : d,
-                                    )
-                                    .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
-                                  d => d.size,
+                            : ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
+                                .filter(d =>
+                                  timeline.enabled
+                                    ? d.date ===
+                                      format(
+                                        new Date(uniqDatesSorted[index]),
+                                        timeline.dateFormat || 'yyyy',
+                                      )
+                                    : d,
                                 )
-                                  .reverse()
-                                  .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                              : ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
-                                  .filter(d =>
-                                    timeline.enabled
-                                      ? d.date ===
-                                        format(
-                                          new Date(uniqDatesSorted[index]),
-                                          timeline.dateFormat || 'yyyy',
-                                        )
-                                      : d,
-                                  )
-                                  .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
-                                  .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                                .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
+                                .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                         }
                         barColor={
                           data.filter(el => el.color).length === 0
@@ -379,11 +363,7 @@ export function VerticalBarGraph(props: Props) {
                         colorDomain={
                           data.filter(el => el.color).length === 0
                             ? []
-                            : colorDomain ||
-                              (uniqBy(
-                                data.filter(el => el.color),
-                                'color',
-                              ).map(d => d.color) as string[])
+                            : colorDomain || (uniqBy(data, 'color', true) as string[])
                         }
                         width={width || svgWidth}
                         refValues={refValues}

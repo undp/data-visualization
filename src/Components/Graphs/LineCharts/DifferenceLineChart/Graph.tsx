@@ -13,9 +13,9 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { bisectCenter } from 'd3-array';
 import { pointer, select } from 'd3-selection';
-import sortBy from 'lodash.sortby';
 import { motion, useInView } from 'motion/react';
 import { cn } from '@undp/design-system-react/cn';
+import orderBy from 'lodash.orderby';
 
 import {
   AnimateDataType,
@@ -171,12 +171,13 @@ export function Graph(props: Props) {
     right: rightMargin,
   };
   const MouseoverRectRef = useRef(null);
-  const dataFormatted = sortBy(
+  const dataFormatted = orderBy(
     data.map(d => ({
       ...d,
       date: parse(`${d.date}`, dateFormat, new Date()),
     })),
-    'date',
+    ['date'],
+    ['asc'],
   );
   const highlightAreaSettingsFormatted = highlightAreaSettings.map(d => ({
     ...d,

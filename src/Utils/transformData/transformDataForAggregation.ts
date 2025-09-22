@@ -1,6 +1,7 @@
-import uniqBy from 'lodash.uniqby';
 import sum from 'lodash.sum';
 import flattenDeep from 'lodash.flattendeep';
+
+import { uniqBy } from '../uniqBy';
 
 import { AggregationSettingsDataType } from '@/Types';
 /**
@@ -41,14 +42,13 @@ export function transformDataForAggregation(
 ) {
   if (data.length === 0) return [];
   if (typeof data[0][keyColumn] !== 'object') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const uniqValues = uniqBy(data, (d: any) => d[keyColumn]).map(d => {
+    const uniqValues = uniqBy(data, keyColumn).map(d => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const dataObj: any = {};
-      dataObj[keyColumn] = d[keyColumn];
+      dataObj[keyColumn] = d;
       const filteredData = data.filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (j: any) => j[keyColumn] === d[keyColumn],
+        (j: any) => j[keyColumn] === d,
       );
       dataObj.count = filteredData.length;
       dataObj.rollUpData = filteredData;
@@ -72,11 +72,8 @@ export function transformDataForAggregation(
     });
     return uniqValues;
   }
-  const values = uniqBy(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    flattenDeep(data.map((d: any) => d[keyColumn])),
-    el => el,
-  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const values = [...new Set(flattenDeep(data.map((d: any) => d[keyColumn])))];
   const uniqValues = values.map(d => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dataObj: any = {};

@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import uniqBy from 'lodash.uniqby';
 import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
@@ -23,6 +22,7 @@ import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
+import { uniqBy } from '@/Utils/uniqBy';
 
 interface Props {
   // Data
@@ -301,15 +301,7 @@ export function MultiLineAltChart(props: Props) {
                       colors={
                         (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
                       }
-                      colorDomain={
-                        colorDomain ||
-                        uniqBy(
-                          data.filter(el => el.color),
-                          'color',
-                        )
-                          .map(d => d.color)
-                          .filter(d => d !== undefined)
-                      }
+                      colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
                       setSelectedColor={setSelectedColor}
                       showNAColor={showNAColor}
                     />
@@ -375,11 +367,7 @@ export function MultiLineAltChart(props: Props) {
                         colorDomain={
                           data.filter(el => el.color).length === 0
                             ? []
-                            : colorDomain ||
-                              (uniqBy(
-                                data.filter(el => el.color),
-                                'color',
-                              ).map(d => d.color) as string[])
+                            : colorDomain || (uniqBy(data, 'color', true) as string[])
                         }
                         dimmedOpacity={dimmedOpacity}
                         precision={precision}
