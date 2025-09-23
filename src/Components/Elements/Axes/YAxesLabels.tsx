@@ -30,16 +30,16 @@ export function YAxesLabels(props: Props) {
     isInView,
   } = props;
   return (
-    <motion.foreignObject
-      width={width}
-      height={height}
-      x={x}
+    <motion.g
+      key={x}
       variants={{
         initial: {
           y,
+          x,
         },
         whileInView: {
           y,
+          x,
           transition: { duration: animate.duration },
         },
       }}
@@ -47,18 +47,20 @@ export function YAxesLabels(props: Props) {
       animate={isInView ? 'whileInView' : 'initial'}
       exit={{ opacity: 0, transition: { duration: animate.duration } }}
     >
-      <div className='flex flex-col justify-center h-inherit'>
-        <p
-          className={cn(
-            'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 leading-none',
-            `text-${alignment}`,
-            className,
-          )}
-          style={style}
-        >
-          {value}
-        </p>
-      </div>
-    </motion.foreignObject>
+      <foreignObject y={0} x={0} width={width} height={height}>
+        <div className='flex flex-col justify-center h-inherit'>
+          <p
+            className={cn(
+              'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 leading-none',
+              `text-${alignment}`,
+              className,
+            )}
+            style={style}
+          >
+            {value}
+          </p>
+        </div>
+      </foreignObject>
+    </motion.g>
   );
 }

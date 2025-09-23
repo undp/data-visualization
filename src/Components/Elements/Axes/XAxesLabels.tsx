@@ -30,16 +30,16 @@ export function XAxesLabels(props: Props) {
     isInView,
   } = props;
   return (
-    <motion.foreignObject
-      width={width}
-      height={height}
-      y={y}
+    <motion.g
+      key={y}
       variants={{
         initial: {
           x,
+          y,
         },
         whileInView: {
           x,
+          y,
           transition: { duration: animate.duration },
         },
       }}
@@ -47,21 +47,23 @@ export function XAxesLabels(props: Props) {
       animate={isInView ? 'whileInView' : 'initial'}
       exit={{ opacity: 0, transition: { duration: animate.duration } }}
     >
-      <div
-        className={`flex flex-col items-center h-inherit ${
-          alignment === 'top' ? 'justify-start' : 'justify-end'
-        }`}
-      >
-        <p
-          className={cn(
-            'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 text-center leading-none',
-            className,
-          )}
-          style={style}
+      <foreignObject width={width} height={height} y={0} x={0}>
+        <div
+          className={`flex flex-col items-center h-inherit ${
+            alignment === 'top' ? 'justify-start' : 'justify-end'
+          }`}
         >
-          {value}
-        </p>
-      </div>
-    </motion.foreignObject>
+          <p
+            className={cn(
+              'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 text-center leading-none',
+              className,
+            )}
+            style={style}
+          >
+            {value}
+          </p>
+        </div>
+      </foreignObject>
+    </motion.g>
   );
 }
