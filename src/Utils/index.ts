@@ -11,3 +11,4 @@ export { svgDownload } from './svgDownload';
 export { excelDownload } from './excelDownload';
 export { getUniqValue } from './getUniqValue';
 export { graphList } from './getGraphList';
+export { getCentroidCoordinates } from './getCentroidCoordinates';

@@ -6,9 +6,6 @@ import { scaleOrdinal, scaleThreshold } from 'd3-scale';
 import * as THREE from 'three';
 import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
-import centerOfMass from '@turf/center-of-mass';
-import area from '@turf/area';
-import { Feature, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 
 import {
   ChoroplethMapDataType,
@@ -21,6 +18,7 @@ import { Tooltip } from '@/Components/Elements/Tooltip';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { X } from '@/Components/Icons';
 import { string2HTML } from '@/Utils/string2HTML';
+import { getCentroidCoordinates } from '@/Utils/getCentroidCoordinates';
 
 interface Props {
   width: number;
@@ -59,42 +57,6 @@ interface Props {
   fogSettings?: FogDataType;
   highlightedAltitude: number;
   selectedId?: string;
-}
-
-function getMainlandCentroid(
-  multiPolygonFeature: Feature<Polygon | MultiPolygon, GeoJsonProperties>,
-) {
-  // If it's already a Polygon, just return its centroid
-  if (multiPolygonFeature.geometry.type === 'Polygon') {
-    return centerOfMass(multiPolygonFeature);
-  }
-
-  // If it's MultiPolygon → find the largest polygon
-  if (multiPolygonFeature.geometry.type === 'MultiPolygon') {
-    let maxArea = 0;
-    let largestPolygon: Feature<Polygon, GeoJsonProperties> | null = null;
-
-    for (const coords of multiPolygonFeature.geometry.coordinates) {
-      const poly: Feature<Polygon, GeoJsonProperties> = {
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: coords,
-        },
-        properties: {},
-      };
-
-      const polyArea = area(poly);
-      if (polyArea > maxArea) {
-        maxArea = polyArea;
-        largestPolygon = poly;
-      }
-    }
-
-    return centerOfMass(largestPolygon);
-  }
-
-  throw new Error('Unsupported geometry type');
 }
 
 function createLightFromConfig(config: LightConfig): THREE.Light {
@@ -232,20 +194,20 @@ function Graph(props: Props) {
   }, [enableZoom]);
   useEffect(() => {
     if (globeEl.current) {
-      if (mouseOverData || mouseClickData || selectedId) {
+      if (mouseOverData || selectedId) {
         globeEl.current.controls().autoRotate = false;
       } else {
         globeEl.current.controls().autoRotate = autoRotate === 0 ? false : true;
         globeEl.current.controls().autoRotateSpeed = autoRotate;
       }
     }
-  }, [mouseOverData, mouseClickData, selectedId, autoRotate]);
+  }, [mouseOverData, selectedId, autoRotate]);
   useEffect(() => {
     if (globeEl.current && selectedId) {
       const selectedPolygon = polygonData.find(
         (d: any) => d.properties[mapProperty] === selectedId,
       );
-      const [lng, lat] = getMainlandCentroid(selectedPolygon).geometry.coordinates;
+      const [lng, lat] = getCentroidCoordinates(selectedPolygon);
       globeEl.current.pointOfView({ lat, lng, altitude: scale }, 1000);
     }
   }, [selectedId, scale, polygonData, mapProperty]);
@@ -325,7 +287,7 @@ function Graph(props: Props) {
         polygonAltitude={(polygon: any) =>
           highlightedIds.includes(polygon?.properties?.[mapProperty]) ||
           polygon?.properties?.[mapProperty] === selectedId
-            ? highlightedAltitude
+            ? highlightedAltitude * (polygon?.properties?.[mapProperty] === selectedId ? 2 : 1)
             : polygon?.properties?.[mapProperty] === mouseOverData?.id ||
                 polygon?.properties?.[mapProperty] === mouseClickData?.id
               ? highlightedAltitude
@@ -343,7 +305,8 @@ function Graph(props: Props) {
           const id = polygon?.properties?.[mapProperty];
           const val = data.find(el => el.id === id)?.x;
           const color = val !== undefined && val !== null ? colorScale(val as any) : mapNoDataColor;
-          return highlightedIds.includes(polygon?.properties?.[mapProperty])
+          return highlightedIds.includes(polygon?.properties?.[mapProperty]) ||
+            polygon?.properties?.[mapProperty] === selectedId
             ? color
             : 'rgba(100,100,100,0)';
         }}

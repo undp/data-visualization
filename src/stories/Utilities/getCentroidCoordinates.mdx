@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Utilities/getCentroidCoordinates" />
+
+# getCentroidCoordinates
+
+gets the geographical coordinates for a polygon
+
+```ts
+function getCentroidCoordinates(polygons: Feature<Polygon | MultiPolygon, GeoJsonProperties>, centerLargestPolygon?: boolean): [number, number]
+```
+
+## Parameters
+
+- `polygons` - GeoJson features.
+- `centerLargestPolygon` - Optional parameter that defines if center point should be fo the largest polygon in a multi-polygon geometry (default: true).
+
+
+## Returns
+
+An array of number where first number is longitude and second number is latitude
+
+## Example Usage
+
+```js
+// Example of how to use the function
+const [lng, lat] = getCentroidCoordinates(polygon, true);

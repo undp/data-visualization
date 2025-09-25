@@ -118,6 +118,7 @@ export { imageDownload } from './Utils/imageDownload';
 export { svgDownload } from './Utils/svgDownload';
 export { excelDownload } from './Utils/excelDownload';
 export { getUniqValue } from './Utils/getUniqValue';
+export { getCentroidCoordinates } from './Utils/getCentroidCoordinates';
 
 /* ---------Data fetch and Parse ------------*/
 export {
