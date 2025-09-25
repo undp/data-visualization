@@ -103,7 +103,6 @@ function ThreeDGraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
-          categorical: settings?.categorical,
           autoRotate: settings?.autoRotate,
           globeMaterial: settings?.globeMaterial,
           atmosphereColor: settings?.atmosphereColor,
@@ -113,6 +112,7 @@ function ThreeDGraphEl(props: Props) {
           fogSettings: settings?.fogSetting,
           lights: settings?.lights,
           highlightedAltitude: settings?.highlightedAltitude,
+          selectedId: settings?.selectedId,
         };
       default:
         return {};

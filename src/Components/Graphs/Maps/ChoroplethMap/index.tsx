@@ -106,8 +106,6 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Scale for the colors */
   scaleType?: Exclude<ScaleDataType, 'linear'>;
-  /** Toggles if the color scaling is categorical or not */
-  categorical?: boolean;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */

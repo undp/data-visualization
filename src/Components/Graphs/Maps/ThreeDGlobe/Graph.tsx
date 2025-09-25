@@ -7,6 +7,8 @@ import * as THREE from 'three';
 import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
 import centerOfMass from '@turf/center-of-mass';
+import area from '@turf/area';
+import { Feature, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 
 import {
   ChoroplethMapDataType,
@@ -56,6 +58,43 @@ interface Props {
   globeCurvatureResolution: number;
   fogSettings?: FogDataType;
   highlightedAltitude: number;
+  selectedId?: string;
+}
+
+function getMainlandCentroid(
+  multiPolygonFeature: Feature<Polygon | MultiPolygon, GeoJsonProperties>,
+) {
+  // If it's already a Polygon, just return its centroid
+  if (multiPolygonFeature.geometry.type === 'Polygon') {
+    return centerOfMass(multiPolygonFeature);
+  }
+
+  // If it's MultiPolygon → find the largest polygon
+  if (multiPolygonFeature.geometry.type === 'MultiPolygon') {
+    let maxArea = 0;
+    let largestPolygon: Feature<Polygon, GeoJsonProperties> | null = null;
+
+    for (const coords of multiPolygonFeature.geometry.coordinates) {
+      const poly: Feature<Polygon, GeoJsonProperties> = {
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: coords,
+        },
+        properties: {},
+      };
+
+      const polyArea = area(poly);
+      if (polyArea > maxArea) {
+        maxArea = polyArea;
+        largestPolygon = poly;
+      }
+    }
+
+    return centerOfMass(largestPolygon);
+  }
+
+  throw new Error('Unsupported geometry type');
 }
 
 function createLightFromConfig(config: LightConfig): THREE.Light {
@@ -173,13 +212,11 @@ function Graph(props: Props) {
     fogSettings,
     lights,
     highlightedAltitude,
+    selectedId,
   } = props;
   const [globeReady, setGlobeReady] = useState(false);
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
-  const [mouseClickCentroid, setMouseClickCentroid] = useState<[number, number] | undefined>(
-    undefined,
-  );
   const [showLegend, setShowLegend] = useState(!(width < 680));
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [mouseOverData, setMouseOverData] = useState<ChoroplethMapDataType | undefined>(undefined);
@@ -195,22 +232,23 @@ function Graph(props: Props) {
   }, [enableZoom]);
   useEffect(() => {
     if (globeEl.current) {
-      if (mouseOverData || mouseClickData) {
+      if (mouseOverData || mouseClickData || selectedId) {
         globeEl.current.controls().autoRotate = false;
       } else {
         globeEl.current.controls().autoRotate = autoRotate === 0 ? false : true;
         globeEl.current.controls().autoRotateSpeed = autoRotate;
       }
     }
-  }, [mouseOverData, mouseClickData, autoRotate]);
+  }, [mouseOverData, mouseClickData, selectedId, autoRotate]);
   useEffect(() => {
-    if (globeEl.current && mouseClickCentroid) {
-      globeEl.current.pointOfView(
-        { lat: mouseClickCentroid[1], lng: mouseClickCentroid[0], altitude: scale },
-        1000,
+    if (globeEl.current && selectedId) {
+      const selectedPolygon = polygonData.find(
+        (d: any) => d.properties[mapProperty] === selectedId,
       );
+      const [lng, lat] = getMainlandCentroid(selectedPolygon).geometry.coordinates;
+      globeEl.current.pointOfView({ lat, lng, altitude: scale }, 1000);
     }
-  }, [mouseClickCentroid, scale]);
+  }, [selectedId, scale, polygonData, mapProperty]);
 
   useEffect(() => {
     const canvas = globeEl.current?.renderer().domElement;
@@ -285,7 +323,8 @@ function Graph(props: Props) {
         lineHoverPrecision={0}
         polygonsData={polygonData}
         polygonAltitude={(polygon: any) =>
-          highlightedIds.includes(polygon?.properties?.[mapProperty])
+          highlightedIds.includes(polygon?.properties?.[mapProperty]) ||
+          polygon?.properties?.[mapProperty] === selectedId
             ? highlightedAltitude
             : polygon?.properties?.[mapProperty] === mouseOverData?.id ||
                 polygon?.properties?.[mapProperty] === mouseClickData?.id
@@ -328,12 +367,9 @@ function Graph(props: Props) {
             ) {
               setMouseClickData(undefined);
               onSeriesMouseClick?.(undefined);
-              setMouseClickCentroid(undefined);
             } else {
               setMouseClickData(clickedData);
               onSeriesMouseClick?.(clickedData);
-              const [lng, lat] = centerOfMass(polygon).geometry.coordinates;
-              setMouseClickCentroid([lng, lat]);
             }
           }
         }}

@@ -93,8 +93,6 @@ interface Props {
   polygonAltitude?: number;
   /** Scale for the colors */
   scaleType?: Exclude<ScaleDataType, 'linear'>;
-  /** Toggles if the color scaling is categorical or not */
-  categorical?: boolean;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
   /** The max altitude of the atmosphere, in terms of globe radius units. */
@@ -105,6 +103,8 @@ interface Props {
   fogSettings?: FogDataType;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
+  /** Countries or regions to be highlighted */
+  selectedId?: string;
   /** Countries or regions to be highlighted */
   highlightedIds?: string[];
   /** Defines the altitude of the highlighted countries or the countries on mouseover. */
@@ -198,6 +198,7 @@ export function ThreeDGlobe(props: Props) {
         position: { x: 5, y: 10, z: 5 },
       },
     ],
+    selectedId,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -382,6 +383,7 @@ export function ThreeDGlobe(props: Props) {
                   fogSettings={fogSettings}
                   lights={lights}
                   highlightedAltitude={highlightedAltitude}
+                  selectedId={selectedId}
                 />
               ) : (
                 <div

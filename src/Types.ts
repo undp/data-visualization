@@ -973,7 +973,6 @@ export interface GraphSettingsDataType {
   autoRotate?: boolean;
   enableZoom?: boolean;
   globeMaterial?: any;
-  categorical?: boolean;
   atmosphereColor?: string;
   lineAxisTitle?: string;
   timeline?: TimelineDataType;
@@ -986,6 +985,7 @@ export interface GraphSettingsDataType {
   fogSetting?: FogDataType;
   showAxisLabels?: boolean;
   highlightedAltitude?: number;
+  selectedId?: string;
 }
 
 export interface InfoBoxDataType {

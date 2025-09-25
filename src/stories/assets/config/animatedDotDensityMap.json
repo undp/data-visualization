@@ -33,7 +33,6 @@
     "height": 600,
     "domain": [0.55, 0.7, 0.8],
     "colorLegendTitle": "Legend Title",
-    "categorical": false,
     "backgroundColor": true,
     "mapBorderWidth": 1,
     "mapNoDataColor": "#EDEFF0",

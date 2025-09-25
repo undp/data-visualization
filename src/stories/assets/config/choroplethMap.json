@@ -28,7 +28,6 @@
     "height": 600,
     "colorDomain": [10, 20, 30, 40],
     "colorLegendTitle": "Legend Title",
-    "categorical": false,
     "scale": 180,
     "centerPoint": [0, 20],
     "backgroundColor": "#FAFAFA",

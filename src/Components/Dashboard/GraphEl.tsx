@@ -801,7 +801,6 @@ function GraphEl(props: Props) {
               ? settings?.colorLegendTitle
               : getValues('x', graphDataConfiguration || [], readableHeader || []),
           scaleType: settings?.scaleType,
-          categorical: settings?.categorical,
           data: graphData,
           scale: settings?.scale,
           centerPoint: settings?.centerPoint,
