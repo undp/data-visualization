@@ -534,13 +534,6 @@ export function Graph(props: Props) {
                       highlightedDataPoints.indexOf(d.label as string | number) !== -1 ? (
                         <motion.text
                           style={{
-                            fill:
-                              labelColor ||
-                              (data.filter(el => el.color).length === 0
-                                ? colors[0]
-                                : !d.color
-                                  ? Colors.gray
-                                  : colors[colorDomain.indexOf(`${d.color}`)]),
                             ...(styles?.graphObjectValues || {}),
                           }}
                           className={cn('graph-value text-sm', classNames?.graphObjectValues)}
@@ -550,10 +543,24 @@ export function Graph(props: Props) {
                             initial: {
                               x: !radiusScale ? radius : radiusScale(d.radius || 0),
                               opacity: 0,
+                              fill:
+                                labelColor ||
+                                (data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(`${d.color}`)]),
                             },
                             whileInView: {
                               x: !radiusScale ? radius : radiusScale(d.radius || 0),
                               opacity: 1,
+                              fill:
+                                labelColor ||
+                                (data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(`${d.color}`)]),
                               transition: { duration: animate.duration },
                             },
                           }}

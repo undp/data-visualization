@@ -526,10 +526,14 @@ export function Graph(props: Props) {
                                 ? 2
                                 : 4
                           }
-                          style={{ fill: intervalLineColors[0] }}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           variants={{
-                            initial: { opacity: 0, cx: x(d.date), cy: y(d.yMin) },
+                            initial: {
+                              opacity: 0,
+                              fill: intervalLineColors[0],
+                              cx: x(d.date),
+                              cy: y(d.yMin),
+                            },
                             whileInView: {
                               opacity: 1,
                               transition: {
@@ -538,6 +542,7 @@ export function Graph(props: Props) {
                               },
                               cx: x(d.date),
                               cy: y(d.yMin),
+                              fill: intervalLineColors[0],
                             },
                           }}
                           initial='initial'
@@ -551,12 +556,17 @@ export function Graph(props: Props) {
                                 ? 2
                                 : 4
                           }
-                          style={{ fill: intervalLineColors[1] }}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           variants={{
-                            initial: { opacity: 0, cx: x(d.date), cy: y(d.yMax) },
+                            initial: {
+                              opacity: 0,
+                              fill: intervalLineColors[1],
+                              cx: x(d.date),
+                              cy: y(d.yMax),
+                            },
                             whileInView: {
                               opacity: 1,
+                              fill: intervalLineColors[1],
                               transition: {
                                 duration: hasAnimatedOnce ? animate.duration : 0.5,
                                 delay: hasAnimatedOnce ? 0 : animate.duration,
@@ -574,7 +584,6 @@ export function Graph(props: Props) {
                       <motion.text
                         dy={-8}
                         style={{
-                          fill: lineColor,
                           textAnchor: 'middle',
                           ...(styles?.graphObjectValues || {}),
                         }}
@@ -584,10 +593,11 @@ export function Graph(props: Props) {
                         )}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0, x: x(d.date), y: y(d.y) },
+                          initial: { opacity: 0, fill: lineColor, x: x(d.date), y: y(d.y) },
                           whileInView: {
                             opacity: 1,
                             x: x(d.date),
+                            fill: lineColor,
                             y: y(d.y),
                             transition: {
                               duration: hasAnimatedOnce ? animate.duration : 0.5,
@@ -606,18 +616,23 @@ export function Graph(props: Props) {
                         <motion.text
                           dy='1em'
                           style={{
-                            fill: intervalLineColors[0],
                             textAnchor: 'middle',
                             ...(styles?.graphObjectValues || {}),
                           }}
                           className={cn('text-xs font-bold', classNames?.graphObjectValues)}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           variants={{
-                            initial: { opacity: 0, x: x(d.date), y: y(d.yMin) },
+                            initial: {
+                              opacity: 0,
+                              fill: intervalLineColors[0],
+                              x: x(d.date),
+                              y: y(d.yMin),
+                            },
                             whileInView: {
                               opacity: 1,
                               x: x(d.date),
                               y: y(d.yMin),
+                              fill: intervalLineColors[0],
                               transition: {
                                 duration: hasAnimatedOnce ? animate.duration : 0.5,
                                 delay: hasAnimatedOnce ? 0 : animate.duration,
@@ -632,16 +647,21 @@ export function Graph(props: Props) {
                         <motion.text
                           dy={-8}
                           style={{
-                            fill: intervalLineColors[1],
                             textAnchor: 'middle',
                             ...(styles?.graphObjectValues || {}),
                           }}
                           className={cn('text-xs font-bold', classNames?.graphObjectValues)}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           variants={{
-                            initial: { opacity: 0, x: x(d.date), y: y(d.yMax) },
+                            initial: {
+                              opacity: 0,
+                              fill: intervalLineColors[1],
+                              x: x(d.date),
+                              y: y(d.yMax),
+                            },
                             whileInView: {
                               opacity: 1,
+                              fill: intervalLineColors[1],
                               x: x(d.date),
                               y: y(d.yMax),
                               transition: {

@@ -256,12 +256,12 @@ export function Graph(props: Props) {
                     />
                   ) : (
                     <motion.rect
-                      y={0 - radius}
                       x={-1}
-                      height={radius * 2}
                       width={2}
                       variants={{
                         initial: {
+                          y: 0 - radius,
+                          height: radius * 2,
                           fill:
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
@@ -278,6 +278,8 @@ export function Graph(props: Props) {
                                   : colors[colorDomain.indexOf(d.color)],
                         },
                         whileInView: {
+                          y: 0 - radius,
+                          height: radius * 2,
                           fill:
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
@@ -304,11 +306,44 @@ export function Graph(props: Props) {
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
                       <motion.text
                         x={0}
-                        y={0 - radius - 5}
                         variants={{
-                          initial: { opacity: 0 },
+                          initial: {
+                            opacity: 0,
+                            y: 0 - radius - 5,
+                            fill:
+                              valueColor ||
+                              (highlightColor && highlightedDataPoints
+                                ? highlightedDataPoints.indexOf(d.label) !== -1
+                                  ? highlightColor
+                                  : data.filter(el => el.color).length === 0
+                                    ? colors[0]
+                                    : !d.color
+                                      ? Colors.gray
+                                      : colors[colorDomain.indexOf(d.color)]
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]),
+                          },
                           whileInView: {
                             opacity: 1,
+                            y: 0 - radius - 5,
+                            fill:
+                              valueColor ||
+                              (highlightColor && highlightedDataPoints
+                                ? highlightedDataPoints.indexOf(d.label) !== -1
+                                  ? highlightColor
+                                  : data.filter(el => el.color).length === 0
+                                    ? colors[0]
+                                    : !d.color
+                                      ? Colors.gray
+                                      : colors[colorDomain.indexOf(d.color)]
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]),
                             transition: { duration: animate.duration },
                           },
                         }}
@@ -316,21 +351,6 @@ export function Graph(props: Props) {
                         animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         style={{
-                          fill:
-                            valueColor ||
-                            (highlightColor && highlightedDataPoints
-                              ? highlightedDataPoints.indexOf(d.label) !== -1
-                                ? highlightColor
-                                : data.filter(el => el.color).length === 0
-                                  ? colors[0]
-                                  : !d.color
-                                    ? Colors.gray
-                                    : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
-                                ? colors[0]
-                                : !d.color
-                                  ? Colors.gray
-                                  : colors[colorDomain.indexOf(d.color)]),
                           textAnchor: 'middle',
                           ...(styles?.graphObjectValues || {}),
                         }}

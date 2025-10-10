@@ -501,12 +501,17 @@ export function Graph(props: Props) {
                               ? 2
                               : 4
                         }
-                        style={{ fill: lineColors[0] }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0, cx: x(d.date), cy: y1(d.y1 as number) },
+                          initial: {
+                            opacity: 0,
+                            cx: x(d.date),
+                            cy: y1(d.y1 as number),
+                            fill: lineColors[0],
+                          },
                           whileInView: {
                             opacity: 1,
+                            fill: lineColors[0],
                             transition: {
                               duration: hasAnimatedOnce ? animate.duration : 0.5,
                               delay: hasAnimatedOnce ? 0 : animate.duration,
@@ -529,7 +534,6 @@ export function Graph(props: Props) {
                               : '1em'
                         }
                         style={{
-                          fill: lineColors[0],
                           textAnchor: 'middle',
                           ...(styles?.graphObjectValues || {}),
                         }}
@@ -539,10 +543,16 @@ export function Graph(props: Props) {
                         )}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0, x: x(d.date), y: y2(d.y1 as number) },
+                          initial: {
+                            opacity: 0,
+                            x: x(d.date),
+                            y: y2(d.y1 as number),
+                            fill: lineColors[0],
+                          },
                           whileInView: {
                             opacity: 1,
                             x: x(d.date),
+                            fill: lineColors[0],
                             y: y2(d.y1 as number),
                             transition: {
                               duration: hasAnimatedOnce ? animate.duration : 0.5,
@@ -575,16 +585,21 @@ export function Graph(props: Props) {
                               ? 2
                               : 4
                         }
-                        style={{ fill: lineColors[1] }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0, cx: x(d.date), cy: y2(d.y2 as number) },
+                          initial: {
+                            opacity: 0,
+                            cx: x(d.date),
+                            cy: y2(d.y2 as number),
+                            fill: lineColors[1],
+                          },
                           whileInView: {
                             opacity: 1,
                             transition: {
                               duration: hasAnimatedOnce ? animate.duration : 0.5,
                               delay: hasAnimatedOnce ? 0 : animate.duration,
                             },
+                            fill: lineColors[1],
                             cx: x(d.date),
                             cy: y2(d.y2 as number),
                           },
@@ -603,7 +618,6 @@ export function Graph(props: Props) {
                               : '1em'
                         }
                         style={{
-                          fill: lineColors[1],
                           textAnchor: 'middle',
                           ...(styles?.graphObjectValues || {}),
                         }}
@@ -613,11 +627,17 @@ export function Graph(props: Props) {
                         )}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0, x: x(d.date), y: y2(d.y2 as number) },
+                          initial: {
+                            opacity: 0,
+                            x: x(d.date),
+                            y: y2(d.y2 as number),
+                            fill: lineColors[1],
+                          },
                           whileInView: {
                             opacity: 1,
                             x: x(d.date),
                             y: y2(d.y2 as number),
+                            fill: lineColors[1],
                             transition: {
                               duration: hasAnimatedOnce ? animate.duration : 0.5,
                               delay: hasAnimatedOnce ? 0 : animate.duration,

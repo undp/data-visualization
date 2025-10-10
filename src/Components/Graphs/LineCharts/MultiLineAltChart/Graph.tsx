@@ -532,14 +532,6 @@ export function Graph(props: Props) {
                   mouseOverData?.label === d[0].label) &&
                 showLabels ? (
                   <motion.text
-                    style={{
-                      fill:
-                        data.filter(el => el.color).length === 0
-                          ? lineColors[0]
-                          : !d[0].color
-                            ? Colors.gray
-                            : lineColors[colorDomain.indexOf(d[0].color)],
-                    }}
                     className='text-sm font-bold'
                     dx={5}
                     dy={4}
@@ -547,11 +539,23 @@ export function Graph(props: Props) {
                     variants={{
                       initial: {
                         opacity: 0,
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? lineColors[0]
+                            : !d[0].color
+                              ? Colors.gray
+                              : lineColors[colorDomain.indexOf(d[0].color)],
                         x: x(d[d.length - 1].date),
                         y: y(d[d.length - 1].y as number),
                       },
                       whileInView: {
                         opacity: 1,
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? lineColors[0]
+                            : !d[0].color
+                              ? Colors.gray
+                              : lineColors[colorDomain.indexOf(d[0].color)],
                         x: x(d[d.length - 1].date),
                         y: y(d[d.length - 1].y as number),
                         transition: {

@@ -276,7 +276,6 @@ export function Graph(props: Props) {
                         <motion.text
                           y={(subBarScale(`${j}`) as number) + subBarScale.bandwidth() / 2}
                           style={{
-                            fill: valueColor || barColors[j],
                             textAnchor: el ? (el < 0 ? 'end' : 'start') : 'start',
                             ...(styles?.graphObjectValues || {}),
                           }}
@@ -284,10 +283,11 @@ export function Graph(props: Props) {
                           dx={el ? (el < 0 ? -5 : 5) : 5}
                           dy='0.33em'
                           variants={{
-                            initial: { x: x(0), opacity: 0 },
+                            initial: { x: x(0), opacity: 0, fill: valueColor || barColors[j] },
                             whileInView: {
                               x: x(el || 0),
                               opacity: 1,
+                              fill: valueColor || barColors[j],
                               transition: { duration: animate.duration },
                             },
                           }}

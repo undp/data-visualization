@@ -447,7 +447,6 @@ export function Graph(props: Props) {
                     <motion.text
                       y={y.bandwidth() / 2}
                       style={{
-                        ...(valueColor ? { fill: valueColor } : { fill: barColor }),
                         textAnchor: d.size ? (d.size < 0 ? 'end' : 'start') : 'start',
                         ...(styles?.graphObjectValues || {}),
                       }}
@@ -465,10 +464,12 @@ export function Graph(props: Props) {
                         initial: {
                           x: x(0),
                           opacity: 0,
+                          fill: valueColor || barColor,
                         },
                         whileInView: {
                           x: d.size ? x(d.size) : x(0),
                           opacity: 1,
+                          fill: valueColor || barColor,
                           transition: { duration: animate.duration },
                         },
                       }}

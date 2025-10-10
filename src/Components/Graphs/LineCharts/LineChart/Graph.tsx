@@ -406,12 +406,17 @@ export function Graph(props: Props) {
                               ? 2
                               : 4
                         }
-                        style={{ fill: lineColor }}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
-                          initial: { opacity: 0, cx: x(d.date), cy: y(d.y as number) },
+                          initial: {
+                            opacity: 0,
+                            cx: x(d.date),
+                            cy: y(d.y as number),
+                            fill: lineColor,
+                          },
                           whileInView: {
                             opacity: 1,
+                            fill: lineColor,
                             transition: {
                               duration: hasAnimatedOnce ? animate.duration : 0.5,
                               delay: hasAnimatedOnce ? 0 : animate.duration,

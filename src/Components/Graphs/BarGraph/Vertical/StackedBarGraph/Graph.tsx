@@ -290,7 +290,6 @@ export function Graph(props: Props) {
                         <motion.text
                           x={x.bandwidth() / 2}
                           style={{
-                            fill: getTextColorBasedOnBgColor(barColors[j]),
                             textAnchor: 'middle',
                             ...(styles?.graphObjectValues || {}),
                           }}
@@ -352,7 +351,6 @@ export function Graph(props: Props) {
                   {showValues ? (
                     <motion.text
                       style={{
-                        ...(valueColor && { fill: valueColor }),
                         textAnchor: 'middle',
                         ...(styles?.graphObjectValues || {}),
                       }}
@@ -369,10 +367,12 @@ export function Graph(props: Props) {
                         initial: {
                           y: y(0),
                           opacity: 0,
+                          ...(valueColor && { fill: valueColor }),
                         },
                         whileInView: {
                           y: y(sum(d.size.map(el => el || 0))),
                           opacity: 1,
+                          ...(valueColor && { fill: valueColor }),
                           transition: { duration: animate.duration },
                         },
                       }}

@@ -359,11 +359,13 @@ export function Graph(props: Props) {
                         attrY: y1(0),
                         height: 0,
                         opacity: 1,
+                        fill: barColor,
                       },
                       whileInView: {
                         attrY: d.bar ? (d.bar > 0 ? y1(d.bar) : y1(0)) : 0,
                         height: d.bar ? Math.abs(y1(d.bar) - y1(0)) : 0,
                         opacity: 1,
+                        fill: barColor,
                         transition: { duration: animate.duration },
                       },
                     }}
@@ -377,7 +379,6 @@ export function Graph(props: Props) {
                     }}
                     x={x(`${i}`)}
                     width={x.bandwidth()}
-                    style={{ fill: barColor }}
                   />
                   {showValues && !checkIfNullOrUndefined(d.bar) ? (
                     <motion.text
@@ -391,17 +392,18 @@ export function Graph(props: Props) {
                         initial: {
                           attrY: y1(0),
                           opacity: 0,
+                          fill: barColor,
                         },
                         whileInView: {
                           attrY: y1(d.bar || 0),
                           opacity: 1,
+                          fill: barColor,
                           transition: { duration: animate.duration },
                         },
                       }}
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
                       style={{
-                        fill: barColor,
                         textAnchor: 'middle',
                         ...(styles?.graphObjectValues || {}),
                       }}
@@ -441,17 +443,18 @@ export function Graph(props: Props) {
                 initial: {
                   d: lineShape(dataWithId.map(d => ({ ...d, line: 0 }))) as string,
                   opacity: 0,
+                  stroke: lineColor,
                 },
                 whileInView: {
                   d: lineShape(dataWithId) as string,
                   opacity: 1,
+                  stroke: lineColor,
                   transition: { duration: animate.duration },
                 },
               }}
               initial='initial'
               animate={isInView ? 'whileInView' : 'initial'}
               style={{
-                stroke: lineColor,
                 fill: 'none',
                 strokeWidth: 2,
               }}
@@ -499,10 +502,12 @@ export function Graph(props: Props) {
                         initial: {
                           cy: y2(0),
                           opacity: 0,
+                          fill: lineColor,
                         },
                         whileInView: {
                           cy: y2(d.line as number),
                           opacity: 1,
+                          fill: lineColor,
                           transition: { duration: animate.duration },
                         },
                       }}
@@ -516,7 +521,6 @@ export function Graph(props: Props) {
                             ? 2
                             : 4
                       }
-                      style={{ fill: lineColor }}
                     />
                     {showValues ? (
                       <motion.text
@@ -527,7 +531,6 @@ export function Graph(props: Props) {
                           transition: { duration: animate.duration },
                         }}
                         style={{
-                          fill: lineColor,
                           textAnchor: 'middle',
                           ...(styles?.graphObjectValues || {}),
                         }}
@@ -535,10 +538,12 @@ export function Graph(props: Props) {
                           initial: {
                             y: y2(0),
                             opacity: 0,
+                            fill: lineColor,
                           },
                           whileInView: {
                             y: y2(d.line as number),
                             opacity: 1,
+                            fill: lineColor,
                             transition: { duration: animate.duration },
                           },
                         }}

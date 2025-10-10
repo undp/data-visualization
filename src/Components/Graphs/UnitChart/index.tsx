@@ -287,10 +287,7 @@ export function UnitChart(props: Props) {
                         {cellsData.map((d, i) => (
                           <motion.circle
                             key={i}
-                            cx={(i % gridSize) * gridDimension + gridDimension / 2}
-                            cy={Math.floor(i / gridSize) * gridDimension + gridDimension / 2}
                             style={{
-                              ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
                               strokeWidth: 1,
                             }}
                             variants={{
@@ -305,6 +302,8 @@ export function UnitChart(props: Props) {
                                 opacity: 1,
                                 ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
                                 strokeWidth: 1,
+                                cx: (i % gridSize) * gridDimension + gridDimension / 2,
+                                cy: Math.floor(i / gridSize) * gridDimension + gridDimension / 2,
                                 transition: {
                                   duration: 0,
                                   delay: (animateValue.duration / cellsData.length) * i,

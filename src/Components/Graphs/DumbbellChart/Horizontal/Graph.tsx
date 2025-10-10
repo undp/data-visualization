@@ -387,7 +387,6 @@ export function Graph(props: Props) {
                           <motion.text
                             y={0}
                             style={{
-                              fill: valueColor || dotColors[j],
                               textAnchor: 'middle',
                               ...(styles?.graphObjectValues || {}),
                             }}
@@ -400,9 +399,10 @@ export function Graph(props: Props) {
                             )}
                             exit={{ opacity: 0, transition: { duration: animate.duration } }}
                             variants={{
-                              initial: { x: x(0), opacity: 0 },
+                              initial: { x: x(0), opacity: 0, fill: valueColor || dotColors[j] },
                               whileInView: {
                                 x: x(el || 0),
+                                fill: valueColor || dotColors[j],
                                 opacity: 1,
                                 transition: { duration: animate.duration },
                               },

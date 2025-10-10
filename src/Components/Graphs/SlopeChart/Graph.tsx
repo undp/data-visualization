@@ -244,9 +244,9 @@ export function Graph(props: Props) {
                   }}
                 >
                   <motion.circle
-                    cx={radius}
                     variants={{
                       initial: {
+                        cx: radius,
                         cy: y(d.y1),
                         fill:
                           data.filter(el => el.color).length === 0
@@ -263,6 +263,7 @@ export function Graph(props: Props) {
                         opacity: 0,
                       },
                       whileInView: {
+                        cx: radius,
                         cy: y(d.y1),
                         fill:
                           data.filter(el => el.color).length === 0
@@ -371,9 +372,9 @@ export function Graph(props: Props) {
                     ) : null
                   ) : null}
                   <motion.circle
-                    cx={graphWidth - radius}
                     variants={{
                       initial: {
+                        cx: graphWidth - radius,
                         cy: y(d.y2),
                         fill:
                           data.filter(el => el.color).length === 0
@@ -390,6 +391,7 @@ export function Graph(props: Props) {
                         opacity: 0,
                       },
                       whileInView: {
+                        cx: graphWidth - radius,
                         cy: y(d.y2),
                         fill:
                           data.filter(el => el.color).length === 0
@@ -497,10 +499,10 @@ export function Graph(props: Props) {
                     ) : null
                   ) : null}
                   <motion.line
-                    x1={radius}
-                    x2={graphWidth - radius}
                     variants={{
                       initial: {
+                        x1: radius,
+                        x2: graphWidth - radius,
                         y1: y(d.y1),
                         y2: y(d.y1),
                         stroke:
@@ -511,6 +513,8 @@ export function Graph(props: Props) {
                               : colors[colorDomain.indexOf(`${d.color}`)],
                       },
                       whileInView: {
+                        x1: radius,
+                        x2: graphWidth - radius,
                         y1: y(d.y1),
                         y2: y(d.y2),
                         stroke:

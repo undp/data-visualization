@@ -355,10 +355,12 @@ export function Graph(props: Props) {
                         initial: {
                           x: x(0),
                           opacity: 0,
+                          ...(valueColor ? { fill: valueColor } : {}),
                         },
                         whileInView: {
                           x: x(sum(d.size.map(el => el || 0))),
                           opacity: 1,
+                          ...(valueColor ? { fill: valueColor } : {}),
                           transition: { duration: animate.duration },
                         },
                       }}

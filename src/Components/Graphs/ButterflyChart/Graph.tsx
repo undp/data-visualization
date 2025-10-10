@@ -234,7 +234,6 @@ export function Graph(props: Props) {
                       <motion.text
                         y={(y(`${i}`) as number) + y.bandwidth() / 2}
                         style={{
-                          fill: barColors[0],
                           textAnchor: d.rightBar ? (d.rightBar > 0 ? 'end' : 'start') : 'start',
                           ...(styles?.graphObjectValues || {}),
                         }}
@@ -249,12 +248,14 @@ export function Graph(props: Props) {
                           initial: {
                             x: xLeftBar(0),
                             opacity: 0,
+                            fill: barColors[0],
                           },
                           whileInView: {
                             x: d.leftBar
                               ? xLeftBar(d.leftBar)
                               : xLeftBar(minValueLeftBar < 0 ? 0 : minValueLeftBar),
                             opacity: 1,
+                            fill: barColors[0],
                             transition: { duration: animate.duration },
                           },
                         }}
@@ -386,7 +387,6 @@ export function Graph(props: Props) {
                       <motion.text
                         y={(y(`${i}`) as number) + y.bandwidth() / 2}
                         style={{
-                          fill: barColors[1],
                           textAnchor: d.rightBar ? (d.rightBar < 0 ? 'end' : 'start') : 'start',
                           ...(styles?.graphObjectValues || {}),
                         }}
@@ -401,12 +401,14 @@ export function Graph(props: Props) {
                           initial: {
                             x: xRightBar(0),
                             opacity: 0,
+                            fill: barColors[1],
                           },
                           whileInView: {
                             x: d.rightBar
                               ? xRightBar(d.rightBar)
                               : xRightBar(minValueRightBar < 0 ? 0 : minValueRightBar),
                             opacity: 1,
+                            fill: barColors[1],
                             transition: { duration: animate.duration },
                           },
                         }}

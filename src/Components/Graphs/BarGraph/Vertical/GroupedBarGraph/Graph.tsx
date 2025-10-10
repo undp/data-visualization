@@ -300,17 +300,17 @@ export function Graph(props: Props) {
                         <motion.text
                           x={(subBarScale(`${j}`) as number) + subBarScale.bandwidth() / 2}
                           style={{
-                            fill: valueColor || barColors[j],
                             textAnchor: 'middle',
                             ...(styles?.graphObjectValues || {}),
                           }}
                           className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                           dy={el ? (el >= 0 ? '-5px' : '1em') : '-5px'}
                           variants={{
-                            initial: { y: y(0), opacity: 0 },
+                            initial: { y: y(0), opacity: 0, fill: valueColor || barColors[j] },
                             whileInView: {
                               y: y(el || 0),
                               opacity: 1,
+                              fill: valueColor || barColors[j],
                               transition: { duration: animate.duration },
                             },
                           }}

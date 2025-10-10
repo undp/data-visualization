@@ -38,7 +38,6 @@ export function RegressionLine(props: Props) {
             className,
           )}
           style={{
-            ...(color && { stroke: color }),
             fill: 'none',
             ...(style || {}),
           }}
@@ -49,12 +48,14 @@ export function RegressionLine(props: Props) {
               y2: y1,
               x1,
               x2: x1,
+              ...(color && { stroke: color }),
             },
             whileInView: {
               y1,
               y2,
               x1,
               x2,
+              ...(color && { stroke: color }),
               transition: { duration: animate.duration },
             },
           }}

@@ -486,12 +486,17 @@ export function Graph(props: Props) {
                                   ? 2
                                   : 4
                             }
-                            style={{ fill: lineColors[i] }}
                             exit={{ opacity: 0, transition: { duration: animate.duration } }}
                             variants={{
-                              initial: { opacity: 0, cx: x(el.date), cy: y(el.y as number) },
+                              initial: {
+                                opacity: 0,
+                                fill: lineColors[i],
+                                cx: x(el.date),
+                                cy: y(el.y as number),
+                              },
                               whileInView: {
                                 opacity: 1,
+                                fill: lineColors[i],
                                 transition: {
                                   duration: hasAnimatedOnce ? animate.duration : 0.5,
                                   delay: hasAnimatedOnce ? 0 : animate.duration,
@@ -508,7 +513,6 @@ export function Graph(props: Props) {
                           <motion.text
                             dy={-8}
                             style={{
-                              fill: lineColors[i],
                               textAnchor: 'middle',
                               ...(styles?.graphObjectValues || {}),
                             }}
@@ -518,9 +522,15 @@ export function Graph(props: Props) {
                             )}
                             exit={{ opacity: 0, transition: { duration: animate.duration } }}
                             variants={{
-                              initial: { opacity: 0, x: x(el.date), y: y(el.y as number) },
+                              initial: {
+                                opacity: 0,
+                                fill: lineColors[i],
+                                x: x(el.date),
+                                y: y(el.y as number),
+                              },
                               whileInView: {
                                 opacity: 1,
+                                fill: lineColors[i],
                                 x: x(el.date),
                                 y: y(el.y as number),
                                 transition: {
@@ -541,7 +551,6 @@ export function Graph(props: Props) {
                 ))}
                 {showColorLegendAtTop || labelsToBeHidden.includes(labels[i]) ? null : (
                   <motion.text
-                    style={{ fill: lineColors[i] }}
                     className='text-xs'
                     dx={5}
                     dy={4}
@@ -549,11 +558,13 @@ export function Graph(props: Props) {
                     variants={{
                       initial: {
                         opacity: 0,
+                        fill: lineColors[i],
                         x: x(d[d.length - 1].date),
                         y: y(d[d.length - 1].y as number),
                       },
                       whileInView: {
                         opacity: 1,
+                        fill: lineColors[i],
                         x: x(d[d.length - 1].date),
                         y: y(d[d.length - 1].y as number),
                         transition: {

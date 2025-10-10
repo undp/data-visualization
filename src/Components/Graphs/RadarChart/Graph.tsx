@@ -317,31 +317,47 @@ export function Graph(props: Props) {
                   <motion.path
                     d={lineShape(d.values) || ''}
                     variants={{
-                      initial: { d: lineShape(d.values.map(_el => 0)) || '' },
+                      initial: {
+                        d: lineShape(d.values.map(_el => 0)) || '',
+                        stroke:
+                          data.filter(el => el.color).length === 0
+                            ? lineColors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : lineColors[colorDomain.indexOf(d.color)],
+                        fill: fillShape
+                          ? data.filter(el => el.color).length === 0
+                            ? lineColors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : lineColors[colorDomain.indexOf(d.color)]
+                          : 'none',
+                        strokeWidth,
+                      },
                       whileInView: {
                         d: lineShape(d.values) || '',
                         transition: { duration: animate.duration },
+                        stroke:
+                          data.filter(el => el.color).length === 0
+                            ? lineColors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : lineColors[colorDomain.indexOf(d.color)],
+                        fill: fillShape
+                          ? data.filter(el => el.color).length === 0
+                            ? lineColors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : lineColors[colorDomain.indexOf(d.color)]
+                          : 'none',
+                        strokeWidth,
                       },
                     }}
                     initial='initial'
                     animate={isInView ? 'whileInView' : 'initial'}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     style={{
-                      stroke:
-                        data.filter(el => el.color).length === 0
-                          ? lineColors[0]
-                          : !d.color
-                            ? Colors.gray
-                            : lineColors[colorDomain.indexOf(d.color)],
-                      fill: fillShape
-                        ? data.filter(el => el.color).length === 0
-                          ? lineColors[0]
-                          : !d.color
-                            ? Colors.gray
-                            : lineColors[colorDomain.indexOf(d.color)]
-                        : 'none',
                       fillOpacity: 0.1,
-                      strokeWidth,
                     }}
                   />
                   <g>
@@ -351,24 +367,30 @@ export function Graph(props: Props) {
                           <>
                             {showDots ? (
                               <motion.circle
-                                cx={Math.cos(angleScale(j) - Math.PI / 2) * scale(el)}
-                                cy={Math.sin(angleScale(j) - Math.PI / 2) * scale(el)}
                                 r={4}
-                                style={{
-                                  fill:
-                                    data.filter(el => el.color).length === 0
-                                      ? lineColors[0]
-                                      : !d.color
-                                        ? Colors.gray
-                                        : lineColors[colorDomain.indexOf(d.color)],
-                                }}
                                 variants={{
-                                  initial: { cx: 0, cy: 0, opacity: 0 },
+                                  initial: {
+                                    cx: 0,
+                                    cy: 0,
+                                    opacity: 0,
+                                    fill:
+                                      data.filter(el => el.color).length === 0
+                                        ? lineColors[0]
+                                        : !d.color
+                                          ? Colors.gray
+                                          : lineColors[colorDomain.indexOf(d.color)],
+                                  },
                                   whileInView: {
                                     cx: Math.cos(angleScale(j) - Math.PI / 2) * scale(el),
                                     cy: Math.sin(angleScale(j) - Math.PI / 2) * scale(el),
                                     opacity: 1,
                                     transition: { duration: animate.duration },
+                                    fill:
+                                      data.filter(el => el.color).length === 0
+                                        ? lineColors[0]
+                                        : !d.color
+                                          ? Colors.gray
+                                          : lineColors[colorDomain.indexOf(d.color)],
                                   },
                                 }}
                                 initial='initial'
@@ -378,16 +400,7 @@ export function Graph(props: Props) {
                             ) : null}
                             {showValues ? (
                               <motion.text
-                                x={Math.cos(angleScale(j) - Math.PI / 2) * (scale(el) + 6)}
-                                y={Math.sin(angleScale(j) - Math.PI / 2) * (scale(el) + 6)}
                                 style={{
-                                  fill: lineColors[i],
-                                  textAnchor:
-                                    Math.cos(angleScale(j) - Math.PI / 2) < 0
-                                      ? 'end'
-                                      : Math.cos(angleScale(j) - Math.PI / 2) < 0.00001
-                                        ? 'middle'
-                                        : 'start',
                                   ...(styles?.graphObjectValues || {}),
                                 }}
                                 dy={
@@ -402,9 +415,29 @@ export function Graph(props: Props) {
                                   classNames?.graphObjectValues,
                                 )}
                                 variants={{
-                                  initial: { opacity: 0 },
+                                  initial: {
+                                    opacity: 0,
+                                    x: Math.cos(angleScale(j) - Math.PI / 2) * (scale(el) + 6),
+                                    y: Math.sin(angleScale(j) - Math.PI / 2) * (scale(el) + 6),
+                                    fill: lineColors[i],
+                                    textAnchor:
+                                      Math.cos(angleScale(j) - Math.PI / 2) < 0
+                                        ? 'end'
+                                        : Math.cos(angleScale(j) - Math.PI / 2) < 0.00001
+                                          ? 'middle'
+                                          : 'start',
+                                  },
                                   whileInView: {
                                     opacity: 1,
+                                    x: Math.cos(angleScale(j) - Math.PI / 2) * (scale(el) + 6),
+                                    y: Math.sin(angleScale(j) - Math.PI / 2) * (scale(el) + 6),
+                                    fill: lineColors[i],
+                                    textAnchor:
+                                      Math.cos(angleScale(j) - Math.PI / 2) < 0
+                                        ? 'end'
+                                        : Math.cos(angleScale(j) - Math.PI / 2) < 0.00001
+                                          ? 'middle'
+                                          : 'start',
                                     transition: { duration: animate.duration },
                                   },
                                 }}
