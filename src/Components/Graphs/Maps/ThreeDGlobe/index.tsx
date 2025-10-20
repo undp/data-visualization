@@ -95,6 +95,8 @@ interface Props {
   scaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
+  /** Toggle if color scale is collapsed by default. */
+  collapseColorScaleByDefault?: boolean;
   /** The max altitude of the atmosphere, in terms of globe radius units. */
   atmosphereAltitude?: number;
   /** Resolution in angular degrees of the sphere curvature. The finer the resolution, the more the globe is fragmented into smaller faces to approximate the spheric surface, at the cost of performance. */
@@ -199,6 +201,7 @@ export function ThreeDGlobe(props: Props) {
       },
     ],
     selectedId,
+    collapseColorScaleByDefault,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -384,6 +387,7 @@ export function ThreeDGlobe(props: Props) {
                   lights={lights}
                   highlightedAltitude={highlightedAltitude}
                   selectedId={selectedId}
+                  collapseColorScaleByDefault={collapseColorScaleByDefault}
                 />
               ) : (
                 <div

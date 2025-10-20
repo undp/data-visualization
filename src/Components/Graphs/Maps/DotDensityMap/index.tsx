@@ -109,6 +109,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
+  /** Toggle if color scale is collapsed by default. */
+  collapseColorScaleByDefault?: boolean;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
   showAntarctica?: boolean;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -195,6 +197,7 @@ export function DotDensityMap(props: Props) {
     customLayers = [],
     maxRadiusValue,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
+    collapseColorScaleByDefault,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -426,6 +429,7 @@ export function DotDensityMap(props: Props) {
                           ...data.map(d => d.radius).filter(d => d !== undefined && d !== null),
                         )
                   }
+                  collapseColorScaleByDefault={collapseColorScaleByDefault}
                 />
               ) : (
                 <div

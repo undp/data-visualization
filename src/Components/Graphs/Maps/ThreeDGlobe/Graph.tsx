@@ -57,6 +57,7 @@ interface Props {
   fogSettings?: FogDataType;
   highlightedAltitude: number;
   selectedId?: string;
+  collapseColorScaleByDefault?: boolean;
 }
 
 function createLightFromConfig(config: LightConfig): THREE.Light {
@@ -175,11 +176,15 @@ function Graph(props: Props) {
     lights,
     highlightedAltitude,
     selectedId,
+    collapseColorScaleByDefault,
   } = props;
   const [globeReady, setGlobeReady] = useState(false);
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
-  const [showLegend, setShowLegend] = useState(!(width < 680));
+
+  const [showLegend, setShowLegend] = useState(
+    collapseColorScaleByDefault === undefined ? !(width < 680) : !collapseColorScaleByDefault,
+  );
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [mouseOverData, setMouseOverData] = useState<ChoroplethMapDataType | undefined>(undefined);
   const colorScale = categorical
@@ -374,19 +379,7 @@ function Graph(props: Props) {
           {showLegend ? (
             <>
               <div
-                style={{
-                  backgroundColor: 'rgba(240,240,240, 0.7)',
-                  border: '1px solid var(--gray-400)',
-                  borderRadius: '999px',
-                  width: '24px',
-                  height: '24px',
-                  padding: '3px',
-                  cursor: 'pointer',
-                  zIndex: 10,
-                  position: 'absolute',
-                  right: '-0.75rem',
-                  top: '-0.75rem',
-                }}
+                className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
                 onClick={() => {
                   setShowLegend(false);
                 }}
@@ -394,9 +387,8 @@ function Graph(props: Props) {
                 <X />
               </div>
               <div
-                className='p-2'
+                className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
                 style={{
-                  backgroundColor: 'rgba(240,240,240, 0.7)',
                   width: categorical ? undefined : '340px',
                 }}
               >
@@ -478,7 +470,7 @@ function Graph(props: Props) {
                 setShowLegend(true);
               }}
             >
-              <div className='items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-550 border-primary-gray-400 dark:border-primary-gray-500'>
+              <div className='show-color-legend-button items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-600 border-primary-gray-400 dark:border-primary-gray-500'>
                 Show Legend
               </div>
             </button>

@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "browser": "./dist/index.umd.js",
@@ -463,7 +463,7 @@
   "peerDependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
-    "@undp/design-system-react": "^1.2.13",
+    "@undp/design-system-react": "^1.3.2",
     "ajv": "^8.17.1",
     "dom-to-svg": "^0.12.2",
     "file-saver": "^2.0.5",
@@ -472,8 +472,8 @@
     "marked": "^16.2.1",
     "math-expression-evaluator": "^2.0.7",
     "pmtiles": "^4.3.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-globe.gl": "^2.35.0",
     "tailwind-animate": "^0.2.10",
     "tailwind-merge": "^3.3.1",

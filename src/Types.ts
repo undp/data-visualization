@@ -986,6 +986,7 @@ export interface GraphSettingsDataType {
   showAxisLabels?: boolean;
   highlightedAltitude?: number;
   selectedId?: string;
+  collapseColorScaleByDefault?: boolean;
 }
 
 export interface InfoBoxDataType {

@@ -67,6 +67,7 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   showColorScale: boolean;
+  collapseColorScaleByDefault?: boolean;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   animate: AnimateDataType;
@@ -107,8 +108,11 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     customLayers,
+    collapseColorScaleByDefault,
   } = props;
-  const [showLegend, setShowLegend] = useState(!(width < 680));
+  const [showLegend, setShowLegend] = useState(
+    collapseColorScaleByDefault === undefined ? !(width < 680) : !collapseColorScaleByDefault,
+  );
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
@@ -515,19 +519,7 @@ export function Graph(props: Props) {
             {showLegend ? (
               <>
                 <div
-                  style={{
-                    backgroundColor: 'rgba(240,240,240, 0.7)',
-                    border: '1px solid var(--gray-400)',
-                    borderRadius: '999px',
-                    width: '24px',
-                    height: '24px',
-                    padding: '3px',
-                    cursor: 'pointer',
-                    zIndex: 10,
-                    position: 'absolute',
-                    right: '-0.75rem',
-                    top: '-0.75rem',
-                  }}
+                  className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
                   onClick={() => {
                     setShowLegend(false);
                   }}
@@ -535,8 +527,8 @@ export function Graph(props: Props) {
                   <X />
                 </div>
                 <div
-                  className='p-2'
-                  style={{ backgroundColor: 'rgba(240,240,240, 0.7)', width: '175px' }}
+                  className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
+                  style={{ width: '175px' }}
                 >
                   <div className='flex gap-1 items-center'>
                     <svg width='136px' viewBox='0 0 136 136' className='shrink-0'>
@@ -635,7 +627,7 @@ export function Graph(props: Props) {
                   setShowLegend(true);
                 }}
               >
-                <div className='items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-550 border-primary-gray-400 dark:border-primary-gray-500'>
+                <div className='show-color-legend-button items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-600 border-primary-gray-400 dark:border-primary-gray-500'>
                   Show Legend
                 </div>
               </button>
@@ -646,13 +638,13 @@ export function Graph(props: Props) {
           <div className='absolute left-4 top-4 flex flex-col'>
             <button
               onClick={() => handleZoom('in')}
-              className='leading-0 px-2 py-3.5 border text-primary-gray-700 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+              className='leading-0 px-2 py-3.5 border text-primary-gray-700 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'
             >
               +
             </button>
             <button
               onClick={() => handleZoom('out')}
-              className='leading-0 px-2 py-3.5 border text-primary-gray-700 border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-400 dark:bg-primary-gray-600 dark:text-primary-gray-100'
+              className='leading-0 px-2 py-3.5 border text-primary-gray-700 border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'
             >
               –
             </button>

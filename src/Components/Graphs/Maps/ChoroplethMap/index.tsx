@@ -108,6 +108,8 @@ interface Props {
   scaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
+  /** Toggle if color scale is collapsed by default. */
+  collapseColorScaleByDefault?: boolean;
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
   mapProperty?: string;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
@@ -195,6 +197,7 @@ export function ChoroplethMap(props: Props) {
     dimmedOpacity = 0.3,
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
+    collapseColorScaleByDefault,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -426,6 +429,7 @@ export function ChoroplethMap(props: Props) {
                       : animate || { duration: 0, once: true, amount: 0 }
                   }
                   customLayers={customLayers}
+                  collapseColorScaleByDefault={collapseColorScaleByDefault}
                 />
               ) : (
                 <div
