@@ -1,3 +1,5 @@
+import { RefObject } from 'react';
+
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
 import { GraphDescription } from '@/Components/Typography/GraphDescription';
@@ -7,7 +9,7 @@ interface Props {
   graphTitle?: string | React.ReactNode;
   graphDescription?: string | React.ReactNode;
   width?: number;
-  graphDownload?: HTMLDivElement | null;
+  graphDownload?: RefObject<HTMLDivElement | null>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dataDownload?: any;
   isDashboard?: boolean;
@@ -28,7 +30,7 @@ export function GraphHeader(props: Props) {
   } = props;
   return (
     <div
-      className={`flex gap-2 justify-between ${
+      className={`flex gap-2 justify-between pb-4 ${
         graphDescription && graphTitle ? 'items-start' : 'items-center'
       }`}
       style={{ maxWidth: width ? `${width}px` : 'none' }}

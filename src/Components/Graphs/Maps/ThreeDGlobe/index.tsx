@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import * as THREE from 'three';
-import { cn } from '@undp/design-system-react/cn';
 
 import Graph from './Graph';
 
@@ -21,6 +20,7 @@ import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { Colors } from '@/Components/ColorPalette';
 import { getUniqValue } from '@/Utils/getUniqValue';
 import { getJenks } from '@/Utils/getJenks';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Data
@@ -210,19 +210,22 @@ export function ThreeDGlobe(props: Props) {
   const [svgHeight, setSvgHeight] = useState(0);
 
   const graphDiv = useRef<HTMLDivElement>(null);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 760);
-      setSvgHeight(height || entries[0].target.clientHeight || 480);
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 480);
-      setSvgWidth(graphDiv.current.clientWidth || 760);
-      if (!width) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height]);
+  }, []);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onUpdateShape = useEffectEvent((shape: any) => {
+    setMapShape(shape);
+  });
   useEffect(() => {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
@@ -248,11 +251,11 @@ export function ThreeDGlobe(props: Props) {
             const geometry = { ...el.geometry, coordinates: coord };
             return { ...el, geometry };
           });
-          setMapShape(features);
-        } else setMapShape(d.features);
+          onUpdateShape(features);
+        } else onUpdateShape(d.features);
       });
     } else {
-      setMapShape(mapData.features);
+      onUpdateShape(mapData.features);
     }
   }, [mapData]);
 
@@ -265,166 +268,139 @@ export function ThreeDGlobe(props: Props) {
           colors?.length || 4,
         ));
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        aria-label={
-          ariaLabel ||
-          `${
-            graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is a map.${graphDescription ? ` ${graphDescription}` : ''}`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {graphTitle || graphDescription || dataDownload ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-                graphDownload={undefined}
-                dataDownload={
-                  dataDownload
-                    ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                      ? data.map(d => d.data).filter(d => d !== undefined)
-                      : data.filter(d => d !== undefined)
-                    : null
-                }
-              />
-            ) : null}
-            <div
-              className='flex flex-col grow justify-center leading-0'
-              ref={graphDiv}
-              aria-label='Map area'
-            >
-              {(width || svgWidth) && (height || svgHeight) && mapShape ? (
-                <Graph
-                  data={data}
-                  globeOffset={globeOffset}
-                  polygonData={mapShape}
-                  colorDomain={domain}
-                  width={width || svgWidth}
-                  height={Math.max(
-                    minHeight,
-                    height ||
-                      (relativeHeight
-                        ? minHeight
-                          ? (width || svgWidth) * relativeHeight > minHeight
-                            ? (width || svgWidth) * relativeHeight
-                            : minHeight
-                          : (width || svgWidth) * relativeHeight
-                        : svgHeight),
-                  )}
-                  colors={
-                    colors ||
-                    (scaleType === 'categorical'
-                      ? Colors[theme].sequentialColors[
-                          `neutralColorsx0${domain.length as 4 | 5 | 6 | 7 | 8 | 9}`
-                        ]
-                      : Colors[theme].sequentialColors[
-                          `neutralColorsx0${(domain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
-                        ])
-                  }
-                  mapNoDataColor={mapNoDataColor}
-                  categorical={scaleType === 'categorical'}
-                  mapBorderColor={mapBorderColor}
-                  tooltip={tooltip}
-                  mapProperty={mapProperty}
-                  styles={styles}
-                  classNames={classNames}
-                  autoRotate={autoRotate === true ? 1.5 : autoRotate === false ? 0 : autoRotate}
-                  enableZoom={enableZoom}
-                  globeMaterial={globeMaterial}
-                  atmosphereColor={atmosphereColor}
-                  colorLegendTitle={colorLegendTitle}
-                  showColorScale={showColorScale}
-                  hoverStrokeColor={
-                    theme === 'light'
-                      ? Colors.light.grays['gray-700']
-                      : Colors.light.grays['gray-300']
-                  }
-                  highlightedIds={highlightedIds}
-                  resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                  detailsOnClick={detailsOnClick}
-                  onSeriesMouseOver={onSeriesMouseOver}
-                  onSeriesMouseClick={onSeriesMouseClick}
-                  scale={scale}
-                  polygonAltitude={polygonAltitude}
-                  centerLat={centerPoint[0]}
-                  centerLng={centerPoint[1]}
-                  atmosphereAltitude={atmosphereAltitude}
-                  globeCurvatureResolution={globeCurvatureResolution}
-                  fogSettings={fogSettings}
-                  lights={lights}
-                  highlightedAltitude={highlightedAltitude}
-                  selectedId={selectedId}
-                  collapseColorScaleByDefault={collapseColorScaleByDefault}
-                />
-              ) : (
-                <div
-                  style={{
-                    height: `${Math.max(
-                      minHeight,
-                      height ||
-                        (relativeHeight
-                          ? minHeight
-                            ? (width || svgWidth) * relativeHeight > minHeight
-                              ? (width || svgWidth) * relativeHeight
-                              : minHeight
-                            : (width || svgWidth) * relativeHeight
-                          : svgHeight),
-                    )}px`,
-                  }}
-                  className='flex items-center justify-center'
-                >
-                  <Spinner aria-label='Loading graph' />
-                </div>
-              )}
-            </div>
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
-                }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
-              />
-            ) : null}
+      {graphTitle || graphDescription || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {svgWidth && svgHeight && mapShape ? (
+          <Graph
+            data={data}
+            globeOffset={globeOffset}
+            polygonData={mapShape}
+            colorDomain={domain}
+            width={width || svgWidth}
+            height={Math.max(
+              minHeight,
+              height ||
+                (relativeHeight
+                  ? minHeight
+                    ? (width || svgWidth) * relativeHeight > minHeight
+                      ? (width || svgWidth) * relativeHeight
+                      : minHeight
+                    : (width || svgWidth) * relativeHeight
+                  : svgHeight),
+            )}
+            colors={
+              colors ||
+              (scaleType === 'categorical'
+                ? Colors[theme].sequentialColors[
+                    `neutralColorsx0${domain.length as 4 | 5 | 6 | 7 | 8 | 9}`
+                  ]
+                : Colors[theme].sequentialColors[
+                    `neutralColorsx0${(domain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
+                  ])
+            }
+            mapNoDataColor={mapNoDataColor}
+            categorical={scaleType === 'categorical'}
+            mapBorderColor={mapBorderColor}
+            tooltip={tooltip}
+            mapProperty={mapProperty}
+            styles={styles}
+            classNames={classNames}
+            autoRotate={autoRotate === true ? 1.5 : autoRotate === false ? 0 : autoRotate}
+            enableZoom={enableZoom}
+            globeMaterial={globeMaterial}
+            atmosphereColor={atmosphereColor}
+            colorLegendTitle={colorLegendTitle}
+            showColorScale={showColorScale}
+            hoverStrokeColor={
+              theme === 'light' ? Colors.light.grays['gray-700'] : Colors.light.grays['gray-300']
+            }
+            highlightedIds={highlightedIds}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            onSeriesMouseOver={onSeriesMouseOver}
+            onSeriesMouseClick={onSeriesMouseClick}
+            scale={scale}
+            polygonAltitude={polygonAltitude}
+            centerLat={centerPoint[0]}
+            centerLng={centerPoint[1]}
+            atmosphereAltitude={atmosphereAltitude}
+            globeCurvatureResolution={globeCurvatureResolution}
+            fogSettings={fogSettings}
+            lights={lights}
+            highlightedAltitude={highlightedAltitude}
+            selectedId={selectedId}
+            collapseColorScaleByDefault={collapseColorScaleByDefault}
+          />
+        ) : (
+          <div
+            style={{
+              height: `${Math.max(
+                minHeight,
+                height ||
+                  (relativeHeight
+                    ? minHeight
+                      ? (width || svgWidth) * relativeHeight > minHeight
+                        ? (width || svgWidth) * relativeHeight
+                        : minHeight
+                      : (width || svgWidth) * relativeHeight
+                    : svgHeight),
+              )}px`,
+            }}
+            className='flex items-center justify-center'
+          >
+            <Spinner aria-label='Loading graph' />
           </div>
-        </div>
-      </div>
-    </div>
+        )}
+      </GraphArea>
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

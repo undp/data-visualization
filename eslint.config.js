@@ -1,8 +1,7 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import reactHooks from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import { defineConfig } from 'eslint/config';
@@ -18,21 +17,27 @@ export default defineConfig([
       'dist/**',
       'storybook-static/**',
       'dist-ssr/**',
-      'build/**',
       'coverage/**',
       '**/*.test.js',
       '**/__snapshots__/**',
     ],
   },
   js.configs.recommended,
+  reactHooks.configs.flat.recommended,
+  ...tseslint.configs.recommended,
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx,ts}'],
     plugins: {
       react: pluginReact,
-      'react-hooks': reactHooksPlugin,
+      'react-hooks': reactHooks,
       import: importPlugin,
       'jsx-a11y': jsxA11y,
       prettier: prettierPlugin,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
     rules: {
       // React rules
@@ -43,17 +48,15 @@ export default defineConfig([
       'react/jsx-no-undef': 'error',
       'react/jsx-curly-brace-presence': 'error',
       'react/prop-types': 'off',
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
       'react/require-default-props': 0,
       'react/jsx-filename-extension': 0,
       'react/no-array-index-key': 0,
       'react/jsx-props-no-spreading': 0,
 
       // TypeScript rules
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-redeclare': 'error',
 
       // Import rules
       'import/order': [
@@ -73,17 +76,12 @@ export default defineConfig([
       'jsx-a11y/anchor-is-valid': 'warn',
 
       // General rules
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'prefer-const': 'error',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'warn',
       'no-nested-ternary': 0,
-
-      // Rule to run Prettier as an ESLint rule
       'prettier/prettier': 'error',
     },
   },
-  // Add TypeScript support
-  ...tseslint.configs.recommended,
   prettierConfig,
 ]);

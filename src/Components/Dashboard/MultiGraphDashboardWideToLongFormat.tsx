@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
 import { Label } from '@undp/design-system-react/Label';
 import { Spinner } from '@undp/design-system-react/Spinner';
@@ -60,51 +60,70 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
     graphClassNames,
   } = props;
 
-  const filterConfig = useMemo(
-    () => ({
-      ignoreCase: true,
-      ignoreAccents: true,
-      trim: true,
-    }),
-    [],
-  );
+  const filterConfig = {
+    ignoreCase: true,
+    ignoreAccents: true,
+    trim: true,
+  };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [data, setData] = useState<any>(undefined);
+  const [filteredData, setFilteredData] = useState<any>(undefined);
   const [filterValues, setFilterValues] = useState<string[]>([]);
   const [selectedFilterValues, setSelectedFilterValues] = useState<string | undefined>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [dataFromFile, setDataFromFile] = useState<any>(undefined);
+  const [data, setData] = useState<any>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [unformattedData, setUnformattedData] = useState<any>(undefined);
 
-  useEffect(() => {
-    if (dataFromFile) {
-      const filteredData = dataFromFile.filter(
+  const updateDataAndFilterValueEvent = useEffectEvent(() => {
+    const filteredData = filterData(unformattedData, dataFilters || []);
+    setFilterValues(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      filteredData.map((el: any) => el[dataSettings.keyColumn]),
+    );
+    setSelectedFilterValues(filteredData[0][dataSettings.keyColumn]);
+    const tempData = wideToLongTransformation(
+      filteredData,
+      dataSettings.keyColumn,
+      readableHeader || [],
+      debugMode,
+    );
+    setData(tempData);
+  });
+
+  const updateFilteredDataEvent = useEffectEvent(() => {
+    if (data) {
+      const filteredDataTemp = data.filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (item: any) => item[dataSettings.keyColumn] === selectedFilterValues,
       );
-      setData(filteredData);
+      setFilteredData(filteredDataTemp);
     }
-  }, [dataFromFile, selectedFilterValues, dataSettings.keyColumn]);
-  const fetchDataHandler = useCallback(async () => {
-    if (dataSettings) {
+  });
+
+  useEffect(() => {
+    updateFilteredDataEvent();
+  }, [selectedFilterValues, dataSettings.keyColumn]);
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const fetchData = dataSettings.dataURL
+        const dataFromFile = dataSettings.dataURL
           ? typeof dataSettings.dataURL === 'string'
             ? dataSettings.fileType === 'json'
-              ? fetchAndParseJSON(
+              ? await fetchAndParseJSON(
                   dataSettings.dataURL,
                   undefined,
                   dataSettings.dataTransformation,
                   debugMode,
                 )
               : dataSettings.fileType === 'api'
-                ? fetchAndTransformDataFromAPI(
+                ? await fetchAndTransformDataFromAPI(
                     dataSettings.dataURL,
                     dataSettings.apiHeaders,
                     undefined,
                     dataSettings.dataTransformation,
                     debugMode,
                   )
-                : fetchAndParseCSV(
+                : await fetchAndParseCSV(
                     dataSettings.dataURL,
                     dataSettings.dataTransformation,
                     undefined,
@@ -112,31 +131,23 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                     dataSettings.delimiter,
                     true,
                   )
-            : fetchAndParseMultipleDataSources(dataSettings.dataURL, dataSettings.idColumnTitle)
-          : transformColumnsToArray(dataSettings.data, undefined);
-
-        const d = await fetchData;
-        const filteredData = filterData(d, dataFilters || []);
-        setFilterValues(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          filteredData.map((el: any) => el[dataSettings.keyColumn]),
-        );
-        setSelectedFilterValues(filteredData[0][dataSettings.keyColumn]);
-        const tempData = wideToLongTransformation(
-          filteredData,
-          dataSettings.keyColumn,
-          readableHeader || [],
-          debugMode,
-        );
-        setDataFromFile(tempData);
+            : await fetchAndParseMultipleDataSources(
+                dataSettings.dataURL,
+                dataSettings.idColumnTitle,
+              )
+          : await transformColumnsToArray(dataSettings.data, undefined);
+        setUnformattedData(dataFromFile);
+        updateDataAndFilterValueEvent();
       } catch (error) {
         console.error('Data fetching error:', error);
       }
-    }
-  }, [dataSettings, debugMode, dataFilters, readableHeader]);
+    };
+    fetchData();
+  }, [dataSettings, debugMode]);
+
   useEffect(() => {
-    fetchDataHandler();
-  }, [fetchDataHandler]);
+    updateDataAndFilterValueEvent();
+  }, [dataFilters, readableHeader]);
   return (
     <div
       className={`${theme || 'light'} flex grow`}
@@ -177,7 +188,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                 isDashboard
               />
             ) : null}
-            {data ? (
+            {filteredData ? (
               <>
                 <div
                   style={{
@@ -262,7 +273,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                             styles: el.settings?.styles || graphStyles,
                             classNames: el.settings?.classNames || graphClassNames,
                           }}
-                          dataSettings={{ data }}
+                          dataSettings={{ data: filteredData }}
                           graphDataConfiguration={
                             el.graphDataConfiguration
                               ? el.graphDataConfiguration

@@ -28,7 +28,7 @@ export function ColorLegendWithMouseOver(props: Props) {
 
   return (
     <div
-      className={cn('flex leading-0', isCenter && 'justify-center', className)}
+      className={cn('flex leading-0 pb-3', isCenter && 'justify-center', className)}
       style={{ maxWidth: width ? `${width}px` : 'none' }}
       aria-label='Color legend'
     >

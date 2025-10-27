@@ -69,6 +69,7 @@ export function Graph(props: Props) {
         height={`${radius * 2}px`}
         viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         direction='ltr'
+        className='mx-auto'
       >
         <g transform={`translate(${radius} ${radius})`}>
           {mainText || subNote ? (

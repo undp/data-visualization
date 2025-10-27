@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
 
@@ -18,6 +17,7 @@ import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { uniqBy } from '@/Utils/uniqBy';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Data
@@ -190,206 +190,142 @@ export function RadarChart(props: Props) {
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 420);
-      setSvgHeight(height || entries[0].target.clientHeight || 420);
       setGraphRadius(
         (Math.min(
           ...[
-            width || entries[0].target.clientWidth || 620,
-            height || entries[0].target.clientHeight || 480,
+            entries[0].target.clientWidth || 620,
+            entries[0].target.clientHeight || 480,
+            radius || Infinity,
           ],
         ) || 420) / 2,
       );
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 420);
-      setSvgWidth(graphDiv.current.clientWidth || 420);
-      setGraphRadius(
-        (Math.min(...[graphDiv.current.clientWidth, graphDiv.current.clientHeight]) || 420) / 2,
-      );
-      if (!width || !radius) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height, radius]);
+  }, [radius]);
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          minHeight: 'inherit',
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        ref={graphParentDiv}
-        aria-label={
-          ariaLabel ||
-          `${
-            graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is a donut or pie chart chart. ${graphDescription ? ` ${graphDescription}` : ''}`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col gap-2 w-full grow justify-between'>
-            {graphTitle || graphDescription || graphDownload || dataDownload ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-                graphDownload={graphDownload ? graphParentDiv.current : undefined}
-                dataDownload={
-                  dataDownload
-                    ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                      ? data.map(d => d.data).filter(d => d !== undefined)
-                      : data.filter(d => d !== undefined)
-                    : null
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          {showColorScale && data.filter(el => el.color).length !== 0 ? (
+            <ColorLegendWithMouseOver
+              width={width}
+              colorLegendTitle={colorLegendTitle}
+              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+              colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+              setSelectedColor={setSelectedColor}
+              showNAColor={showNAColor}
+              className={classNames?.colorLegend}
+              isCenter
+            />
+          ) : null}
+          <GraphArea ref={graphDiv}>
+            {graphRadius ? (
+              <Graph
+                data={data}
+                lineColors={
+                  data.filter(el => el.color).length === 0
+                    ? colors
+                      ? [colors as string]
+                      : [Colors.primaryColors['blue-600']]
+                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
                 }
+                radius={graphRadius}
+                tooltip={tooltip}
+                colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+                onSeriesMouseOver={onSeriesMouseOver}
+                onSeriesMouseClick={onSeriesMouseClick}
+                styles={styles}
+                detailsOnClick={detailsOnClick}
+                selectedColor={selectedColor}
+                axisLabels={axisLabels}
+                strokeWidth={strokeWidth}
+                showValues={showValues}
+                showDots={showDots}
+                topMargin={topMargin}
+                bottomMargin={bottomMargin}
+                leftMargin={leftMargin}
+                rightMargin={rightMargin}
+                curveType={curveType}
+                noOfTicks={noOfTicks}
+                minValue={minValue}
+                maxValue={maxValue}
+                fillShape={fillShape}
+                highlightedLines={highlightedLines}
+                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                animate={
+                  animate === true
+                    ? { duration: 0.5, once: true, amount: 0.5 }
+                    : animate || { duration: 0, once: true, amount: 0 }
+                }
+                dimmedOpacity={dimmedOpacity}
+                precision={precision}
+                customLayers={customLayers}
               />
             ) : null}
-            <div
-              className='flex grow flex-col justify-center items-stretch gap-8 flex-wrap'
-              style={{
-                width: width ? `${width}px` : '100%',
-              }}
-            >
-              {data.length === 0 ? (
-                <EmptyState />
-              ) : (
-                <>
-                  {showColorScale && data.filter(el => el.color).length !== 0 ? (
-                    <ColorLegendWithMouseOver
-                      width={width}
-                      colorLegendTitle={colorLegendTitle}
-                      colors={
-                        (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
-                      }
-                      colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
-                      setSelectedColor={setSelectedColor}
-                      showNAColor={showNAColor}
-                    />
-                  ) : null}
-                  <div
-                    className={`flex ${
-                      width ? 'grow-0' : 'grow'
-                    } items-center justify-center leading-0`}
-                    style={{
-                      width: width ? `${width}px` : '100%',
-                      height: height
-                        ? `${Math.max(
-                            minHeight,
-                            height ||
-                              (relativeHeight
-                                ? minHeight
-                                  ? (width || svgWidth) * relativeHeight > minHeight
-                                    ? (width || svgWidth) * relativeHeight
-                                    : minHeight
-                                  : (width || svgWidth) * relativeHeight
-                                : svgHeight),
-                          )}px`
-                        : 'auto',
-                    }}
-                    ref={graphDiv}
-                    aria-label='Graph area'
-                  >
-                    <div className='w-full flex justify-center leading-0'>
-                      {radius || graphRadius ? (
-                        <Graph
-                          data={data}
-                          lineColors={
-                            data.filter(el => el.color).length === 0
-                              ? colors
-                                ? [colors as string]
-                                : [Colors.primaryColors['blue-600']]
-                              : (colors as string[] | undefined) ||
-                                Colors[theme].categoricalColors.colors
-                          }
-                          radius={radius || graphRadius}
-                          tooltip={tooltip}
-                          colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
-                          onSeriesMouseOver={onSeriesMouseOver}
-                          onSeriesMouseClick={onSeriesMouseClick}
-                          styles={styles}
-                          detailsOnClick={detailsOnClick}
-                          selectedColor={selectedColor}
-                          axisLabels={axisLabels}
-                          strokeWidth={strokeWidth}
-                          showValues={showValues}
-                          showDots={showDots}
-                          topMargin={topMargin}
-                          bottomMargin={bottomMargin}
-                          leftMargin={leftMargin}
-                          rightMargin={rightMargin}
-                          curveType={curveType}
-                          noOfTicks={noOfTicks}
-                          minValue={minValue}
-                          maxValue={maxValue}
-                          fillShape={fillShape}
-                          highlightedLines={highlightedLines}
-                          resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                          animate={
-                            animate === true
-                              ? { duration: 0.5, once: true, amount: 0.5 }
-                              : animate || { duration: 0, once: true, amount: 0 }
-                          }
-                          dimmedOpacity={dimmedOpacity}
-                          precision={precision}
-                          customLayers={customLayers}
-                        />
-                      ) : null}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
-                }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
-              />
-            ) : (
-              <div />
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+          </GraphArea>
+        </>
+      )}
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

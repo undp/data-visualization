@@ -154,6 +154,7 @@ export function Graph(props: Props) {
         viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         direction='ltr'
         ref={svgRef}
+        className='mx-auto'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}

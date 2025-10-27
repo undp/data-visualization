@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import sum from 'lodash.sum';
 import { H2, P } from '@undp/design-system-react/Typography';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-import { cn } from '@undp/design-system-react/cn';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -16,6 +15,7 @@ import {
   AnimateDataType,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Data
@@ -132,6 +132,7 @@ export function UnitChart(props: Props) {
   });
   const totalValue = sum(data.map(d => d.value));
   const graphParentDiv = useRef<HTMLDivElement>(null);
+  const graphDiv = useRef<HTMLDivElement>(null);
   const gridDimension = size / gridSize;
   const radius = (gridDimension - unitPadding * 2) / 2;
   if (radius <= 0) {
@@ -149,200 +150,170 @@ export function UnitChart(props: Props) {
     }
   });
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          minHeight: 'inherit',
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        ref={graphParentDiv}
-        aria-label={
-          ariaLabel ||
-          `${graphTitle ? `The graph shows ${graphTitle}. ` : ''}${
-            graphDescription ? ` ${graphDescription}` : ''
-          }`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
+      {graphTitle || graphDescription || graphDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {note ? (
+        <H2
+          marginBottom='2xs'
+          className='text-primary-gray-700 dark:text-primary-gray-100 font-bold'
+          style={{ width: width ? `${width}px` : '100%' }}
         >
-          <div className='flex flex-col gap-3 w-full grow'>
-            {graphTitle || graphDescription || graphDownload ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-                graphDownload={graphDownload ? graphParentDiv.current : undefined}
-                dataDownload={
-                  dataDownload
-                    ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                      ? data.map(d => d.data).filter(d => d !== undefined)
-                      : data.filter(d => d !== undefined)
-                    : null
-                }
-              />
-            ) : null}
-            {note ? (
-              <H2
-                marginBottom='2xs'
-                className='text-primary-gray-700 dark:text-primary-gray-100 font-bold'
-                style={{ width: width ? `${width}px` : '100%' }}
-              >
-                {note}
-              </H2>
-            ) : null}
-            <div className='flex grow flex-col gap-4 justify-between'>
-              <div>
-                {showColorScale ? (
-                  <div
-                    className='mb-4 leading-0'
-                    style={{ width: width ? `${width}px` : '100%' }}
-                    aria-label='Color legend'
-                  >
-                    <div className='flex mb-0 flex-wrap gap-x-4 gap-y-1'>
-                      {data.map((d, i) => (
-                        <div className='flex gap-2 items-center' key={i}>
-                          <div
-                            className='w-3 h-3 rounded-full'
-                            style={{ backgroundColor: colors[i] }}
-                          />
-                          <P
-                            marginBottom='none'
-                            size='sm'
-                            className='text-primary-gray-700 dark:text-primary-gray-100'
-                          >
-                            {d.label}:{' '}
-                            <span className='font-bold'>
-                              {numberFormattingFunction(d.value, 'NA', precision)}
-                            </span>
-                          </P>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-                <div aria-label='Graph area'>
-                  <svg
-                    width={`${width || size}px`}
-                    height={`${Math.max(
-                      minHeight,
-                      height
-                        ? relativeHeight && width
-                          ? minHeight
-                            ? width * relativeHeight > minHeight
-                              ? width * relativeHeight
-                              : minHeight
-                            : width * relativeHeight
-                          : height
-                        : Math.floor((totalNoOfDots - 1) / gridSize) * gridDimension +
-                            gridDimension / 2 +
-                            radius +
-                            5,
-                    )}px`}
-                    ref={svgRef}
-                    direction='ltr'
-                    viewBox={`0 0 ${width || size} ${Math.max(
-                      minHeight,
-                      height
-                        ? relativeHeight && width
-                          ? minHeight
-                            ? width * relativeHeight > minHeight
-                              ? width * relativeHeight
-                              : minHeight
-                            : width * relativeHeight
-                          : height
-                        : Math.floor((totalNoOfDots - 1) / gridSize) * gridDimension +
-                            gridDimension / 2 +
-                            radius +
-                            5,
-                    )}`}
-                  >
-                    <AnimatePresence>
-                      <g>
-                        {cellsData.map((d, i) => (
-                          <motion.circle
-                            key={i}
-                            style={{
-                              strokeWidth: 1,
-                            }}
-                            variants={{
-                              initial: {
-                                fill: '#fff',
-                                opacity: 0,
-                                ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
-                                strokeWidth: 1,
-                              },
-                              whileInView: {
-                                fill: d.color,
-                                opacity: 1,
-                                ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
-                                strokeWidth: 1,
-                                cx: (i % gridSize) * gridDimension + gridDimension / 2,
-                                cy: Math.floor(i / gridSize) * gridDimension + gridDimension / 2,
-                                transition: {
-                                  duration: 0,
-                                  delay: (animateValue.duration / cellsData.length) * i,
-                                },
-                              },
-                            }}
-                            initial='initial'
-                            animate={isInView ? 'whileInView' : 'initial'}
-                            className={
-                              (d.color.toLowerCase() === '#fff' ||
-                                d.color.toLowerCase() === '#ffffff' ||
-                                d.color.toLowerCase() === 'white') &&
-                              showStrokeForWhiteDots
-                                ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                                : ''
-                            }
-                            r={radius}
-                          />
-                        ))}
-                      </g>
-                    </AnimatePresence>
-                  </svg>
-                </div>
+          {note}
+        </H2>
+      ) : null}
+      {showColorScale ? (
+        <div
+          className='mb-4 leading-0'
+          style={{ width: width ? `${width}px` : '100%' }}
+          aria-label='Color legend'
+        >
+          <div className='flex mb-0 flex-wrap gap-x-4 gap-y-1'>
+            {data.map((d, i) => (
+              <div className='flex gap-2 items-center' key={i}>
+                <div className='w-3 h-3 rounded-full' style={{ backgroundColor: colors[i] }} />
+                <P
+                  marginBottom='none'
+                  size='sm'
+                  className='text-primary-gray-700 dark:text-primary-gray-100'
+                >
+                  {d.label}:{' '}
+                  <span className='font-bold'>
+                    {numberFormattingFunction(d.value, 'NA', precision)}
+                  </span>
+                </P>
               </div>
-              {sources || footNote ? (
-                <GraphFooter
-                  styles={{
-                    footnote: styles?.footnote,
-                    source: styles?.source,
-                  }}
-                  sources={sources}
-                  footNote={footNote}
-                  width={width}
-                />
-              ) : null}
-            </div>
+            ))}
           </div>
         </div>
-      </div>
-    </div>
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        <svg
+          width={`${width || size}px`}
+          height={`${Math.max(
+            minHeight,
+            height
+              ? relativeHeight && width
+                ? minHeight
+                  ? width * relativeHeight > minHeight
+                    ? width * relativeHeight
+                    : minHeight
+                  : width * relativeHeight
+                : height
+              : Math.floor((totalNoOfDots - 1) / gridSize) * gridDimension +
+                  gridDimension / 2 +
+                  radius +
+                  5,
+          )}px`}
+          ref={svgRef}
+          direction='ltr'
+          viewBox={`0 0 ${width || size} ${Math.max(
+            minHeight,
+            height
+              ? relativeHeight && width
+                ? minHeight
+                  ? width * relativeHeight > minHeight
+                    ? width * relativeHeight
+                    : minHeight
+                  : width * relativeHeight
+                : height
+              : Math.floor((totalNoOfDots - 1) / gridSize) * gridDimension +
+                  gridDimension / 2 +
+                  radius +
+                  5,
+          )}`}
+        >
+          <AnimatePresence>
+            <g>
+              {cellsData.map((d, i) => (
+                <motion.circle
+                  key={i}
+                  style={{
+                    strokeWidth: 1,
+                  }}
+                  variants={{
+                    initial: {
+                      fill: '#fff',
+                      opacity: 0,
+                      ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                      strokeWidth: 1,
+                    },
+                    whileInView: {
+                      fill: d.color,
+                      opacity: 1,
+                      ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                      strokeWidth: 1,
+                      cx: (i % gridSize) * gridDimension + gridDimension / 2,
+                      cy: Math.floor(i / gridSize) * gridDimension + gridDimension / 2,
+                      transition: {
+                        duration: 0,
+                        delay: (animateValue.duration / cellsData.length) * i,
+                      },
+                    },
+                  }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
+                  className={
+                    (d.color.toLowerCase() === '#fff' ||
+                      d.color.toLowerCase() === '#ffffff' ||
+                      d.color.toLowerCase() === 'white') &&
+                    showStrokeForWhiteDots
+                      ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                      : ''
+                  }
+                  r={radius}
+                />
+              ))}
+            </g>
+          </AnimatePresence>
+        </svg>
+      </GraphArea>
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{
+            footnote: styles?.footnote,
+            source: styles?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

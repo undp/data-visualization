@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
 import orderBy from 'lodash.orderby';
+import { Spacer } from '@undp/design-system-react/Spacer';
+import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
 
@@ -17,6 +18,7 @@ import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Data
@@ -60,10 +62,6 @@ interface Props {
   padding?: string;
   /** Radius of the donut chart */
   radius?: number;
-  /** Top margin of the graph */
-  topMargin?: number;
-  /** Bottom margin of the graph */
-  bottomMargin?: number;
 
   // Values and Ticks
   /** Prefix for values */
@@ -137,8 +135,6 @@ export function DonutChart(props: Props) {
     onSeriesMouseOver,
     graphID,
     onSeriesMouseClick,
-    topMargin = 0,
-    bottomMargin = 0,
     graphDownload = false,
     dataDownload = false,
     colorDomain,
@@ -158,211 +154,146 @@ export function DonutChart(props: Props) {
     precision = 2,
   } = props;
 
-  const [donutRadius, setDonutRadius] = useState(0);
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
+  const [graphRadius, setGraphRadius] = useState(0);
 
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 420);
-      setSvgHeight(height || entries[0].target.clientHeight || 420);
-      setDonutRadius(
+      setGraphRadius(
         (Math.min(
           ...[
-            width || entries[0].target.clientWidth || 620,
-            height || entries[0].target.clientHeight || 480,
+            entries[0].target.clientWidth || 620,
+            entries[0].target.clientHeight || 480,
+            radius || Infinity,
           ],
         ) || 420) / 2,
       );
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 420);
-      setSvgWidth(graphDiv.current.clientWidth || 420);
-      setDonutRadius(
-        (Math.min(...[graphDiv.current.clientWidth, graphDiv.current.clientHeight]) || 420) / 2,
-      );
-      if (!width || !radius) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height, radius]);
+  }, [radius]);
 
   const sortedData = sortData ? orderBy(data, ['size'], [sortData]) : data;
 
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          minHeight: 'inherit',
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        ref={graphParentDiv}
-        aria-label={
-          ariaLabel ||
-          `${
-            graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is a donut or pie chart chart. ${graphDescription ? ` ${graphDescription}` : ''}`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col gap-2 w-full grow justify-between'>
-            {graphTitle || graphDescription || graphDownload || dataDownload ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-                graphDownload={graphDownload ? graphParentDiv.current : undefined}
-                dataDownload={
-                  dataDownload
-                    ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                      ? data.map(d => d.data).filter(d => d !== undefined)
-                      : data.filter(d => d !== undefined)
-                    : null
-                }
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          {showColorScale ? (
+            <div
+              className={cn(
+                'leading-0 flex mb-0 ml-auto mr-auto justify-center gap-x-3 gap-y-0 flex-wrap',
+                classNames?.colorLegend,
+              )}
+              style={{ maxWidth: colorScaleMaxWidth }}
+              aria-label='Color legend'
+            >
+              {sortedData.map((d, i) => (
+                <div className='flex gap-2 items-center pb-3' key={i}>
+                  <div
+                    className='w-3 h-3 rounded-full'
+                    style={{
+                      backgroundColor:
+                        (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) !== -1
+                          ? (colors || Colors[theme].categoricalColors.colors)[
+                              (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) %
+                                (colors || Colors[theme].categoricalColors.colors).length
+                            ]
+                          : Colors.gray,
+                    }}
+                  />
+                  <P
+                    marginBottom='none'
+                    size='sm'
+                    className='text-primary-gray-700 dark:text-primary-gray-100'
+                  >
+                    {d.label}:{' '}
+                    <span className='font-bold' style={{ fontSize: 'inherit' }}>
+                      {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
+                    </span>
+                  </P>
+                </div>
+              ))}
+            </div>
+          ) : null}
+          <Spacer size='lg' />
+          <GraphArea ref={graphDiv}>
+            {graphRadius ? (
+              <Graph
+                mainText={mainText}
+                data={sortedData}
+                colors={colors}
+                radius={graphRadius}
+                subNote={subNote}
+                strokeWidth={strokeWidth}
+                tooltip={tooltip}
+                colorDomain={colorDomain || sortedData.map(d => d.label)}
+                onSeriesMouseOver={onSeriesMouseOver}
+                onSeriesMouseClick={onSeriesMouseClick}
+                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                styles={styles}
+                detailsOnClick={detailsOnClick}
+                precision={precision}
               />
             ) : null}
-            <div
-              className='flex grow flex-col justify-center items-stretch gap-8 flex-wrap'
-              style={{
-                width: width ? `${width}px` : '100%',
-                padding: `${topMargin}px 0 ${bottomMargin}px 0`,
-              }}
-            >
-              {data.length === 0 ? (
-                <EmptyState />
-              ) : (
-                <>
-                  {showColorScale ? (
-                    <div className='leading-0' aria-label='Color legend'>
-                      <div
-                        className='flex mb-0 ml-auto mr-auto justify-center gap-3.5 flex-wrap'
-                        style={{ maxWidth: colorScaleMaxWidth }}
-                      >
-                        {sortedData.map((d, i) => (
-                          <div className='flex gap-2 items-center' key={i}>
-                            <div
-                              className='w-3 h-3 rounded-full'
-                              style={{
-                                backgroundColor:
-                                  (colorDomain || sortedData.map(el => el.label)).indexOf(
-                                    d.label,
-                                  ) !== -1
-                                    ? (colors || Colors[theme].categoricalColors.colors)[
-                                        (colorDomain || sortedData.map(el => el.label)).indexOf(
-                                          d.label,
-                                        ) %
-                                          (colors || Colors[theme].categoricalColors.colors).length
-                                      ]
-                                    : Colors.gray,
-                              }}
-                            />
-                            <P
-                              marginBottom='none'
-                              size='sm'
-                              className='text-primary-gray-700 dark:text-primary-gray-100'
-                            >
-                              {d.label}:{' '}
-                              <span className='font-bold' style={{ fontSize: 'inherit' }}>
-                                {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
-                              </span>
-                            </P>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-                  <div
-                    className={`flex ${
-                      width ? 'grow-0' : 'grow'
-                    } items-center justify-center leading-0`}
-                    style={{
-                      width: width ? `${width}px` : '100%',
-                      height: height
-                        ? `${Math.max(
-                            minHeight,
-                            height ||
-                              (relativeHeight
-                                ? minHeight
-                                  ? (width || svgWidth) * relativeHeight > minHeight
-                                    ? (width || svgWidth) * relativeHeight
-                                    : minHeight
-                                  : (width || svgWidth) * relativeHeight
-                                : svgHeight),
-                          )}px`
-                        : 'auto',
-                    }}
-                    ref={graphDiv}
-                    aria-label='Graph area'
-                  >
-                    <div className='w-full flex justify-center leading-0'>
-                      {radius || donutRadius ? (
-                        <Graph
-                          mainText={mainText}
-                          data={sortedData}
-                          colors={colors}
-                          radius={radius || donutRadius}
-                          subNote={subNote}
-                          strokeWidth={strokeWidth}
-                          tooltip={tooltip}
-                          colorDomain={colorDomain || sortedData.map(d => d.label)}
-                          onSeriesMouseOver={onSeriesMouseOver}
-                          onSeriesMouseClick={onSeriesMouseClick}
-                          resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                          styles={styles}
-                          detailsOnClick={detailsOnClick}
-                          precision={precision}
-                        />
-                      ) : null}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
-                }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
-              />
-            ) : (
-              <div />
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+          </GraphArea>
+        </>
+      )}
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

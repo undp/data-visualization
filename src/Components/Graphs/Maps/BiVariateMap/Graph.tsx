@@ -15,6 +15,7 @@ import { scaleThreshold } from 'd3-scale';
 import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
 import { AnimatePresence, motion, useInView } from 'motion/react';
+import { cn } from '@undp/design-system-react/cn';
 
 import {
   AnimateDataType,
@@ -515,7 +516,7 @@ export function Graph(props: Props) {
           </g>
         </motion.svg>
         {showColorScale === false ? null : (
-          <div className='absolute left-4 bottom-4'>
+          <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
             {showLegend ? (
               <>
                 <div
@@ -635,7 +636,7 @@ export function Graph(props: Props) {
           </div>
         )}
         {zoomInteraction === 'button' && (
-          <div className='absolute left-4 top-4 flex flex-col'>
+          <div className='absolute left-4 top-4 flex flex-col zoom-buttons'>
             <button
               onClick={() => handleZoom('in')}
               className='leading-0 px-2 py-3.5 border text-primary-gray-700 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'

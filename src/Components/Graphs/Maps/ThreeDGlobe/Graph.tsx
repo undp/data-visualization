@@ -6,6 +6,7 @@ import { scaleOrdinal, scaleThreshold } from 'd3-scale';
 import * as THREE from 'three';
 import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
+import { cn } from '@undp/design-system-react/cn';
 
 import {
   ChoroplethMapDataType,
@@ -271,10 +272,10 @@ function Graph(props: Props) {
     }
   }, [lights, fogSettings]);
 
-  const handleGlobeReady = useCallback(() => {
+  const handleGlobeReady = () => {
     setGlobeReady(true);
     setupCustomLighting();
-  }, [setupCustomLighting]);
+  };
   useEffect(() => {
     if (globeReady) {
       setupCustomLighting();
@@ -375,7 +376,7 @@ function Graph(props: Props) {
         }}
       />
       {showColorScale === false ? null : (
-        <div className='absolute left-4 bottom-4'>
+        <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
           {showLegend ? (
             <>
               <div

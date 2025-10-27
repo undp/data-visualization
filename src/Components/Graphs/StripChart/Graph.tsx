@@ -28,10 +28,10 @@ interface Props {
   colors: string[];
   colorDomain: string[];
   radius: number;
-  leftMargin: number;
-  rightMargin: number;
-  topMargin: number;
-  bottomMargin: number;
+  leftMargin?: number;
+  rightMargin?: number;
+  topMargin?: number;
+  bottomMargin?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,7 +59,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
 }
 
-export function Graph(props: Props) {
+export function VerticalGraph(props: Props) {
   const {
     data,
     width,
@@ -67,10 +67,372 @@ export function Graph(props: Props) {
     colors,
     colorDomain,
     radius,
-    leftMargin,
-    rightMargin,
-    topMargin,
-    bottomMargin,
+    leftMargin = 20,
+    rightMargin = 20,
+    topMargin = 10,
+    bottomMargin = 10,
+    tooltip,
+    onSeriesMouseOver,
+    highlightedDataPoints,
+    selectedColor,
+    minValue,
+    maxValue,
+    onSeriesMouseClick,
+    noOfTicks,
+    prefix,
+    suffix,
+    stripType,
+    highlightColor,
+    dotOpacity,
+    resetSelectionOnDoubleClick,
+    detailsOnClick,
+    styles,
+    classNames,
+    valueColor,
+    animate,
+    dimmedOpacity,
+    precision,
+    customLayers,
+  } = props;
+  const svgRef = useRef(null);
+  const isInView = useInView(svgRef, {
+    once: animate.once,
+    amount: animate.amount,
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [mouseOverData, setMouseOverData] = useState<any>(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [mouseClickData, setMouseClickData] = useState<any>(undefined);
+  const [eventX, setEventX] = useState<number | undefined>(undefined);
+  const [eventY, setEventY] = useState<number | undefined>(undefined);
+  const margin = {
+    top: topMargin,
+    bottom: bottomMargin,
+    left: leftMargin,
+    right: rightMargin,
+  };
+  const graphWidth = width - margin.left - margin.right;
+  const graphHeight = height - margin.top - margin.bottom;
+
+  const dataWithId = data.map((d, i) => ({ ...d, id: `${i}` }));
+
+  const sortedData = orderBy(
+    dataWithId,
+    [
+      item => {
+        const index = (highlightedDataPoints || []).indexOf(item.label);
+        return index === -1 ? Infinity : index;
+      },
+    ],
+    ['desc'],
+  );
+  const yMaxValue = !checkIfNullOrUndefined(maxValue)
+    ? (maxValue as number)
+    : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) < 0
+      ? 0
+      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+  const yMinValue = !checkIfNullOrUndefined(minValue)
+    ? (minValue as number)
+    : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) >= 0
+      ? 0
+      : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+  const y = scaleLinear().domain([yMinValue, yMaxValue]).range([graphHeight, 0]).nice();
+  const ticks = getTickPositions(noOfTicks, graphHeight);
+  return (
+    <>
+      <motion.svg
+        width={`${width}px`}
+        height={`${height}px`}
+        viewBox={`0 0 ${width} ${height}`}
+        direction='ltr'
+        ref={svgRef}
+      >
+        <g transform={`translate(${margin.left},${margin.top})`}>
+          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          <AnimatePresence>
+            {sortedData.map(d => {
+              return (
+                <motion.g
+                  className='undp-viz-g-with-hover'
+                  key={d.label}
+                  variants={{
+                    initial: {
+                      opacity: 0,
+                      x: graphWidth / 2,
+                      y: y(0),
+                    },
+                    whileInView: {
+                      x: graphWidth / 2,
+                      y: y(d.position),
+                      opacity: selectedColor
+                        ? d.color
+                          ? colors[colorDomain.indexOf(d.color)] === selectedColor
+                            ? 0.95
+                            : dimmedOpacity
+                          : dimmedOpacity
+                        : highlightedDataPoints.length !== 0
+                          ? highlightedDataPoints.indexOf(d.label) !== -1
+                            ? 0.95
+                            : dimmedOpacity
+                          : dotOpacity,
+                      transition: { duration: animate.duration },
+                    },
+                  }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  onMouseEnter={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    onSeriesMouseOver?.(d);
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        setMouseClickData(d);
+                        onSeriesMouseClick?.(d);
+                      }
+                    }
+                  }}
+                  onMouseMove={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    onSeriesMouseOver?.(undefined);
+                  }}
+                >
+                  {stripType === 'dot' ? (
+                    <motion.circle
+                      cy={0}
+                      cx={0}
+                      variants={{
+                        initial: {
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
+                              : data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(d.color)],
+                        },
+                        whileInView: {
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
+                              : data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(d.color)],
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      r={radius}
+                    />
+                  ) : (
+                    <motion.rect
+                      y={-1}
+                      height={2}
+                      variants={{
+                        initial: {
+                          x: 0 - radius,
+                          width: radius * 2,
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
+                              : data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(d.color)],
+                        },
+                        whileInView: {
+                          x: 0 - radius,
+                          width: radius * 2,
+                          fill:
+                            highlightColor && highlightedDataPoints
+                              ? highlightedDataPoints.indexOf(d.label) !== -1
+                                ? highlightColor
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]
+                              : data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(d.color)],
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    />
+                  )}
+                  {highlightedDataPoints.length !== 0 ? (
+                    highlightedDataPoints.indexOf(d.label) !== -1 ? (
+                      <motion.text
+                        y={0}
+                        dy='0.33em'
+                        variants={{
+                          initial: {
+                            opacity: 0,
+                            x: 0 + radius + 3,
+                            fill:
+                              valueColor ||
+                              (highlightColor && highlightedDataPoints
+                                ? highlightedDataPoints.indexOf(d.label) !== -1
+                                  ? highlightColor
+                                  : data.filter(el => el.color).length === 0
+                                    ? colors[0]
+                                    : !d.color
+                                      ? Colors.gray
+                                      : colors[colorDomain.indexOf(d.color)]
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]),
+                          },
+                          whileInView: {
+                            opacity: 1,
+                            x: 0 + radius + 3,
+                            fill:
+                              valueColor ||
+                              (highlightColor && highlightedDataPoints
+                                ? highlightedDataPoints.indexOf(d.label) !== -1
+                                  ? highlightColor
+                                  : data.filter(el => el.color).length === 0
+                                    ? colors[0]
+                                    : !d.color
+                                      ? Colors.gray
+                                      : colors[colorDomain.indexOf(d.color)]
+                                : data.filter(el => el.color).length === 0
+                                  ? colors[0]
+                                  : !d.color
+                                    ? Colors.gray
+                                    : colors[colorDomain.indexOf(d.color)]),
+                            transition: { duration: animate.duration },
+                          },
+                        }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        style={{
+                          textAnchor: 'start',
+                          ...(styles?.graphObjectValues || {}),
+                        }}
+                        className={cn(
+                          'graph-value text-sm font-bold',
+                          classNames?.graphObjectValues,
+                        )}
+                      >
+                        {numberFormattingFunction(d.position, 'NA', precision, prefix, suffix)}
+                      </motion.text>
+                    ) : null
+                  ) : null}
+                </motion.g>
+              );
+            })}
+            {ticks.map((tick, i) => (
+              <text
+                key={i}
+                y={tick}
+                x={graphWidth / 2 + radius + 5}
+                style={{
+                  textAnchor: 'start',
+                  ...(styles?.yAxis?.labels || {}),
+                }}
+                className={cn(
+                  'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
+                  classNames?.yAxis?.labels,
+                )}
+              >
+                {numberFormattingFunction(y.invert(tick), 'NA', precision, prefix, suffix)}
+              </text>
+            ))}
+          </AnimatePresence>
+          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+        </g>
+      </motion.svg>
+      {mouseOverData && tooltip && eventX && eventY ? (
+        <Tooltip
+          data={mouseOverData}
+          body={tooltip}
+          xPos={eventX}
+          yPos={eventY}
+          backgroundStyle={styles?.tooltip}
+          className={classNames?.tooltip}
+        />
+      ) : null}
+      {detailsOnClick && mouseClickData !== undefined ? (
+        <Modal
+          open={mouseClickData !== undefined}
+          onClose={() => {
+            setMouseClickData(undefined);
+          }}
+        >
+          <div
+            className='graph-modal-content m-0'
+            dangerouslySetInnerHTML={
+              typeof detailsOnClick === 'string'
+                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
+                : undefined
+            }
+          >
+            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
+          </div>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
+export function HorizontalGraph(props: Props) {
+  const {
+    data,
+    width,
+    height,
+    colors,
+    colorDomain,
+    radius,
+    leftMargin = 5,
+    rightMargin = 5,
+    topMargin = 10,
+    bottomMargin = 10,
     tooltip,
     onSeriesMouseOver,
     highlightedDataPoints,

@@ -15,7 +15,7 @@ export function LinearColorLegend(props: Props) {
   const { colorLegendTitle, colorDomain, colors, width, className } = props;
   return (
     <div
-      className={cn('flex gap-0 flex-wrap justify-center leading-0', className)}
+      className={cn('flex gap-0 flex-wrap justify-center leading-0 pb-3', className)}
       style={{ maxWidth: width ? `${width}px` : 'none' }}
       aria-label='Color legend'
     >

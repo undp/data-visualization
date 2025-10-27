@@ -149,6 +149,7 @@ export interface ClassNameObject {
   mouseOverLine?: string;
   regLine?: string;
   dataCards?: string;
+  colorLegend?: string;
 }
 
 export interface BarGraphDataType {

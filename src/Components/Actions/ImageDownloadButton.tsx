@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, RefObject } from 'react';
 import { Button } from '@undp/design-system-react/Button';
 
 import { imageDownload } from '@/Utils/imageDownload';
@@ -12,7 +12,7 @@ interface Props {
     | 'secondary'
     | 'secondary-without-icon'
     | 'tertiary';
-  nodeID: string | HTMLElement;
+  nodeID: string | RefObject<HTMLDivElement | null>;
   filename?: string;
   buttonSmall?: boolean;
   className?: string;
@@ -41,7 +41,7 @@ export function ImageDownloadButton(props: Props) {
             console.error('Cannot find the html element');
           }
         } else {
-          imageDownload(nodeID as HTMLElement, filename);
+          imageDownload(nodeID.current as HTMLDivElement, filename);
         }
       }}
       aria-label='Click to download the graph as image'

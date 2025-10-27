@@ -1,6 +1,8 @@
-import { HorizontalBeeSwarmChart } from './Horizontal';
-import { VerticalBeeSwarmChart } from './Vertical';
+import { useEffect, useRef, useState } from 'react';
 
+import { HorizontalGraph, VerticalGraph } from './Graph';
+
+import { uniqBy } from '@/Utils/uniqBy';
 import {
   ReferenceDataType,
   SourcesDataType,
@@ -10,6 +12,12 @@ import {
   ClassNameObject,
   CustomLayerDataType,
 } from '@/Types';
+import { Colors } from '@/Components/ColorPalette';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
 
 interface Props {
   // Data
@@ -66,6 +74,10 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
+  /** Prefix for values */
+  prefix?: string;
+  /** Suffix for values */
+  suffix?: string;
   /** Maximum value for the radius of the circle */
   maxRadiusValue?: number;
   /** Minimum value for position of the circle */
@@ -130,13 +142,10 @@ export function BeeSwarmChart(props: Props) {
   const {
     data,
     graphTitle,
-    backgroundColor,
     topMargin,
     bottomMargin,
     leftMargin,
     rightMargin,
-    showLabels,
-    showTicks,
     colors,
     sources,
     graphDescription,
@@ -152,127 +161,168 @@ export function BeeSwarmChart(props: Props) {
     refValues,
     showColorScale,
     graphID,
-    radius,
+    radius = 5,
+    showLabels = true,
+    showTicks = true,
     maxRadiusValue,
     maxValue,
     minValue,
-    highlightedDataPoints,
+    highlightedDataPoints = [],
     onSeriesMouseClick,
-    graphDownload,
-    dataDownload,
-    language,
-    showNAColor,
-    minHeight,
-    theme,
     ariaLabel,
-    resetSelectionOnDoubleClick,
+    backgroundColor = false,
+    graphDownload = false,
+    dataDownload = false,
+    language = 'en',
+    showNAColor = true,
+    minHeight = 0,
+    theme = 'light',
+    resetSelectionOnDoubleClick = true,
     detailsOnClick,
-    noOfTicks,
     orientation = 'vertical',
+    suffix = '',
+    prefix = '',
     styles,
     classNames,
-    dimmedOpacity,
-    precision,
-    customLayers,
+    noOfTicks = 5,
+    dimmedOpacity = 0.3,
+    precision = 2,
+    customLayers = [],
   } = props;
+  const [svgWidth, setSvgWidth] = useState(0);
+  const [svgHeight, setSvgHeight] = useState(0);
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 
-  if (orientation === 'vertical')
-    return (
-      <VerticalBeeSwarmChart
-        data={data}
-        graphTitle={graphTitle}
-        backgroundColor={backgroundColor}
-        topMargin={topMargin}
-        bottomMargin={bottomMargin}
-        leftMargin={leftMargin}
-        rightMargin={rightMargin}
-        showLabels={showLabels}
-        showTicks={showTicks}
-        colors={colors}
-        sources={sources}
-        graphDescription={graphDescription}
-        height={height}
-        width={width}
-        footNote={footNote}
-        colorDomain={colorDomain}
-        colorLegendTitle={colorLegendTitle}
-        padding={padding}
-        relativeHeight={relativeHeight}
-        tooltip={tooltip}
-        onSeriesMouseOver={onSeriesMouseOver}
-        refValues={refValues}
-        showColorScale={showColorScale}
-        graphID={graphID}
-        radius={radius}
-        maxRadiusValue={maxRadiusValue}
-        maxValue={maxValue}
-        minValue={minValue}
-        highlightedDataPoints={highlightedDataPoints}
-        onSeriesMouseClick={onSeriesMouseClick}
-        graphDownload={graphDownload}
-        dataDownload={dataDownload}
-        language={language}
-        showNAColor={showNAColor}
-        minHeight={minHeight}
-        theme={theme}
-        ariaLabel={ariaLabel}
-        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-        styles={styles}
-        detailsOnClick={detailsOnClick}
-        classNames={classNames}
-        noOfTicks={noOfTicks}
-        dimmedOpacity={dimmedOpacity}
-        precision={precision}
-        customLayers={customLayers}
-      />
-    );
+  const graphDiv = useRef<HTMLDivElement>(null);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
+  const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
+    });
+    if (graphDiv.current) {
+      resizeObserver.observe(graphDiv.current);
+    }
+    return () => resizeObserver.disconnect();
+  }, []);
   return (
-    <HorizontalBeeSwarmChart
-      data={data}
-      graphTitle={graphTitle}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
       backgroundColor={backgroundColor}
-      topMargin={topMargin}
-      bottomMargin={bottomMargin}
-      leftMargin={leftMargin}
-      rightMargin={rightMargin}
-      showLabels={showLabels}
-      showTicks={showTicks}
-      colors={colors}
-      sources={sources}
-      graphDescription={graphDescription}
-      height={height}
-      width={width}
-      footNote={footNote}
-      colorDomain={colorDomain}
-      colorLegendTitle={colorLegendTitle}
-      padding={padding}
-      relativeHeight={relativeHeight}
-      tooltip={tooltip}
-      onSeriesMouseOver={onSeriesMouseOver}
-      refValues={refValues}
-      showColorScale={showColorScale}
-      graphID={graphID}
-      radius={radius}
-      maxRadiusValue={maxRadiusValue}
-      maxValue={maxValue}
-      minValue={minValue}
-      highlightedDataPoints={highlightedDataPoints}
-      onSeriesMouseClick={onSeriesMouseClick}
-      graphDownload={graphDownload}
-      dataDownload={dataDownload}
-      language={language}
-      showNAColor={showNAColor}
-      minHeight={minHeight}
       theme={theme}
-      ariaLabel={ariaLabel}
-      resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-      styles={styles}
-      detailsOnClick={detailsOnClick}
-      classNames={classNames}
-      noOfTicks={noOfTicks}
-      dimmedOpacity={dimmedOpacity}
-      precision={precision}
-      customLayers={customLayers}
-    />
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
+    >
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          {showColorScale !== false && data.filter(el => el.color).length !== 0 ? (
+            <ColorLegendWithMouseOver
+              width={width}
+              colorLegendTitle={colorLegendTitle}
+              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+              colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+              setSelectedColor={setSelectedColor}
+              showNAColor={showNAColor}
+              className={classNames?.colorLegend}
+            />
+          ) : null}
+          <GraphArea ref={graphDiv}>
+            {svgWidth && svgHeight ? (
+              <Comp
+                data={data}
+                circleColors={
+                  data.filter(el => el.color).length === 0
+                    ? colors
+                      ? [colors as string]
+                      : [Colors.primaryColors['blue-600']]
+                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+                }
+                colorDomain={
+                  data.filter(el => el.color).length === 0
+                    ? []
+                    : colorDomain || (uniqBy(data, 'color', true) as string[])
+                }
+                width={svgWidth}
+                selectedColor={selectedColor}
+                height={svgHeight}
+                showTicks={showTicks}
+                leftMargin={leftMargin}
+                rightMargin={rightMargin}
+                topMargin={topMargin}
+                bottomMargin={bottomMargin}
+                showLabels={showLabels}
+                tooltip={tooltip}
+                onSeriesMouseOver={onSeriesMouseOver}
+                refValues={refValues}
+                startFromZero={false}
+                radius={radius}
+                maxRadiusValue={maxRadiusValue}
+                maxValue={maxValue}
+                minValue={minValue}
+                highlightedDataPoints={highlightedDataPoints}
+                onSeriesMouseClick={onSeriesMouseClick}
+                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                detailsOnClick={detailsOnClick}
+                styles={styles}
+                classNames={classNames}
+                suffix={suffix}
+                prefix={prefix}
+                noOfTicks={noOfTicks || 5}
+                dimmedOpacity={dimmedOpacity}
+                precision={precision}
+                customLayers={customLayers}
+              />
+            ) : null}
+          </GraphArea>
+        </>
+      )}
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

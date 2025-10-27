@@ -1,9 +1,6 @@
-import { HorizontalBarGraph } from './Horizontal/BarGraph';
-import { HorizontalGroupedBarGraph } from './Horizontal/GroupedBarGraph';
-import { HorizontalStackedBarGraph } from './Horizontal/StackedBarGraph';
-import { VerticalBarGraph } from './Vertical/BarGraph';
-import { VerticalGroupedBarGraph } from './Vertical/GroupedBarGraph';
-import { VerticalStackedBarGraph } from './Vertical/StackedBarGraph';
+import { GroupedBarGraphEl } from './GroupedBarGraph';
+import { SimpleBarGraphEl } from './SimpleBarGraph';
+import { StackedBarGraphEl } from './StackedBarGraph';
 
 import {
   ReferenceDataType,
@@ -224,73 +221,8 @@ export function SimpleBarGraph(props: Props) {
     timeline,
     naLabel,
   } = props;
-
-  if (orientation === 'vertical')
-    return (
-      <VerticalBarGraph
-        data={data}
-        graphTitle={graphTitle}
-        colors={colors}
-        barPadding={barPadding}
-        showTicks={showTicks}
-        leftMargin={leftMargin}
-        rightMargin={rightMargin}
-        topMargin={topMargin}
-        bottomMargin={bottomMargin}
-        truncateBy={truncateBy}
-        showLabels={showLabels}
-        showValues={showValues}
-        backgroundColor={backgroundColor}
-        suffix={suffix}
-        prefix={prefix}
-        sources={sources}
-        graphDescription={graphDescription}
-        height={height}
-        width={width}
-        footNote={footNote}
-        colorDomain={colorDomain}
-        colorLegendTitle={colorLegendTitle}
-        padding={padding}
-        relativeHeight={relativeHeight}
-        tooltip={tooltip}
-        onSeriesMouseOver={onSeriesMouseOver}
-        refValues={refValues}
-        showColorScale={showColorScale}
-        graphID={graphID}
-        maxValue={maxValue}
-        minValue={minValue}
-        highlightedDataPoints={highlightedDataPoints}
-        onSeriesMouseClick={onSeriesMouseClick}
-        graphDownload={graphDownload}
-        dataDownload={dataDownload}
-        language={language}
-        theme={theme}
-        sortData={sortData}
-        labelOrder={labelOrder}
-        showNAColor={showNAColor}
-        minHeight={minHeight}
-        maxBarThickness={maxBarThickness}
-        maxNumberOfBars={maxNumberOfBars}
-        minBarThickness={minBarThickness}
-        ariaLabel={ariaLabel}
-        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-        styles={styles}
-        detailsOnClick={detailsOnClick}
-        barAxisTitle={barAxisTitle}
-        noOfTicks={noOfTicks}
-        valueColor={valueColor}
-        classNames={classNames}
-        filterNA={filterNA}
-        animate={animate}
-        dimmedOpacity={dimmedOpacity}
-        precision={precision}
-        customLayers={customLayers}
-        timeline={timeline}
-        naLabel={naLabel}
-      />
-    );
   return (
-    <HorizontalBarGraph
+    <SimpleBarGraphEl
       data={data}
       graphTitle={graphTitle}
       colors={colors}
@@ -350,6 +282,7 @@ export function SimpleBarGraph(props: Props) {
       customLayers={customLayers}
       timeline={timeline}
       naLabel={naLabel}
+      orientation={orientation}
     />
   );
 }
@@ -549,73 +482,12 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     naLabel,
   } = props;
 
-  if (orientation === 'vertical')
-    return (
-      <VerticalGroupedBarGraph
-        data={data}
-        graphTitle={graphTitle}
-        colors={colors}
-        sources={sources}
-        graphDescription={graphDescription}
-        barPadding={barPadding}
-        showTicks={showTicks}
-        truncateBy={truncateBy}
-        height={height}
-        width={width}
-        footNote={footNote}
-        colorDomain={colorDomain}
-        colorLegendTitle={colorLegendTitle}
-        suffix={suffix}
-        prefix={prefix}
-        showValues={showValues}
-        padding={padding}
-        backgroundColor={backgroundColor}
-        leftMargin={leftMargin}
-        rightMargin={rightMargin}
-        sortParameter={sortParameter}
-        sortData={sortData}
-        topMargin={topMargin}
-        bottomMargin={bottomMargin}
-        showLabels={showLabels}
-        relativeHeight={relativeHeight}
-        tooltip={tooltip}
-        onSeriesMouseOver={onSeriesMouseOver}
-        refValues={refValues}
-        graphID={graphID}
-        maxValue={maxValue}
-        minValue={minValue}
-        onSeriesMouseClick={onSeriesMouseClick}
-        graphDownload={graphDownload}
-        dataDownload={dataDownload}
-        language={language}
-        labelOrder={labelOrder}
-        minHeight={minHeight}
-        theme={theme}
-        maxBarThickness={maxBarThickness}
-        ariaLabel={ariaLabel}
-        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-        styles={styles}
-        detailsOnClick={detailsOnClick}
-        barAxisTitle={barAxisTitle}
-        noOfTicks={noOfTicks}
-        valueColor={valueColor}
-        classNames={classNames}
-        filterNA={filterNA}
-        animate={animate}
-        precision={precision}
-        customLayers={customLayers}
-        showColorScale={showColorScale}
-        timeline={timeline}
-        naLabel={naLabel}
-      />
-    );
   return (
-    <HorizontalGroupedBarGraph
+    <GroupedBarGraphEl
+      orientation={orientation}
       data={data}
       graphTitle={graphTitle}
       colors={colors}
-      sortParameter={sortParameter}
-      sortData={sortData}
       sources={sources}
       graphDescription={graphDescription}
       barPadding={barPadding}
@@ -633,6 +505,8 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       backgroundColor={backgroundColor}
       leftMargin={leftMargin}
       rightMargin={rightMargin}
+      sortParameter={sortParameter}
+      sortData={sortData}
       topMargin={topMargin}
       bottomMargin={bottomMargin}
       showLabels={showLabels}
@@ -868,69 +742,8 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     naLabel,
   } = props;
 
-  if (orientation === 'vertical')
-    return (
-      <VerticalStackedBarGraph
-        data={data}
-        graphTitle={graphTitle}
-        colors={colors}
-        sources={sources}
-        graphDescription={graphDescription}
-        barPadding={barPadding}
-        showTicks={showTicks}
-        leftMargin={leftMargin}
-        rightMargin={rightMargin}
-        topMargin={topMargin}
-        bottomMargin={bottomMargin}
-        truncateBy={truncateBy}
-        showLabels={showLabels}
-        showValues={showValues}
-        backgroundColor={backgroundColor}
-        suffix={suffix}
-        prefix={prefix}
-        height={height}
-        width={width}
-        footNote={footNote}
-        colorDomain={colorDomain}
-        colorLegendTitle={colorLegendTitle}
-        padding={padding}
-        tooltip={tooltip}
-        onSeriesMouseOver={onSeriesMouseOver}
-        relativeHeight={relativeHeight}
-        refValues={refValues}
-        graphID={graphID}
-        maxValue={maxValue}
-        onSeriesMouseClick={onSeriesMouseClick}
-        graphDownload={graphDownload}
-        dataDownload={dataDownload}
-        language={language}
-        theme={theme}
-        labelOrder={labelOrder}
-        minHeight={minHeight}
-        maxBarThickness={maxBarThickness}
-        sortParameter={sortParameter}
-        sortData={sortData}
-        maxNumberOfBars={maxNumberOfBars}
-        minBarThickness={minBarThickness}
-        ariaLabel={ariaLabel}
-        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-        styles={styles}
-        detailsOnClick={detailsOnClick}
-        barAxisTitle={barAxisTitle}
-        noOfTicks={noOfTicks}
-        valueColor={valueColor}
-        classNames={classNames}
-        filterNA={filterNA}
-        animate={animate}
-        precision={precision}
-        customLayers={customLayers}
-        showColorScale={showColorScale}
-        timeline={timeline}
-        naLabel={naLabel}
-      />
-    );
   return (
-    <HorizontalStackedBarGraph
+    <StackedBarGraphEl
       data={data}
       graphTitle={graphTitle}
       colors={colors}
@@ -987,6 +800,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       showColorScale={showColorScale}
       timeline={timeline}
       naLabel={naLabel}
+      orientation={orientation}
     />
   );
 }

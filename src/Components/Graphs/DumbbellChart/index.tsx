@@ -1,6 +1,13 @@
-import { HorizontalDumbbellChart } from './Horizontal';
-import { VerticalDumbbellChart } from './Vertical';
+import orderBy from 'lodash.orderby';
+import { format } from 'date-fns/format';
+import { useEffect, useRef, useState } from 'react';
+import { ascending, sort } from 'd3-array';
+import { parse } from 'date-fns/parse';
+import { SliderUI } from '@undp/design-system-react/SliderUI';
 
+import { HorizontalGraph, VerticalGraph } from './Graph';
+
+import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import {
   SourcesDataType,
   Languages,
@@ -12,6 +19,16 @@ import {
   AnimateDataType,
   TimelineDataType,
 } from '@/Types';
+import { ensureCompleteDataForDumbbellChart } from '@/Utils/ensureCompleteData';
+import { getSliderMarks } from '@/Utils/getSliderMarks';
+import { uniqBy } from '@/Utils/uniqBy';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { Pause, Play } from '@/Components/Icons';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { Colors } from '@/Components/ColorPalette';
 
 interface Props {
   // Data
@@ -164,197 +181,316 @@ export function DumbbellChart(props: Props) {
   const {
     data,
     graphTitle,
-    colors,
+    colors = Colors.light.categoricalColors.colors,
     sources,
     graphDescription,
-    barPadding,
-    showTicks,
+    barPadding = 0.25,
+    showTicks = true,
     leftMargin,
     rightMargin,
     topMargin,
     bottomMargin,
-    truncateBy,
+    truncateBy = 999,
     height,
     width,
     footNote,
     colorDomain,
     colorLegendTitle,
     padding,
-    backgroundColor,
-    radius,
+    backgroundColor = true,
+    radius = 3,
     tooltip,
-    showLabels,
+    showLabels = true,
     relativeHeight,
     onSeriesMouseOver,
     graphID,
-    suffix,
-    prefix,
+    suffix = '',
+    prefix = '',
     maxValue,
     minValue,
     onSeriesMouseClick,
-    graphDownload,
-    dataDownload,
-    showValues,
+    graphDownload = false,
+    dataDownload = false,
+    showValues = true,
     sortParameter,
-    arrowConnector,
-    connectorStrokeWidth,
-    language,
-    minHeight,
-    theme,
+    arrowConnector = false,
+    connectorStrokeWidth = 2,
+    language = 'en',
+    minHeight = 0,
+    theme = 'light',
     maxBarThickness,
     maxNumberOfBars,
     minBarThickness,
     ariaLabel,
-    resetSelectionOnDoubleClick,
+    resetSelectionOnDoubleClick = true,
     detailsOnClick,
     axisTitle,
-    noOfTicks,
+    noOfTicks = 5,
     valueColor,
     orientation = 'vertical',
     styles,
     classNames,
     labelOrder,
     refValues,
-    filterNA,
-    animate,
-    precision,
-    showColorScale,
-    customLayers,
-    highlightedDataPoints,
-    dimmedOpacity,
-    timeline,
+    filterNA = true,
+    animate = false,
+    precision = 2,
+    showColorScale = true,
+    customLayers = [],
+    highlightedDataPoints = [],
+    dimmedOpacity = 0.3,
+    timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     sortData,
   } = props;
 
-  if (orientation === 'vertical')
-    return (
-      <VerticalDumbbellChart
-        data={data}
-        graphTitle={graphTitle}
-        colors={colors}
-        sources={sources}
-        graphDescription={graphDescription}
-        barPadding={barPadding}
-        showTicks={showTicks}
-        leftMargin={leftMargin}
-        rightMargin={rightMargin}
-        topMargin={topMargin}
-        bottomMargin={bottomMargin}
-        truncateBy={truncateBy}
-        height={height}
-        width={width}
-        footNote={footNote}
-        colorDomain={colorDomain}
-        colorLegendTitle={colorLegendTitle}
-        padding={padding}
-        backgroundColor={backgroundColor}
-        radius={radius}
-        tooltip={tooltip}
-        showLabels={showLabels}
-        relativeHeight={relativeHeight}
-        onSeriesMouseOver={onSeriesMouseOver}
-        graphID={graphID}
-        suffix={suffix}
-        prefix={prefix}
-        maxValue={maxValue}
-        minValue={minValue}
-        onSeriesMouseClick={onSeriesMouseClick}
-        graphDownload={graphDownload}
-        dataDownload={dataDownload}
-        showValues={showValues}
-        sortParameter={sortParameter}
-        arrowConnector={arrowConnector}
-        connectorStrokeWidth={connectorStrokeWidth}
-        language={language}
-        minHeight={minHeight}
-        theme={theme}
-        maxBarThickness={maxBarThickness}
-        maxNumberOfBars={maxNumberOfBars}
-        minBarThickness={minBarThickness}
-        ariaLabel={ariaLabel}
-        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-        styles={styles}
-        detailsOnClick={detailsOnClick}
-        axisTitle={axisTitle}
-        noOfTicks={noOfTicks}
-        labelOrder={labelOrder}
-        valueColor={valueColor}
-        classNames={classNames}
-        refValues={refValues}
-        filterNA={filterNA}
-        animate={animate}
-        precision={precision}
-        showColorScale={showColorScale}
-        customLayers={customLayers}
-        highlightedDataPoints={highlightedDataPoints}
-        dimmedOpacity={dimmedOpacity}
-        timeline={timeline}
-        sortData={sortData}
-      />
+  const [svgWidth, setSvgWidth] = useState(0);
+  const [svgHeight, setSvgHeight] = useState(0);
+  const [play, setPlay] = useState(timeline.autoplay);
+  const uniqDatesSorted = sort(
+    uniqBy(data, 'date', true).map(d =>
+      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
+    ),
+    (a, b) => ascending(a, b),
+  );
+  const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
+
+  const graphDiv = useRef<HTMLDivElement>(null);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
+    });
+    if (graphDiv.current) {
+      resizeObserver.observe(graphDiv.current);
+    }
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(
+      () => {
+        setIndex(i => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
+      },
+      (timeline.speed || 2) * 1000,
     );
+    if (!play) clearInterval(interval);
+    return () => clearInterval(interval);
+  }, [uniqDatesSorted, play, timeline.speed]);
+
+  const markObj = getSliderMarks(
+    uniqDatesSorted,
+    index,
+    timeline.showOnlyActiveDate,
+    timeline.dateFormat || 'yyyy',
+  );
+
+  const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
   return (
-    <HorizontalDumbbellChart
-      data={data}
-      graphTitle={graphTitle}
-      colors={colors}
-      sources={sources}
-      graphDescription={graphDescription}
-      barPadding={barPadding}
-      showTicks={showTicks}
-      leftMargin={leftMargin}
-      rightMargin={rightMargin}
-      topMargin={topMargin}
-      bottomMargin={bottomMargin}
-      truncateBy={truncateBy}
-      height={height}
-      width={width}
-      footNote={footNote}
-      colorDomain={colorDomain}
-      colorLegendTitle={colorLegendTitle}
-      padding={padding}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
       backgroundColor={backgroundColor}
-      radius={radius}
-      tooltip={tooltip}
-      showLabels={showLabels}
-      relativeHeight={relativeHeight}
-      onSeriesMouseOver={onSeriesMouseOver}
-      graphID={graphID}
-      suffix={suffix}
-      prefix={prefix}
-      maxValue={maxValue}
-      minValue={minValue}
-      onSeriesMouseClick={onSeriesMouseClick}
-      graphDownload={graphDownload}
-      dataDownload={dataDownload}
-      showValues={showValues}
-      sortParameter={sortParameter}
-      arrowConnector={arrowConnector}
-      connectorStrokeWidth={connectorStrokeWidth}
+      theme={theme}
       language={language}
       minHeight={minHeight}
-      theme={theme}
-      maxBarThickness={maxBarThickness}
-      maxNumberOfBars={maxNumberOfBars}
-      minBarThickness={minBarThickness}
-      ariaLabel={ariaLabel}
-      resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-      styles={styles}
-      detailsOnClick={detailsOnClick}
-      axisTitle={axisTitle}
-      noOfTicks={noOfTicks}
-      valueColor={valueColor}
-      classNames={classNames}
-      labelOrder={labelOrder}
-      refValues={refValues}
-      filterNA={filterNA}
-      animate={animate}
-      precision={precision}
-      showColorScale={showColorScale}
-      customLayers={customLayers}
-      highlightedDataPoints={highlightedDataPoints}
-      dimmedOpacity={dimmedOpacity}
-      timeline={timeline}
-      sortData={sortData}
-    />
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
+    >
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {timeline.enabled && uniqDatesSorted.length > 0 && markObj ? (
+        <div className='flex gap-6 items-center' dir='ltr'>
+          <button
+            type='button'
+            onClick={() => {
+              setPlay(!play);
+            }}
+            className='p-0 border-0 cursor-pointer bg-transparent'
+            aria-label={play ? 'Click to pause animation' : 'Click to play animation'}
+          >
+            {play ? <Pause /> : <Play />}
+          </button>
+          <SliderUI
+            min={uniqDatesSorted[0]}
+            max={uniqDatesSorted[uniqDatesSorted.length - 1]}
+            marks={markObj}
+            step={null}
+            defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
+            value={uniqDatesSorted[index]}
+            onChangeComplete={nextValue => {
+              setIndex(uniqDatesSorted.indexOf(nextValue as number));
+            }}
+            onChange={nextValue => {
+              setIndex(uniqDatesSorted.indexOf(nextValue as number));
+            }}
+            aria-label='Time slider. Use arrow keys to adjust selected time period.'
+          />
+        </div>
+      ) : null}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          {showColorScale ? (
+            <ColorLegendWithMouseOver
+              width={width}
+              colorDomain={colorDomain}
+              colors={colors}
+              colorLegendTitle={colorLegendTitle}
+              setSelectedColor={setSelectedColor}
+              showNAColor={false}
+              className={classNames?.colorLegend}
+            />
+          ) : null}
+          <GraphArea ref={graphDiv}>
+            {svgWidth && svgHeight ? (
+              <Comp
+                data={
+                  sortParameter !== undefined
+                    ? sortParameter === 'diff'
+                      ? orderBy(
+                          ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
+                            .filter(d =>
+                              timeline.enabled
+                                ? d.date ===
+                                  format(
+                                    new Date(uniqDatesSorted[index]),
+                                    timeline.dateFormat || 'yyyy',
+                                  )
+                                : d,
+                            )
+                            .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
+                          d =>
+                            checkIfNullOrUndefined(d.x[d.x.length - 1]) ||
+                            checkIfNullOrUndefined(d.x[0])
+                              ? -Infinity
+                              : (d.x[d.x.length - 1] as number) - (d.x[0] as number),
+                          [sortData || 'asc'],
+                        ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                      : orderBy(
+                          ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
+                            .filter(d =>
+                              timeline.enabled
+                                ? d.date ===
+                                  format(
+                                    new Date(uniqDatesSorted[index]),
+                                    timeline.dateFormat || 'yyyy',
+                                  )
+                                : d,
+                            )
+                            .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
+                          d =>
+                            checkIfNullOrUndefined(d.x[sortParameter])
+                              ? -Infinity
+                              : d.x[sortParameter],
+                          [sortData || 'asc'],
+                        ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                    : ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
+                        .filter(d => (filterNA ? !d.x.every(item => item == null) : d))
+                        .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                }
+                dotColors={colors}
+                width={svgWidth}
+                height={svgHeight}
+                radius={radius}
+                barPadding={barPadding}
+                showTicks={showTicks}
+                leftMargin={leftMargin}
+                rightMargin={rightMargin}
+                topMargin={topMargin}
+                bottomMargin={bottomMargin}
+                truncateBy={truncateBy}
+                showLabels={showLabels}
+                showValues={showValues}
+                tooltip={tooltip}
+                suffix={suffix}
+                prefix={prefix}
+                onSeriesMouseOver={onSeriesMouseOver}
+                maxValue={
+                  !checkIfNullOrUndefined(maxValue)
+                    ? (maxValue as number)
+                    : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null)))) < 0
+                      ? 0
+                      : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null))))
+                }
+                minValue={
+                  !checkIfNullOrUndefined(minValue)
+                    ? (minValue as number)
+                    : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null)))) > 0
+                      ? 0
+                      : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null))))
+                }
+                onSeriesMouseClick={onSeriesMouseClick}
+                selectedColor={selectedColor}
+                arrowConnector={arrowConnector}
+                connectorStrokeWidth={connectorStrokeWidth}
+                maxBarThickness={maxBarThickness}
+                minBarThickness={minBarThickness}
+                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                detailsOnClick={detailsOnClick}
+                axisTitle={axisTitle}
+                noOfTicks={noOfTicks}
+                valueColor={valueColor}
+                styles={styles}
+                classNames={classNames}
+                labelOrder={labelOrder}
+                refValues={refValues}
+                animate={
+                  animate === true
+                    ? { duration: 0.5, once: true, amount: 0.5 }
+                    : animate || { duration: 0, once: true, amount: 0 }
+                }
+                precision={precision}
+                customLayers={customLayers}
+                highlightedDataPoints={highlightedDataPoints}
+                dimmedOpacity={dimmedOpacity}
+                rtl={language === 'ar' || language === 'he'}
+              />
+            ) : null}
+          </GraphArea>
+        </>
+      )}
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

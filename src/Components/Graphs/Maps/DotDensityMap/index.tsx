@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useEffectEvent } from 'react';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
-import { cn } from '@undp/design-system-react/cn';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { ascending, sort } from 'd3-array';
@@ -28,6 +27,7 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Pause, Play } from '@/Components/Icons';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { uniqBy } from '@/Utils/uniqBy';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Data
@@ -218,24 +218,26 @@ export function DotDensityMap(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 760);
-      setSvgHeight(height || entries[0].target.clientHeight || 480);
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 480);
-      setSvgWidth(graphDiv.current.clientWidth || 760);
-      if (!width) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height]);
+  }, []);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onUpdateShape = useEffectEvent((shape: any) => {
+    setMapShape(shape);
+  });
   useEffect(() => {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
       fetchData.then(d => {
-        setMapShape(d);
+        onUpdateShape(d);
       });
     } else {
-      setMapShape(mapData);
+      onUpdateShape(mapData);
     }
   }, [mapData]);
 
@@ -257,216 +259,185 @@ export function DotDensityMap(props: Props) {
     timeline.dateFormat || 'yyyy',
   );
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        ref={graphParentDiv}
-        aria-label={
-          ariaLabel ||
-          `${
-            graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is a dot density map showing the distribution of a variable across a region or world, with each dot representing a data point.${
-            graphDescription ? ` ${graphDescription}` : ''
-          }`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {graphTitle || graphDescription || graphDownload || dataDownload ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-                graphDownload={graphDownload ? graphParentDiv.current : undefined}
-                dataDownload={
-                  dataDownload
-                    ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                      ? data.map(d => d.data).filter(d => d !== undefined)
-                      : data.filter(d => d !== undefined)
-                    : null
-                }
-              />
-            ) : null}
-            {timeline.enabled && uniqDatesSorted.length > 0 && markObj ? (
-              <div className='flex gap-6 items-center' dir='ltr'>
-                <button
-                  type='button'
-                  onClick={() => {
-                    setPlay(!play);
-                  }}
-                  className='p-0 border-0 cursor-pointer bg-transparent'
-                  aria-label={play ? 'Click to pause animation' : 'Click to play animation'}
-                >
-                  {play ? <Pause /> : <Play />}
-                </button>
-                <SliderUI
-                  min={uniqDatesSorted[0]}
-                  max={uniqDatesSorted[uniqDatesSorted.length - 1]}
-                  marks={markObj}
-                  step={null}
-                  defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
-                  value={uniqDatesSorted[index]}
-                  onChangeComplete={nextValue => {
-                    setIndex(uniqDatesSorted.indexOf(nextValue as number));
-                  }}
-                  onChange={nextValue => {
-                    setIndex(uniqDatesSorted.indexOf(nextValue as number));
-                  }}
-                  aria-label='Time slider. Use arrow keys to adjust selected time period.'
-                />
-              </div>
-            ) : null}
-            <div
-              className='flex flex-col grow justify-center leading-0'
-              ref={graphDiv}
-              aria-label='Map area'
-            >
-              {(width || svgWidth) && (height || svgHeight) && mapShape ? (
-                <Graph
-                  data={data.filter(d =>
-                    timeline.enabled
-                      ? d.date ===
-                        format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
-                      : d,
-                  )}
-                  mapData={
-                    showAntarctica
-                      ? mapShape
-                      : {
-                          ...mapShape,
-                          features: mapShape.features.filter(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (el: any) => el.properties.NAME !== 'Antarctica',
-                          ),
-                        }
-                  }
-                  colorDomain={
-                    data.filter(el => el.color).length === 0
-                      ? []
-                      : colorDomain || (uniqBy(data, 'color', true) as string[])
-                  }
-                  width={width || svgWidth}
-                  height={Math.max(
-                    minHeight,
-                    height ||
-                      (relativeHeight
-                        ? minHeight
-                          ? (width || svgWidth) * relativeHeight > minHeight
-                            ? (width || svgWidth) * relativeHeight
-                            : minHeight
-                          : (width || svgWidth) * relativeHeight
-                        : svgHeight),
-                  )}
-                  scale={scale}
-                  centerPoint={centerPoint}
-                  colors={
-                    data.filter(el => el.color).length === 0
-                      ? colors
-                        ? [colors as string]
-                        : [Colors.primaryColors['blue-600']]
-                      : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
-                  }
-                  colorLegendTitle={colorLegendTitle}
-                  radius={radius}
-                  mapBorderWidth={mapBorderWidth}
-                  mapNoDataColor={mapNoDataColor}
-                  mapBorderColor={mapBorderColor}
-                  tooltip={tooltip}
-                  onSeriesMouseOver={onSeriesMouseOver}
-                  showLabels={showLabels}
-                  isWorldMap={isWorldMap}
-                  showColorScale={showColorScale}
-                  zoomScaleExtend={zoomScaleExtend}
-                  zoomTranslateExtend={zoomTranslateExtend}
-                  onSeriesMouseClick={onSeriesMouseClick}
-                  highlightedDataPoints={highlightedDataPoints}
-                  resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                  styles={styles}
-                  classNames={classNames}
-                  zoomInteraction={zoomInteraction}
-                  detailsOnClick={detailsOnClick}
-                  mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
-                  animate={
-                    animate === true
-                      ? { duration: 0.5, once: true, amount: 0.5 }
-                      : animate || { duration: 0, once: true, amount: 0 }
-                  }
-                  dimmedOpacity={dimmedOpacity}
-                  customLayers={customLayers}
-                  maxRadiusValue={
-                    !checkIfNullOrUndefined(maxRadiusValue)
-                      ? (maxRadiusValue as number)
-                      : Math.max(
-                          ...data.map(d => d.radius).filter(d => d !== undefined && d !== null),
-                        )
-                  }
-                  collapseColorScaleByDefault={collapseColorScaleByDefault}
-                />
-              ) : (
-                <div
-                  style={{
-                    height: `${Math.max(
-                      minHeight,
-                      height ||
-                        (relativeHeight
-                          ? minHeight
-                            ? (width || svgWidth) * relativeHeight > minHeight
-                              ? (width || svgWidth) * relativeHeight
-                              : minHeight
-                            : (width || svgWidth) * relativeHeight
-                          : svgHeight),
-                    )}px`,
-                  }}
-                  className='flex items-center justify-center'
-                >
-                  <Spinner aria-label='Loading graph' />
-                </div>
-              )}
-            </div>
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
-                }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
-              />
-            ) : null}
-          </div>
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {timeline.enabled && uniqDatesSorted.length > 0 && markObj ? (
+        <div className='flex gap-6 items-center' dir='ltr'>
+          <button
+            type='button'
+            onClick={() => {
+              setPlay(!play);
+            }}
+            className='p-0 border-0 cursor-pointer bg-transparent'
+            aria-label={play ? 'Click to pause animation' : 'Click to play animation'}
+          >
+            {play ? <Pause /> : <Play />}
+          </button>
+          <SliderUI
+            min={uniqDatesSorted[0]}
+            max={uniqDatesSorted[uniqDatesSorted.length - 1]}
+            marks={markObj}
+            step={null}
+            defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
+            value={uniqDatesSorted[index]}
+            onChangeComplete={nextValue => {
+              setIndex(uniqDatesSorted.indexOf(nextValue as number));
+            }}
+            onChange={nextValue => {
+              setIndex(uniqDatesSorted.indexOf(nextValue as number));
+            }}
+            aria-label='Time slider. Use arrow keys to adjust selected time period.'
+          />
         </div>
-      </div>
-    </div>
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {svgWidth && svgHeight && mapShape ? (
+          <Graph
+            data={data.filter(d =>
+              timeline.enabled
+                ? d.date === format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                : d,
+            )}
+            mapData={
+              showAntarctica
+                ? mapShape
+                : {
+                    ...mapShape,
+                    features: mapShape.features.filter(
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      (el: any) => el.properties.NAME !== 'Antarctica',
+                    ),
+                  }
+            }
+            colorDomain={
+              data.filter(el => el.color).length === 0
+                ? []
+                : colorDomain || (uniqBy(data, 'color', true) as string[])
+            }
+            width={width || svgWidth}
+            height={Math.max(
+              minHeight,
+              height ||
+                (relativeHeight
+                  ? minHeight
+                    ? (width || svgWidth) * relativeHeight > minHeight
+                      ? (width || svgWidth) * relativeHeight
+                      : minHeight
+                    : (width || svgWidth) * relativeHeight
+                  : svgHeight),
+            )}
+            scale={scale}
+            centerPoint={centerPoint}
+            colors={
+              data.filter(el => el.color).length === 0
+                ? colors
+                  ? [colors as string]
+                  : [Colors.primaryColors['blue-600']]
+                : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+            }
+            colorLegendTitle={colorLegendTitle}
+            radius={radius}
+            mapBorderWidth={mapBorderWidth}
+            mapNoDataColor={mapNoDataColor}
+            mapBorderColor={mapBorderColor}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            showLabels={showLabels}
+            isWorldMap={isWorldMap}
+            showColorScale={showColorScale}
+            zoomScaleExtend={zoomScaleExtend}
+            zoomTranslateExtend={zoomTranslateExtend}
+            onSeriesMouseClick={onSeriesMouseClick}
+            highlightedDataPoints={highlightedDataPoints}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            styles={styles}
+            classNames={classNames}
+            zoomInteraction={zoomInteraction}
+            detailsOnClick={detailsOnClick}
+            mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            dimmedOpacity={dimmedOpacity}
+            customLayers={customLayers}
+            maxRadiusValue={
+              !checkIfNullOrUndefined(maxRadiusValue)
+                ? (maxRadiusValue as number)
+                : Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null))
+            }
+            collapseColorScaleByDefault={collapseColorScaleByDefault}
+          />
+        ) : (
+          <div
+            style={{
+              height: `${Math.max(
+                minHeight,
+                height ||
+                  (relativeHeight
+                    ? minHeight
+                      ? (width || svgWidth) * relativeHeight > minHeight
+                        ? (width || svgWidth) * relativeHeight
+                        : minHeight
+                      : (width || svgWidth) * relativeHeight
+                    : svgHeight),
+              )}px`,
+            }}
+            className='flex items-center justify-center'
+          >
+            <Spinner aria-label='Loading graph' />
+          </div>
+        )}
+      </GraphArea>
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

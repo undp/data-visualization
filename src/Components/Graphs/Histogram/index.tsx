@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { bin } from 'd3-array';
 import { Spinner } from '@undp/design-system-react/Spinner';
 
@@ -9,7 +8,6 @@ import { SimpleBarGraph } from '../BarGraph';
 
 import { Colors } from '@/Components/ColorPalette';
 import {
-  TreeMapDataType,
   ReferenceDataType,
   HistogramDataType,
   DonutChartDataType,
@@ -172,22 +170,18 @@ export function Histogram(props: Props) {
     precision,
   } = props;
 
-  const [dataFormatted, setDataFormatted] = useState<TreeMapDataType[]>([]);
-  useEffect(() => {
-    const bins = bin()
-      .thresholds(numberOfBins || 10)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .value((d: any) => d.value)(data as any);
-    const dataUpdates = bins.map(d => ({
-      label: `${d.x0}-${d.x1}`,
-      size: d.length,
-      data: {
-        options: `${d.x0}-${d.x1}`,
-        frequency: d.length,
-      },
-    }));
-    setDataFormatted(dataUpdates);
-  }, [data, numberOfBins]);
+  const bins = bin()
+    .thresholds(numberOfBins || 10)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .value((d: any) => d.value)(data as any);
+  const dataFormatted = bins.map(d => ({
+    label: `${d.x0}-${d.x1}`,
+    size: d.length,
+    data: {
+      options: `${d.x0}-${d.x1}`,
+      frequency: d.length,
+    },
+  }));
   if (dataFormatted.length === 0)
     return (
       <div style={{ width: `${width}px`, height: `${height}px`, margin: 'auto' }}>

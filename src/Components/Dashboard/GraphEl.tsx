@@ -978,8 +978,6 @@ function GraphEl(props: Props) {
           height: settings?.height,
           minHeight: settings?.minHeight,
           relativeHeight: settings?.relativeHeight,
-          topMargin: settings?.topMargin,
-          bottomMargin: settings?.bottomMargin,
           ariaLabel: settings?.ariaLabel,
           legendMaxWidth: settings?.legendMaxWidth,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

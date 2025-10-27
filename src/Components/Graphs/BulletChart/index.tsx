@@ -1,5 +1,7 @@
-import { HorizontalBulletChart } from './Horizontal/';
-import { VerticalBulletChart } from './Vertical';
+import { useState, useRef, useEffect } from 'react';
+import orderBy from 'lodash.orderby';
+
+import { HorizontalGraph, VerticalGraph } from './Graph';
 
 import {
   ReferenceDataType,
@@ -11,6 +13,13 @@ import {
   CustomLayerDataType,
   AnimateDataType,
 } from '@/Types';
+import { Colors } from '@/Components/ColorPalette';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { GraphContainer, GraphArea } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { ColorLegend } from '@/Components/Elements/ColorLegend';
+import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 
 interface Props {
   // Data
@@ -163,19 +172,19 @@ export function BulletChart(props: Props) {
   const {
     data,
     graphTitle,
-    barColor,
-    barPadding,
-    showTicks,
+    barColor = Colors.primaryColors['blue-600'],
+    barPadding = 0.25,
+    showTicks = true,
     leftMargin,
     rightMargin,
     topMargin,
     bottomMargin,
-    truncateBy,
-    showLabels,
-    showValues,
-    backgroundColor,
-    suffix,
-    prefix,
+    truncateBy = 999,
+    showLabels = true,
+    showValues = true,
+    backgroundColor = false,
+    suffix = '',
+    prefix = '',
     sources,
     graphDescription,
     height,
@@ -188,169 +197,197 @@ export function BulletChart(props: Props) {
     tooltip,
     onSeriesMouseOver,
     refValues,
-    showColorScale,
+    showColorScale = true,
     graphID,
     maxValue,
     minValue,
-    highlightedDataPoints,
+    highlightedDataPoints = [],
     onSeriesMouseClick,
-    graphDownload,
-    dataDownload,
-    language,
-    theme,
-    sortData,
-    labelOrder,
-    minHeight,
-    maxBarThickness,
-    maxNumberOfBars,
-    minBarThickness,
-    ariaLabel,
-    resetSelectionOnDoubleClick,
-    detailsOnClick,
-    barAxisTitle,
-    noOfTicks,
     valueColor,
     orientation = 'vertical',
     styles,
     classNames,
-    filterNA,
-    targetStyle,
-    targetColor,
     qualitativeRangeColors,
-    measureBarWidthFactor,
-    animate,
-    dimmedOpacity,
-    precision,
-    naLabel,
+    targetColor = Colors.light.grays['gray-700'],
+    filterNA = true,
+    targetStyle = 'line',
+    measureBarWidthFactor = 0.4,
+    animate = false,
+    dimmedOpacity = 0.3,
+    precision = 2,
+    customLayers = [],
+    naLabel = 'NA',
+    graphDownload = false,
+    dataDownload = false,
+    language = 'en',
+    theme = 'light',
+    sortData,
+    labelOrder,
+    minHeight = 0,
+    maxBarThickness,
+    maxNumberOfBars,
+    minBarThickness,
+    ariaLabel,
+    resetSelectionOnDoubleClick = true,
+    detailsOnClick,
+    barAxisTitle,
+    noOfTicks = 5,
   } = props;
 
-  if (orientation === 'vertical')
-    return (
-      <VerticalBulletChart
-        data={data}
-        graphTitle={graphTitle}
-        barColor={barColor}
-        barPadding={barPadding}
-        showTicks={showTicks}
-        leftMargin={leftMargin}
-        rightMargin={rightMargin}
-        topMargin={topMargin}
-        bottomMargin={bottomMargin}
-        truncateBy={truncateBy}
-        showLabels={showLabels}
-        showValues={showValues}
-        backgroundColor={backgroundColor}
-        suffix={suffix}
-        prefix={prefix}
-        sources={sources}
-        graphDescription={graphDescription}
-        height={height}
-        width={width}
-        footNote={footNote}
-        colorDomain={colorDomain}
-        colorLegendTitle={colorLegendTitle}
-        padding={padding}
-        relativeHeight={relativeHeight}
-        tooltip={tooltip}
-        onSeriesMouseOver={onSeriesMouseOver}
-        refValues={refValues}
-        showColorScale={showColorScale}
-        graphID={graphID}
-        maxValue={maxValue}
-        minValue={minValue}
-        highlightedDataPoints={highlightedDataPoints}
-        onSeriesMouseClick={onSeriesMouseClick}
-        graphDownload={graphDownload}
-        dataDownload={dataDownload}
-        language={language}
-        theme={theme}
-        sortData={sortData}
-        labelOrder={labelOrder}
-        minHeight={minHeight}
-        maxBarThickness={maxBarThickness}
-        maxNumberOfBars={maxNumberOfBars}
-        minBarThickness={minBarThickness}
-        ariaLabel={ariaLabel}
-        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-        styles={styles}
-        detailsOnClick={detailsOnClick}
-        barAxisTitle={barAxisTitle}
-        noOfTicks={noOfTicks}
-        valueColor={valueColor}
-        classNames={classNames}
-        filterNA={filterNA}
-        targetStyle={targetStyle}
-        targetColor={targetColor}
-        measureBarWidthFactor={measureBarWidthFactor}
-        qualitativeRangeColors={qualitativeRangeColors}
-        animate={animate}
-        dimmedOpacity={dimmedOpacity}
-        precision={precision}
-        naLabel={naLabel}
-      />
-    );
+  const [svgWidth, setSvgWidth] = useState(0);
+  const [svgHeight, setSvgHeight] = useState(0);
+  const graphDiv = useRef<HTMLDivElement>(null);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
+  const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
+    });
+    if (graphDiv.current) {
+      resizeObserver.observe(graphDiv.current);
+    }
+    return () => resizeObserver.disconnect();
+  }, []);
   return (
-    <HorizontalBulletChart
-      data={data}
-      graphTitle={graphTitle}
-      barColor={barColor}
-      barPadding={barPadding}
-      showTicks={showTicks}
-      leftMargin={leftMargin}
-      rightMargin={rightMargin}
-      topMargin={topMargin}
-      bottomMargin={bottomMargin}
-      truncateBy={truncateBy}
-      showLabels={showLabels}
-      showValues={showValues}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
       backgroundColor={backgroundColor}
-      suffix={suffix}
-      prefix={prefix}
-      sources={sources}
-      graphDescription={graphDescription}
-      height={height}
-      width={width}
-      footNote={footNote}
-      colorDomain={colorDomain}
-      colorLegendTitle={colorLegendTitle}
-      padding={padding}
-      relativeHeight={relativeHeight}
-      tooltip={tooltip}
-      onSeriesMouseOver={onSeriesMouseOver}
-      refValues={refValues}
-      showColorScale={showColorScale}
-      graphID={graphID}
-      maxValue={maxValue}
-      minValue={minValue}
-      highlightedDataPoints={highlightedDataPoints}
-      onSeriesMouseClick={onSeriesMouseClick}
-      graphDownload={graphDownload}
-      dataDownload={dataDownload}
-      language={language}
       theme={theme}
-      sortData={sortData}
-      labelOrder={labelOrder}
+      language={language}
       minHeight={minHeight}
-      maxBarThickness={maxBarThickness}
-      maxNumberOfBars={maxNumberOfBars}
-      minBarThickness={minBarThickness}
-      ariaLabel={ariaLabel}
-      resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-      styles={styles}
-      detailsOnClick={detailsOnClick}
-      barAxisTitle={barAxisTitle}
-      noOfTicks={noOfTicks}
-      valueColor={valueColor}
-      classNames={classNames}
-      filterNA={filterNA}
-      targetStyle={targetStyle}
-      targetColor={targetColor}
-      measureBarWidthFactor={measureBarWidthFactor}
-      qualitativeRangeColors={qualitativeRangeColors}
-      animate={animate}
-      dimmedOpacity={dimmedOpacity}
-      precision={precision}
-      naLabel={naLabel}
-    />
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
+    >
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          {showColorScale && data.filter(el => el.qualitativeRange).length !== 0 && colorDomain ? (
+            <ColorLegend
+              width={width}
+              colorLegendTitle={colorLegendTitle}
+              colors={qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10}
+              colorDomain={colorDomain}
+              showNAColor={false}
+              className={classNames?.colorLegend}
+            />
+          ) : null}
+          <GraphArea ref={graphDiv}>
+            {svgWidth && svgHeight ? (
+              <Comp
+                data={
+                  sortData
+                    ? orderBy(
+                        data.filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
+                        [
+                          d =>
+                            d.size === undefined
+                              ? sortData === 'asc'
+                                ? (orientation === 'horizontal' ? 1 : -1) * Infinity
+                                : (orientation === 'horizontal' ? -1 : 1) * Infinity
+                              : d.size,
+                        ],
+                        [sortData],
+                      ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                    : data
+                        .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
+                        .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                }
+                barColor={barColor}
+                targetColor={targetColor}
+                width={svgWidth}
+                refValues={refValues}
+                height={svgHeight}
+                suffix={suffix}
+                prefix={prefix}
+                barPadding={barPadding}
+                showLabels={showLabels}
+                showValues={showValues}
+                showTicks={showTicks}
+                truncateBy={truncateBy}
+                leftMargin={leftMargin}
+                rightMargin={rightMargin}
+                qualitativeRangeColors={
+                  qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10
+                }
+                topMargin={topMargin}
+                bottomMargin={bottomMargin}
+                tooltip={tooltip}
+                onSeriesMouseOver={onSeriesMouseOver}
+                maxValue={maxValue}
+                minValue={minValue}
+                highlightedDataPoints={highlightedDataPoints}
+                onSeriesMouseClick={onSeriesMouseClick}
+                labelOrder={labelOrder}
+                maxBarThickness={maxBarThickness}
+                minBarThickness={minBarThickness}
+                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                detailsOnClick={detailsOnClick}
+                barAxisTitle={barAxisTitle}
+                noOfTicks={noOfTicks}
+                valueColor={valueColor}
+                styles={styles}
+                classNames={classNames}
+                targetStyle={targetStyle}
+                dimmedOpacity={dimmedOpacity}
+                measureBarWidthFactor={measureBarWidthFactor}
+                animate={
+                  animate === true
+                    ? { duration: 0.5, once: true, amount: 0.5 }
+                    : animate || { duration: 0, once: true, amount: 0 }
+                }
+                precision={precision}
+                customLayers={customLayers}
+                naLabel={naLabel}
+                rtl={language === 'ar' || language === 'he'}
+              />
+            ) : null}
+          </GraphArea>
+        </>
+      )}
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

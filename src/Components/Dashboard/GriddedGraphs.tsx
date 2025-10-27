@@ -7,6 +7,8 @@ import { RadioGroup, RadioGroupItem } from '@undp/design-system-react/RadioGroup
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
 import { Label } from '@undp/design-system-react/Label';
 
+import { GraphContainer } from '../Elements/GraphContainer';
+
 import GraphEl from './GraphEl';
 
 import {
@@ -198,519 +200,460 @@ export function GriddedGraphs(props: Props) {
     setFilterSettings(prev => prev.map(f => (f.filter === filter ? { ...f, value: values } : f)));
   }, []);
   return (
-    <div
-      className={`${theme || graphSettings?.theme || 'light'} flex  ${
-        graphSettings?.width ? 'w-fit grow-0' : 'w-full grow'
-      }`}
-      dir={graphSettings?.language === 'he' || graphSettings?.language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={graphSettings?.classNames?.graphContainer}
+      style={graphSettings?.styles?.graphContainer}
+      id={graphSettings?.graphID}
+      ref={graphParentDiv}
+      aria-label={graphSettings?.ariaLabel || 'This is a gridded graph'}
+      backgroundColor={graphSettings?.backgroundColor ?? false}
+      theme={graphSettings?.theme || 'light'}
+      language={graphSettings?.language || 'en'}
+      width={graphSettings?.width}
+      height={graphSettings?.height}
+      padding={graphSettings?.padding}
     >
-      <div
-        className={`${
-          !graphSettings?.backgroundColor
-            ? 'bg-transparent '
-            : graphSettings?.backgroundColor === true
-              ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-              : ''
-        }ml-auto mr-auto flex flex-col grow h-inherit ${graphSettings?.language || 'en'}`}
-        style={{
-          ...(graphSettings?.backgroundColor && graphSettings?.backgroundColor !== true
-            ? { backgroundColor: graphSettings?.backgroundColor }
-            : {}),
-        }}
-        id={graphSettings?.graphID}
-        ref={graphParentDiv}
-        aria-label={
-          graphSettings?.ariaLabel ||
-          `${
-            graphSettings?.graphTitle ? `The graph shows ${graphSettings?.graphTitle}. ` : ''
-          }This is a gridded chart.${
-            graphSettings?.graphDescription ? ` ${graphSettings?.graphDescription}` : ''
-          }`
-        }
-      >
-        <div
-          style={{
-            padding: graphSettings?.backgroundColor
-              ? graphSettings?.padding || '1rem'
-              : graphSettings?.padding || 0,
-            flexGrow: 1,
-            display: 'flex',
+      {advancedGraphSettings?.graphTitle ||
+      advancedGraphSettings?.graphDescription ||
+      graphSettings?.graphTitle ||
+      graphSettings?.graphDescription ||
+      graphSettings?.graphDownload ||
+      graphSettings?.dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: advancedGraphSettings?.styles?.title || graphSettings?.styles?.title,
+            description:
+              advancedGraphSettings?.styles?.description || graphSettings?.styles?.description,
           }}
-        >
-          <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {advancedGraphSettings?.graphTitle ||
-            advancedGraphSettings?.graphDescription ||
-            graphSettings?.graphTitle ||
-            graphSettings?.graphDescription ||
-            graphSettings?.graphDownload ||
-            graphSettings?.dataDownload ? (
-              <GraphHeader
-                styles={{
-                  title: advancedGraphSettings?.styles?.title || graphSettings?.styles?.title,
-                  description:
-                    advancedGraphSettings?.styles?.description ||
-                    graphSettings?.styles?.description,
-                }}
-                classNames={{
-                  title:
-                    advancedGraphSettings?.classNames?.title || graphSettings?.classNames?.title,
-                  description:
-                    advancedGraphSettings?.classNames?.description ||
-                    graphSettings?.classNames?.description,
-                }}
-                graphTitle={advancedGraphSettings?.graphTitle || graphSettings?.graphTitle}
-                graphDescription={
-                  advancedGraphSettings?.graphDescription || graphSettings?.graphDescription
-                }
-                width={advancedGraphSettings?.width || graphSettings?.width}
-                graphDownload={graphSettings?.graphDownload ? graphParentDiv.current : undefined}
-                dataDownload={
-                  graphSettings?.dataDownload && data ? (data.length > 0 ? data : null) : null
-                }
-              />
-            ) : null}
-            {data && gridOption.length > 0 ? (
-              <>
-                {filterSettings.length !== 0 ||
-                (dataSelectionOptions || []).length !== 0 ||
-                (advancedDataSelectionOptions || []).length !== 0 ? (
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: '1rem',
-                      flexWrap: 'wrap',
-                      alignItems: 'flex-start',
-                      width: '100%',
-                    }}
-                  >
-                    {advancedDataSelectionOptions?.map((d, i) => (
-                      <div
-                        style={{
-                          width:
-                            d.width ||
-                            `calc(${100 / noOfFiltersPerRow}% - ${
-                              (noOfFiltersPerRow - 1) / noOfFiltersPerRow
-                            }rem)`,
-                          flexGrow: 1,
-                          flexShrink: d.ui !== 'radio' ? 0 : 1,
-                          minWidth: '240px',
-                        }}
-                        key={i}
-                      >
-                        <Label className='mb-2'>{d.label || 'Graph by'}</Label>
-                        {d.ui !== 'radio' ? (
-                          <DropdownSelect
-                            options={d.options.map(opt => ({
-                              ...opt,
-                              value: opt.label,
-                            }))}
-                            isClearable={false}
-                            isSearchable
-                            variant={uiMode}
-                            controlShouldRenderValue
-                            defaultValue={
-                              d.defaultValue
-                                ? {
-                                    ...d.defaultValue,
-                                    value: d.defaultValue?.label,
-                                  }
-                                : {
-                                    ...d.options[0],
-                                    value: d.options[0].label,
-                                  }
-                            }
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            onChange={(el: any) => {
-                              setAdvancedGraphSettings(el?.graphSettings || {});
-                              setGraphConfig(el?.dataConfiguration);
-                            }}
-                          />
-                        ) : (
-                          <RadioGroup
-                            defaultValue={d.defaultValue?.label || d.options[0].label}
-                            variant={uiMode}
-                            onValueChange={el => {
-                              const selectedOption =
-                                d.options[d.options.findIndex(opt => opt.label === el)];
-                              setAdvancedGraphSettings(selectedOption.graphSettings || {});
-                              setGraphConfig(selectedOption.dataConfiguration);
-                            }}
-                          >
-                            {d.options.map((el, j) => (
-                              <RadioGroupItem label={el.label} value={el.label} key={j} />
-                            ))}
-                          </RadioGroup>
-                        )}
-                      </div>
-                    ))}
-                    {dataSelectionOptions?.map((d, i) => (
-                      <div
-                        style={{
-                          width:
-                            d.width ||
-                            `calc(${100 / noOfFiltersPerRow}% - ${
-                              (noOfFiltersPerRow - 1) / noOfFiltersPerRow
-                            }rem)`,
-                          flexGrow: 1,
-                          flexShrink: d.ui !== 'radio' ? 0 : 1,
-                          minWidth: '240px',
-                        }}
-                        key={i}
-                      >
-                        <Label className='mb-2'>
-                          {d.label || `Visualize ${d.chartConfigId} by`}
-                        </Label>
-                        {!checkIfMultiple(d.chartConfigId, graphConfig || []) ? (
-                          d.ui !== 'radio' ? (
-                            <DropdownSelect
-                              options={d.allowedColumnIds}
-                              isClearable={false}
-                              isSearchable
-                              variant={uiMode}
-                              defaultValue={
-                                graphDataConfiguration
-                                  ? d.allowedColumnIds[
-                                      d.allowedColumnIds.findIndex(
-                                        j =>
-                                          j.value ===
-                                          (graphDataConfiguration[
-                                            graphDataConfiguration.findIndex(
-                                              el => el.chartConfigId === d.chartConfigId,
-                                            )
-                                          ].columnId as string),
-                                      )
-                                    ]
-                                  : undefined
-                              }
-                              controlShouldRenderValue
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              onChange={(el: any) => {
-                                const newGraphConfig = {
-                                  columnId: el?.value as string,
-                                  chartConfigId: d.chartConfigId,
-                                };
-                                const updatedConfig = graphConfig?.map(item =>
-                                  item.chartConfigId === newGraphConfig.chartConfigId
-                                    ? newGraphConfig
-                                    : item,
-                                );
-                                setAdvancedGraphSettings(el?.graphSettings || {});
-                                setGraphConfig(updatedConfig);
-                              }}
-                            />
-                          ) : (
-                            <RadioGroup
-                              variant={uiMode}
-                              defaultValue={
-                                graphDataConfiguration
-                                  ? d.allowedColumnIds[
-                                      d.allowedColumnIds.findIndex(
-                                        j =>
-                                          j.value ===
-                                          (graphDataConfiguration[
-                                            graphDataConfiguration.findIndex(
-                                              el => el.chartConfigId === d.chartConfigId,
-                                            )
-                                          ].columnId as string),
-                                      )
-                                    ].label
-                                  : ''
-                              }
-                              onValueChange={el => {
-                                const selectedOption =
-                                  d.allowedColumnIds[
-                                    d.allowedColumnIds.findIndex(opt => opt.label === el)
-                                  ];
-                                const newGraphConfig = {
-                                  columnId: selectedOption.value,
-                                  chartConfigId: d.chartConfigId,
-                                };
-                                const updatedConfig = graphConfig?.map(item =>
-                                  item.chartConfigId === newGraphConfig.chartConfigId
-                                    ? newGraphConfig
-                                    : item,
-                                );
-                                setAdvancedGraphSettings(selectedOption.graphSettings || {});
-                                setGraphConfig(updatedConfig);
-                              }}
-                            >
-                              {d.allowedColumnIds.map((el, j) => (
-                                <RadioGroupItem label={el.label} value={el.label} key={j} />
-                              ))}
-                            </RadioGroup>
-                          )
-                        ) : d.ui !== 'radio' ? (
-                          <DropdownSelect
-                            options={d.allowedColumnIds}
-                            isMulti
-                            variant={uiMode}
-                            isSearchable
-                            controlShouldRenderValue
-                            defaultValue={
-                              graphDataConfiguration
-                                ? (
-                                    graphDataConfiguration[
-                                      graphDataConfiguration.findIndex(
-                                        el => el.chartConfigId === d.chartConfigId,
-                                      )
-                                    ].columnId as string[]
-                                  ).map(
-                                    el =>
-                                      d.allowedColumnIds[
-                                        d.allowedColumnIds.findIndex(j => j.value === el)
-                                      ],
-                                  )
-                                : undefined
-                            }
-                            filterOption={createFilter(filterConfig)}
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            onChange={(el: any) => {
-                              const newGraphConfig = {
-                                columnId: el.map(
-                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                  (item: any) => item.value,
-                                ) as string[],
-                                chartConfigId: d.chartConfigId,
-                              };
-                              const updatedConfig = graphConfig?.map(item =>
-                                item.chartConfigId === newGraphConfig.chartConfigId
-                                  ? newGraphConfig
-                                  : item,
-                              );
-                              setGraphConfig(updatedConfig);
-                            }}
-                            isRtl={
-                              graphSettings?.language === 'ar' || graphSettings?.language === 'he'
-                            }
-                          />
-                        ) : (
-                          <CheckboxGroup
-                            variant={uiMode}
-                            defaultValue={
-                              graphDataConfiguration
-                                ? (
-                                    graphDataConfiguration[
-                                      graphDataConfiguration.findIndex(
-                                        el => el.chartConfigId === d.chartConfigId,
-                                      )
-                                    ].columnId as string[]
-                                  )
-                                    .map(
-                                      el =>
-                                        d.allowedColumnIds[
-                                          d.allowedColumnIds.findIndex(j => j.value === el)
-                                        ],
-                                    )
-                                    .map(el => el.value)
-                                : []
-                            }
-                            onValueChange={el => {
-                              const newGraphConfig = {
-                                columnId: el || [],
-                                chartConfigId: d.chartConfigId,
-                              };
-                              const updatedConfig = graphConfig?.map(item =>
-                                item.chartConfigId === newGraphConfig.chartConfigId
-                                  ? newGraphConfig
-                                  : item,
-                              );
-                              setGraphConfig(updatedConfig);
-                            }}
-                          >
-                            {d.allowedColumnIds.map((el, j) => (
-                              <CheckboxGroupItem label={el.label} value={el.label} key={j} />
-                            ))}
-                          </CheckboxGroup>
-                        )}
-                      </div>
-                    ))}
-                    {filterSettings?.map((d, i) => (
-                      <div
-                        style={{
-                          width:
-                            d.width ||
-                            `calc(${100 / noOfFiltersPerRow}% - ${
-                              (noOfFiltersPerRow - 1) / noOfFiltersPerRow
-                            }rem)`,
-                          flexGrow: 1,
-                          flexShrink: 0,
-                          flexWrap: 'wrap',
-                        }}
-                        key={i}
-                      >
-                        <Label className='mb-2'>{d.label}</Label>
-                        {d.singleSelect ? (
-                          <DropdownSelect
-                            variant={uiMode}
-                            options={d.availableValues}
-                            isClearable={d.clearable === undefined ? true : d.clearable}
-                            isRtl={
-                              graphSettings?.language === 'ar' || graphSettings?.language === 'he'
-                            }
-                            isSearchable
-                            controlShouldRenderValue
-                            filterOption={createFilter(filterConfig)}
-                            onChange={el => {
-                              handleFilterChange(d.filter, el);
-                            }}
-                            defaultValue={d.defaultValue}
-                          />
-                        ) : (
-                          <>
-                            <DropdownSelect
-                              variant={uiMode}
-                              options={d.availableValues}
-                              isMulti
-                              isClearable={d.clearable === undefined ? true : d.clearable}
-                              isSearchable
-                              controlShouldRenderValue
-                              filterOption={createFilter(filterConfig)}
-                              onChange={el => {
-                                handleFilterChange(d.filter, el);
-                              }}
-                              defaultValue={d.defaultValue}
-                              isRtl={
-                                graphSettings?.language === 'ar' || graphSettings?.language === 'he'
-                              }
-                            />
-                            {d.allowSelectAll ? (
-                              <button
-                                className='bg-transparent border-0 p-0 mt-2 cursor-pointer text-primary-blue-600 dark:text-primary-blue-400'
-                                type='button'
-                                onClick={() => {
-                                  handleFilterChange(d.filter, d.availableValues);
-                                }}
-                              >
-                                Select all options
-                              </button>
-                            ) : null}
-                          </>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-                {showCommonColorScale !== false && graphSettings?.showColorScale !== false ? (
-                  <ColorLegend
-                    width={graphSettings?.width}
-                    colorLegendTitle={graphSettings?.colorLegendTitle}
-                    colors={
-                      (graphSettings?.colors as string[] | undefined) ||
-                      (graphSettings?.lineColors as string[] | undefined) ||
-                      Colors[(graphSettings?.theme as 'light' | 'dark' | undefined) || 'light']
-                        .categoricalColors.colors
-                    }
-                    colorDomain={graphSettings?.colorDomain || graphSettings?.labels || []}
-                    showNAColor={
-                      graphSettings?.showNAColor === undefined ||
-                      graphSettings?.showNAColor === null
-                        ? true
-                        : graphSettings?.showNAColor
-                    }
-                  />
-                ) : null}
+          classNames={{
+            title: advancedGraphSettings?.classNames?.title || graphSettings?.classNames?.title,
+            description:
+              advancedGraphSettings?.classNames?.description ||
+              graphSettings?.classNames?.description,
+          }}
+          graphTitle={advancedGraphSettings?.graphTitle || graphSettings?.graphTitle}
+          graphDescription={
+            advancedGraphSettings?.graphDescription || graphSettings?.graphDescription
+          }
+          width={advancedGraphSettings?.width || graphSettings?.width}
+          graphDownload={graphSettings?.graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            graphSettings?.dataDownload && data ? (data.length > 0 ? data : null) : null
+          }
+        />
+      ) : null}
+      {data && gridOption.length > 0 ? (
+        <>
+          {filterSettings.length !== 0 ||
+          (dataSelectionOptions || []).length !== 0 ||
+          (advancedDataSelectionOptions || []).length !== 0 ? (
+            <div className='flex flex-wrap items-start gap-x-4 gap-y-0 w-full'>
+              {advancedDataSelectionOptions?.map((d, i) => (
                 <div
                   style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '1rem',
-                    flexDirection:
-                      graphSettings?.language === 'ar' || graphSettings?.language === 'he'
-                        ? 'row-reverse'
-                        : 'row',
-                    justifyContent: 'center',
+                    width:
+                      d.width ||
+                      `calc(${100 / noOfFiltersPerRow}% - ${
+                        (noOfFiltersPerRow - 1) / noOfFiltersPerRow
+                      }rem)`,
+                    flexGrow: 1,
+                    flexShrink: d.ui !== 'radio' ? 0 : 1,
+                    minWidth: '240px',
                   }}
+                  className='pb-4'
+                  key={i}
                 >
-                  {gridOption.map((el, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        width: `calc(${
-                          100 /
-                          (noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number))
-                        }% - ${
-                          ((noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number)) -
-                            1) /
-                          (noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number))
-                        }rem)`,
-                        minWidth: checkIfNullOrUndefined(minGraphWidth)
-                          ? '280px'
-                          : `${minGraphWidth}px`,
+                  <Label className='mb-2'>{d.label || 'Graph by'}</Label>
+                  {d.ui !== 'radio' ? (
+                    <DropdownSelect
+                      options={d.options.map(opt => ({
+                        ...opt,
+                        value: opt.label,
+                      }))}
+                      isClearable={false}
+                      isSearchable
+                      variant={uiMode}
+                      controlShouldRenderValue
+                      defaultValue={
+                        d.defaultValue
+                          ? {
+                              ...d.defaultValue,
+                              value: d.defaultValue?.label,
+                            }
+                          : {
+                              ...d.options[0],
+                              value: d.options[0].label,
+                            }
+                      }
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      onChange={(el: any) => {
+                        setAdvancedGraphSettings(el?.graphSettings || {});
+                        setGraphConfig(el?.dataConfiguration);
+                      }}
+                    />
+                  ) : (
+                    <RadioGroup
+                      defaultValue={d.defaultValue?.label || d.options[0].label}
+                      variant={uiMode}
+                      onValueChange={el => {
+                        const selectedOption =
+                          d.options[d.options.findIndex(opt => opt.label === el)];
+                        setAdvancedGraphSettings(selectedOption.graphSettings || {});
+                        setGraphConfig(selectedOption.dataConfiguration);
                       }}
                     >
-                      <GraphEl
-                        graph={graphType}
-                        graphDataConfiguration={graphConfig}
-                        graphData={
-                          transformDataForGraph(
-                            dataTransform
-                              ? transformDataForAggregation(
-                                  filterData(data, dataFilters || []).filter(
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                    (d: any) => d[columnGridBy] === el,
-                                  ),
-                                  dataTransform.keyColumn,
-                                  dataTransform.aggregationColumnsSetting,
-                                )
-                              : filterData(data, dataFilters || []).filter(
-                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                  (d: any) => d[columnGridBy] === el,
-                                ),
-                            graphType,
-                            graphConfig,
-                          ) || []
-                        }
-                        debugMode={debugMode}
-                        settings={{
-                          ...(graphSettings || {}),
-                          ...advancedGraphSettings,
-                          theme: graphSettings?.theme || theme,
-                          width: undefined,
-                          height: undefined,
-                          relativeHeight: graphSettings?.relativeHeight || 0.67,
-                          minHeight: minGraphHeight,
-                          graphTitle: `${el}`,
-                          graphDescription: undefined,
-                          graphDownload: false,
-                          dataDownload: false,
-                          backgroundColor: undefined,
-                          padding: '0',
-                          footNote: undefined,
-                          sources: undefined,
-                          showColorScale:
-                            graphSettings?.showColorScale === false
-                              ? false
-                              : showCommonColorScale === false,
-                        }}
-                        readableHeader={readableHeader || []}
-                      />
-                    </div>
-                  ))}
+                      {d.options.map((el, j) => (
+                        <RadioGroupItem label={el.label} value={el.label} key={j} />
+                      ))}
+                    </RadioGroup>
+                  )}
                 </div>
-              </>
-            ) : (
-              <div className='w-full flex justify-center p-4'>
-                <Spinner />
+              ))}
+              {dataSelectionOptions?.map((d, i) => (
+                <div
+                  style={{
+                    width:
+                      d.width ||
+                      `calc(${100 / noOfFiltersPerRow}% - ${
+                        (noOfFiltersPerRow - 1) / noOfFiltersPerRow
+                      }rem)`,
+                    flexGrow: 1,
+                    flexShrink: d.ui !== 'radio' ? 0 : 1,
+                    minWidth: '240px',
+                  }}
+                  className='pb-4'
+                  key={i}
+                >
+                  <Label className='mb-2'>{d.label || `Visualize ${d.chartConfigId} by`}</Label>
+                  {!checkIfMultiple(d.chartConfigId, graphConfig || []) ? (
+                    d.ui !== 'radio' ? (
+                      <DropdownSelect
+                        options={d.allowedColumnIds}
+                        isClearable={false}
+                        isSearchable
+                        variant={uiMode}
+                        defaultValue={
+                          graphDataConfiguration
+                            ? d.allowedColumnIds[
+                                d.allowedColumnIds.findIndex(
+                                  j =>
+                                    j.value ===
+                                    (graphDataConfiguration[
+                                      graphDataConfiguration.findIndex(
+                                        el => el.chartConfigId === d.chartConfigId,
+                                      )
+                                    ].columnId as string),
+                                )
+                              ]
+                            : undefined
+                        }
+                        controlShouldRenderValue
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        onChange={(el: any) => {
+                          const newGraphConfig = {
+                            columnId: el?.value as string,
+                            chartConfigId: d.chartConfigId,
+                          };
+                          const updatedConfig = graphConfig?.map(item =>
+                            item.chartConfigId === newGraphConfig.chartConfigId
+                              ? newGraphConfig
+                              : item,
+                          );
+                          setAdvancedGraphSettings(el?.graphSettings || {});
+                          setGraphConfig(updatedConfig);
+                        }}
+                      />
+                    ) : (
+                      <RadioGroup
+                        variant={uiMode}
+                        defaultValue={
+                          graphDataConfiguration
+                            ? d.allowedColumnIds[
+                                d.allowedColumnIds.findIndex(
+                                  j =>
+                                    j.value ===
+                                    (graphDataConfiguration[
+                                      graphDataConfiguration.findIndex(
+                                        el => el.chartConfigId === d.chartConfigId,
+                                      )
+                                    ].columnId as string),
+                                )
+                              ].label
+                            : ''
+                        }
+                        onValueChange={el => {
+                          const selectedOption =
+                            d.allowedColumnIds[
+                              d.allowedColumnIds.findIndex(opt => opt.label === el)
+                            ];
+                          const newGraphConfig = {
+                            columnId: selectedOption.value,
+                            chartConfigId: d.chartConfigId,
+                          };
+                          const updatedConfig = graphConfig?.map(item =>
+                            item.chartConfigId === newGraphConfig.chartConfigId
+                              ? newGraphConfig
+                              : item,
+                          );
+                          setAdvancedGraphSettings(selectedOption.graphSettings || {});
+                          setGraphConfig(updatedConfig);
+                        }}
+                      >
+                        {d.allowedColumnIds.map((el, j) => (
+                          <RadioGroupItem label={el.label} value={el.label} key={j} />
+                        ))}
+                      </RadioGroup>
+                    )
+                  ) : d.ui !== 'radio' ? (
+                    <DropdownSelect
+                      options={d.allowedColumnIds}
+                      isMulti
+                      variant={uiMode}
+                      isSearchable
+                      controlShouldRenderValue
+                      defaultValue={
+                        graphDataConfiguration
+                          ? (
+                              graphDataConfiguration[
+                                graphDataConfiguration.findIndex(
+                                  el => el.chartConfigId === d.chartConfigId,
+                                )
+                              ].columnId as string[]
+                            ).map(
+                              el =>
+                                d.allowedColumnIds[
+                                  d.allowedColumnIds.findIndex(j => j.value === el)
+                                ],
+                            )
+                          : undefined
+                      }
+                      filterOption={createFilter(filterConfig)}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      onChange={(el: any) => {
+                        const newGraphConfig = {
+                          columnId: el.map(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (item: any) => item.value,
+                          ) as string[],
+                          chartConfigId: d.chartConfigId,
+                        };
+                        const updatedConfig = graphConfig?.map(item =>
+                          item.chartConfigId === newGraphConfig.chartConfigId
+                            ? newGraphConfig
+                            : item,
+                        );
+                        setGraphConfig(updatedConfig);
+                      }}
+                      isRtl={graphSettings?.language === 'ar' || graphSettings?.language === 'he'}
+                    />
+                  ) : (
+                    <CheckboxGroup
+                      variant={uiMode}
+                      defaultValue={
+                        graphDataConfiguration
+                          ? (
+                              graphDataConfiguration[
+                                graphDataConfiguration.findIndex(
+                                  el => el.chartConfigId === d.chartConfigId,
+                                )
+                              ].columnId as string[]
+                            )
+                              .map(
+                                el =>
+                                  d.allowedColumnIds[
+                                    d.allowedColumnIds.findIndex(j => j.value === el)
+                                  ],
+                              )
+                              .map(el => el.value)
+                          : []
+                      }
+                      onValueChange={el => {
+                        const newGraphConfig = {
+                          columnId: el || [],
+                          chartConfigId: d.chartConfigId,
+                        };
+                        const updatedConfig = graphConfig?.map(item =>
+                          item.chartConfigId === newGraphConfig.chartConfigId
+                            ? newGraphConfig
+                            : item,
+                        );
+                        setGraphConfig(updatedConfig);
+                      }}
+                    >
+                      {d.allowedColumnIds.map((el, j) => (
+                        <CheckboxGroupItem label={el.label} value={el.label} key={j} />
+                      ))}
+                    </CheckboxGroup>
+                  )}
+                </div>
+              ))}
+              {filterSettings?.map((d, i) => (
+                <div
+                  style={{
+                    width:
+                      d.width ||
+                      `calc(${100 / noOfFiltersPerRow}% - ${
+                        (noOfFiltersPerRow - 1) / noOfFiltersPerRow
+                      }rem)`,
+                    flexGrow: 1,
+                    flexShrink: 0,
+                    flexWrap: 'wrap',
+                  }}
+                  className='pb-4'
+                  key={i}
+                >
+                  <Label className='mb-2'>{d.label}</Label>
+                  {d.singleSelect ? (
+                    <DropdownSelect
+                      variant={uiMode}
+                      options={d.availableValues}
+                      isClearable={d.clearable === undefined ? true : d.clearable}
+                      isRtl={graphSettings?.language === 'ar' || graphSettings?.language === 'he'}
+                      isSearchable
+                      controlShouldRenderValue
+                      filterOption={createFilter(filterConfig)}
+                      onChange={el => {
+                        handleFilterChange(d.filter, el);
+                      }}
+                      defaultValue={d.defaultValue}
+                    />
+                  ) : (
+                    <>
+                      <DropdownSelect
+                        variant={uiMode}
+                        options={d.availableValues}
+                        isMulti
+                        isClearable={d.clearable === undefined ? true : d.clearable}
+                        isSearchable
+                        controlShouldRenderValue
+                        filterOption={createFilter(filterConfig)}
+                        onChange={el => {
+                          handleFilterChange(d.filter, el);
+                        }}
+                        defaultValue={d.defaultValue}
+                        isRtl={graphSettings?.language === 'ar' || graphSettings?.language === 'he'}
+                      />
+                      {d.allowSelectAll ? (
+                        <button
+                          className='bg-transparent border-0 p-0 mt-2 cursor-pointer text-primary-blue-600 dark:text-primary-blue-400'
+                          type='button'
+                          onClick={() => {
+                            handleFilterChange(d.filter, d.availableValues);
+                          }}
+                        >
+                          Select all options
+                        </button>
+                      ) : null}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {showCommonColorScale !== false && graphSettings?.showColorScale !== false ? (
+            <ColorLegend
+              width={graphSettings?.width}
+              colorLegendTitle={graphSettings?.colorLegendTitle}
+              colors={
+                (graphSettings?.colors as string[] | undefined) ||
+                (graphSettings?.lineColors as string[] | undefined) ||
+                Colors[(graphSettings?.theme as 'light' | 'dark' | undefined) || 'light']
+                  .categoricalColors.colors
+              }
+              colorDomain={graphSettings?.colorDomain || graphSettings?.labels || []}
+              showNAColor={
+                graphSettings?.showNAColor === undefined || graphSettings?.showNAColor === null
+                  ? true
+                  : graphSettings?.showNAColor
+              }
+            />
+          ) : null}
+          <div
+            className={`flex flex-wrap gap-4 justify-center ${graphSettings?.language === 'ar' || graphSettings?.language === 'he' ? 'flex-row-reverse' : 'flex-row'}`}
+          >
+            {gridOption.map((el, i) => (
+              <div
+                key={i}
+                style={{
+                  width: `calc(${
+                    100 / (noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number))
+                  }% - ${
+                    ((noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number)) - 1) /
+                    (noOfColumns || (Math.min(...[4, gridOption.length || 0]) as number))
+                  }rem)`,
+                  minWidth: checkIfNullOrUndefined(minGraphWidth) ? '280px' : `${minGraphWidth}px`,
+                }}
+              >
+                <GraphEl
+                  graph={graphType}
+                  graphDataConfiguration={graphConfig}
+                  graphData={
+                    transformDataForGraph(
+                      dataTransform
+                        ? transformDataForAggregation(
+                            filterData(data, dataFilters || []).filter(
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              (d: any) => d[columnGridBy] === el,
+                            ),
+                            dataTransform.keyColumn,
+                            dataTransform.aggregationColumnsSetting,
+                          )
+                        : filterData(data, dataFilters || []).filter(
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            (d: any) => d[columnGridBy] === el,
+                          ),
+                      graphType,
+                      graphConfig,
+                    ) || []
+                  }
+                  debugMode={debugMode}
+                  settings={{
+                    ...(graphSettings || {}),
+                    ...advancedGraphSettings,
+                    theme: graphSettings?.theme || theme,
+                    width: undefined,
+                    height: undefined,
+                    relativeHeight: graphSettings?.relativeHeight || 0.67,
+                    minHeight: minGraphHeight,
+                    graphTitle: `${el}`,
+                    graphDescription: undefined,
+                    graphDownload: false,
+                    dataDownload: false,
+                    backgroundColor: undefined,
+                    padding: '0',
+                    footNote: undefined,
+                    sources: undefined,
+                    showColorScale:
+                      graphSettings?.showColorScale === false
+                        ? false
+                        : showCommonColorScale === false,
+                  }}
+                  readableHeader={readableHeader || []}
+                />
               </div>
-            )}
-            {graphSettings?.sources || graphSettings?.footNote ? (
-              <GraphFooter
-                styles={{
-                  footnote: graphSettings?.styles?.footnote,
-                  source: graphSettings?.styles?.source,
-                }}
-                classNames={{
-                  footnote: graphSettings?.classNames?.footnote,
-                  source: graphSettings?.classNames?.source,
-                }}
-                sources={graphSettings?.sources}
-                footNote={graphSettings?.footNote}
-                width={graphSettings?.width}
-              />
-            ) : null}
+            ))}
           </div>
+        </>
+      ) : (
+        <div className='w-full flex justify-center p-4'>
+          <Spinner />
         </div>
-      </div>
-    </div>
+      )}
+      {graphSettings?.sources || graphSettings?.footNote ? (
+        <GraphFooter
+          styles={{
+            footnote: graphSettings?.styles?.footnote,
+            source: graphSettings?.styles?.source,
+          }}
+          classNames={{
+            footnote: graphSettings?.classNames?.footnote,
+            source: graphSettings?.classNames?.source,
+          }}
+          sources={graphSettings?.sources}
+          footNote={graphSettings?.footNote}
+          width={graphSettings?.width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

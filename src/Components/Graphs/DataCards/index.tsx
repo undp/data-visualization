@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useEffectEvent, useRef, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
-import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
 import { Pagination } from '@undp/design-system-react/Pagination';
 import { Search } from '@undp/design-system-react/Search';
 import orderBy from 'lodash.orderby';
+import { Spacer } from '@undp/design-system-react/Spacer';
 
 import { Graph } from './Graph';
 
@@ -15,6 +15,7 @@ import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { getUniqValue } from '@/Utils/getUniqValue';
 import { transformDefaultValue } from '@/Utils/transformDataForSelect';
+import { GraphContainer } from '@/Components/Elements/GraphContainer';
 
 export type FilterDataType = {
   column: string;
@@ -145,23 +146,20 @@ export function DataCards(props: Props) {
   const [cardData, setCardData] = useState(data);
 
   const [page, setPage] = useState(1);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const filterSettings = useMemo(
-    () =>
-      (cardFilters || []).map(el => ({
-        filter: el.column,
-        label: el.label || `Filter by ${el.column}`,
-        singleSelect: true,
-        clearable: true,
-        defaultValue: transformDefaultValue(el.defaultValue),
-        availableValues: getUniqValue(data, el.column)
-          .filter(v => !el.excludeValues?.includes(`${v}`))
-          .map(v => ({ value: v, label: v })),
-        width: el.width,
-      })),
-    [cardFilters, data],
-  );
+  const filterSettings = (cardFilters || []).map(el => ({
+    filter: el.column,
+    label: el.label || `Filter by ${el.column}`,
+    singleSelect: true,
+    clearable: true,
+    defaultValue: transformDefaultValue(el.defaultValue),
+    availableValues: getUniqValue(data, el.column)
+      .filter(v => !el.excludeValues?.includes(`${v}`))
+      .map(v => ({ value: v, label: v })),
+    width: el.width,
+  }));
 
   const [selectedFilters, setSelectedFilters] = useState(
     (cardFilters || []).map(el => ({
@@ -188,16 +186,12 @@ export function DataCards(props: Props) {
       : undefined,
   );
 
-  const filterConfig = useMemo(
-    () => ({
-      ignoreCase: true,
-      ignoreAccents: true,
-      trim: true,
-    }),
-    [],
-  );
-
-  useEffect(() => {
+  const filterConfig = {
+    ignoreCase: true,
+    ignoreAccents: true,
+    trim: true,
+  };
+  const cardSortingEvent = useEffectEvent(() => {
     setSortedBy(
       cardSortingOptions
         ? !cardSortingOptions.defaultValue ||
@@ -212,8 +206,16 @@ export function DataCards(props: Props) {
             ]
         : undefined,
     );
+  });
+  useEffect(() => {
+    cardSortingEvent();
   }, [cardSortingOptions]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cardDataEvent = useEffectEvent((data: any) => {
+    setCardData(data);
+    setPage(1);
+  });
   useEffect(() => {
     const filteredData = filterByKeys(data, cardSearchColumns || [], searchQuery).filter(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -228,191 +230,168 @@ export function DataCards(props: Props) {
         ),
     );
     if (sortedBy) {
-      setCardData(orderBy(filteredData, [sortedBy.value], [sortedBy.type]));
+      cardDataEvent(orderBy(filteredData, [sortedBy.value], [sortedBy.type]));
     } else {
-      setCardData(filteredData);
+      cardDataEvent(filteredData);
     }
   }, [data, cardSearchColumns, searchQuery, selectedFilters, sortedBy]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [cardData]);
-
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      width={width}
+      height={height}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        aria-label={
-          ariaLabel ||
-          `${graphTitle ? `The graph shows ${graphTitle}. ` : ''}This is an list of cards. ${
-            graphDescription ? ` ${graphDescription}` : ''
-          }`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col grow gap-3 w-full justify-between'>
-            {graphTitle || graphDescription ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
+      {graphTitle || graphDescription ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+        />
+      ) : null}
+      {cardSortingOptions || filterSettings.length > 0 ? (
+        <div className='flex gap-x-4 gap-y-0 flex-wrap items-start w-full pb-3'>
+          {cardSortingOptions ? (
+            <div
+              className='grow shrink-0 min-w-[240px]'
+              style={{ width: cardSortingOptions.width || 'calc(25% - 0.75rem)' }}
+            >
+              <P
+                marginBottom='xs'
+                size='sm'
+                className='text-primary-gray-700 dark:text-primary-gray-100'
+              >
+                Sort by
+              </P>
+              <DropdownSelect
+                options={cardSortingOptions.options}
+                isRtl={language === 'he' || language === 'ar'}
+                isSearchable
+                filterOption={createFilter(filterConfig)}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onChange={(el: any) => {
+                  setSortedBy(el || undefined);
                 }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-              />
-            ) : null}
-            {cardSortingOptions || filterSettings.length > 0 ? (
-              <div className='flex gap-4 flex-wrap items-start w-full'>
-                {cardSortingOptions ? (
-                  <div
-                    className='grow shrink-0 min-w-[240px]'
-                    style={{ width: cardSortingOptions.width || 'calc(25% - 0.75rem)' }}
-                  >
-                    <P
-                      marginBottom='xs'
-                      size='sm'
-                      className='text-primary-gray-700 dark:text-primary-gray-100'
-                    >
-                      Sort by
-                    </P>
-                    <DropdownSelect
-                      options={cardSortingOptions.options}
-                      isRtl={language === 'he' || language === 'ar'}
-                      isSearchable
-                      filterOption={createFilter(filterConfig)}
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      onChange={(el: any) => {
-                        setSortedBy(el || undefined);
-                      }}
-                      variant={uiMode}
-                      size='sm'
-                      defaultValue={
-                        !cardSortingOptions.defaultValue ||
+                variant={uiMode}
+                size='sm'
+                defaultValue={
+                  !cardSortingOptions.defaultValue ||
+                  cardSortingOptions.options.findIndex(
+                    el => el.label === cardSortingOptions.defaultValue,
+                  ) === -1
+                    ? cardSortingOptions.options[0]
+                    : cardSortingOptions.options[
                         cardSortingOptions.options.findIndex(
                           el => el.label === cardSortingOptions.defaultValue,
-                        ) === -1
-                          ? cardSortingOptions.options[0]
-                          : cardSortingOptions.options[
-                              cardSortingOptions.options.findIndex(
-                                el => el.label === cardSortingOptions.defaultValue,
-                              )
-                            ]
-                      }
-                    />
-                  </div>
-                ) : null}
-                {filterSettings?.map((d, i) => (
-                  <div
-                    className='grow shrink-0 min-w-[240px]'
-                    style={{ width: d.width || 'calc(25% - 0.75rem)' }}
-                    key={i}
-                  >
-                    <P
-                      marginBottom='xs'
-                      size='sm'
-                      className='text-primary-gray-700 dark:text-primary-gray-100'
-                    >
-                      {d.label}
-                    </P>
-                    <DropdownSelect
-                      options={d.availableValues}
-                      isClearable={d.clearable === undefined ? true : d.clearable}
-                      isRtl={language === 'he' || language === 'ar'}
-                      isSearchable
-                      variant={uiMode}
-                      size='sm'
-                      controlShouldRenderValue
-                      filterOption={createFilter(filterConfig)}
-                      onChange={el => {
-                        setSelectedFilters(prev =>
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          prev.map(f => (f.filter === d.filter ? { ...f, value: el as any } : f)),
-                        );
-                      }}
-                      defaultValue={d.defaultValue}
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : null}
-            {(cardSearchColumns || []).length > 0 ? (
-              <div style={{ paddingTop: '1px' }}>
-                <Search
-                  placeholder='Search...'
-                  onSearch={e => {
-                    setSearchQuery(e || '');
-                  }}
-                  buttonVariant='icon'
-                  inputVariant={uiMode}
-                  showSearchButton={false}
-                  inputSize='sm'
-                />
-              </div>
-            ) : null}
-            <Graph
-              data={cardData}
-              width={width}
-              height={height}
-              cardTemplate={cardTemplate}
-              cardMinWidth={cardMinWidth}
-              page={page}
-              cardBackgroundColor={cardBackgroundColor}
-              styles={styles}
-              classNames={classNames}
-              noOfItemsInAPage={noOfItemsInAPage}
-              detailsOnClick={detailsOnClick}
-              onSeriesMouseClick={onSeriesMouseClick}
-              allowDataDownloadOnDetail={allowDataDownloadOnDetail}
-            />
-            {noOfItemsInAPage ? (
-              <Pagination
-                total={cardData.length}
-                defaultPage={0}
-                pageSize={noOfItemsInAPage}
-                onChange={setPage}
+                        )
+                      ]
+                }
               />
-            ) : null}
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
+            </div>
+          ) : null}
+          {filterSettings?.map((d, i) => (
+            <div
+              className='grow shrink-0 min-w-[240px]'
+              style={{ width: d.width || 'calc(25% - 0.75rem)' }}
+              key={i}
+            >
+              <P
+                marginBottom='xs'
+                size='sm'
+                className='text-primary-gray-700 dark:text-primary-gray-100'
+              >
+                {d.label}
+              </P>
+              <DropdownSelect
+                options={d.availableValues}
+                isClearable={d.clearable === undefined ? true : d.clearable}
+                isRtl={language === 'he' || language === 'ar'}
+                isSearchable
+                variant={uiMode}
+                size='sm'
+                controlShouldRenderValue
+                filterOption={createFilter(filterConfig)}
+                onChange={el => {
+                  setSelectedFilters(prev =>
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    prev.map(f => (f.filter === d.filter ? { ...f, value: el as any } : f)),
+                  );
                 }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
+                defaultValue={d.defaultValue}
               />
-            ) : null}
-          </div>
+            </div>
+          ))}
         </div>
-      </div>
-    </div>
+      ) : null}
+      <Spacer size='xl' />
+      {(cardSearchColumns || []).length > 0 ? (
+        <div style={{ paddingTop: '1px' }}>
+          <Search
+            placeholder='Search...'
+            onSearch={e => {
+              setSearchQuery(e || '');
+            }}
+            buttonVariant='icon'
+            inputVariant={uiMode}
+            showSearchButton={false}
+            inputSize='sm'
+          />
+        </div>
+      ) : null}
+      <Spacer size='xl' />
+      <Graph
+        data={cardData}
+        width={width}
+        height={height}
+        cardTemplate={cardTemplate}
+        cardMinWidth={cardMinWidth}
+        page={page}
+        cardBackgroundColor={cardBackgroundColor}
+        styles={styles}
+        classNames={classNames}
+        noOfItemsInAPage={noOfItemsInAPage}
+        detailsOnClick={detailsOnClick}
+        onSeriesMouseClick={onSeriesMouseClick}
+        allowDataDownloadOnDetail={allowDataDownloadOnDetail}
+      />
+      <Spacer size='xl' />
+      {noOfItemsInAPage ? (
+        <Pagination
+          total={cardData.length}
+          defaultPage={0}
+          pageSize={noOfItemsInAPage}
+          onChange={setPage}
+        />
+      ) : null}
+      <Spacer size='2xl' />
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

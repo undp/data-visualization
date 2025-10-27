@@ -1,11 +1,11 @@
 import { useRef, useEffect, useState } from 'react';
-import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
 
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { ClassNameObject, Languages, SourcesDataType, StyleObject } from '@/Types';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -86,108 +86,82 @@ export function GeoHubCompareMaps(props: Props) {
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
   const graphDiv = useRef<HTMLDivElement>(null);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 620);
-      setSvgHeight(height || entries[0].target.clientHeight || 480);
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 480);
-      setSvgWidth(graphDiv.current.clientWidth || 620);
-      if (!width) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height]);
+  }, []);
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        aria-label={
-          ariaLabel ||
-          `${
-            graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is a comparison between two maps.${graphDescription ? ` ${graphDescription}` : ''}`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {graphTitle || graphDescription ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-              />
-            ) : null}
-            <div
-              className='flex flex-col grow justify-center leading-0'
-              ref={graphDiv}
-              aria-label='map area'
-            >
-              {(width || svgWidth) && (height || svgHeight) ? (
-                <Graph
-                  width={width || svgWidth}
-                  height={Math.max(
-                    minHeight,
-                    height ||
-                      (relativeHeight
-                        ? minHeight
-                          ? (width || svgWidth) * relativeHeight > minHeight
-                            ? (width || svgWidth) * relativeHeight
-                            : minHeight
-                          : (width || svgWidth) * relativeHeight
-                        : svgHeight),
-                  )}
-                  mapStyles={mapStyles}
-                  center={center}
-                  zoomLevel={zoomLevel}
-                  mapLegend={mapLegend}
-                />
-              ) : null}
-            </div>
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
-                }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
-              />
-            ) : null}
-          </div>
-        </div>
-      </div>
-    </div>
+      {graphTitle || graphDescription ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {svgWidth && svgHeight ? (
+          <Graph
+            width={width || svgWidth}
+            height={Math.max(
+              minHeight,
+              height ||
+                (relativeHeight
+                  ? minHeight
+                    ? (width || svgWidth) * relativeHeight > minHeight
+                      ? (width || svgWidth) * relativeHeight
+                      : minHeight
+                    : (width || svgWidth) * relativeHeight
+                  : svgHeight),
+            )}
+            mapStyles={mapStyles}
+            center={center}
+            zoomLevel={zoomLevel}
+            mapLegend={mapLegend}
+          />
+        ) : null}
+      </GraphArea>
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

@@ -19,7 +19,7 @@ import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 
 interface ConfigObject {
   graphSettings?: GraphSettingsDataType;
-  dataSettings?: DataSettingsDataType;
+  dataSettings: DataSettingsDataType;
   filters?: FilterUiSettingsDataType[];
   graphType: GraphType;
   noOfFiltersPerRow?: number;
@@ -47,16 +47,16 @@ interface Props {
 export function SingleGraphDashboardFromConfig(props: Props) {
   const { config } = props;
   const [configSettings, setConfigSettings] = useState<ConfigObject | undefined>(undefined);
-
   useEffect(() => {
-    if (typeof config === 'string') {
-      const fetchData = fetchAndParseJSON(config);
-      fetchData.then(d => {
-        setConfigSettings(d);
-      });
-    } else {
-      setConfigSettings(config);
-    }
+    const fetchData = async () => {
+      if (typeof config === 'string') {
+        const data = await fetchAndParseJSON(config);
+        setConfigSettings(data);
+      } else {
+        setConfigSettings(config);
+      }
+    };
+    fetchData();
   }, [config]);
   if (!configSettings)
     return (

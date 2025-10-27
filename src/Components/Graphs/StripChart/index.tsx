@@ -1,6 +1,9 @@
-import { HorizontalStripChart } from './Horizontal';
-import { VerticalStripChart } from './Vertical';
+import { useEffect, useRef, useState } from 'react';
 
+import { HorizontalGraph, VerticalGraph } from './Graph';
+
+import { uniqBy } from '@/Utils/uniqBy';
+import { Colors } from '@/Components/ColorPalette';
 import {
   SourcesDataType,
   Languages,
@@ -10,6 +13,11 @@ import {
   CustomLayerDataType,
   AnimateDataType,
 } from '@/Types';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
 
 interface Props {
   // Data
@@ -144,9 +152,9 @@ export function StripChart(props: Props) {
     footNote,
     colorDomain,
     colorLegendTitle,
-    radius,
+    radius = 5,
     padding,
-    backgroundColor,
+    backgroundColor = false,
     leftMargin,
     rightMargin,
     topMargin,
@@ -154,140 +162,175 @@ export function StripChart(props: Props) {
     tooltip,
     relativeHeight,
     onSeriesMouseOver,
-    showColorScale,
-    highlightedDataPoints,
+    showColorScale = true,
+    highlightedDataPoints = [],
     graphID,
     minValue,
     maxValue,
     onSeriesMouseClick,
-    noOfTicks,
-    graphDownload,
-    dataDownload,
-    prefix,
-    suffix,
-    stripType,
-    language,
+    noOfTicks = 2,
+    graphDownload = false,
+    dataDownload = false,
+    prefix = '',
+    suffix = '',
+    stripType = 'dot',
+    language = 'en',
     highlightColor,
-    dotOpacity,
-    showNAColor,
-    minHeight,
-    theme,
+    dotOpacity = 0.3,
+    showNAColor = true,
+    minHeight = 0,
+    theme = 'light',
     ariaLabel,
     valueColor,
-    resetSelectionOnDoubleClick,
+    resetSelectionOnDoubleClick = true,
     detailsOnClick,
     orientation = 'vertical',
     styles,
     classNames,
-    animate,
+    animate = false,
     dimmedOpacity = 0.3,
-    precision,
-    customLayers,
+    precision = 2,
+    customLayers = [],
   } = props;
 
-  if (orientation === 'vertical')
-    return (
-      <VerticalStripChart
-        data={data}
-        graphTitle={graphTitle}
-        colors={colors}
-        sources={sources}
-        graphDescription={graphDescription}
-        height={height}
-        width={width}
-        footNote={footNote}
-        colorDomain={colorDomain}
-        colorLegendTitle={colorLegendTitle}
-        radius={radius}
-        padding={padding}
-        backgroundColor={backgroundColor}
-        leftMargin={leftMargin}
-        rightMargin={rightMargin}
-        topMargin={topMargin}
-        bottomMargin={bottomMargin}
-        tooltip={tooltip}
-        relativeHeight={relativeHeight}
-        onSeriesMouseOver={onSeriesMouseOver}
-        showColorScale={showColorScale}
-        highlightedDataPoints={highlightedDataPoints}
-        graphID={graphID}
-        minValue={minValue}
-        maxValue={maxValue}
-        onSeriesMouseClick={onSeriesMouseClick}
-        noOfTicks={noOfTicks}
-        graphDownload={graphDownload}
-        dataDownload={dataDownload}
-        prefix={prefix}
-        suffix={suffix}
-        stripType={stripType}
-        language={language}
-        highlightColor={highlightColor}
-        dotOpacity={dotOpacity}
-        showNAColor={showNAColor}
-        minHeight={minHeight}
-        theme={theme}
-        ariaLabel={ariaLabel}
-        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-        styles={styles}
-        valueColor={valueColor}
-        detailsOnClick={detailsOnClick}
-        classNames={classNames}
-        animate={animate}
-        dimmedOpacity={dimmedOpacity}
-        precision={precision}
-        customLayers={customLayers}
-      />
-    );
+  const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
+
+  const [svgWidth, setSvgWidth] = useState(0);
+  const [svgHeight, setSvgHeight] = useState(0);
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
+
+  const graphDiv = useRef<HTMLDivElement>(null);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
+    });
+    if (graphDiv.current) {
+      resizeObserver.observe(graphDiv.current);
+    }
+    return () => resizeObserver.disconnect();
+  }, []);
   return (
-    <HorizontalStripChart
-      data={data}
-      graphTitle={graphTitle}
-      colors={colors}
-      sources={sources}
-      graphDescription={graphDescription}
-      height={height}
-      width={width}
-      footNote={footNote}
-      colorDomain={colorDomain}
-      colorLegendTitle={colorLegendTitle}
-      radius={radius}
-      padding={padding}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
       backgroundColor={backgroundColor}
-      leftMargin={leftMargin}
-      rightMargin={rightMargin}
-      topMargin={topMargin}
-      bottomMargin={bottomMargin}
-      tooltip={tooltip}
-      relativeHeight={relativeHeight}
-      onSeriesMouseOver={onSeriesMouseOver}
-      showColorScale={showColorScale}
-      highlightedDataPoints={highlightedDataPoints}
-      graphID={graphID}
-      minValue={minValue}
-      maxValue={maxValue}
-      onSeriesMouseClick={onSeriesMouseClick}
-      noOfTicks={noOfTicks}
-      graphDownload={graphDownload}
-      dataDownload={dataDownload}
-      prefix={prefix}
-      suffix={suffix}
-      stripType={stripType}
-      language={language}
-      highlightColor={highlightColor}
-      dotOpacity={dotOpacity}
-      showNAColor={showNAColor}
-      minHeight={minHeight}
       theme={theme}
-      ariaLabel={ariaLabel}
-      resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-      styles={styles}
-      valueColor={valueColor}
-      detailsOnClick={detailsOnClick}
-      classNames={classNames}
-      animate={animate}
-      dimmedOpacity={dimmedOpacity}
-      precision={precision}
-      customLayers={customLayers}
-    />
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
+    >
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          {showColorScale !== false && data.filter(el => el.color).length !== 0 ? (
+            <ColorLegendWithMouseOver
+              width={width}
+              colorLegendTitle={colorLegendTitle}
+              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+              colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+              setSelectedColor={setSelectedColor}
+              showNAColor={showNAColor}
+              className={classNames?.colorLegend}
+            />
+          ) : null}
+          <GraphArea ref={graphDiv}>
+            {svgWidth && svgHeight ? (
+              <Comp
+                data={data}
+                width={svgWidth}
+                height={svgHeight}
+                colorDomain={
+                  data.filter(el => el.color).length === 0
+                    ? []
+                    : colorDomain || (uniqBy(data, 'color', true) as string[])
+                }
+                colors={
+                  data.filter(el => el.color).length === 0
+                    ? colors
+                      ? [colors as string]
+                      : [Colors.primaryColors['blue-600']]
+                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+                }
+                selectedColor={selectedColor}
+                radius={radius}
+                leftMargin={leftMargin}
+                rightMargin={rightMargin}
+                topMargin={topMargin}
+                bottomMargin={bottomMargin}
+                tooltip={tooltip}
+                onSeriesMouseOver={onSeriesMouseOver}
+                highlightedDataPoints={highlightedDataPoints}
+                minValue={minValue}
+                maxValue={maxValue}
+                onSeriesMouseClick={onSeriesMouseClick}
+                prefix={prefix}
+                suffix={suffix}
+                stripType={stripType}
+                highlightColor={highlightColor}
+                dotOpacity={dotOpacity}
+                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                detailsOnClick={detailsOnClick}
+                styles={styles}
+                classNames={classNames}
+                valueColor={valueColor}
+                animate={
+                  animate === true
+                    ? { duration: 0.5, once: true, amount: 0.5 }
+                    : animate || { duration: 0, once: true, amount: 0 }
+                }
+                noOfTicks={noOfTicks}
+                dimmedOpacity={dimmedOpacity}
+                precision={precision}
+                customLayers={customLayers}
+              />
+            ) : null}
+          </GraphArea>
+        </>
+      )}
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

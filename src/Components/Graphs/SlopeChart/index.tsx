@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { cn } from '@undp/design-system-react/cn';
 
 import { Graph } from './Graph';
 
@@ -19,6 +18,7 @@ import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithM
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { uniqBy } from '@/Utils/uniqBy';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Data
@@ -181,178 +181,133 @@ export function SlopeChart(props: Props) {
 
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 620);
-      setSvgHeight(height || entries[0].target.clientHeight || 480);
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 480);
-      setSvgWidth(graphDiv.current.clientWidth || 620);
-      if (!width) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height]);
+  }, []);
   return (
-    <div
-      className={`${theme || 'light'} flex ${width ? 'grow-0' : 'grow'} ${
-        !fillContainer ? 'w-fit' : 'w-full'
-      } `}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={fillContainer ? undefined : width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          !fillContainer ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        id={graphID}
-        ref={graphParentDiv}
-        aria-label={
-          ariaLabel ||
-          `${
-            graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is a slope chart showing changes in data between two category or starting and ending time. Each line represents a different row in data, with lines sloping up or down to show increase or decrease over two categories or time.${
-            graphDescription ? ` ${graphDescription}` : ''
-          }`
-        }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {graphTitle || graphDescription || graphDownload || dataDownload ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-                graphDownload={graphDownload ? graphParentDiv.current : undefined}
-                dataDownload={
-                  dataDownload
-                    ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                      ? data.map(d => d.data).filter(d => d !== undefined)
-                      : data.filter(d => d !== undefined)
-                    : null
+      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+          graphDownload={graphDownload ? graphParentDiv : undefined}
+          dataDownload={
+            dataDownload
+              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                ? data.map(d => d.data).filter(d => d !== undefined)
+                : data.filter(d => d !== undefined)
+              : null
+          }
+        />
+      ) : null}
+      {data.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          {showColorScale && data.filter(el => el.color).length !== 0 ? (
+            <ColorLegendWithMouseOver
+              width={width}
+              colorLegendTitle={colorLegendTitle}
+              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+              colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+              setSelectedColor={setSelectedColor}
+              showNAColor={showNAColor}
+              className={classNames?.colorLegend}
+            />
+          ) : null}
+          <GraphArea ref={graphDiv}>
+            {svgWidth && svgHeight ? (
+              <Graph
+                data={data.filter(
+                  d => !checkIfNullOrUndefined(d.y1) && !checkIfNullOrUndefined(d.y2),
+                )}
+                width={fillContainer || !width ? svgWidth : svgWidth < width ? svgWidth : width}
+                height={svgHeight}
+                colorDomain={
+                  data.filter(el => el.color).length === 0
+                    ? []
+                    : colorDomain || (uniqBy(data, 'color', true) as string[])
                 }
+                colors={
+                  data.filter(el => el.color).length === 0
+                    ? colors
+                      ? [colors as string]
+                      : [Colors.primaryColors['blue-600']]
+                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+                }
+                selectedColor={selectedColor}
+                axisTitles={axisTitles}
+                showLabels={showLabels}
+                radius={radius}
+                leftMargin={leftMargin}
+                rightMargin={rightMargin}
+                topMargin={topMargin}
+                bottomMargin={bottomMargin}
+                tooltip={tooltip}
+                onSeriesMouseOver={onSeriesMouseOver}
+                highlightedDataPoints={highlightedDataPoints}
+                minValue={minValue}
+                maxValue={maxValue}
+                onSeriesMouseClick={onSeriesMouseClick}
+                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                detailsOnClick={detailsOnClick}
+                styles={styles}
+                classNames={classNames}
+                animate={
+                  animate === true
+                    ? { duration: 0.5, once: true, amount: 0.5 }
+                    : animate || { duration: 0, once: true, amount: 0 }
+                }
+                dimmedOpacity={dimmedOpacity}
+                customLayers={customLayers}
               />
             ) : null}
-            <div className='grow flex flex-col justify-center gap-3 w-full'>
-              {data.length === 0 ? (
-                <EmptyState />
-              ) : (
-                <>
-                  {showColorScale && data.filter(el => el.color).length !== 0 ? (
-                    <ColorLegendWithMouseOver
-                      width={width}
-                      colorLegendTitle={colorLegendTitle}
-                      colors={
-                        (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
-                      }
-                      colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
-                      setSelectedColor={setSelectedColor}
-                      showNAColor={showNAColor}
-                    />
-                  ) : null}
-                  <div
-                    className='flex flex-col grow justify-center w-full leading-0'
-                    ref={graphDiv}
-                    aria-label='Graph area'
-                  >
-                    {(width || svgWidth) && (height || svgHeight) ? (
-                      <Graph
-                        data={data.filter(
-                          d => !checkIfNullOrUndefined(d.y1) && !checkIfNullOrUndefined(d.y2),
-                        )}
-                        width={width || svgWidth}
-                        height={Math.max(
-                          minHeight,
-                          height ||
-                            (relativeHeight
-                              ? minHeight
-                                ? (width || svgWidth) * relativeHeight > minHeight
-                                  ? (width || svgWidth) * relativeHeight
-                                  : minHeight
-                                : (width || svgWidth) * relativeHeight
-                              : svgHeight),
-                        )}
-                        colorDomain={
-                          data.filter(el => el.color).length === 0
-                            ? []
-                            : colorDomain || (uniqBy(data, 'color', true) as string[])
-                        }
-                        colors={
-                          data.filter(el => el.color).length === 0
-                            ? colors
-                              ? [colors as string]
-                              : [Colors.primaryColors['blue-600']]
-                            : (colors as string[] | undefined) ||
-                              Colors[theme].categoricalColors.colors
-                        }
-                        selectedColor={selectedColor}
-                        axisTitles={axisTitles}
-                        showLabels={showLabels}
-                        radius={radius}
-                        leftMargin={leftMargin}
-                        rightMargin={rightMargin}
-                        topMargin={topMargin}
-                        bottomMargin={bottomMargin}
-                        tooltip={tooltip}
-                        onSeriesMouseOver={onSeriesMouseOver}
-                        highlightedDataPoints={highlightedDataPoints}
-                        minValue={minValue}
-                        maxValue={maxValue}
-                        onSeriesMouseClick={onSeriesMouseClick}
-                        resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                        detailsOnClick={detailsOnClick}
-                        styles={styles}
-                        classNames={classNames}
-                        animate={
-                          animate === true
-                            ? { duration: 0.5, once: true, amount: 0.5 }
-                            : animate || { duration: 0, once: true, amount: 0 }
-                        }
-                        dimmedOpacity={dimmedOpacity}
-                        customLayers={customLayers}
-                      />
-                    ) : null}
-                  </div>
-                </>
-              )}
-            </div>
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
-                }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
-              />
-            ) : null}
-          </div>
-        </div>
-      </div>
-    </div>
+          </GraphArea>
+        </>
+      )}
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }

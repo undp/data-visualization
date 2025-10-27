@@ -9,15 +9,12 @@ import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { filterData } from '@/Utils/transformData/filterData';
 import { string2HTML } from '@/Utils/string2HTML';
 import { X } from '@/Components/Icons';
+import { GraphArea } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   mapStyle: string;
   center?: [number, number];
   zoomLevel?: number;
-  width?: number;
-  height?: number;
-  relativeHeight?: number;
-  minHeight: number;
   selectedLayer: string[];
   layerIdList: string[];
   excludeLayers: string[];
@@ -25,19 +22,8 @@ interface Props {
 }
 
 export function MapEl(props: Props) {
-  const {
-    mapStyle,
-    height,
-    width,
-    relativeHeight,
-    center,
-    zoomLevel,
-    minHeight,
-    selectedLayer,
-    layerIdList,
-    excludeLayers,
-    mapLegend,
-  } = props;
+  const { mapStyle, center, zoomLevel, selectedLayer, layerIdList, excludeLayers, mapLegend } =
+    props;
 
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -50,16 +36,14 @@ export function MapEl(props: Props) {
   const mapRef = useRef<any>(null);
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 620);
-      setSvgHeight(height || entries[0].target.clientHeight || 480);
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 480);
-      setSvgWidth(graphDiv.current.clientWidth || 620);
-      if (!width) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height]);
+  }, []);
   useEffect(() => {
     if (mapContainer.current && svgWidth && !mapRef.current) {
       fetchAndParseJSON(mapStyle).then(d => {
@@ -142,30 +126,15 @@ export function MapEl(props: Props) {
     }
   }, [excludeLayers, layerIdList, mapStyle, mapStyleData, selectedLayer]);
   return (
-    <div
-      className='flex flex-col grow justify-center leading-0'
-      ref={graphDiv}
-      aria-label='Map area'
-    >
-      {(width || svgWidth) && (height || svgHeight) ? (
+    <GraphArea ref={graphDiv}>
+      {svgWidth && svgHeight ? (
         <div
           style={{
-            width: width || svgWidth,
-            height: Math.max(
-              minHeight,
-              height ||
-                (relativeHeight
-                  ? minHeight
-                    ? (width || svgWidth) * relativeHeight > minHeight
-                      ? (width || svgWidth) * relativeHeight
-                      : minHeight
-                    : (width || svgWidth) * relativeHeight
-                  : svgHeight),
-            ),
+            width: svgWidth,
+            height: svgHeight,
           }}
         >
           <div ref={mapContainer} className='map maplibre-show-control w-full h-full' />
-
           {mapLegend ? (
             <div className='absolute left-[22px] bottom-13'>
               {showLegend ? (
@@ -204,6 +173,6 @@ export function MapEl(props: Props) {
           ) : null}
         </div>
       ) : null}
-    </div>
+    </GraphArea>
   );
 }

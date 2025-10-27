@@ -16,7 +16,7 @@ export function GraphFooter(props: Props) {
     return null;
   return (
     <div
-      className='flex gap-2 flex-col'
+      className='flex flex-col pt-4'
       style={{ maxWidth: width ? `${width}px` : 'none' }}
       aria-label='Graph footer'
     >

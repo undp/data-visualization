@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
 import orderBy from 'lodash.orderby';
 import { scaleSqrt } from 'd3-scale';
@@ -56,7 +56,7 @@ interface TreeMapDataTypeForBubbleChart extends TreeMapDataType {
   vy: number;
 }
 
-export const Graph = memo((props: Props) => {
+export const Graph = (props: Props) => {
   const {
     data,
     colors,
@@ -98,35 +98,28 @@ export const Graph = memo((props: Props) => {
   const [eventY, setEventY] = useState<number | undefined>(undefined);
   const [finalData, setFinalData] = useState<TreeMapDataTypeForBubbleChart[] | null>(null);
 
-  // Memoize expensive calculations
-  const margin = useMemo(
-    () => ({
-      top: topMargin,
-      bottom: bottomMargin,
-      left: leftMargin,
-      right: rightMargin,
-    }),
-    [topMargin, bottomMargin, leftMargin, rightMargin],
-  );
+  const margin = {
+    top: topMargin,
+    bottom: bottomMargin,
+    left: leftMargin,
+    right: rightMargin,
+  };
 
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
   // Memoize data ordering and radius scale
-  const dataOrdered = useMemo(
-    () =>
-      data.filter(d => !checkIfNullOrUndefined(d.size)).length === 0
-        ? data
-        : orderBy(
-            data.filter(d => !checkIfNullOrUndefined(d.size)),
-            'radius',
-            'asc',
-          ),
-    [data],
-  );
+  const dataOrdered =
+    data.filter(d => !checkIfNullOrUndefined(d.size)).length === 0
+      ? data
+      : orderBy(
+          data.filter(d => !checkIfNullOrUndefined(d.size)),
+          'radius',
+          'asc',
+        );
 
-  const radiusScale = useMemo(() => {
-    return data.filter(d => d.size === undefined || d.size === null).length !== data.length
+  const radiusScale =
+    data.filter(d => d.size === undefined || d.size === null).length !== data.length
       ? scaleSqrt()
           .domain([
             0,
@@ -137,7 +130,6 @@ export const Graph = memo((props: Props) => {
           .range([0.25, radius])
           .nice()
       : undefined;
-  }, [data, maxRadiusValue, radius]);
 
   // Memoize simulation setup
   useEffect(() => {
@@ -194,76 +186,62 @@ export const Graph = memo((props: Props) => {
     setupSimulation();
   }, [data, radius, graphHeight, graphWidth, maxRadiusValue, dataOrdered, radiusScale]);
 
-  // Memoize event handlers to prevent unnecessary re-renders
-  const handleMouseEnter = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (event: any, d: any) => {
-      setMouseOverData(d);
-      setEventY(event.clientY);
-      setEventX(event.clientX);
-      onSeriesMouseOver?.(d);
-    },
-    [onSeriesMouseOver],
-  );
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleMouseMove = useCallback((event: any, d: any) => {
+  const handleMouseEnter = (event: any, d: any) => {
     setMouseOverData(d);
     setEventY(event.clientY);
     setEventX(event.clientX);
-  }, []);
+    onSeriesMouseOver?.(d);
+  };
 
-  const handleClick = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (d: any) => {
-      if (onSeriesMouseClick || detailsOnClick) {
-        if (mouseClickData === d.label && resetSelectionOnDoubleClick) {
-          setMouseClickData(undefined);
-          onSeriesMouseClick?.(undefined);
-        } else {
-          setMouseClickData(d.label);
-          onSeriesMouseClick?.(d);
-        }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleMouseMove = (event: any, d: any) => {
+    setMouseOverData(d);
+    setEventY(event.clientY);
+    setEventX(event.clientX);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClick = (d: any) => {
+    if (onSeriesMouseClick || detailsOnClick) {
+      if (mouseClickData === d.label && resetSelectionOnDoubleClick) {
+        setMouseClickData(undefined);
+        onSeriesMouseClick?.(undefined);
+      } else {
+        setMouseClickData(d.label);
+        onSeriesMouseClick?.(d);
       }
-    },
-    [onSeriesMouseClick, detailsOnClick, mouseClickData, resetSelectionOnDoubleClick],
-  );
+    }
+  };
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = () => {
     setMouseOverData(undefined);
     setEventX(undefined);
     setEventY(undefined);
     onSeriesMouseOver?.(undefined);
-  }, [onSeriesMouseOver]);
+  };
 
-  // Memoize color and opacity calculations
-  const getCircleColor = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (d: any) =>
-      data.filter(el => el.color).length === 0
-        ? colors[0]
-        : !d.color
-          ? Colors.gray
-          : colors[colorDomain.indexOf(d.color)],
-    [data, colors, colorDomain],
-  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getCircleColor = (d: any) =>
+    data.filter(el => el.color).length === 0
+      ? colors[0]
+      : !d.color
+        ? Colors.gray
+        : colors[colorDomain.indexOf(d.color)];
 
-  const getOpacity = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (d: any) =>
-      selectedColor
-        ? d.color
-          ? colors[colorDomain.indexOf(d.color)] === selectedColor
-            ? 1
-            : dimmedOpacity
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getOpacity = (d: any) =>
+    selectedColor
+      ? d.color
+        ? colors[colorDomain.indexOf(d.color)] === selectedColor
+          ? 1
           : dimmedOpacity
-        : highlightedDataPoints.length !== 0
-          ? highlightedDataPoints.indexOf(d.label) !== -1
-            ? 0.85
-            : dimmedOpacity
-          : 0.85,
-    [selectedColor, dimmedOpacity, colors, colorDomain, highlightedDataPoints],
-  );
+        : dimmedOpacity
+      : highlightedDataPoints.length !== 0
+        ? highlightedDataPoints.indexOf(d.label) !== -1
+          ? 0.85
+          : dimmedOpacity
+        : 0.85;
 
   // Render loading state
   if (!finalData) {
@@ -405,6 +383,4 @@ export const Graph = memo((props: Props) => {
     );
   }
   return null;
-});
-
-Graph.displayName = 'BubbleChart';
+};

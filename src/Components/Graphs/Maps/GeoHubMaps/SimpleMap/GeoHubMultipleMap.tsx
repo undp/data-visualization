@@ -9,33 +9,19 @@ import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { filterData } from '@/Utils/transformData/filterData';
 import { X } from '@/Components/Icons';
 import { string2HTML } from '@/Utils/string2HTML';
+import { GraphArea } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   mapStyle: string;
   center?: [number, number];
   zoomLevel?: number;
-  width?: number;
-  height?: number;
-  relativeHeight?: number;
-  minHeight: number;
   includeLayers: string[];
   excludeLayers: string[];
   mapLegend?: string | React.ReactNode;
 }
 
 export function GeoHubMultipleMap(props: Props) {
-  const {
-    mapStyle,
-    height,
-    width,
-    relativeHeight,
-    center,
-    zoomLevel,
-    minHeight,
-    includeLayers,
-    excludeLayers,
-    mapLegend,
-  } = props;
+  const { mapStyle, center, zoomLevel, includeLayers, excludeLayers, mapLegend } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -46,16 +32,14 @@ export function GeoHubMultipleMap(props: Props) {
   const mapRef = useRef<any>(null);
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
-      setSvgWidth(width || entries[0].target.clientWidth || 620);
-      setSvgHeight(height || entries[0].target.clientHeight || 480);
+      setSvgWidth(entries[0].target.clientWidth || 620);
+      setSvgHeight(entries[0].target.clientHeight || 480);
     });
     if (graphDiv.current) {
-      setSvgHeight(graphDiv.current.clientHeight || 480);
-      setSvgWidth(graphDiv.current.clientWidth || 620);
-      if (!width) resizeObserver.observe(graphDiv.current);
+      resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [width, height]);
+  }, []);
   useEffect(() => {
     if (mapContainer.current && svgWidth && !mapRef.current) {
       fetchAndParseJSON(mapStyle).then(d => {
@@ -120,26 +104,12 @@ export function GeoHubMultipleMap(props: Props) {
     }
   }, [excludeLayers, includeLayers, mapStyle]);
   return (
-    <div
-      className='flex flex-col grow justify-center leading-0'
-      ref={graphDiv}
-      aria-label='Map area'
-    >
-      {(width || svgWidth) && (height || svgHeight) ? (
+    <GraphArea ref={graphDiv}>
+      {svgWidth && svgHeight ? (
         <div
           style={{
-            width: width || svgWidth,
-            height: Math.max(
-              minHeight,
-              height ||
-                (relativeHeight
-                  ? minHeight
-                    ? (width || svgWidth) * relativeHeight > minHeight
-                      ? (width || svgWidth) * relativeHeight
-                      : minHeight
-                    : (width || svgWidth) * relativeHeight
-                  : svgHeight),
-            ),
+            width: svgWidth,
+            height: svgHeight,
           }}
         >
           <div
@@ -185,6 +155,6 @@ export function GeoHubMultipleMap(props: Props) {
           ) : null}
         </div>
       ) : null}
-    </div>
+    </GraphArea>
   );
 }

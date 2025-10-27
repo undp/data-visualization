@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import flattenDeep from 'lodash.flattendeep';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
-import { cn } from '@undp/design-system-react/cn';
+import { Spacer } from '@undp/design-system-react/Spacer';
 
 import { MapEl } from './MapEl';
 
@@ -14,6 +14,7 @@ import {
   SourcesDataType,
   StyleObject,
 } from '@/Types';
+import { GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -102,6 +103,7 @@ export function GeoHubMapWithLayerSelection(props: Props) {
   } = props;
 
   const [selectedLayer, setSelectedLayer] = useState(layerSelection[0].layerID);
+  const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSelectedLayer(layerSelection[0].layerID);
@@ -116,109 +118,83 @@ export function GeoHubMapWithLayerSelection(props: Props) {
     [],
   );
   return (
-    <div
-      className={`${theme || 'light'} flex  ${width ? 'w-fit grow-0' : 'w-full grow'}`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+    <GraphContainer
+      className={classNames?.graphContainer}
+      style={styles?.graphContainer}
+      id={graphID}
+      ref={graphParentDiv}
+      aria-label={ariaLabel}
+      backgroundColor={backgroundColor}
+      theme={theme}
+      language={language}
+      minHeight={minHeight}
+      width={width}
+      height={height}
+      relativeHeight={relativeHeight}
+      padding={padding}
     >
-      <div
-        className={cn(
-          `${
-            !backgroundColor
-              ? 'bg-transparent '
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
-                : ''
-          }ml-auto mr-auto flex flex-col grow h-inherit ${language || 'en'}`,
-          width ? 'w-fit' : 'w-full',
-          classNames?.graphContainer,
-        )}
-        style={{
-          ...(styles?.graphContainer || {}),
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
+      {graphTitle || graphDescription ? (
+        <GraphHeader
+          styles={{
+            title: styles?.title,
+            description: styles?.description,
+          }}
+          classNames={{
+            title: classNames?.title,
+            description: classNames?.description,
+          }}
+          graphTitle={graphTitle}
+          graphDescription={graphDescription}
+          width={width}
+        />
+      ) : null}
+      <DropdownSelect
+        options={layerSelection.map(d => ({
+          label: d.name,
+          value: d.layerID,
+        }))}
+        size='sm'
+        isClearable={false}
+        variant={uiMode}
+        isRtl={language === 'he' || language === 'ar'}
+        isSearchable
+        filterOption={createFilter(filterConfig)}
+        defaultValue={{
+          label: layerSelection[0].name,
+          value: layerSelection[0].layerID,
         }}
-        id={graphID}
-        aria-label={
-          ariaLabel ||
-          `${
-            graphTitle ? `The graph shows ${graphTitle}. ` : ''
-          }This is a map.${graphDescription ? ` ${graphDescription}` : ''}`
+        controlShouldRenderValue
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onChange={(el: any) => {
+          if (el) setSelectedLayer(el.value);
+        }}
+      />
+      <Spacer size='lg' />
+      <MapEl
+        mapStyle={mapStyle}
+        center={center}
+        zoomLevel={zoomLevel}
+        selectedLayer={selectedLayer}
+        layerIdList={flattenDeep(layerSelection.map(d => d.layerID))}
+        excludeLayers={excludeLayers}
+        mapLegend={
+          (mapLegend as MapLegendDataType[]).find(
+            d => d.mapStyleName === layerSelection.find(el => el.layerID === selectedLayer)?.name,
+          )?.legend
         }
-      >
-        <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
-        >
-          <div className='flex flex-col w-full gap-4 grow justify-between'>
-            {graphTitle || graphDescription ? (
-              <GraphHeader
-                styles={{
-                  title: styles?.title,
-                  description: styles?.description,
-                }}
-                classNames={{
-                  title: classNames?.title,
-                  description: classNames?.description,
-                }}
-                graphTitle={graphTitle}
-                graphDescription={graphDescription}
-                width={width}
-              />
-            ) : null}
-            <DropdownSelect
-              options={layerSelection.map(d => ({
-                label: d.name,
-                value: d.layerID,
-              }))}
-              size='sm'
-              isClearable={false}
-              variant={uiMode}
-              isRtl={language === 'he' || language === 'ar'}
-              isSearchable
-              filterOption={createFilter(filterConfig)}
-              defaultValue={{
-                label: layerSelection[0].name,
-                value: layerSelection[0].layerID,
-              }}
-              controlShouldRenderValue
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              onChange={(el: any) => {
-                if (el) setSelectedLayer(el.value);
-              }}
-            />
-            <MapEl
-              mapStyle={mapStyle}
-              center={center}
-              zoomLevel={zoomLevel}
-              width={width}
-              height={height}
-              relativeHeight={relativeHeight}
-              minHeight={minHeight}
-              selectedLayer={selectedLayer}
-              layerIdList={flattenDeep(layerSelection.map(d => d.layerID))}
-              excludeLayers={excludeLayers}
-              mapLegend={
-                (mapLegend as MapLegendDataType[]).find(
-                  d =>
-                    d.mapStyleName ===
-                    layerSelection.find(el => el.layerID === selectedLayer)?.name,
-                )?.legend
-              }
-            />
-            {sources || footNote ? (
-              <GraphFooter
-                styles={{ footnote: styles?.footnote, source: styles?.source }}
-                classNames={{
-                  footnote: classNames?.footnote,
-                  source: classNames?.source,
-                }}
-                sources={sources}
-                footNote={footNote}
-                width={width}
-              />
-            ) : null}
-          </div>
-        </div>
-      </div>
-    </div>
+      />
+      {sources || footNote ? (
+        <GraphFooter
+          styles={{ footnote: styles?.footnote, source: styles?.source }}
+          classNames={{
+            footnote: classNames?.footnote,
+            source: classNames?.source,
+          }}
+          sources={sources}
+          footNote={footNote}
+          width={width}
+        />
+      ) : null}
+    </GraphContainer>
   );
 }
