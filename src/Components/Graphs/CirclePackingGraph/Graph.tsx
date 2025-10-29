@@ -134,7 +134,7 @@ export const Graph = (props: Props) => {
   // Memoize simulation setup
   useEffect(() => {
     const setupSimulation = () => {
-      const dataTemp = [...dataOrdered];
+      const dataTemp = dataOrdered.map(d => ({ ...d, ...(d.data && { data: { ...d.data } }) }));
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const simulation = forceSimulation(dataTemp as any)
         .force('y', forceY(_d => graphHeight / 2).strength(1))
@@ -293,7 +293,17 @@ export const Graph = (props: Props) => {
                         width={2 * bubbleRadius}
                         height={2 * bubbleRadius}
                       >
-                        <div className='flex flex-col justify-center items-center h-full py-0 px-3'>
+                        <div
+                          className='flex flex-col justify-center items-center h-full py-0 px-3'
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            padding: '0 0.75rem',
+                          }}
+                        >
                           {showLabels && (
                             <p
                               className={cn(
@@ -309,6 +319,9 @@ export const Graph = (props: Props) => {
                                   ),
                                   14,
                                 )}px`,
+                                textAlign: 'center',
+                                margin: 0,
+                                lineHeight: 1.25,
                                 WebkitLineClamp:
                                   bubbleRadius * 2 < 60
                                     ? 1
@@ -335,6 +348,11 @@ export const Graph = (props: Props) => {
                                   Math.max(Math.round(bubbleRadius / 4), 14),
                                   14,
                                 )}px`,
+                                textAlign: 'center',
+                                margin: 0,
+                                lineHeight: 1.25,
+                                width: '100%',
+                                fontWeight: 'bold',
                                 color: getTextColorBasedOnBgColor(circleColor),
                               }}
                             >

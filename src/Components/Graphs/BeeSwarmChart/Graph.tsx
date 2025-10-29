@@ -161,7 +161,12 @@ export function VerticalGraph(props: Props) {
   const yTicks = y.ticks(noOfTicks);
 
   useEffect(() => {
-    const dataTemp = (dataOrdered as BeeSwarmChartDataType[]).filter(d => d.position);
+    const dataTemp = (
+      dataOrdered.map(d => ({
+        ...d,
+        ...(d.data && { data: { ...d.data } }),
+      })) as BeeSwarmChartDataType[]
+    ).filter(d => d.position);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     forceSimulation(dataTemp as any)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -507,7 +512,12 @@ export function HorizontalGraph(props: Props) {
   const xTicks = x.ticks(noOfTicks);
 
   useEffect(() => {
-    const dataTemp = (dataOrdered as BeeSwarmChartDataType[]).filter(d => d.position);
+    const dataTemp = (
+      dataOrdered.map(d => ({
+        ...d,
+        ...(d.data && { data: { ...d.data } }),
+      })) as BeeSwarmChartDataType[]
+    ).filter(d => d.position);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     forceSimulation(dataTemp as any)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
