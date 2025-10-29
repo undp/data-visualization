@@ -86,26 +86,25 @@ export function BasicStatCard(props: Props) {
     precision,
   } = props;
   return (
-    <div
-      className={`${theme || 'light'} flex w-full`}
-      dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
-    >
+    <div className={`${theme || 'light'} w-full`}>
       <div
+        id={graphID}
+        dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
         className={cn(
-          `${
+          `${theme || 'light'} flex flex-col w-full box-border h-full ${
             !backgroundColor
-              ? 'bg-transparent '
+              ? 'bg-transparent'
               : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
+                ? 'bg-primary-gray-200 dark:bg-primary-gray-650'
                 : ''
-          }flex flex-col w-full h-inherit ${language || 'en'}`,
+          } ${language || 'en'}`,
           classNames?.graphContainer,
         )}
         style={{
           ...(styles?.graphContainer || {}),
           ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
+          padding: backgroundColor ? padding || '1rem' : padding || 0,
         }}
-        id={graphID}
         aria-label={
           ariaLabel ||
           `${graphTitle ? `The graph shows ${graphTitle}. ` : ''}This is a statistic card.${
@@ -114,11 +113,10 @@ export function BasicStatCard(props: Props) {
         }
       >
         <div
-          className='flex grow'
-          style={{ padding: backgroundColor ? padding || '1rem' : padding || 0 }}
+          className={`flex flex-col w-full grow ${layout !== 'secondary' ? 'gap-12 justify-between' : 'gap-4 justify-center'}`}
         >
           {layout !== 'secondary' ? (
-            <div className='flex flex-col w-full gap-12 justify-between grow'>
+            <>
               {graphTitle || graphDescription ? (
                 <GraphHeader
                   styles={{
@@ -183,9 +181,9 @@ export function BasicStatCard(props: Props) {
                   footNote={footNote}
                 />
               ) : null}
-            </div>
+            </>
           ) : (
-            <div className='flex flex-col w-full gap-4 grow justify-center'>
+            <>
               <H3
                 marginBottom={layout === 'secondary' ? 'none' : 'base'}
                 className={`leading-none text-outline font-heading ${
@@ -240,7 +238,7 @@ export function BasicStatCard(props: Props) {
                   footNote={footNote}
                 />
               ) : null}
-            </div>
+            </>
           )}
         </div>
       </div>
