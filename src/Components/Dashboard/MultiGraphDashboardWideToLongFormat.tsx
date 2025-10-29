@@ -162,9 +162,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
             : dashboardLayout?.backgroundColor === true
               ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
               : ''
-        }flex flex-col h-inherit w-full ml-auto mr-auto grow gap-4 ${
-          dashboardLayout?.language || 'en'
-        }`}
+        }flex flex-col w-full ml-auto mr-auto grow gap-4 ${dashboardLayout?.language || 'en'}`}
         style={{
           ...(dashboardLayout?.backgroundColor && dashboardLayout?.backgroundColor !== true
             ? { backgroundColor: dashboardLayout?.backgroundColor }
@@ -248,7 +246,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                     {d.columns.map((el, j) => (
                       <div
                         key={j}
-                        className='flex bg-transparent h-inherit grow min-w-60'
+                        className='flex bg-transparent grow min-w-60'
                         style={{
                           width: `calc(${
                             (100 * (el.columnWidth || 1)) / TotalWidth(d.columns)
@@ -266,6 +264,8 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                             ...(el.settings || {}),
                             width: undefined,
                             height: undefined,
+                            minHeight: undefined,
+                            relativeHeight: undefined,
                             radius: el.graphType === 'donutChart' ? undefined : el.settings?.radius,
                             size: el.graphType === 'unitChart' ? el.settings.size : undefined,
                             language: el.settings?.language || dashboardLayout.language,

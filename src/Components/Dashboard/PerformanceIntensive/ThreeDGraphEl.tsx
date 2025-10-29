@@ -123,7 +123,7 @@ function ThreeDGraphEl(props: Props) {
   const graphProps = getGraphProps(graph);
   return (
     <div
-      className={`grow my-0 mx-auto flex flex-col h-inherit ${settings?.width ? 'w-fit' : 'w-full'} justify-center ${settings?.theme || 'light'}`}
+      className={`grow my-0 mx-auto flex flex-col w-full justify-center ${settings?.theme || 'light'}`}
       style={{ minHeight: 'inherit' }}
     >
       {GraphComponent ? (

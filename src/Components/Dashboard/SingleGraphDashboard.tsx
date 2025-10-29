@@ -293,6 +293,8 @@ export function SingleGraphDashboard(props: Props) {
       width={graphSettings?.width}
       height={graphSettings?.height}
       padding={graphSettings?.padding}
+      minHeight={graphSettings?.minHeight}
+      relativeHeight={graphSettings?.relativeHeight}
     >
       {data ||
       graphList
@@ -740,6 +742,10 @@ export function SingleGraphDashboard(props: Props) {
               graphDownload: false,
               dataDownload: false,
               backgroundColor: undefined,
+              width: undefined,
+              height: undefined,
+              relativeHeight: undefined,
+              minHeight: undefined,
               padding: '0',
               theme: graphSettings?.theme,
               ...(highlightedDataPointList

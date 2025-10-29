@@ -288,7 +288,7 @@ export function MultiGraphDashboard(props: Props) {
               {d.columns.map((el, j) => (
                 <div
                   key={j}
-                  className='flex bg-transparent h-inherit grow min-w-60'
+                  className='flex bg-transparent grow min-w-60'
                   style={{
                     width: `calc(${(100 * (el.columnWidth || 1)) / TotalWidth(d.columns)}% - ${
                       (TotalWidth(d.columns) - (el.columnWidth || 1)) / TotalWidth(d.columns)
@@ -304,6 +304,8 @@ export function MultiGraphDashboard(props: Props) {
                       ...(el.settings || {}),
                       width: undefined,
                       height: undefined,
+                      minHeight: undefined,
+                      relativeHeight: undefined,
                       resetSelectionOnDoubleClick: el.attachedFilter
                         ? false
                         : el.settings?.resetSelectionOnDoubleClick,

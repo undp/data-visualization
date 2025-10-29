@@ -262,6 +262,8 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
       width={graphSettings?.width}
       height={graphSettings?.height}
       padding={graphSettings?.padding}
+      minHeight={graphSettings?.minHeight}
+      relativeHeight={graphSettings?.relativeHeight}
     >
       {data ||
       graphList
@@ -710,6 +712,10 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
               dataDownload: false,
               backgroundColor: undefined,
               padding: '0',
+              width: undefined,
+              height: undefined,
+              relativeHeight: undefined,
+              minHeight: undefined,
               theme: graphSettings?.theme,
               ...(highlightedDataPointList
                 ? {
