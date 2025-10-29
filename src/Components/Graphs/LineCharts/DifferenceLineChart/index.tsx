@@ -23,6 +23,7 @@ import { Colors } from '@/Components/ColorPalette';
 import { generateRandomString } from '@/Utils/generateRandomString';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getNoOfTicks } from '@/Utils/getNoOfTicks';
 
 interface Props {
   // Data
@@ -285,7 +286,7 @@ export function DifferenceLineChart(props: Props) {
                 prefix={prefix}
                 dateFormat={dateFormat}
                 showValues={showValues}
-                noOfXTicks={noOfXTicks}
+                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
                 leftMargin={leftMargin}
                 rightMargin={rightMargin}
                 topMargin={topMargin}

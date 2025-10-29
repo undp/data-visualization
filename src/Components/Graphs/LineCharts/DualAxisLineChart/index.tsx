@@ -19,6 +19,7 @@ import {
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getNoOfTicks } from '@/Utils/getNoOfTicks';
 
 interface Props {
   // Data
@@ -141,7 +142,7 @@ export function DualAxisLineChart(props: Props) {
     height,
     width,
     footNote,
-    noOfXTicks = 10,
+    noOfXTicks,
     dateFormat = 'yyyy',
     showValues = false,
     padding,
@@ -263,7 +264,7 @@ export function DualAxisLineChart(props: Props) {
                 height={svgHeight}
                 dateFormat={dateFormat}
                 showValues={showValues}
-                noOfXTicks={noOfXTicks}
+                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
                 leftMargin={leftMargin}
                 rightMargin={rightMargin}
                 topMargin={topMargin}

@@ -23,6 +23,7 @@ import { EmptyState } from '@/Components/Elements/EmptyState';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { uniqBy } from '@/Utils/uniqBy';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getNoOfTicks } from '@/Utils/getNoOfTicks';
 
 interface Props {
   // Data
@@ -295,7 +296,7 @@ export function MultiLineAltChart(props: Props) {
                 width={svgWidth}
                 height={svgHeight}
                 dateFormat={dateFormat}
-                noOfXTicks={noOfXTicks}
+                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
                 leftMargin={leftMargin}
                 rightMargin={rightMargin}
                 topMargin={topMargin}

@@ -23,6 +23,7 @@ import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { generateRandomString } from '@/Utils/generateRandomString';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getNoOfTicks } from '@/Utils/getNoOfTicks';
 
 interface Props {
   // Data
@@ -293,7 +294,7 @@ export function MultiLineChart(props: Props) {
                 width={svgWidth}
                 height={svgHeight}
                 dateFormat={dateFormat}
-                noOfXTicks={noOfXTicks}
+                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
                 leftMargin={leftMargin}
                 rightMargin={rightMargin}
                 topMargin={topMargin}

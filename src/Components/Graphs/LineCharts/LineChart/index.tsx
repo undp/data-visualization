@@ -21,6 +21,7 @@ import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getNoOfTicks } from '@/Utils/getNoOfTicks';
 
 interface Props {
   // Data
@@ -259,7 +260,7 @@ export function SimpleLineChart(props: Props) {
               prefix={prefix}
               dateFormat={dateFormat}
               showValues={showValues}
-              noOfXTicks={noOfXTicks}
+              noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
               leftMargin={leftMargin}
               rightMargin={rightMargin}
               topMargin={topMargin}
