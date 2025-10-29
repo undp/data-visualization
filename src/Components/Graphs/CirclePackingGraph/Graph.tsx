@@ -6,6 +6,7 @@ import { extent } from 'd3-array';
 import { Modal } from '@undp/design-system-react/Modal';
 import { cn } from '@undp/design-system-react/cn';
 import { Spinner } from '@undp/design-system-react/Spinner';
+import { P } from '@undp/design-system-react/Typography';
 
 import { ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -308,11 +309,12 @@ export const Graph = (props: Props) => {
                             }}
                           >
                             {showLabels && (
-                              <p
+                              <P
                                 className={cn(
                                   'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
                                   classNames?.graphObjectValues,
                                 )}
+                                marginBottom='none'
                                 style={{
                                   fontSize: `${Math.min(
                                     Math.max(Math.round(bubbleRadius / 4), 12),
@@ -322,9 +324,6 @@ export const Graph = (props: Props) => {
                                     ),
                                     14,
                                   )}px`,
-                                  textAlign: 'center',
-                                  margin: 0,
-                                  lineHeight: 1.25,
                                   WebkitLineClamp:
                                     bubbleRadius * 2 < 60
                                       ? 1
@@ -341,26 +340,22 @@ export const Graph = (props: Props) => {
                                 }}
                               >
                                 {d.label}
-                              </p>
+                              </P>
                             )}
                             {showValues && (
-                              <p
+                              <P
                                 className='text-center font-bold leading-[1.25] w-full m-0 circle-packing-value'
+                                marginBottom='none'
                                 style={{
                                   fontSize: `${Math.min(
                                     Math.max(Math.round(bubbleRadius / 4), 14),
                                     14,
                                   )}px`,
-                                  textAlign: 'center',
-                                  margin: 0,
-                                  lineHeight: 1.25,
-                                  width: '100%',
-                                  fontWeight: 'bold',
                                   color: getTextColorBasedOnBgColor(circleColor),
                                 }}
                               >
                                 {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
-                              </p>
+                              </P>
                             )}
                           </div>
                         </foreignObject>

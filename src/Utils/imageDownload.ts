@@ -1,8 +1,8 @@
-import { toPng } from 'html-to-image';
+import { domToPng } from 'modern-screenshot';
 /**
  * Downloads an image of a specified HTML element as a PNG file.
  *
- * Uses `html-to-image` to capture the content of the `node` and converts it to a downloadable PNG image.
+ * Uses `modern-screenshot` to capture the content of the `node` and converts it to a downloadable PNG image.
  * It removes elements with the class `undp-viz-download-button` from the clone to prevent them from appearing in the screenshot.
  *
  * @param node - The HTMLElement to capture and convert into an image.
@@ -14,13 +14,18 @@ import { toPng } from 'html-to-image';
  */
 
 export function imageDownload(node: HTMLElement, filename: string) {
-  toPng(node, {
+  domToPng(node, {
     quality: 1,
-    pixelRatio: 2,
-    skipAutoScale: true,
+    scale: 2,
     style: { margin: '0' },
+    features: {
+      copyScrollbar: false,
+    },
     filter: node => {
-      return !node.classList?.contains('undp-viz-download-button');
+      if (node instanceof Element) {
+        return !node.classList.contains('undp-viz-download-button');
+      }
+      return true; // Include non-Element nodes
     },
   })
     .then((dataUrl: string) => {

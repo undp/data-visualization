@@ -48,15 +48,7 @@ export function YAxesLabels(props: Props) {
       exit={{ opacity: 0, transition: { duration: animate.duration } }}
     >
       <foreignObject y={0} x={0} width={width} height={height}>
-        <div
-          className='flex flex-col justify-center h-full'
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            height: '100%',
-          }}
-        >
+        <div className='flex flex-col justify-center h-full'>
           <p
             className={cn(
               'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 leading-none',
@@ -64,10 +56,6 @@ export function YAxesLabels(props: Props) {
               className,
             )}
             style={{
-              textAlign: alignment,
-              padding: '6px 0',
-              fontSize: '12px',
-              lineHeight: 1,
               ...style,
             }}
           >

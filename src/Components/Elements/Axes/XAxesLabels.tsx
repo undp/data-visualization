@@ -52,13 +52,6 @@ export function XAxesLabels(props: Props) {
           className={`flex flex-col items-center h-full ${
             alignment === 'top' ? 'justify-start' : 'justify-end'
           }`}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: alignment === 'top' ? 'flex-start' : 'flex-end',
-            height: '100%',
-          }}
         >
           <p
             className={cn(
@@ -66,10 +59,6 @@ export function XAxesLabels(props: Props) {
               className,
             )}
             style={{
-              textAlign: 'center',
-              padding: '0 6px',
-              fontSize: '12px',
-              lineHeight: 1,
               ...style,
             }}
           >

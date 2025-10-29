@@ -64,7 +64,7 @@ The dependencies that are pre-installed wit the library:
 * simple-statistics - For statistical functions
 * xss - For cleaning up cross scripting from user-submitted HTML
 * date-fns - For date formatting
-* html-to-image - For downloading div as images
+* modern-screenshot - For downloading div as images
 * react-csv - For generating a csv file
 
 __Required peer dependencies__ 

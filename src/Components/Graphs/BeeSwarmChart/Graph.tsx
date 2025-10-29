@@ -6,6 +6,7 @@ import orderBy from 'lodash.orderby';
 import { Modal } from '@undp/design-system-react/Modal';
 import { cn } from '@undp/design-system-react/cn';
 import { Spinner } from '@undp/design-system-react/Spinner';
+import { P } from '@undp/design-system-react/Typography';
 
 import {
   BeeSwarmChartDataType,
@@ -670,11 +671,12 @@ export function HorizontalGraph(props: Props) {
                     >
                       <div className='flex flex-col gap-0.5 justify-center items-center h-inherit py-0 px-1.5'>
                         {showLabels ? (
-                          <p
+                          <P
                             className={cn(
                               'text-center leading-none m-0',
                               classNames?.graphObjectValues,
                             )}
+                            marginBottom='none'
                             style={{
                               fontSize: `${Math.min(
                                 Math.max(
@@ -704,7 +706,7 @@ export function HorizontalGraph(props: Props) {
                             }}
                           >
                             {d.label}
-                          </p>
+                          </P>
                         ) : null}
                       </div>
                     </foreignObject>
