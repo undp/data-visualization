@@ -131,18 +131,8 @@ export function GeoHubCompareMaps(props: Props) {
       <GraphArea ref={graphDiv}>
         {svgWidth && svgHeight ? (
           <Graph
-            width={width || svgWidth}
-            height={Math.max(
-              minHeight,
-              height ||
-                (relativeHeight
-                  ? minHeight
-                    ? (width || svgWidth) * relativeHeight > minHeight
-                      ? (width || svgWidth) * relativeHeight
-                      : minHeight
-                    : (width || svgWidth) * relativeHeight
-                  : svgHeight),
-            )}
+            width={svgWidth}
+            height={svgHeight}
             mapStyles={mapStyles}
             center={center}
             zoomLevel={zoomLevel}

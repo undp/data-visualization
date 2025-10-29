@@ -313,18 +313,8 @@ export function ThreeDGlobe(props: Props) {
             globeOffset={globeOffset}
             polygonData={mapShape}
             colorDomain={domain}
-            width={width || svgWidth}
-            height={Math.max(
-              minHeight,
-              height ||
-                (relativeHeight
-                  ? minHeight
-                    ? (width || svgWidth) * relativeHeight > minHeight
-                      ? (width || svgWidth) * relativeHeight
-                      : minHeight
-                    : (width || svgWidth) * relativeHeight
-                  : svgHeight),
-            )}
+            width={svgWidth}
+            height={svgHeight}
             colors={
               colors ||
               (scaleType === 'categorical'

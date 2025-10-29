@@ -334,18 +334,8 @@ export function GroupedBarGraphEl(props: Props) {
                         ).filter(d => (filterNA ? !d.size.every(item => item == null) : d))
                   }
                   barColors={colors}
-                  width={width || svgWidth}
-                  height={Math.max(
-                    minHeight,
-                    height ||
-                      (relativeHeight
-                        ? minHeight
-                          ? (width || svgWidth) * relativeHeight > minHeight
-                            ? (width || svgWidth) * relativeHeight
-                            : minHeight
-                          : (width || svgWidth) * relativeHeight
-                        : svgHeight),
-                  )}
+                  width={svgWidth}
+                  height={svgHeight}
                   suffix={suffix}
                   prefix={prefix}
                   showValues={showValues}

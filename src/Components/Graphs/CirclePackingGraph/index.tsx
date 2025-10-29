@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import sum from 'lodash.sum';
 
 import { Graph } from './Graph';
+import { getMaxCircleRadius } from './getMaxCircleRadius';
 
 import { Languages, SourcesDataType, StyleObject, ClassNameObject, TreeMapDataType } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { Colors } from '@/Components/ColorPalette';
-import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { uniqBy } from '@/Utils/uniqBy';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
@@ -272,25 +271,11 @@ export function CirclePackingGraph(props: Props) {
                 theme={theme}
                 radius={
                   !radius
-                    ? (Math.min(
-                        width || svgWidth,
-                        height ||
-                          (relativeHeight
-                            ? minHeight
-                              ? (width || svgWidth) * relativeHeight > minHeight
-                                ? (width || svgWidth) * relativeHeight
-                                : minHeight
-                              : (width || svgWidth) * relativeHeight
-                            : svgHeight),
-                      ) *
-                        (data.filter(d => !checkIfNullOrUndefined(d.size)).length === 0
-                          ? 1
-                          : Math.max(
-                              ...data.map(d => d.size).filter(d => d !== undefined && d !== null),
-                            ))) /
-                      (data.filter(d => !checkIfNullOrUndefined(d.size)).length === 0
-                        ? data.length
-                        : sum(data.filter(d => d.size).map(d => d.size)) * 1.25)
+                    ? getMaxCircleRadius(
+                        data.map(d => d.size),
+                        svgWidth,
+                        svgHeight,
+                      )
                     : radius
                 }
                 maxRadiusValue={maxRadiusValue}

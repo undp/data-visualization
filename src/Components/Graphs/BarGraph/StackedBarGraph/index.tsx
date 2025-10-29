@@ -344,18 +344,8 @@ export function StackedBarGraphEl(props: Props) {
                           .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                   }
                   barColors={colors}
-                  width={width || svgWidth}
-                  height={Math.max(
-                    minHeight,
-                    height ||
-                      (relativeHeight
-                        ? minHeight
-                          ? (width || svgWidth) * relativeHeight > minHeight
-                            ? (width || svgWidth) * relativeHeight
-                            : minHeight
-                          : (width || svgWidth) * relativeHeight
-                        : svgHeight),
-                  )}
+                  width={svgWidth}
+                  height={svgHeight}
                   barPadding={barPadding}
                   showTicks={showTicks}
                   leftMargin={leftMargin}

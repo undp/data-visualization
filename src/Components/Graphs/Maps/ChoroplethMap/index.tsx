@@ -354,18 +354,8 @@ export function ChoroplethMap(props: Props) {
                   }
             }
             colorDomain={domain}
-            width={width || svgWidth}
-            height={Math.max(
-              minHeight,
-              height ||
-                (relativeHeight
-                  ? minHeight
-                    ? (width || svgWidth) * relativeHeight > minHeight
-                      ? (width || svgWidth) * relativeHeight
-                      : minHeight
-                    : (width || svgWidth) * relativeHeight
-                  : svgHeight),
-            )}
+            width={svgWidth}
+            height={svgHeight}
             scale={scale}
             centerPoint={centerPoint}
             colors={

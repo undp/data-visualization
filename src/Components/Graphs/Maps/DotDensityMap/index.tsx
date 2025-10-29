@@ -350,18 +350,8 @@ export function DotDensityMap(props: Props) {
                 ? []
                 : colorDomain || (uniqBy(data, 'color', true) as string[])
             }
-            width={width || svgWidth}
-            height={Math.max(
-              minHeight,
-              height ||
-                (relativeHeight
-                  ? minHeight
-                    ? (width || svgWidth) * relativeHeight > minHeight
-                      ? (width || svgWidth) * relativeHeight
-                      : minHeight
-                    : (width || svgWidth) * relativeHeight
-                  : svgHeight),
-            )}
+            width={svgWidth}
+            height={svgHeight}
             scale={scale}
             centerPoint={centerPoint}
             colors={

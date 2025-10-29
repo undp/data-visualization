@@ -285,84 +285,87 @@ export const Graph = (props: Props) => {
                   onMouseLeave={handleMouseLeave}
                 >
                   <circle cx={0} cy={0} r={bubbleRadius} fill={circleColor} />
-                  {(showLabel || showValues) && d.size !== undefined && d.size !== null && (
-                    <g>
-                      <foreignObject
-                        y={0 - bubbleRadius}
-                        x={0 - bubbleRadius}
-                        width={2 * bubbleRadius}
-                        height={2 * bubbleRadius}
-                      >
-                        <div
-                          className='flex flex-col justify-center items-center h-full py-0 px-3'
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100%',
-                            padding: '0 0.75rem',
-                          }}
+                  {(showLabel || showValues) &&
+                    d.size !== undefined &&
+                    d.size !== null &&
+                    bubbleRadius >= 15 && (
+                      <g>
+                        <foreignObject
+                          y={0 - bubbleRadius}
+                          x={0 - bubbleRadius}
+                          width={2 * bubbleRadius}
+                          height={2 * bubbleRadius}
                         >
-                          {showLabels && (
-                            <p
-                              className={cn(
-                                'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
-                                classNames?.graphObjectValues,
-                              )}
-                              style={{
-                                fontSize: `${Math.min(
-                                  Math.max(Math.round(bubbleRadius / 4), 12),
-                                  Math.max(
-                                    Math.round((bubbleRadius * 12) / `${d.label}`.length),
-                                    12,
-                                  ),
-                                  14,
-                                )}px`,
-                                textAlign: 'center',
-                                margin: 0,
-                                lineHeight: 1.25,
-                                WebkitLineClamp:
-                                  bubbleRadius * 2 < 60
-                                    ? 1
-                                    : bubbleRadius * 2 < 75
-                                      ? 2
-                                      : bubbleRadius * 2 < 100
-                                        ? 3
-                                        : undefined,
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                color: getTextColorBasedOnBgColor(circleColor),
-                                hyphens: 'auto',
-                                ...(styles?.graphObjectValues || {}),
-                              }}
-                            >
-                              {d.label}
-                            </p>
-                          )}
-                          {showValues && (
-                            <p
-                              className='text-center font-bold leading-[1.25] w-full m-0 circle-packing-value'
-                              style={{
-                                fontSize: `${Math.min(
-                                  Math.max(Math.round(bubbleRadius / 4), 14),
-                                  14,
-                                )}px`,
-                                textAlign: 'center',
-                                margin: 0,
-                                lineHeight: 1.25,
-                                width: '100%',
-                                fontWeight: 'bold',
-                                color: getTextColorBasedOnBgColor(circleColor),
-                              }}
-                            >
-                              {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
-                            </p>
-                          )}
-                        </div>
-                      </foreignObject>
-                    </g>
-                  )}
+                          <div
+                            className='flex flex-col justify-center items-center h-full py-0 px-3'
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              height: '100%',
+                              padding: '0 0.75rem',
+                            }}
+                          >
+                            {showLabels && (
+                              <p
+                                className={cn(
+                                  'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
+                                  classNames?.graphObjectValues,
+                                )}
+                                style={{
+                                  fontSize: `${Math.min(
+                                    Math.max(Math.round(bubbleRadius / 4), 12),
+                                    Math.max(
+                                      Math.round((bubbleRadius * 12) / `${d.label}`.length),
+                                      12,
+                                    ),
+                                    14,
+                                  )}px`,
+                                  textAlign: 'center',
+                                  margin: 0,
+                                  lineHeight: 1.25,
+                                  WebkitLineClamp:
+                                    bubbleRadius * 2 < 60
+                                      ? 1
+                                      : bubbleRadius * 2 < 75
+                                        ? 2
+                                        : bubbleRadius * 2 < 100
+                                          ? 3
+                                          : undefined,
+                                  display: '-webkit-box',
+                                  WebkitBoxOrient: 'vertical',
+                                  color: getTextColorBasedOnBgColor(circleColor),
+                                  hyphens: 'auto',
+                                  ...(styles?.graphObjectValues || {}),
+                                }}
+                              >
+                                {d.label}
+                              </p>
+                            )}
+                            {showValues && (
+                              <p
+                                className='text-center font-bold leading-[1.25] w-full m-0 circle-packing-value'
+                                style={{
+                                  fontSize: `${Math.min(
+                                    Math.max(Math.round(bubbleRadius / 4), 14),
+                                    14,
+                                  )}px`,
+                                  textAlign: 'center',
+                                  margin: 0,
+                                  lineHeight: 1.25,
+                                  width: '100%',
+                                  fontWeight: 'bold',
+                                  color: getTextColorBasedOnBgColor(circleColor),
+                                }}
+                              >
+                                {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
+                              </p>
+                            )}
+                          </div>
+                        </foreignObject>
+                      </g>
+                    )}
                 </g>
               );
             })}
