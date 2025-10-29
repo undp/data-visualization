@@ -63,7 +63,13 @@ export function YAxesLabels(props: Props) {
               `text-${alignment}`,
               className,
             )}
-            style={{ textAlign: alignment, padding: '0 6px', ...style }}
+            style={{
+              textAlign: alignment,
+              padding: '6px 0',
+              fontSize: '12px',
+              lineHeight: 1,
+              ...style,
+            }}
           >
             {value}
           </p>

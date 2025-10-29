@@ -65,7 +65,13 @@ export function XAxesLabels(props: Props) {
               'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 text-center leading-none',
               className,
             )}
-            style={{ textAlign: 'center', padding: '0 6px', ...style }}
+            style={{
+              textAlign: 'center',
+              padding: '0 6px',
+              fontSize: '12px',
+              lineHeight: 1,
+              ...style,
+            }}
           >
             {value}
           </p>

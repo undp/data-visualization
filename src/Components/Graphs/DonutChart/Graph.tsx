@@ -79,7 +79,18 @@ export function Graph(props: Props) {
               width={2 * (radius - strokeWidth)}
               height={2 * (radius - strokeWidth)}
             >
-              <div className='flex flex-col gap-0.5 justify-center items-center h-inherit py-0 px-4'>
+              <div
+                className='flex flex-col gap-0.5 justify-center items-center h-inherit py-0 px-4'
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.125rem',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 'inherit',
+                  padding: '0 1rem',
+                }}
+              >
                 {mainText ? (
                   <H2
                     marginBottom='none'
