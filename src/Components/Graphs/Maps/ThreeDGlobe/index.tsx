@@ -40,7 +40,7 @@ interface Props {
   ariaLabel?: string;
 
   // Colors and Styling
-  /** Colors for the choropleth map */
+  /** Colors for the choropleth map. Make sure the the colors are in hex code, any other format can cause issues. */
   colors?: string[];
   /** Domain of colors for the graph */
   colorDomain?: number[] | string[];
@@ -111,6 +111,8 @@ interface Props {
   highlightedIds?: string[];
   /** Defines the altitude of the highlighted countries or the countries on mouseover. */
   highlightedAltitude?: number;
+  /** Defines the opacity of the non-highlighted data */
+  dimmedOpacity?: number;
   /** Enable data download option as a csv */
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
@@ -181,6 +183,7 @@ export function ThreeDGlobe(props: Props) {
     onSeriesMouseClick,
     highlightedIds = [],
     highlightedAltitude = 0.1,
+    dimmedOpacity = 0.3,
     scale = 1,
     globeOffset = [0, 0],
     polygonAltitude = 0.01,
@@ -357,6 +360,7 @@ export function ThreeDGlobe(props: Props) {
             highlightedAltitude={highlightedAltitude}
             selectedId={selectedId}
             collapseColorScaleByDefault={collapseColorScaleByDefault}
+            dimmedOpacity={dimmedOpacity}
           />
         ) : (
           <div

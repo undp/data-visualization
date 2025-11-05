@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
 import { cn } from '@undp/design-system-react/cn';
+import hexToRgba from 'hex-to-rgba';
 
 import {
   ChoroplethMapDataType,
@@ -59,6 +60,7 @@ interface Props {
   highlightedAltitude: number;
   selectedId?: string;
   collapseColorScaleByDefault?: boolean;
+  dimmedOpacity: number;
 }
 
 function createLightFromConfig(config: LightConfig): THREE.Light {
@@ -178,6 +180,7 @@ function Graph(props: Props) {
     highlightedAltitude,
     selectedId,
     collapseColorScaleByDefault,
+    dimmedOpacity,
   } = props;
   const [globeReady, setGlobeReady] = useState(false);
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
@@ -293,28 +296,41 @@ function Graph(props: Props) {
         polygonAltitude={(polygon: any) =>
           highlightedIds.includes(polygon?.properties?.[mapProperty]) ||
           polygon?.properties?.[mapProperty] === selectedId
-            ? highlightedAltitude * (polygon?.properties?.[mapProperty] === selectedId ? 2 : 1)
+            ? highlightedAltitude
             : polygon?.properties?.[mapProperty] === mouseOverData?.id ||
                 polygon?.properties?.[mapProperty] === mouseClickData?.id
               ? highlightedAltitude
               : polygonAltitude
         }
         polygonCapColor={(polygon: any) => {
+          const opacity = selectedId
+            ? polygon?.properties?.[mapProperty] === selectedId
+              ? 1
+              : dimmedOpacity
+            : highlightedIds.length !== 0
+              ? highlightedIds.includes(polygon?.properties?.[mapProperty])
+                ? 1
+                : dimmedOpacity
+              : 1;
           const id = polygon?.properties?.[mapProperty];
           const val = data.find(el => el.id === id)?.x;
-          if (val !== undefined && val !== null) {
-            return colorScale(val as any);
-          }
-          return mapNoDataColor;
+          const color = val !== undefined && val !== null ? colorScale(val as any) : mapNoDataColor;
+          return hexToRgba(color, `${opacity}`);
         }}
         polygonSideColor={(polygon: any) => {
           const id = polygon?.properties?.[mapProperty];
           const val = data.find(el => el.id === id)?.x;
+          const opacity = selectedId
+            ? polygon?.properties?.[mapProperty] === selectedId
+              ? 1
+              : dimmedOpacity
+            : highlightedIds.length !== 0
+              ? highlightedIds.includes(polygon?.properties?.[mapProperty])
+                ? 1
+                : dimmedOpacity
+              : 1;
           const color = val !== undefined && val !== null ? colorScale(val as any) : mapNoDataColor;
-          return highlightedIds.includes(polygon?.properties?.[mapProperty]) ||
-            polygon?.properties?.[mapProperty] === selectedId
-            ? color
-            : 'rgba(100,100,100,0)';
+          return hexToRgba(color, `${opacity}`);
         }}
         polygonStrokeColor={(polygon: any) =>
           polygon?.properties?.[mapProperty] === mouseOverData?.id
