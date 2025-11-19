@@ -73,6 +73,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   naLabel: string;
   rtl: boolean;
+  targetLineThickness: number;
 }
 
 export function VerticalGraph(props: Props) {
@@ -118,6 +119,7 @@ export function VerticalGraph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    targetLineThickness,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -376,21 +378,21 @@ export function VerticalGraph(props: Props) {
                     <motion.rect
                       x={0}
                       width={x.bandwidth()}
-                      style={{
-                        fill: targetColor,
-                      }}
                       exit={{
                         height: 0,
                         y: y(0),
+                        fill: targetColor,
                         transition: { duration: animate.duration },
                       }}
                       variants={{
                         initial: {
                           height: 0,
+                          fill: targetColor,
                           y: y(0),
                         },
                         whileInView: {
                           height: Math.abs(y(d.target) - y(0)),
+                          fill: targetColor,
                           y: d.target > 0 ? y(d.target) : y(0),
                           transition: { duration: animate.duration },
                         },
@@ -430,28 +432,28 @@ export function VerticalGraph(props: Props) {
                     <motion.rect
                       x={0}
                       width={x.bandwidth()}
-                      style={{
-                        fill: targetColor,
-                      }}
                       exit={{
                         y: y(0),
                         opacity: 0,
+                        fill: targetColor,
                         transition: { duration: animate.duration },
                       }}
                       variants={{
                         initial: {
                           y: y(0),
                           opacity: 0,
+                          fill: targetColor,
                         },
                         whileInView: {
-                          y: y(d.target) - 1,
+                          y: y(d.target) - targetLineThickness / 2,
                           opacity: 1,
+                          fill: targetColor,
                           transition: { duration: animate.duration },
                         },
                       }}
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
-                      height={2}
+                      height={targetLineThickness}
                     />
                   ) : null}
                   {showLabels ? (
@@ -609,6 +611,7 @@ export function HorizontalGraph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    targetLineThickness,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -839,21 +842,21 @@ export function HorizontalGraph(props: Props) {
                       y={0}
                       x={d.target >= 0 ? x(0) : x(d.target)}
                       height={y.bandwidth()}
-                      style={{
-                        fill: targetColor,
-                      }}
                       exit={{
                         width: 0,
                         x: x(0),
+                        fill: targetColor,
                         transition: { duration: animate.duration },
                       }}
                       variants={{
                         initial: {
                           x: x(0),
+                          fill: targetColor,
                           width: 0,
                         },
                         whileInView: {
                           x: d.target >= 0 ? x(0) : x(d.target),
+                          fill: targetColor,
                           width: d.target >= 0 ? x(d.target) - x(0) : x(0) - x(d.target),
                           transition: { duration: animate.duration },
                         },
@@ -893,23 +896,23 @@ export function HorizontalGraph(props: Props) {
                     <motion.rect
                       y={0}
                       height={y.bandwidth()}
-                      style={{
-                        fill: targetColor,
-                      }}
-                      width={2}
+                      width={targetLineThickness}
                       exit={{
                         opacity: 0,
                         x: x(0),
+                        fill: targetColor,
                         transition: { duration: animate.duration },
                       }}
                       variants={{
                         initial: {
                           x: x(0),
                           opacity: 0,
+                          fill: targetColor,
                         },
                         whileInView: {
-                          x: x(d.target) - 1,
+                          x: x(d.target) - targetLineThickness / 2,
                           opacity: 1,
+                          fill: targetColor,
                           transition: { duration: animate.duration },
                         },
                       }}

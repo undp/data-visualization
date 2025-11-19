@@ -112,6 +112,8 @@ interface Props {
   targetStyle?: 'background' | 'line';
   /** Defines the color of the target bar */
   targetColor?: string;
+  /** Defines the thickness if the target is of style line */
+  targetLineThickness?: number;
   /** Defines the width of the measure bar in relation with available width */
   measureBarWidthFactor?: number;
   /** Custom order for labels */
@@ -232,6 +234,7 @@ export function BulletChart(props: Props) {
     detailsOnClick,
     barAxisTitle,
     noOfTicks = 5,
+    targetLineThickness = 2,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -370,6 +373,7 @@ export function BulletChart(props: Props) {
                 precision={precision}
                 customLayers={customLayers}
                 naLabel={naLabel}
+                targetLineThickness={targetLineThickness}
                 rtl={language === 'ar' || language === 'he'}
               />
             ) : null}
