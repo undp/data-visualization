@@ -129,24 +129,12 @@ export const GraphNames = [
     id: 'barChart',
   },
   {
-    name: 'Bar graph (animated)',
-    id: 'animatedBarChart',
-  },
-  {
     name: 'Stacked bar graph',
     id: 'stackedBarChart',
   },
   {
-    name: 'Stacked bar graph (animated)',
-    id: 'animatedStackedBarChart',
-  },
-  {
     name: 'Grouped bar graph',
     id: 'groupedBarChart',
-  },
-  {
-    name: 'Grouped bar graph (animated)',
-    id: 'animatedGroupedBarChart',
   },
   {
     name: 'Bullet chart',
@@ -177,10 +165,6 @@ export const GraphNames = [
     id: 'butterflyChart',
   },
   {
-    name: 'Butterfly chart (animated)',
-    id: 'animatedButterflyChart',
-  },
-  {
     name: 'Data cards',
     id: 'dataCards',
   },
@@ -191,10 +175,6 @@ export const GraphNames = [
   {
     name: 'Dumbbell graph',
     id: 'dumbbellChart',
-  },
-  {
-    name: 'Dumbbell graph (animated)',
-    id: 'animatedDumbbellChart',
   },
   {
     name: 'Difference line chart',
@@ -241,10 +221,6 @@ export const GraphNames = [
     id: 'scatterPlot',
   },
   {
-    name: 'Scatter plot (animated)',
-    id: 'animatedScatterPlot',
-  },
-  {
     name: 'Slope chart',
     id: 'slopeChart',
   },
@@ -269,24 +245,16 @@ export const GraphNames = [
     id: 'choroplethMap',
   },
   {
-    name: 'Choropleth map (animated)',
-    id: 'animatedChoroplethMap',
-  },
-  {
     name: 'Bi-variate choropleth map',
     id: 'biVariateChoroplethMap',
-  },
-  {
-    name: 'Bi-variate choropleth map (animated)',
-    id: 'animatedBiVariateChoroplethMap',
   },
   {
     name: 'Dot density map',
     id: 'dotDensityMap',
   },
   {
-    name: 'Dot density map (animated)',
-    id: 'animatedDotDensityMap',
+    name: 'Hybrid map (choropleth + dot density)',
+    id: 'hybridMap',
   },
   {
     name: 'GeoHub Map',

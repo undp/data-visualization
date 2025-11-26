@@ -64,6 +64,7 @@ const entries = {
   ),
   ChoroplethMap: path.resolve(__dirname, 'src/Components/Graphs/Maps/ChoroplethMap/index.tsx'),
   DotDensityMap: path.resolve(__dirname, 'src/Components/Graphs/Maps/DotDensityMap/index.tsx'),
+  HybridMap: path.resolve(__dirname, 'src/Components/Graphs/Maps/HybridMap/index.tsx'),
   ThreeDGlobe: path.resolve(__dirname, 'src/Components/Graphs/Maps/ThreeDGlobe/index.tsx'),
   GeoHubMap: path.resolve(__dirname, 'src/Components/Graphs/Maps/GeoHubMaps/SimpleMap/index.tsx'),
   GeoHubCompareMaps: path.resolve(

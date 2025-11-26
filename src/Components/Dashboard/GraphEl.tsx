@@ -31,6 +31,7 @@ import { StripChart } from '../Graphs/StripChart';
 import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
 import { RadarChart } from '../Graphs/RadarChart';
 import { BulletChart } from '../Graphs/BulletChart';
+import { HybridMap } from '../Graphs/Maps/HybridMap';
 
 import { getValues } from '@/Utils/getValues';
 import {
@@ -125,6 +126,7 @@ function GraphEl(props: Props) {
     lineChartWithConfidenceInterval: LineChartWithConfidenceInterval,
     dataCards: DataCards,
     radarChart: RadarChart,
+    hybridMap: HybridMap,
   };
   const getGraphProps = (graphType: GraphType) => {
     switch (graphType) {
@@ -946,6 +948,70 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
+        };
+      case 'hybridMap':
+        return {
+          timeline: settings?.timeline,
+          customLayers: settings?.customLayers,
+          theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
+          collapseColorScaleByDefault: settings?.collapseColorScaleByDefault,
+          resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
+          graphTitle: settings?.graphTitle,
+          mapData: settings?.mapData,
+          mapProjection: settings?.mapProjection,
+          graphDescription: settings?.graphDescription,
+          footNote: settings?.footNote,
+          width: settings?.width,
+          height: settings?.height,
+          sources: settings?.sources,
+          colorDomain: settings?.colorDomain as string[] | number[],
+          colors: settings?.colors as string[] | undefined,
+          mapColorLegendTitle:
+            Object.keys(settings || {}).indexOf('mapColorLegendTitle') !== -1
+              ? settings?.mapColorLegendTitle
+              : getValues('x', graphDataConfiguration || [], readableHeader || []),
+          choroplethScaleType: settings?.choroplethScaleType,
+          data: graphData,
+          scale: settings?.scale,
+          centerPoint: settings?.centerPoint,
+          backgroundColor: settings?.backgroundColor,
+          mapBorderWidth: settings?.mapBorderWidth,
+          mapNoDataColor: settings?.mapNoDataColor,
+          mapBorderColor: settings?.mapBorderColor,
+          relativeHeight: settings?.relativeHeight,
+          padding: settings?.padding,
+          isWorldMap: settings?.isWorldMap,
+          tooltip: settings?.tooltip,
+          showColorScale: settings?.showColorScale,
+          zoomScaleExtend: settings?.zoomScaleExtend,
+          zoomTranslateExtend: settings?.zoomTranslateExtend,
+          graphID: settings?.graphID,
+          highlightedIds: settings?.highlightedIds,
+          graphDownload: settings?.graphDownload,
+          dataDownload: settings?.dataDownload,
+          mapProperty: settings?.mapProperty,
+          showAntarctica: settings?.showAntarctica,
+          language: settings?.language,
+          minHeight: settings?.minHeight,
+          ariaLabel: settings?.ariaLabel,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onSeriesMouseClick: (el: any) => {
+            updateFilters?.(el.id);
+          },
+          detailsOnClick: settings?.detailsOnClick,
+          styles: settings?.styles,
+          classNames: settings?.classNames,
+          zoomInteraction: settings?.zoomInteraction,
+          animate: settings?.animate,
+          maxRadiusValue: settings?.maxRadiusValue,
+          radius: settings?.radius,
+          showLabels: settings?.showLabels,
+          highlightedDataPoints: settings?.highlightedDataPoints,
+          dotLegendTitle: settings?.dotLegendTitle,
+          dotColor: settings?.dotColor,
+          dotBorderColor: settings?.dotBorderColor,
+          labelColor: settings?.labelColor,
         };
       case 'donutChart':
         return {

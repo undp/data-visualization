@@ -80,6 +80,8 @@ export function getDataSchemaLink(graph: GraphType | ThreeDGraphType | GeoHubGra
       return 'dataSchema/sankeyChartDataSchema.json';
     case 'lineChartWithConfidenceInterval':
       return 'dataSchema/lineChartWithConfidenceIntervalDataSchema.json';
+    case 'hybridMap':
+      return 'dataSchema/hybridMapDataSchema.json';
     case 'radarChart':
       return 'dataSchema/radarChartDataSchema.json';
     default:
@@ -168,6 +170,8 @@ export function getSettingsSchemaLink(
       return 'settingsSchema/SettingsSchema.json';
     case 'radarChart':
       return 'settingsSchema/radarChartSettingsSchema.json';
+    case 'hybridMap':
+      return 'settingsSchema/hybridMapSettingsSchema.json';
     default:
       console.error('Unknown chart type:', graph);
       return null;

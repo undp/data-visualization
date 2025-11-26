@@ -25,6 +25,7 @@ export { SparkLine } from './Components/Graphs/LineCharts/SparkLine';
 export { BiVariateChoroplethMap } from './Components/Graphs/Maps/BiVariateMap';
 export { ChoroplethMap } from './Components/Graphs/Maps/ChoroplethMap';
 export { DotDensityMap } from './Components/Graphs/Maps/DotDensityMap';
+export { HybridMap } from './Components/Graphs/Maps/HybridMap';
 export { ThreeDGlobe } from './Components/Graphs/Maps/ThreeDGlobe';
 export { GeoHubMap } from './Components/Graphs/Maps/GeoHubMaps/SimpleMap';
 export { GeoHubCompareMaps } from './Components/Graphs/Maps/GeoHubMaps/CompareMaps';

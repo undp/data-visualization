@@ -320,6 +320,46 @@ export const ChartConfiguration: {
     ],
   },
   {
+    chartID: 'hybridMap',
+    configuration: [
+      {
+        id: 'id',
+        required: false,
+        multiple: false,
+      },
+      {
+        id: 'x',
+        required: false,
+        multiple: false,
+      },
+      {
+        id: 'lat',
+        required: false,
+        multiple: false,
+      },
+      {
+        id: 'long',
+        required: false,
+        multiple: false,
+      },
+      {
+        id: 'label',
+        multiple: false,
+        required: false,
+      },
+      {
+        id: 'radius',
+        required: false,
+        multiple: false,
+      },
+      {
+        id: 'date',
+        required: false,
+        multiple: false,
+      },
+    ],
+  },
+  {
     chartID: 'donutChart',
     configuration: [
       {

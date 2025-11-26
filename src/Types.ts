@@ -28,6 +28,7 @@ export type GraphTypeForGriddedGraph =
   | 'stackedAreaChart'
   | 'choroplethMap'
   | 'biVariateChoroplethMap'
+  | 'hybridMap'
   | 'dotDensityMap'
   | 'donutChart'
   | 'slopeChart'
@@ -291,6 +292,17 @@ export interface DotDensityMapDataType {
   long: number;
   radius?: number;
   color?: string | number;
+  label?: string | number;
+  date?: string | number;
+  data?: object;
+}
+
+export interface HybridMapDataType {
+  lat?: number;
+  long?: number;
+  x?: number | string | null;
+  id?: string;
+  radius?: number;
   label?: string | number;
   date?: string | number;
   data?: object;
@@ -988,6 +1000,11 @@ export interface GraphSettingsDataType {
   highlightedAltitude?: number;
   selectedId?: string;
   collapseColorScaleByDefault?: boolean;
+  dotLegendTitle?: string;
+  dotColor?: string;
+  dotBorderColor?: string;
+  mapColorLegendTitle?: string;
+  choroplethScaleType?: Exclude<ScaleDataType, 'linear'>;
 }
 
 export interface InfoBoxDataType {

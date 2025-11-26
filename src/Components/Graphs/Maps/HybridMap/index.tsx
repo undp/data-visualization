@@ -1,41 +1,40 @@
 import { useState, useRef, useEffect, useEffectEvent } from 'react';
-import { SliderUI } from '@undp/design-system-react/SliderUI';
-import { Spinner } from '@undp/design-system-react/Spinner';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
+import { SliderUI } from '@undp/design-system-react/SliderUI';
+import { Spinner } from '@undp/design-system-react/Spinner';
 import { ascending, sort } from 'd3-array';
 
 import { Graph } from './Graph';
 
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import {
-  ChoroplethMapDataType,
+  HybridMapDataType,
   Languages,
   SourcesDataType,
   StyleObject,
   ClassNameObject,
-  ScaleDataType,
-  MapProjectionTypes,
   ZoomInteractionTypes,
+  MapProjectionTypes,
   CustomLayerDataType,
   AnimateDataType,
   TimelineDataType,
+  ScaleDataType,
 } from '@/Types';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { Colors } from '@/Components/ColorPalette';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
-import { getUniqValue } from '@/Utils/getUniqValue';
-import { getJenks } from '@/Utils/getJenks';
+import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Pause, Play } from '@/Components/Icons';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { uniqBy } from '@/Utils/uniqBy';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getJenks, getUniqValue } from '@/Utils';
 
 interface Props {
   // Data
-  /** Array of data objects */
-  data: ChoroplethMapDataType[];
-
+  /** Array of data objects for dot density map*/
+  data: HybridMapDataType[];
   // Titles, Labels, and Sources
   /** Title of the graph */
   graphTitle?: string | React.ReactNode;
@@ -49,12 +48,14 @@ interface Props {
   ariaLabel?: string;
 
   // Colors and Styling
-  /** Colors for the choropleth map */
+  /** Color or array of colors for the circle */
   colors?: string[];
-  /** Domain of colors for the graph */
+  /** Domain of colors for the graph for the choropleth map */
   colorDomain?: number[] | string[];
-  /** Title for the color legend */
-  colorLegendTitle?: string;
+  /** Title for the legend for the dot density scale */
+  dotLegendTitle?: string;
+  /** Title for the color legend for the color scale */
+  mapColorLegendTitle?: string;
   /** Color for the areas where data is no available */
   mapNoDataColor?: string;
   /** Background color of the graph */
@@ -77,6 +78,8 @@ interface Props {
   padding?: string;
 
   // Graph Parameters
+  /** Maximum radius of the circle */
+  radius?: number;
   /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
@@ -90,32 +93,44 @@ interface Props {
   mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
   mapBorderColor?: string;
+  /** Color of the dots in the dot density map */
+  dotColor?: string;
+  /** Border color of the dots in the dot density map */
+  dotBorderColor?: string;
+  /** Color of the labels */
+  labelColor?: string;
   /** Toggle if the map is a world map */
   isWorldMap?: boolean;
+  /** Scale for the colors of the choropleth map */
+  choroplethScaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Map projection type */
   mapProjection?: MapProjectionTypes;
   /** Extend of the allowed zoom in the map */
   zoomScaleExtend?: [number, number];
   /** Extend of the allowed panning in the map */
   zoomTranslateExtend?: [[number, number], [number, number]];
+  /** Toggle visibility of labels */
+  showLabels?: boolean;
+  /** Maximum value mapped to the radius chart */
+  maxRadiusValue?: number;
   /** Countries or regions to be highlighted */
   highlightedIds?: string[];
+  /** Data points to highlight. Use the label value from data to highlight the data point */
+  highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Scale for the colors */
-  scaleType?: Exclude<ScaleDataType, 'linear'>;
-  /** Toggle visibility of color scale. */
+  /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggle if color scale is collapsed by default. */
   collapseColorScaleByDefault?: boolean;
-  /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
-  mapProperty?: string;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
   showAntarctica?: boolean;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
+  /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
+  mapProperty?: string;
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
   timeline?: TimelineDataType;
   /** Enable graph download option as png */
@@ -148,7 +163,7 @@ interface Props {
   graphID?: string;
 }
 
-export function ChoroplethMap(props: Props) {
+export function HybridMap(props: Props) {
   const {
     data,
     mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
@@ -159,27 +174,28 @@ export function ChoroplethMap(props: Props) {
     height,
     width,
     footNote = 'The designations employed and the presentation of material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations or UNDP concerning the legal status of any country, territory, city or area or its authorities, or concerning the delimitation of its frontiers or boundaries.',
+    mapColorLegendTitle,
     colorDomain,
-    colorLegendTitle,
-    scaleType = 'threshold',
+    choroplethScaleType = 'threshold',
+    radius = 5,
     scale = 0.95,
     centerPoint,
     padding,
     mapBorderWidth = 0.5,
     mapNoDataColor = Colors.light.graphNoData,
     backgroundColor = false,
+    showLabels = false,
     mapBorderColor = Colors.light.grays['gray-500'],
-    relativeHeight,
     tooltip,
+    relativeHeight,
     onSeriesMouseOver,
     isWorldMap = true,
     showColorScale = true,
     zoomScaleExtend = [0.8, 6],
     zoomTranslateExtend,
     graphID,
-    highlightedIds = [],
+    highlightedDataPoints = [],
     onSeriesMouseClick,
-    mapProperty = 'ISO3',
     graphDownload = false,
     dataDownload = false,
     showAntarctica = false,
@@ -196,9 +212,17 @@ export function ChoroplethMap(props: Props) {
     animate = false,
     dimmedOpacity = 0.3,
     customLayers = [],
+    maxRadiusValue,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     collapseColorScaleByDefault,
+    dotColor = Colors.primaryColors['blue-600'],
+    highlightedIds = [],
+    mapProperty = 'ISO3',
+    dotLegendTitle,
+    dotBorderColor,
+    labelColor = Colors.primaryColors['blue-600'],
   } = props;
+
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
@@ -215,6 +239,14 @@ export function ChoroplethMap(props: Props) {
 
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
+  const domain =
+    colorDomain ||
+    (choroplethScaleType === 'categorical'
+      ? getUniqValue(data, 'x')
+      : getJenks(
+          data.map(d => d.x as number | null | undefined),
+          colors?.length || 4,
+        ));
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
       setSvgWidth(entries[0].target.clientWidth || 620);
@@ -239,15 +271,6 @@ export function ChoroplethMap(props: Props) {
       onUpdateShape(mapData);
     }
   }, [mapData]);
-
-  const domain =
-    colorDomain ||
-    (scaleType === 'categorical'
-      ? getUniqValue(data, 'x')
-      : getJenks(
-          data.map(d => d.x as number | null | undefined),
-          colors?.length || 4,
-        ));
 
   useEffect(() => {
     const interval = setInterval(
@@ -337,6 +360,7 @@ export function ChoroplethMap(props: Props) {
       <GraphArea ref={graphDiv}>
         {svgWidth && svgHeight && mapShape ? (
           <Graph
+            dotColor={dotColor}
             data={data.filter(d =>
               timeline.enabled
                 ? d.date === format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
@@ -360,40 +384,53 @@ export function ChoroplethMap(props: Props) {
             centerPoint={centerPoint}
             colors={
               colors ||
-              (scaleType === 'categorical'
-                ? Colors[theme].categoricalColors.colors
+              (choroplethScaleType === 'categorical'
+                ? Colors[theme].sequentialColors[
+                    `neutralColorsx0${domain.length as 4 | 5 | 6 | 7 | 8 | 9}`
+                  ]
                 : Colors[theme].sequentialColors[
                     `neutralColorsx0${(domain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
                   ])
             }
-            colorLegendTitle={colorLegendTitle}
+            mapColorLegendTitle={mapColorLegendTitle}
+            radius={radius}
+            categorical={choroplethScaleType === 'categorical'}
             mapBorderWidth={mapBorderWidth}
             mapNoDataColor={mapNoDataColor}
-            categorical={scaleType === 'categorical'}
             mapBorderColor={mapBorderColor}
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
+            showLabels={showLabels}
             isWorldMap={isWorldMap}
             showColorScale={showColorScale}
             zoomScaleExtend={zoomScaleExtend}
             zoomTranslateExtend={zoomTranslateExtend}
             onSeriesMouseClick={onSeriesMouseClick}
-            mapProperty={mapProperty}
-            highlightedIds={highlightedIds}
+            highlightedDataPoints={highlightedDataPoints}
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             styles={styles}
             classNames={classNames}
+            zoomInteraction={zoomInteraction}
             detailsOnClick={detailsOnClick}
             mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}
-            zoomInteraction={zoomInteraction}
-            dimmedOpacity={dimmedOpacity}
             animate={
               animate === true
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
+            dimmedOpacity={dimmedOpacity}
             customLayers={customLayers}
+            maxRadiusValue={
+              !checkIfNullOrUndefined(maxRadiusValue)
+                ? (maxRadiusValue as number)
+                : Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null))
+            }
             collapseColorScaleByDefault={collapseColorScaleByDefault}
+            highlightedIds={highlightedIds}
+            mapProperty={mapProperty}
+            dotLegendTitle={dotLegendTitle}
+            dotBorderColor={dotBorderColor}
+            labelColor={labelColor}
           />
         ) : (
           <div

@@ -240,6 +240,37 @@ export function GraphDataConfigSelector(graph: string) {
     chartConfigId: 'date',
   }
 ]`,
+    'Hybrid map': `[
+  // ----Not required objects---- //
+  {
+    columnId: 'Column 1',
+    chartConfigId: 'x',
+  },
+  {
+    columnId: 'Column 2',
+    chartConfigId: 'id',
+  },
+  {
+    columnId: 'Column 1',
+    chartConfigId: 'lat',
+  },
+  {
+    columnId: 'Column 2',
+    chartConfigId: 'long',
+  },
+  {
+    columnId: 'Column 4',
+    chartConfigId: 'radius',
+  },
+  {
+    columnId: 'Column 5',
+    chartConfigId: 'label',
+  },
+  {
+    columnId: 'Date',
+    chartConfigId: 'date',
+  }
+]`,
     'Donut graph': `[
   // ----Required objects---- //
   {
