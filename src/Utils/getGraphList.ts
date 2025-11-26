@@ -161,6 +161,13 @@ export const graphList = [
     availableInWideToLongFormat: false,
   },
   {
+    graphName: 'Hybrid map (choropleth + dot density)',
+    graphID: 'hybridMap',
+    availableInGriddedGraph: true,
+    geoHubMapPresentation: false,
+    availableInWideToLongFormat: false,
+  },
+  {
     graphName: 'GeoHub map with comparison',
     graphID: 'geoHubCompareMap',
     availableInGriddedGraph: false,
