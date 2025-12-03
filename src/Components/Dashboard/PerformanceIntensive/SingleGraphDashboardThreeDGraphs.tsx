@@ -182,7 +182,11 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
     };
     fetchData();
     updateFiltersEvent();
-  }, [dataSettings, filters, debugMode]);
+  }, [dataSettings, debugMode]);
+
+  useEffect(() => {
+    updateFiltersEvent();
+  }, [filters, data]);
 
   const filteredDataEvent = useEffectEvent(() => {
     if (!data || filterSettings.length === 0) setFilteredData(data);
@@ -201,6 +205,7 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
       setFilteredData(result);
     }
   });
+
   useEffect(() => {
     filteredDataEvent();
   }, [filterSettings, data]);
@@ -567,19 +572,36 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
                 >
                   <Label className='mb-2'>{d.label}</Label>
                   {d.singleSelect ? (
-                    <DropdownSelect
-                      options={d.availableValues}
-                      variant={uiMode}
-                      isClearable={d.clearable === undefined ? true : d.clearable}
-                      isSearchable
-                      controlShouldRenderValue
-                      filterOption={createFilter(filterConfig)}
-                      onChange={el => {
-                        handleFilterChange(d.filter, el);
-                      }}
-                      value={d.value}
-                      defaultValue={d.defaultValue}
-                    />
+                    d.ui !== 'radio' ? (
+                      <DropdownSelect
+                        options={d.availableValues}
+                        variant={uiMode}
+                        isClearable={d.clearable === undefined ? true : d.clearable}
+                        isSearchable
+                        controlShouldRenderValue
+                        filterOption={createFilter(filterConfig)}
+                        onChange={el => {
+                          handleFilterChange(d.filter, el);
+                        }}
+                        value={d.value}
+                        defaultValue={d.defaultValue}
+                      />
+                    ) : (
+                      <RadioGroup
+                        variant={uiMode}
+                        defaultValue={(d.defaultValue as { value: string; label: string }).value}
+                        onValueChange={el => {
+                          handleFilterChange(
+                            d.filter,
+                            d.availableValues.filter(v => v.value === el),
+                          );
+                        }}
+                      >
+                        {d.availableValues.map((el, j) => (
+                          <RadioGroupItem label={`${el.label}`} value={`${el.value}`} key={j} />
+                        ))}
+                      </RadioGroup>
+                    )
                   ) : (
                     <>
                       {d.ui !== 'radio' ? (

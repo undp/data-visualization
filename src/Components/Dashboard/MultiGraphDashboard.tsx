@@ -3,6 +3,8 @@ import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
 import { Label } from '@undp/design-system-react/Label';
+import { CheckboxGroup, CheckboxGroupItem } from '@undp/design-system-react/CheckboxGroup';
+import { RadioGroup, RadioGroupItem } from '@undp/design-system-react/RadioGroup';
 
 import { GraphContainer } from '../Elements/GraphContainer';
 
@@ -98,6 +100,7 @@ export function MultiGraphDashboard(props: Props) {
       label: el.label || `Filter by ${el.column}`,
       singleSelect: el.singleSelect,
       clearable: el.clearable,
+      ui: el.ui,
       defaultValue: transformDefaultValue(el.defaultValue),
       value: transformDefaultValue(el.defaultValue),
       availableValues: getUniqValue(data, el.column)
@@ -174,7 +177,7 @@ export function MultiGraphDashboard(props: Props) {
 
   useEffect(() => {
     updateFiltersEvent();
-  }, [filters]);
+  }, [filters, data]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFilterChange = (filter: string, values: any) => {
     setFilterSettings(prev => prev.map(f => (f.filter === filter ? { ...f, value: values } : f)));
@@ -220,32 +223,13 @@ export function MultiGraphDashboard(props: Props) {
                 >
                   <Label className='mb-2'>{d.label}</Label>
                   {d.singleSelect ? (
-                    <DropdownSelect
-                      options={d.availableValues}
-                      isClearable={d.clearable === undefined ? true : d.clearable}
-                      size='sm'
-                      variant={uiMode}
-                      isMulti={false}
-                      isSearchable
-                      filterOption={createFilter(filterConfig)}
-                      onChange={el => {
-                        handleFilterChange(d.filter, el);
-                      }}
-                      defaultValue={d.defaultValue}
-                      value={d.value}
-                    />
-                  ) : (
-                    <>
+                    d.ui !== 'radio' ? (
                       <DropdownSelect
                         options={d.availableValues}
-                        isMulti
-                        size='sm'
-                        isClearable={d.clearable === undefined ? true : d.clearable}
                         variant={uiMode}
+                        isClearable={d.clearable === undefined ? true : d.clearable}
                         isSearchable
                         controlShouldRenderValue
-                        closeMenuOnSelect={false}
-                        hideSelectedOptions={false}
                         filterOption={createFilter(filterConfig)}
                         onChange={el => {
                           handleFilterChange(d.filter, el);
@@ -253,6 +237,79 @@ export function MultiGraphDashboard(props: Props) {
                         value={d.value}
                         defaultValue={d.defaultValue}
                       />
+                    ) : (
+                      <RadioGroup
+                        variant={uiMode}
+                        defaultValue={(d.defaultValue as { value: string; label: string }).value}
+                        onValueChange={el => {
+                          handleFilterChange(
+                            d.filter,
+                            d.availableValues.filter(v => v.value === el),
+                          );
+                        }}
+                      >
+                        {d.availableValues.map((el, j) => (
+                          <RadioGroupItem label={`${el.label}`} value={`${el.value}`} key={j} />
+                        ))}
+                      </RadioGroup>
+                    )
+                  ) : (
+                    <>
+                      {d.ui !== 'radio' ? (
+                        <DropdownSelect
+                          options={d.availableValues}
+                          variant={uiMode}
+                          size='sm'
+                          isMulti
+                          isClearable={d.clearable === undefined ? true : d.clearable}
+                          isSearchable
+                          controlShouldRenderValue
+                          filterOption={createFilter(filterConfig)}
+                          onChange={el => {
+                            handleFilterChange(d.filter, el);
+                          }}
+                          value={d.value}
+                          defaultValue={d.defaultValue}
+                        />
+                      ) : (
+                        <CheckboxGroup
+                          variant={uiMode}
+                          defaultValue={
+                            d.defaultValue
+                              ? (
+                                  d.defaultValue as {
+                                    value: string | number;
+                                    label: string | number;
+                                  }[]
+                                ).map(el => `${el.value}`)
+                              : []
+                          }
+                          value={
+                            d.value
+                              ? (
+                                  d.value as {
+                                    value: string | number;
+                                    label: string | number;
+                                  }[]
+                                ).map(el => `${el.value}`)
+                              : undefined
+                          }
+                          onValueChange={el => {
+                            handleFilterChange(
+                              d.filter,
+                              d.availableValues.filter(v => el.indexOf(`${v.value}`) !== -1),
+                            );
+                          }}
+                        >
+                          {d.availableValues.map((el, j) => (
+                            <CheckboxGroupItem
+                              label={`${el.label}`}
+                              value={`${el.value}`}
+                              key={j}
+                            />
+                          ))}
+                        </CheckboxGroup>
+                      )}
                       {d.allowSelectAll ? (
                         <button
                           type='button'

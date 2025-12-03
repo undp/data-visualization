@@ -482,6 +482,7 @@ export type FilterUiSettingsDataType = {
   excludeValues?: string[];
   allowSelectAll?: boolean;
   width?: string;
+  ui?: 'select' | 'radio';
 };
 
 export type HighlightDataPointSettingsDataType = {

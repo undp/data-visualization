@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 import intersection from 'lodash.intersection';
 import flattenDeep from 'lodash.flattendeep';
 import { CheckboxGroup, CheckboxGroupItem } from '@undp/design-system-react/CheckboxGroup';
@@ -132,27 +132,44 @@ export function GriddedGraphs(props: Props) {
     setData(filteredData);
   }, [filteredData]);
 
-  const fetchDataHandler = useCallback(async () => {
-    if (dataSettings) {
+  const updateFiltersEvent = useEffectEvent(() => {
+    const filterSettingsTemp = (filters || []).map(el => ({
+      filter: el.column,
+      label: el.label || `Filter by ${el.column}`,
+      singleSelect: el.singleSelect,
+      clearable: el.clearable,
+      ui: el.ui,
+      defaultValue: transformDefaultValue(el.defaultValue),
+      value: transformDefaultValue(el.defaultValue),
+      availableValues: getUniqValue(dataFromFile, el.column)
+        .filter(v => !el.excludeValues?.includes(`${v}`))
+        .map(v => ({ value: v, label: v })),
+      allowSelectAll: el.allowSelectAll,
+      width: el.width,
+    }));
+    setFilterSettings(filterSettingsTemp);
+  });
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const fetchData = dataSettings.dataURL
+        const fetchDataFromFile = dataSettings.dataURL
           ? typeof dataSettings.dataURL === 'string'
             ? dataSettings.fileType === 'json'
-              ? fetchAndParseJSON(
+              ? await fetchAndParseJSON(
                   dataSettings.dataURL,
                   dataSettings.columnsToArray,
                   dataSettings.dataTransformation,
                   debugMode,
                 )
               : dataSettings.fileType === 'api'
-                ? fetchAndTransformDataFromAPI(
+                ? await fetchAndTransformDataFromAPI(
                     dataSettings.dataURL,
                     dataSettings.apiHeaders,
                     dataSettings.columnsToArray,
                     dataSettings.dataTransformation,
                     debugMode,
                   )
-                : fetchAndParseCSV(
+                : await fetchAndParseCSV(
                     dataSettings.dataURL,
                     dataSettings.dataTransformation,
                     dataSettings.columnsToArray,
@@ -160,38 +177,30 @@ export function GriddedGraphs(props: Props) {
                     dataSettings.delimiter,
                     true,
                   )
-            : fetchAndParseMultipleDataSources(dataSettings.dataURL, dataSettings.idColumnTitle)
-          : transformColumnsToArray(dataSettings.data, dataSettings.columnsToArray);
-
-        const d = await fetchData;
-        setDataFromFile(d);
-
-        const gridValue = getUniqValue(d, columnGridBy) as (string | number)[];
-        setGridOption(gridValue);
-        // Optimize filter settings generation
-        const newFilterSettings = (filters || []).map(el => ({
-          filter: el.column,
-          label: el.label || `Filter by ${el.column}`,
-          singleSelect: el.singleSelect,
-          clearable: el.clearable,
-          defaultValue: transformDefaultValue(el.defaultValue),
-          value: transformDefaultValue(el.defaultValue),
-          availableValues: getUniqValue(d, el.column)
-            .filter(v => !el.excludeValues?.includes(`${v}`))
-            .map(v => ({ value: v, label: v })),
-          allowSelectAll: el.allowSelectAll,
-          width: el.width,
-        }));
-
-        setFilterSettings(newFilterSettings);
+            : await fetchAndParseMultipleDataSources(
+                dataSettings.dataURL,
+                dataSettings.idColumnTitle,
+              )
+          : await transformColumnsToArray(dataSettings.data, dataSettings.columnsToArray);
+        setDataFromFile(fetchDataFromFile);
       } catch (error) {
         console.error('Data fetching error:', error);
       }
-    }
-  }, [dataSettings, debugMode, columnGridBy, filters]);
+    };
+    fetchData();
+    updateFiltersEvent();
+  }, [dataSettings, debugMode]);
   useEffect(() => {
-    fetchDataHandler();
-  }, [fetchDataHandler]);
+    updateFiltersEvent();
+  }, [filters, dataFromFile]);
+
+  const updateGridOptionEvent = useEffectEvent(() => {
+    const gridValue = getUniqValue(dataFromFile, columnGridBy) as (string | number)[];
+    setGridOption(gridValue);
+  });
+  useEffect(() => {
+    updateGridOptionEvent();
+  }, [columnGridBy, dataFromFile]);
   useEffect(() => {
     setGraphConfig(graphDataConfiguration);
   }, [graphDataConfiguration]);
@@ -504,25 +513,10 @@ export function GriddedGraphs(props: Props) {
                 >
                   <Label className='mb-2'>{d.label}</Label>
                   {d.singleSelect ? (
-                    <DropdownSelect
-                      variant={uiMode}
-                      options={d.availableValues}
-                      isClearable={d.clearable === undefined ? true : d.clearable}
-                      isRtl={graphSettings?.language === 'ar' || graphSettings?.language === 'he'}
-                      isSearchable
-                      controlShouldRenderValue
-                      filterOption={createFilter(filterConfig)}
-                      onChange={el => {
-                        handleFilterChange(d.filter, el);
-                      }}
-                      defaultValue={d.defaultValue}
-                    />
-                  ) : (
-                    <>
+                    d.ui !== 'radio' ? (
                       <DropdownSelect
-                        variant={uiMode}
                         options={d.availableValues}
-                        isMulti
+                        variant={uiMode}
                         isClearable={d.clearable === undefined ? true : d.clearable}
                         isSearchable
                         controlShouldRenderValue
@@ -530,13 +524,86 @@ export function GriddedGraphs(props: Props) {
                         onChange={el => {
                           handleFilterChange(d.filter, el);
                         }}
+                        value={d.value}
                         defaultValue={d.defaultValue}
-                        isRtl={graphSettings?.language === 'ar' || graphSettings?.language === 'he'}
                       />
+                    ) : (
+                      <RadioGroup
+                        variant={uiMode}
+                        defaultValue={(d.defaultValue as { value: string; label: string }).value}
+                        onValueChange={el => {
+                          handleFilterChange(
+                            d.filter,
+                            d.availableValues.filter(v => v.value === el),
+                          );
+                        }}
+                      >
+                        {d.availableValues.map((el, j) => (
+                          <RadioGroupItem label={`${el.label}`} value={`${el.value}`} key={j} />
+                        ))}
+                      </RadioGroup>
+                    )
+                  ) : (
+                    <>
+                      {d.ui !== 'radio' ? (
+                        <DropdownSelect
+                          options={d.availableValues}
+                          variant={uiMode}
+                          size='sm'
+                          isMulti
+                          isClearable={d.clearable === undefined ? true : d.clearable}
+                          isSearchable
+                          controlShouldRenderValue
+                          filterOption={createFilter(filterConfig)}
+                          onChange={el => {
+                            handleFilterChange(d.filter, el);
+                          }}
+                          value={d.value}
+                          defaultValue={d.defaultValue}
+                        />
+                      ) : (
+                        <CheckboxGroup
+                          variant={uiMode}
+                          defaultValue={
+                            d.defaultValue
+                              ? (
+                                  d.defaultValue as {
+                                    value: string | number;
+                                    label: string | number;
+                                  }[]
+                                ).map(el => `${el.value}`)
+                              : []
+                          }
+                          value={
+                            d.value
+                              ? (
+                                  d.value as {
+                                    value: string | number;
+                                    label: string | number;
+                                  }[]
+                                ).map(el => `${el.value}`)
+                              : undefined
+                          }
+                          onValueChange={el => {
+                            handleFilterChange(
+                              d.filter,
+                              d.availableValues.filter(v => el.indexOf(`${v.value}`) !== -1),
+                            );
+                          }}
+                        >
+                          {d.availableValues.map((el, j) => (
+                            <CheckboxGroupItem
+                              label={`${el.label}`}
+                              value={`${el.value}`}
+                              key={j}
+                            />
+                          ))}
+                        </CheckboxGroup>
+                      )}
                       {d.allowSelectAll ? (
                         <button
-                          className='bg-transparent border-0 p-0 mt-2 cursor-pointer text-primary-blue-600 dark:text-primary-blue-400'
                           type='button'
+                          className='bg-transparent border-0 p-0 mt-2 cursor-pointer text-primary-blue-600 dark:text-primary-blue-400'
                           onClick={() => {
                             handleFilterChange(d.filter, d.availableValues);
                           }}

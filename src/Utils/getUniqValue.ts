@@ -20,6 +20,7 @@ export function getUniqValue(
   csvData: any,
   column: string,
 ) {
+  if (!csvData) return [];
   if (csvData.length === 0) return [];
   if (typeof csvData[0][column] !== 'object') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
