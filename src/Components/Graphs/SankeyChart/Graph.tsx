@@ -2,7 +2,6 @@ import isEqual from 'fast-deep-equal';
 import { useRef, useState } from 'react';
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-import { Modal } from '@undp/design-system-react/Modal';
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
 
@@ -16,7 +15,7 @@ import {
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
-import { string2HTML } from '@/Utils/string2HTML';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: NodesLinkDataType;
@@ -491,23 +490,12 @@ export function Graph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );

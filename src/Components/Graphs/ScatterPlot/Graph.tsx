@@ -5,7 +5,6 @@ import { Delaunay } from 'd3-delaunay';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
 import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import { cn } from '@undp/design-system-react/cn';
-import { Modal } from '@undp/design-system-react/Modal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
@@ -24,7 +23,6 @@ import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Colors } from '@/Components/ColorPalette';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { getLineEndPoint } from '@/Utils/getLineEndPoint';
-import { string2HTML } from '@/Utils/string2HTML';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
 import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
@@ -34,6 +32,7 @@ import { Annotation } from '@/Components/Elements/Annotations';
 import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
 import { CustomArea } from '@/Components/Elements/HighlightArea/customArea';
 import { HighlightAreaForScatterPlot } from '@/Components/Elements/HighlightArea';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: ScatterPlotDataType[];
@@ -707,23 +706,12 @@ export function Graph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );

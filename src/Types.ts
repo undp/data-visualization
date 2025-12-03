@@ -127,6 +127,7 @@ export interface StyleObject {
   mouseOverLine?: React.CSSProperties;
   regLine?: React.CSSProperties;
   dataCards?: React.CSSProperties;
+  modal?: React.CSSProperties;
 }
 
 export interface AxesClassNameObject {
@@ -151,6 +152,7 @@ export interface ClassNameObject {
   regLine?: string;
   dataCards?: string;
   colorLegend?: string;
+  modal?: string;
 }
 
 export interface BarGraphDataType {

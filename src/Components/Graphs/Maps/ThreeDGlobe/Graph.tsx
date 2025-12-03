@@ -4,7 +4,6 @@ import isEqual from 'fast-deep-equal';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { scaleOrdinal, scaleThreshold } from 'd3-scale';
 import * as THREE from 'three';
-import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
 import { cn } from '@undp/design-system-react/cn';
 import hexToRgba from 'hex-to-rgba';
@@ -19,8 +18,8 @@ import {
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { X } from '@/Components/Icons';
-import { string2HTML } from '@/Utils/string2HTML';
 import { getCentroidCoordinates } from '@/Utils/getCentroidCoordinates';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   width: number;
@@ -505,23 +504,12 @@ function Graph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </div>
   );

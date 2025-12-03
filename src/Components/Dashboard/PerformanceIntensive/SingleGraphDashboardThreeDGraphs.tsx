@@ -318,8 +318,8 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
                       `calc(${100 / noOfFiltersPerRow}% - ${
                         (noOfFiltersPerRow - 1) / noOfFiltersPerRow
                       }rem)`,
-                    flexGrow: 1,
-                    flexShrink: d.ui !== 'radio' ? 0 : 1,
+                    flexGrow: d.width ? 0 : 1,
+                    flexShrink: d.ui !== 'radio' || d.width ? 0 : 1,
                     minWidth: '240px',
                   }}
                   key={i}
@@ -380,8 +380,8 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
                       `calc(${100 / noOfFiltersPerRow}% - ${
                         (noOfFiltersPerRow - 1) / noOfFiltersPerRow
                       }rem)`,
-                    flexGrow: 1,
-                    flexShrink: d.ui !== 'radio' ? 0 : 1,
+                    flexGrow: d.width ? 0 : 1,
+                    flexShrink: d.ui !== 'radio' || d.width ? 0 : 1,
                     minWidth: '240px',
                   }}
                   key={i}
@@ -563,8 +563,8 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
                       `calc(${100 / noOfFiltersPerRow}% - ${
                         (noOfFiltersPerRow - 1) / noOfFiltersPerRow
                       }rem)`,
-                    flexGrow: 1,
-                    flexShrink: 0,
+                    flexGrow: d.width ? 0 : 1,
+                    flexShrink: d.ui !== 'radio' || d.width ? 0 : 1,
                     minWidth: '240px',
                   }}
                   key={i}
@@ -682,7 +682,7 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
                       `calc(${100 / noOfFiltersPerRow}% - ${
                         (noOfFiltersPerRow - 1) / noOfFiltersPerRow
                       }rem)`,
-                    flexGrow: 1,
+                    flexGrow: highlightDataPointSettings.width ? 0 : 1,
                     flexShrink: 0,
                     minWidth: '240px',
                   }}

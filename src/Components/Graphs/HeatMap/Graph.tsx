@@ -2,7 +2,6 @@ import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand, scaleOrdinal, scaleThreshold } from 'd3-scale';
 import { useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
-import { Modal } from '@undp/design-system-react/Modal';
 import { motion, useInView } from 'motion/react';
 
 import {
@@ -16,10 +15,10 @@ import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { string2HTML } from '@/Utils/string2HTML';
 import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
 import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
 import { uniqBy } from '@/Utils/uniqBy';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: HeatMapDataType[];
@@ -304,23 +303,12 @@ export function Graph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );

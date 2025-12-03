@@ -3,7 +3,6 @@ import isEqual from 'fast-deep-equal';
 import { lineRadial, curveLinearClosed, curveCardinalClosed } from 'd3-shape';
 import { useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
-import { Modal } from '@undp/design-system-react/Modal';
 import { scaleLinear } from 'd3-scale';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
@@ -17,8 +16,8 @@ import {
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { Colors } from '@/Components/ColorPalette';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { string2HTML } from '@/Utils/string2HTML';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   radius: number;
@@ -472,23 +471,12 @@ export function Graph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );

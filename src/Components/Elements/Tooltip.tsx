@@ -26,6 +26,12 @@ export function Tooltip(props: Props) {
     },
     className,
   } = props;
+  if (
+    (typeof body === 'function' && (body(data) === null || body(data) === undefined)) ||
+    body === ''
+  ) {
+    return null;
+  }
   return createPortal(
     <div className='undp-container'>
       <div

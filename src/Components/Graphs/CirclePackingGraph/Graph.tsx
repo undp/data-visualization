@@ -3,7 +3,6 @@ import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3
 import orderBy from 'lodash.orderby';
 import { scaleSqrt } from 'd3-scale';
 import { extent } from 'd3-array';
-import { Modal } from '@undp/design-system-react/Modal';
 import { cn } from '@undp/design-system-react/cn';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { P } from '@undp/design-system-react/Typography';
@@ -14,7 +13,7 @@ import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { Colors } from '@/Components/ColorPalette';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { string2HTML } from '@/Utils/string2HTML';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: TreeMapDataType[];
@@ -377,23 +376,12 @@ export const Graph = (props: Props) => {
           />
         )}
         {detailsOnClick && mouseClickData !== undefined ? (
-          <Modal
-            open={mouseClickData !== undefined}
-            onClose={() => {
-              setMouseClickData(undefined);
-            }}
-          >
-            <div
-              className='graph-modal-content m-0'
-              dangerouslySetInnerHTML={
-                typeof detailsOnClick === 'string'
-                  ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                  : undefined
-              }
-            >
-              {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-            </div>
-          </Modal>
+          <DetailsModal
+            body={detailsOnClick}
+            data={mouseClickData}
+            setData={setMouseClickData}
+            className={classNames?.modal}
+          />
         ) : null}
       </>
     );

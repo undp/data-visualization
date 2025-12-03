@@ -10,7 +10,6 @@ import {
 import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { scaleOrdinal, scaleSqrt, scaleThreshold } from 'd3-scale';
-import { Modal } from '@undp/design-system-react/Modal';
 import { P } from '@undp/design-system-react/Typography';
 import bbox from '@turf/bbox';
 import centerOfMass from '@turf/center-of-mass';
@@ -29,9 +28,9 @@ import {
   ZoomInteractionTypes,
 } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
-import { string2HTML } from '@/Utils/string2HTML';
 import { X } from '@/Components/Icons';
 import { checkIfNullOrUndefined, numberFormattingFunction } from '@/Utils';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: HybridMapDataType[];
@@ -748,23 +747,12 @@ export function Graph(props: Props) {
         )}
       </div>
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip

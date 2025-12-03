@@ -3,7 +3,6 @@ import { scaleLinear, scaleBand } from 'd3-scale';
 import sum from 'lodash.sum';
 import { useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
-import { Modal } from '@undp/design-system-react/Modal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
@@ -18,7 +17,6 @@ import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
-import { string2HTML } from '@/Utils/string2HTML';
 import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
 import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
@@ -26,6 +24,7 @@ import { Axis } from '@/Components/Elements/Axes/Axis';
 import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
 import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
 import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: GroupedBarGraphDataType[];
@@ -427,23 +426,12 @@ export function HorizontalGraph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );
@@ -809,23 +797,12 @@ export function VerticalGraph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );

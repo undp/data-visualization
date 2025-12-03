@@ -3,13 +3,12 @@ import isEqual from 'fast-deep-equal';
 import { pie, arc } from 'd3-shape';
 import { useState } from 'react';
 import { H2, P } from '@undp/design-system-react/Typography';
-import { Modal } from '@undp/design-system-react/Modal';
 
 import { ClassNameObject, DonutChartDataType, StyleObject } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { Colors } from '@/Components/ColorPalette';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { string2HTML } from '@/Utils/string2HTML';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   mainText?: string | { label: string; suffix?: string; prefix?: string };
@@ -185,23 +184,12 @@ export function Graph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );

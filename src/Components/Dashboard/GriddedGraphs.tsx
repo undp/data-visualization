@@ -265,8 +265,8 @@ export function GriddedGraphs(props: Props) {
                       `calc(${100 / noOfFiltersPerRow}% - ${
                         (noOfFiltersPerRow - 1) / noOfFiltersPerRow
                       }rem)`,
-                    flexGrow: 1,
-                    flexShrink: d.ui !== 'radio' ? 0 : 1,
+                    flexGrow: d.width ? 0 : 1,
+                    flexShrink: d.ui !== 'radio' || d.width ? 0 : 1,
                     minWidth: '240px',
                   }}
                   className='pb-4'
@@ -326,8 +326,8 @@ export function GriddedGraphs(props: Props) {
                       `calc(${100 / noOfFiltersPerRow}% - ${
                         (noOfFiltersPerRow - 1) / noOfFiltersPerRow
                       }rem)`,
-                    flexGrow: 1,
-                    flexShrink: d.ui !== 'radio' ? 0 : 1,
+                    flexGrow: d.width ? 0 : 1,
+                    flexShrink: d.ui !== 'radio' || d.width ? 0 : 1,
                     minWidth: '240px',
                   }}
                   className='pb-4'
@@ -504,8 +504,8 @@ export function GriddedGraphs(props: Props) {
                       `calc(${100 / noOfFiltersPerRow}% - ${
                         (noOfFiltersPerRow - 1) / noOfFiltersPerRow
                       }rem)`,
-                    flexGrow: 1,
-                    flexShrink: 0,
+                    flexGrow: d.width ? 0 : 1,
+                    flexShrink: d.ui !== 'radio' || d.width ? 0 : 1,
                     flexWrap: 'wrap',
                   }}
                   className='pb-4'

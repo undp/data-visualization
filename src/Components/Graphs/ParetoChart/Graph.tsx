@@ -10,7 +10,6 @@ import {
 } from 'd3-shape';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { cn } from '@undp/design-system-react/cn';
-import { Modal } from '@undp/design-system-react/Modal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
 import {
@@ -23,11 +22,11 @@ import {
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
-import { string2HTML } from '@/Utils/string2HTML';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
 import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: ParetoChartDataType[];
@@ -580,23 +579,12 @@ export function Graph(props: Props) {
         />
       ) : null}
       {detailsOnClick && mouseClickData !== undefined ? (
-        <Modal
-          open={mouseClickData !== undefined}
-          onClose={() => {
-            setMouseClickData(undefined);
-          }}
-        >
-          <div
-            className='graph-modal-content m-0'
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, mouseClickData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(mouseClickData) : null}
-          </div>
-        </Modal>
+        <DetailsModal
+          body={detailsOnClick}
+          data={mouseClickData}
+          setData={setMouseClickData}
+          className={classNames?.modal}
+        />
       ) : null}
     </>
   );
