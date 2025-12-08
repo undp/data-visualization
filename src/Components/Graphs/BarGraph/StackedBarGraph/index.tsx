@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import sum from 'lodash.sum';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
-import { ascending, sort } from 'd3-array';
 import orderBy from 'lodash.orderby';
 
 import { HorizontalGraph, VerticalGraph } from './Graph';
@@ -28,7 +27,6 @@ import { EmptyState } from '@/Components/Elements/EmptyState';
 import { Pause, Play } from '@/Components/Icons';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { ensureCompleteDataForStackedBarChart } from '@/Utils/ensureCompleteData';
-import { uniqBy } from '@/Utils/uniqBy';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
@@ -160,12 +158,13 @@ export function StackedBarGraphEl(props: Props) {
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
-  const uniqDatesSorted = sort(
-    uniqBy(data, 'date', true).map(d =>
-      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
-    ),
-    (a, b) => ascending(a, b),
-  );
+  const uniqDatesSorted = useMemo(() => {
+    const dates = [
+      ...new Set(data.map(d => parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime())),
+    ];
+    dates.sort((a, b) => a - b);
+    return dates;
+  }, [data, timeline.dateFormat]);
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 

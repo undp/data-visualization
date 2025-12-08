@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect, useEffectEvent } from 'react';
+import { useState, useRef, useEffect, useEffectEvent, useMemo } from 'react';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
-import { ascending, sort } from 'd3-array';
 
 import { Graph } from './Graph';
 
@@ -27,7 +26,6 @@ import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { Pause, Play } from '@/Components/Icons';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
-import { uniqBy } from '@/Utils/uniqBy';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { getJenks, getUniqValue } from '@/Utils';
 
@@ -226,12 +224,13 @@ export function HybridMap(props: Props) {
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
-  const uniqDatesSorted = sort(
-    uniqBy(data, 'date', true).map(d =>
-      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
-    ),
-    (a, b) => ascending(a, b),
-  );
+  const uniqDatesSorted = useMemo(() => {
+    const dates = [
+      ...new Set(data.map(d => parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime())),
+    ];
+    dates.sort((a, b) => a - b);
+    return dates;
+  }, [data, timeline.dateFormat]);
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

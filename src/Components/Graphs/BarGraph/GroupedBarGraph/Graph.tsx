@@ -1,6 +1,6 @@
 import isEqual from 'fast-deep-equal';
 import { scaleLinear, scaleBand } from 'd3-scale';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
@@ -128,11 +128,30 @@ export function HorizontalGraph(props: Props) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  const dataWithId = data.map((d, i) => ({
-    ...d,
-    id: labelOrder ? `${d.label}` : `${i}`,
-  }));
-  const barOrder = labelOrder || dataWithId.map(d => `${d.id}`);
+  const dataWithId = useMemo(() => {
+    const idSet = new Set<string>();
+
+    const dataWithIdWithoutMissingIds = data.map((d, i) => {
+      const id = labelOrder ? `${d.label}` : `${i}`;
+      idSet.add(id);
+      return { ...d, id };
+    });
+
+    const missingIds = labelOrder ? labelOrder.filter(id => !idSet.has(id)) : [];
+
+    return [
+      ...dataWithIdWithoutMissingIds,
+      ...missingIds.map(id => ({
+        id,
+        label: id,
+        size: Array(data[0].size.length).fill(null),
+      })),
+    ];
+  }, [data, labelOrder]);
+
+  const barOrder = useMemo(() => {
+    return labelOrder ?? dataWithId.map(d => `${d.id}`);
+  }, [labelOrder, dataWithId]);
 
   const x = scaleLinear().domain([minValue, maxValue]).range([0, graphWidth]).nice();
   const y = scaleBand()
@@ -436,13 +455,33 @@ export function VerticalGraph(props: Props) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
+  const dataWithId = useMemo(() => {
+    const idSet = new Set<string>();
+
+    const dataWithIdWithoutMissingIds = data.map((d, i) => {
+      const id = labelOrder ? `${d.label}` : `${i}`;
+      idSet.add(id);
+      return { ...d, id };
+    });
+
+    const missingIds = labelOrder ? labelOrder.filter(id => !idSet.has(id)) : [];
+
+    return [
+      ...dataWithIdWithoutMissingIds,
+      ...missingIds.map(id => ({
+        id,
+        label: id,
+        size: Array(data[0].size.length).fill(null),
+      })),
+    ];
+  }, [data, labelOrder]);
+
+  const barOrder = useMemo(() => {
+    return labelOrder ?? dataWithId.map(d => `${d.id}`);
+  }, [labelOrder, dataWithId]);
+
   const y = scaleLinear().domain([minValue, maxValue]).range([graphHeight, 0]).nice();
 
-  const dataWithId = data.map((d, i) => ({
-    ...d,
-    id: labelOrder ? `${d.label}` : `${i}`,
-  }));
-  const barOrder = labelOrder || dataWithId.map(d => `${d.id}`);
   const x = scaleBand()
     .domain(barOrder)
     .range([

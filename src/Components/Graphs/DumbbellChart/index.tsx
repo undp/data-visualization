@@ -1,7 +1,6 @@
 import orderBy from 'lodash.orderby';
 import { format } from 'date-fns/format';
-import { useEffect, useRef, useState } from 'react';
-import { ascending, sort } from 'd3-array';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { parse } from 'date-fns/parse';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 
@@ -21,7 +20,6 @@ import {
 } from '@/Types';
 import { ensureCompleteDataForDumbbellChart } from '@/Utils/ensureCompleteData';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
-import { uniqBy } from '@/Utils/uniqBy';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { Pause, Play } from '@/Components/Icons';
@@ -246,12 +244,13 @@ export function DumbbellChart(props: Props) {
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
   const [play, setPlay] = useState(timeline.autoplay);
-  const uniqDatesSorted = sort(
-    uniqBy(data, 'date', true).map(d =>
-      parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime(),
-    ),
-    (a, b) => ascending(a, b),
-  );
+  const uniqDatesSorted = useMemo(() => {
+    const dates = [
+      ...new Set(data.map(d => parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime())),
+    ];
+    dates.sort((a, b) => a - b);
+    return dates;
+  }, [data, timeline.dateFormat]);
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 
