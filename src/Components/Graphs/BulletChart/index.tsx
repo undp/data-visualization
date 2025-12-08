@@ -1,5 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import orderBy from 'lodash.orderby';
+import { parse } from 'date-fns/parse';
+import { format } from 'date-fns/format';
+import { SliderUI } from '@undp/design-system-react/SliderUI';
 
 import { HorizontalGraph, VerticalGraph } from './Graph';
 
@@ -12,6 +15,7 @@ import {
   ClassNameObject,
   CustomLayerDataType,
   AnimateDataType,
+  TimelineDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -20,6 +24,9 @@ import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { ColorLegend } from '@/Components/Elements/ColorLegend';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getSliderMarks } from '@/Utils/getSliderMarks';
+import { ensureCompleteDataForBulletChart } from '@/Utils/ensureCompleteData';
+import { Pause, Play } from '@/Components/Icons';
 
 interface Props {
   // Data
@@ -136,6 +143,8 @@ interface Props {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
+  /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
+  timeline?: TimelineDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -235,6 +244,7 @@ export function BulletChart(props: Props) {
     barAxisTitle,
     noOfTicks = 5,
     targetLineThickness = 2,
+    timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -242,6 +252,20 @@ export function BulletChart(props: Props) {
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
+
+  const [play, setPlay] = useState(timeline.autoplay);
+  const uniqDatesSorted = useMemo(() => {
+    const dates = [
+      ...new Set(
+        data
+          .filter(d => d.date)
+          .map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+      ),
+    ];
+    dates.sort((a, b) => a - b);
+    return dates;
+  }, [data, timeline.dateFormat]);
+  const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(entries => {
@@ -253,6 +277,25 @@ export function BulletChart(props: Props) {
     }
     return () => resizeObserver.disconnect();
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(
+      () => {
+        setIndex(i => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
+      },
+      (timeline.speed || 2) * 1000,
+    );
+    if (!play) clearInterval(interval);
+    return () => clearInterval(interval);
+  }, [uniqDatesSorted, play, timeline.speed]);
+
+  const markObj = getSliderMarks(
+    uniqDatesSorted,
+    index,
+    timeline.showOnlyActiveDate,
+    timeline.dateFormat || 'yyyy',
+  );
+
   return (
     <GraphContainer
       className={classNames?.graphContainer}
@@ -292,94 +335,137 @@ export function BulletChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale && data.filter(el => el.qualitativeRange).length !== 0 && colorDomain ? (
-            <ColorLegend
-              width={width}
-              colorLegendTitle={colorLegendTitle}
-              colors={qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10}
-              colorDomain={colorDomain}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Comp
-                data={
-                  sortData
-                    ? orderBy(
-                        data.filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
-                        [
-                          d =>
-                            d.size === undefined
-                              ? sortData === 'asc'
-                                ? (orientation === 'horizontal' ? 1 : -1) * Infinity
-                                : (orientation === 'horizontal' ? -1 : 1) * Infinity
-                              : d.size,
-                        ],
-                        [sortData],
-                      ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                    : data
-                        .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
-                        .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                }
-                barColor={barColor}
-                targetColor={targetColor}
-                width={svgWidth}
-                refValues={refValues}
-                height={svgHeight}
-                suffix={suffix}
-                prefix={prefix}
-                barPadding={barPadding}
-                showLabels={showLabels}
-                showValues={showValues}
-                showTicks={showTicks}
-                truncateBy={truncateBy}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                qualitativeRangeColors={
-                  qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10
-                }
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                maxValue={maxValue}
-                minValue={minValue}
-                highlightedDataPoints={highlightedDataPoints}
-                onSeriesMouseClick={onSeriesMouseClick}
-                labelOrder={labelOrder}
-                maxBarThickness={maxBarThickness}
-                minBarThickness={minBarThickness}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                barAxisTitle={barAxisTitle}
-                noOfTicks={noOfTicks}
-                valueColor={valueColor}
-                styles={styles}
-                classNames={classNames}
-                targetStyle={targetStyle}
-                dimmedOpacity={dimmedOpacity}
-                measureBarWidthFactor={measureBarWidthFactor}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                precision={precision}
-                customLayers={customLayers}
-                naLabel={naLabel}
-                targetLineThickness={targetLineThickness}
-                rtl={language === 'ar' || language === 'he'}
+      {timeline.enabled && uniqDatesSorted.length > 0 && markObj ? (
+        <div className='flex gap-6 items-center' dir='ltr'>
+          <button
+            type='button'
+            onClick={() => {
+              setPlay(!play);
+            }}
+            className='p-0 border-0 cursor-pointer bg-transparent'
+            aria-label={play ? 'Click to pause animation' : 'Click to play animation'}
+          >
+            {play ? <Pause /> : <Play />}
+          </button>
+          <SliderUI
+            min={uniqDatesSorted[0]}
+            max={uniqDatesSorted[uniqDatesSorted.length - 1]}
+            marks={markObj}
+            step={null}
+            defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
+            value={uniqDatesSorted[index]}
+            onChangeComplete={nextValue => {
+              setIndex(uniqDatesSorted.indexOf(nextValue as number));
+            }}
+            onChange={nextValue => {
+              setIndex(uniqDatesSorted.indexOf(nextValue as number));
+            }}
+            aria-label='Time slider. Use arrow keys to adjust selected time period.'
+          />
+        </div>
+      ) : null}
+      <div className='grow flex flex-col justify-center gap-3 w-full'>
+        {data.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <>
+            {showColorScale &&
+            data.filter(el => el.qualitativeRange).length !== 0 &&
+            colorDomain ? (
+              <ColorLegend
+                width={width}
+                colorLegendTitle={colorLegendTitle}
+                colors={qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10}
+                colorDomain={colorDomain}
+                showNAColor={false}
+                className={classNames?.colorLegend}
               />
             ) : null}
-          </GraphArea>
-        </>
-      )}
+            <GraphArea ref={graphDiv}>
+              {svgWidth && svgHeight ? (
+                <Comp
+                  data={
+                    sortData
+                      ? orderBy(
+                          ensureCompleteDataForBulletChart(data, timeline.dateFormat || 'yyyy')
+                            .filter(d =>
+                              timeline.enabled
+                                ? d.date ===
+                                  format(
+                                    new Date(uniqDatesSorted[index]),
+                                    timeline.dateFormat || 'yyyy',
+                                  )
+                                : d,
+                            )
+                            .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
+                          [
+                            d =>
+                              d.size === undefined
+                                ? sortData === 'asc'
+                                  ? (orientation === 'horizontal' ? 1 : -1) * Infinity
+                                  : (orientation === 'horizontal' ? -1 : 1) * Infinity
+                                : d.size,
+                          ],
+                          [sortData],
+                        ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                      : data
+                          .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
+                          .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                  }
+                  barColor={barColor}
+                  targetColor={targetColor}
+                  width={svgWidth}
+                  refValues={refValues}
+                  height={svgHeight}
+                  suffix={suffix}
+                  prefix={prefix}
+                  barPadding={barPadding}
+                  showLabels={showLabels}
+                  showValues={showValues}
+                  showTicks={showTicks}
+                  truncateBy={truncateBy}
+                  leftMargin={leftMargin}
+                  rightMargin={rightMargin}
+                  qualitativeRangeColors={
+                    qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10
+                  }
+                  topMargin={topMargin}
+                  bottomMargin={bottomMargin}
+                  tooltip={tooltip}
+                  onSeriesMouseOver={onSeriesMouseOver}
+                  maxValue={maxValue}
+                  minValue={minValue}
+                  highlightedDataPoints={highlightedDataPoints}
+                  onSeriesMouseClick={onSeriesMouseClick}
+                  labelOrder={labelOrder}
+                  maxBarThickness={maxBarThickness}
+                  minBarThickness={minBarThickness}
+                  resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+                  detailsOnClick={detailsOnClick}
+                  barAxisTitle={barAxisTitle}
+                  noOfTicks={noOfTicks}
+                  valueColor={valueColor}
+                  styles={styles}
+                  classNames={classNames}
+                  targetStyle={targetStyle}
+                  dimmedOpacity={dimmedOpacity}
+                  measureBarWidthFactor={measureBarWidthFactor}
+                  animate={
+                    animate === true
+                      ? { duration: 0.5, once: true, amount: 0.5 }
+                      : animate || { duration: 0, once: true, amount: 0 }
+                  }
+                  precision={precision}
+                  customLayers={customLayers}
+                  naLabel={naLabel}
+                  targetLineThickness={targetLineThickness}
+                  rtl={language === 'ar' || language === 'he'}
+                />
+              ) : null}
+            </GraphArea>
+          </>
+        )}
+      </div>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

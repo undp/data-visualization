@@ -317,6 +317,7 @@ function GraphEl(props: Props) {
         };
       case 'bulletChart':
         return {
+          timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,

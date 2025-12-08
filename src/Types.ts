@@ -168,6 +168,7 @@ export interface BulletChartDataType {
   size?: number | null;
   target?: number | null;
   qualitativeRange?: number[] | null;
+  date?: string | number;
   data?: object;
 }
 

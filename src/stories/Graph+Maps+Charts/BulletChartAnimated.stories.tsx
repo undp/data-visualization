@@ -16,7 +16,7 @@ import { BulletChart } from '@/index';
 type PagePropsAndCustomArgs = React.ComponentProps<typeof BulletChart>;
 
 const meta: Meta<PagePropsAndCustomArgs> = {
-  title: 'Graphs/Bullet chart/Simple',
+  title: 'Graphs/Bullet chart/Chart with timeline',
   component: BulletChart,
   tags: ['autodocs'],
   argTypes: {
@@ -229,14 +229,18 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   },
   args: {
     data: [
-      { label: '2020 Q1', size: 3, target: 5, qualitativeRange: [1, 2, 3] },
-      { label: '2020 Q2', size: 8, target: 5, qualitativeRange: [5, 2, 3] },
-      { label: '2020 Q3', size: 11, target: 5, qualitativeRange: [1, 2, 3] },
-      { label: '2020 Q4', size: 19, target: 5, qualitativeRange: [1, 2, 3] },
-      { label: '2021 Q1', size: 3, target: 5, qualitativeRange: [1, 2, 3] },
-      { label: '2022 Q2', size: 8, target: 5, qualitativeRange: [1, 2, 3] },
-      { label: '2023 Q3', size: 11, target: 5, qualitativeRange: [1, 2, 3] },
-      { label: '2024 Q4', size: 19, target: 5, qualitativeRange: [1, 2, 3] },
+      { label: 'Apple', size: 3, target: 5, qualitativeRange: [1, 2, 3], date: '2020' },
+      { label: 'Banana', size: 8, target: 5, qualitativeRange: [5, 2, 3], date: '2020' },
+      { label: 'Cherry', size: 11, target: 5, qualitativeRange: [1, 2, 3], date: '2020' },
+      { label: 'Date', size: 19, target: 5, qualitativeRange: [1, 2, 3], date: '2020' },
+      { label: 'Apple', size: 12, target: 15, qualitativeRange: [1, 2, 3], date: '2021' },
+      { label: 'Banana', size: 16, target: 10, qualitativeRange: [5, 2, 3], date: '2021' },
+      { label: 'Cherry', size: 11, target: 15, qualitativeRange: [1, 2, 3], date: '2021' },
+      { label: 'Date', size: 19, target: 5, qualitativeRange: [1, 2, 3], date: '2021' },
+      { label: 'Apple', size: 15, target: 8, qualitativeRange: [1, 2, 3], date: '2022' },
+      { label: 'Banana', size: 17, target: 4, qualitativeRange: [5, 2, 3], date: '2022' },
+      { label: 'Cherry', size: 14, target: 2, qualitativeRange: [1, 2, 3], date: '2022' },
+      { label: 'Date', size: 13, target: 9, qualitativeRange: [1, 2, 3], date: '2022' },
     ],
   },
   render: ({

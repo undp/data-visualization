@@ -52,6 +52,11 @@ export const ChartConfiguration: {
         required: false,
         multiple: true,
       },
+      {
+        id: 'date',
+        required: false,
+        multiple: false,
+      },
     ],
   },
   {

@@ -160,7 +160,11 @@ export function StackedBarGraphEl(props: Props) {
   const [play, setPlay] = useState(timeline.autoplay);
   const uniqDatesSorted = useMemo(() => {
     const dates = [
-      ...new Set(data.map(d => parse(`${d}`, timeline.dateFormat || 'yyyy', new Date()).getTime())),
+      ...new Set(
+        data
+          .filter(d => d.date)
+          .map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+      ),
     ];
     dates.sort((a, b) => a - b);
     return dates;

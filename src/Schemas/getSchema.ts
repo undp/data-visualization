@@ -203,7 +203,7 @@ export function getGraphConfigChartConfigIdEnum(
     case 'barChart':
       return ['label', 'size', 'color', 'date'];
     case 'bulletChart':
-      return ['label', 'size', 'target', 'qualitativeRange'];
+      return ['label', 'size', 'target', 'qualitativeRange', 'date'];
     case 'treeMap':
       return ['label', 'size', 'color'];
     case 'circlePacking':
