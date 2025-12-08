@@ -408,7 +408,16 @@ export function BulletChart(props: Props) {
                           ],
                           [sortData],
                         ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                      : data
+                      : ensureCompleteDataForBulletChart(data, timeline.dateFormat || 'yyyy')
+                          .filter(d =>
+                            timeline.enabled
+                              ? d.date ===
+                                format(
+                                  new Date(uniqDatesSorted[index]),
+                                  timeline.dateFormat || 'yyyy',
+                                )
+                              : d,
+                          )
                           .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
                           .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                   }

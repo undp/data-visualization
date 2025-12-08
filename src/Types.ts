@@ -1009,6 +1009,7 @@ export interface GraphSettingsDataType {
   dotBorderColor?: string;
   mapColorLegendTitle?: string;
   choroplethScaleType?: Exclude<ScaleDataType, 'linear'>;
+  trackColor?: string;
 }
 
 export interface InfoBoxDataType {

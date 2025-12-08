@@ -242,6 +242,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { label: 'Cherry', size: 14, target: 2, qualitativeRange: [1, 2, 3], date: '2022' },
       { label: 'Date', size: 13, target: 9, qualitativeRange: [1, 2, 3], date: '2022' },
     ],
+    timeline: {
+      enabled: true,
+      autoplay: false,
+      showOnlyActiveDate: false,
+      speed: 2,
+      dateFormat: 'yyyy',
+    },
+    animate: true,
   },
   render: ({
     labelOrder,

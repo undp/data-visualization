@@ -1016,6 +1016,7 @@ function GraphEl(props: Props) {
         };
       case 'donutChart':
         return {
+          trackColor: settings?.trackColor,
           precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1055,6 +1056,7 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           colorScaleMaxWidth: settings?.colorScaleMaxWidth,
+          animate: settings?.animate,
         };
       case 'slopeChart':
         return {

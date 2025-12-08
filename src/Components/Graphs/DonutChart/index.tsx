@@ -12,6 +12,7 @@ import {
   SourcesDataType,
   StyleObject,
   ClassNameObject,
+  AnimateDataType,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -78,12 +79,16 @@ interface Props {
   strokeWidth?: number;
   /** Sorting order for data. This is overwritten by labelOrder prop */
   sortData?: 'asc' | 'desc';
+  /** Toggles if the graph animates in when loaded.  */
+  animate?: boolean | AnimateDataType;
   /** Large text at the center of the donut chart. If the type is an object then the text is the value in the data for the label mentioned in the object */
   mainText?: string | { label: string; suffix?: string; prefix?: string };
   /** Small text at the center of the donut chart */
   subNote?: string;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Track color (i.e. the color of the donut chart's background) of the donut chart */
+  trackColor?: string;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -152,6 +157,8 @@ export function DonutChart(props: Props) {
     styles,
     classNames,
     precision = 2,
+    animate = false,
+    trackColor = Colors.light.grays['gray-200'],
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
@@ -277,6 +284,12 @@ export function DonutChart(props: Props) {
                 styles={styles}
                 detailsOnClick={detailsOnClick}
                 precision={precision}
+                animate={
+                  animate === true
+                    ? { duration: 0.5, once: true, amount: 0.5 }
+                    : animate || { duration: 0, once: true, amount: 0 }
+                }
+                trackColor={trackColor}
               />
             ) : null}
           </GraphArea>
