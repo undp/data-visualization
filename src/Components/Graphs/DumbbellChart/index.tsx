@@ -359,129 +359,122 @@ export function DumbbellChart(props: Props) {
           />
         </div>
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale ? (
-            <ColorLegendWithMouseOver
-              width={width}
-              colorDomain={colorDomain}
-              colors={colors}
-              colorLegendTitle={colorLegendTitle}
-              setSelectedColor={setSelectedColor}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Comp
-                data={
-                  sortParameter !== undefined
-                    ? sortParameter === 'diff'
-                      ? orderBy(
-                          ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
-                            .filter(d =>
-                              timeline.enabled
-                                ? d.date ===
-                                  format(
-                                    new Date(uniqDatesSorted[index]),
-                                    timeline.dateFormat || 'yyyy',
-                                  )
-                                : d,
-                            )
-                            .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
-                          d =>
-                            checkIfNullOrUndefined(d.x[d.x.length - 1]) ||
-                            checkIfNullOrUndefined(d.x[0])
-                              ? -Infinity
-                              : (d.x[d.x.length - 1] as number) - (d.x[0] as number),
-                          [sortData || 'asc'],
-                        ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                      : orderBy(
-                          ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
-                            .filter(d =>
-                              timeline.enabled
-                                ? d.date ===
-                                  format(
-                                    new Date(uniqDatesSorted[index]),
-                                    timeline.dateFormat || 'yyyy',
-                                  )
-                                : d,
-                            )
-                            .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
-                          d =>
-                            checkIfNullOrUndefined(d.x[sortParameter])
-                              ? -Infinity
-                              : d.x[sortParameter],
-                          [sortData || 'asc'],
-                        ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                    : ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
-                        .filter(d => (filterNA ? !d.x.every(item => item == null) : d))
-                        .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                }
-                dotColors={colors}
-                width={svgWidth}
-                height={svgHeight}
-                radius={radius}
-                barPadding={barPadding}
-                showTicks={showTicks}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                truncateBy={truncateBy}
-                showLabels={showLabels}
-                showValues={showValues}
-                tooltip={tooltip}
-                suffix={suffix}
-                prefix={prefix}
-                onSeriesMouseOver={onSeriesMouseOver}
-                maxValue={
-                  !checkIfNullOrUndefined(maxValue)
-                    ? (maxValue as number)
-                    : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null)))) < 0
-                      ? 0
-                      : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null))))
-                }
-                minValue={
-                  !checkIfNullOrUndefined(minValue)
-                    ? (minValue as number)
-                    : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null)))) > 0
-                      ? 0
-                      : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null))))
-                }
-                onSeriesMouseClick={onSeriesMouseClick}
-                selectedColor={selectedColor}
-                arrowConnector={arrowConnector}
-                connectorStrokeWidth={connectorStrokeWidth}
-                maxBarThickness={maxBarThickness}
-                minBarThickness={minBarThickness}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                axisTitle={axisTitle}
-                noOfTicks={noOfTicks}
-                valueColor={valueColor}
-                styles={styles}
-                classNames={classNames}
-                labelOrder={labelOrder}
-                refValues={refValues}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                precision={precision}
-                customLayers={customLayers}
-                highlightedDataPoints={highlightedDataPoints}
-                dimmedOpacity={dimmedOpacity}
-                rtl={language === 'ar' || language === 'he'}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale && data.length > 0 ? (
+        <ColorLegendWithMouseOver
+          width={width}
+          colorDomain={colorDomain}
+          colors={colors}
+          colorLegendTitle={colorLegendTitle}
+          setSelectedColor={setSelectedColor}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Comp
+            data={
+              sortParameter !== undefined
+                ? sortParameter === 'diff'
+                  ? orderBy(
+                      ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
+                        .filter(d =>
+                          timeline.enabled
+                            ? d.date ===
+                              format(
+                                new Date(uniqDatesSorted[index]),
+                                timeline.dateFormat || 'yyyy',
+                              )
+                            : d,
+                        )
+                        .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
+                      d =>
+                        checkIfNullOrUndefined(d.x[d.x.length - 1]) ||
+                        checkIfNullOrUndefined(d.x[0])
+                          ? -Infinity
+                          : (d.x[d.x.length - 1] as number) - (d.x[0] as number),
+                      [sortData || 'asc'],
+                    ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                  : orderBy(
+                      ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
+                        .filter(d =>
+                          timeline.enabled
+                            ? d.date ===
+                              format(
+                                new Date(uniqDatesSorted[index]),
+                                timeline.dateFormat || 'yyyy',
+                              )
+                            : d,
+                        )
+                        .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
+                      d =>
+                        checkIfNullOrUndefined(d.x[sortParameter]) ? -Infinity : d.x[sortParameter],
+                      [sortData || 'asc'],
+                    ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                : ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
+                    .filter(d => (filterNA ? !d.x.every(item => item == null) : d))
+                    .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+            }
+            dotColors={colors}
+            width={svgWidth}
+            height={svgHeight}
+            radius={radius}
+            barPadding={barPadding}
+            showTicks={showTicks}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            truncateBy={truncateBy}
+            showLabels={showLabels}
+            showValues={showValues}
+            tooltip={tooltip}
+            suffix={suffix}
+            prefix={prefix}
+            onSeriesMouseOver={onSeriesMouseOver}
+            maxValue={
+              !checkIfNullOrUndefined(maxValue)
+                ? (maxValue as number)
+                : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null)))) < 0
+                  ? 0
+                  : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null))))
+            }
+            minValue={
+              !checkIfNullOrUndefined(minValue)
+                ? (minValue as number)
+                : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null)))) > 0
+                  ? 0
+                  : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null))))
+            }
+            onSeriesMouseClick={onSeriesMouseClick}
+            selectedColor={selectedColor}
+            arrowConnector={arrowConnector}
+            connectorStrokeWidth={connectorStrokeWidth}
+            maxBarThickness={maxBarThickness}
+            minBarThickness={minBarThickness}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            axisTitle={axisTitle}
+            noOfTicks={noOfTicks}
+            valueColor={valueColor}
+            styles={styles}
+            classNames={classNames}
+            labelOrder={labelOrder}
+            refValues={refValues}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            precision={precision}
+            customLayers={customLayers}
+            highlightedDataPoints={highlightedDataPoints}
+            dimmedOpacity={dimmedOpacity}
+            rtl={language === 'ar' || language === 'he'}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

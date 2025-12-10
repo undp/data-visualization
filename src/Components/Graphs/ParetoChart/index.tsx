@@ -250,67 +250,62 @@ export function ParetoChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {!showColorScale ? null : (
-            <ColorLegend
-              colorDomain={[barAxisTitle, lineAxisTitle]}
-              colors={[
-                barColor || Colors[theme].categoricalColors.colors[0],
-                lineColor || Colors[theme].categoricalColors.colors[1],
-              ]}
-              colorLegendTitle={colorLegendTitle}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          )}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                sameAxes={sameAxes}
-                lineColor={lineColor}
-                barColor={barColor}
-                width={svgWidth}
-                height={svgHeight}
-                truncateBy={truncateBy}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                axisTitles={[barAxisTitle, lineAxisTitle]}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                barPadding={barPadding}
-                showLabels={showLabels}
-                onSeriesMouseClick={onSeriesMouseClick}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                noOfTicks={noOfTicks}
-                lineSuffix={lineSuffix}
-                barSuffix={barSuffix}
-                linePrefix={linePrefix}
-                barPrefix={barPrefix}
-                curveType={curveType}
-                showValues={showValues}
-                styles={styles}
-                classNames={classNames}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                precision={precision}
-                customLayers={customLayers}
-                naLabel={naLabel}
-                showAxisLabels={showAxisLabels}
-              />
-            ) : null}
-          </GraphArea>
-        </>
+      {!showColorScale && data.length > 0 ? null : (
+        <ColorLegend
+          colorDomain={[barAxisTitle, lineAxisTitle]}
+          colors={[
+            barColor || Colors[theme].categoricalColors.colors[0],
+            lineColor || Colors[theme].categoricalColors.colors[1],
+          ]}
+          colorLegendTitle={colorLegendTitle}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
       )}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            sameAxes={sameAxes}
+            lineColor={lineColor}
+            barColor={barColor}
+            width={svgWidth}
+            height={svgHeight}
+            truncateBy={truncateBy}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            axisTitles={[barAxisTitle, lineAxisTitle]}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            barPadding={barPadding}
+            showLabels={showLabels}
+            onSeriesMouseClick={onSeriesMouseClick}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            noOfTicks={noOfTicks}
+            lineSuffix={lineSuffix}
+            barSuffix={barSuffix}
+            linePrefix={linePrefix}
+            barPrefix={barPrefix}
+            curveType={curveType}
+            showValues={showValues}
+            styles={styles}
+            classNames={classNames}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            precision={precision}
+            customLayers={customLayers}
+            naLabel={naLabel}
+            showAxisLabels={showAxisLabels}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

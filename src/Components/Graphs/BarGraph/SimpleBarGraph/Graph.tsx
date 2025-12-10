@@ -70,6 +70,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   naLabel: string;
+  trackColor?: string;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -114,6 +115,7 @@ export function HorizontalGraph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    trackColor,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -281,6 +283,28 @@ export function HorizontalGraph(props: Props) {
                     onSeriesMouseOver?.(undefined);
                   }}
                 >
+                  {trackColor && (
+                    <motion.rect
+                      height={y.bandwidth()}
+                      variants={{
+                        initial: {
+                          width: graphWidth,
+                          x: 0,
+                          y: y(`${d.id}`),
+                          fill: trackColor,
+                        },
+                        whileInView: {
+                          width: graphWidth,
+                          x: 0,
+                          y: y(`${d.id}`),
+                          fill: trackColor,
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    />
+                  )}
                   {d.size ? (
                     <motion.rect
                       variants={{
@@ -485,6 +509,7 @@ export function VerticalGraph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    trackColor,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -678,6 +703,28 @@ export function VerticalGraph(props: Props) {
                     onSeriesMouseOver?.(undefined);
                   }}
                 >
+                  {trackColor && (
+                    <motion.rect
+                      width={x.bandwidth()}
+                      variants={{
+                        initial: {
+                          height: graphHeight,
+                          y: 0,
+                          x: x(`${d.id}`),
+                          fill: trackColor,
+                        },
+                        whileInView: {
+                          height: graphHeight,
+                          y: 0,
+                          x: x(`${d.id}`),
+                          fill: trackColor,
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    />
+                  )}
                   {d.size ? (
                     <motion.rect
                       width={x.bandwidth()}

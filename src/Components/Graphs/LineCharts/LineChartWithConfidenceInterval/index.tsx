@@ -274,73 +274,68 @@ export function LineChartWithConfidenceInterval(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {colorLegendColors && colorLegendDomain ? (
-            <ColorLegend
-              width={width}
-              colorLegendTitle={colorLegendTitle}
-              colors={colorLegendColors}
-              colorDomain={colorLegendDomain}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                lineColor={lineColor || Colors.primaryColors['blue-600']}
-                width={svgWidth}
-                height={svgHeight}
-                suffix={suffix}
-                prefix={prefix}
-                dateFormat={dateFormat}
-                showValues={showValues}
-                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                tooltip={tooltip}
-                highlightAreaSettings={highlightAreaSettings}
-                onSeriesMouseOver={onSeriesMouseOver}
-                refValues={refValues}
-                minValue={minValue}
-                maxValue={maxValue}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                rtl={language === 'he' || language === 'ar'}
-                strokeWidth={strokeWidth}
-                showDots={showDots}
-                annotations={annotations}
-                customHighlightAreaSettings={customHighlightAreaSettings}
-                regressionLine={regressionLine}
-                showIntervalDots={showIntervalDots}
-                showIntervalValues={showIntervalValues}
-                intervalLineStrokeWidth={intervalLineStrokeWidth}
-                intervalLineColors={intervalLineColors}
-                intervalAreaColor={intervalAreaColor}
-                intervalAreaOpacity={intervalAreaOpacity}
-                yAxisTitle={yAxisTitle}
-                noOfYTicks={noOfYTicks}
-                minDate={minDate}
-                maxDate={maxDate}
-                curveType={curveType}
-                styles={styles}
-                classNames={classNames}
-                precision={precision}
-                customLayers={customLayers}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {colorLegendColors && colorLegendDomain && data.length > 0 ? (
+        <ColorLegend
+          width={width}
+          colorLegendTitle={colorLegendTitle}
+          colors={colorLegendColors}
+          colorDomain={colorLegendDomain}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            lineColor={lineColor || Colors.primaryColors['blue-600']}
+            width={svgWidth}
+            height={svgHeight}
+            suffix={suffix}
+            prefix={prefix}
+            dateFormat={dateFormat}
+            showValues={showValues}
+            noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            tooltip={tooltip}
+            highlightAreaSettings={highlightAreaSettings}
+            onSeriesMouseOver={onSeriesMouseOver}
+            refValues={refValues}
+            minValue={minValue}
+            maxValue={maxValue}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            rtl={language === 'he' || language === 'ar'}
+            strokeWidth={strokeWidth}
+            showDots={showDots}
+            annotations={annotations}
+            customHighlightAreaSettings={customHighlightAreaSettings}
+            regressionLine={regressionLine}
+            showIntervalDots={showIntervalDots}
+            showIntervalValues={showIntervalValues}
+            intervalLineStrokeWidth={intervalLineStrokeWidth}
+            intervalLineColors={intervalLineColors}
+            intervalAreaColor={intervalAreaColor}
+            intervalAreaOpacity={intervalAreaOpacity}
+            yAxisTitle={yAxisTitle}
+            noOfYTicks={noOfYTicks}
+            minDate={minDate}
+            maxDate={maxDate}
+            curveType={curveType}
+            styles={styles}
+            classNames={classNames}
+            precision={precision}
+            customLayers={customLayers}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

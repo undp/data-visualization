@@ -314,51 +314,48 @@ export function SankeyChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <GraphArea ref={graphDiv}>
-          {svgWidth && svgHeight && sankeyData ? (
-            <Graph
-              data={sankeyData}
-              nodePadding={nodePadding}
-              nodeWidth={nodeWidth}
-              width={fillContainer || !width ? svgWidth : svgWidth < width ? svgWidth : width}
-              height={svgHeight}
-              showLabels={showLabels}
-              leftMargin={leftMargin}
-              rightMargin={rightMargin}
-              topMargin={topMargin}
-              bottomMargin={bottomMargin}
-              truncateBy={truncateBy}
-              tooltip={tooltip}
-              onSeriesMouseOver={onSeriesMouseOver}
-              showValues={showValues}
-              suffix={suffix}
-              prefix={prefix}
-              onSeriesMouseClick={onSeriesMouseClick}
-              id={generateRandomString(8)}
-              highlightedSourceDataPoints={highlightedSourceDataPoints.map(d => `${d}`)}
-              highlightedTargetDataPoints={highlightedTargetDataPoints.map(d => `${d}`)}
-              defaultLinkOpacity={defaultLinkOpacity}
-              sourceTitle={sourceTitle}
-              targetTitle={targetTitle}
-              sortNodes={sortNodes}
-              resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-              styles={styles}
-              classNames={classNames}
-              detailsOnClick={detailsOnClick}
-              animate={
-                animate === true
-                  ? { duration: 0.5, once: true, amount: 0.5 }
-                  : animate || { duration: 0, once: true, amount: 0 }
-              }
-              precision={precision}
-              customLayers={customLayers}
-            />
-          ) : null}
-        </GraphArea>
-      )}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && sankeyData && data.length > 0 ? (
+          <Graph
+            data={sankeyData}
+            nodePadding={nodePadding}
+            nodeWidth={nodeWidth}
+            width={fillContainer || !width ? svgWidth : svgWidth < width ? svgWidth : width}
+            height={svgHeight}
+            showLabels={showLabels}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            truncateBy={truncateBy}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            showValues={showValues}
+            suffix={suffix}
+            prefix={prefix}
+            onSeriesMouseClick={onSeriesMouseClick}
+            id={generateRandomString(8)}
+            highlightedSourceDataPoints={highlightedSourceDataPoints.map(d => `${d}`)}
+            highlightedTargetDataPoints={highlightedTargetDataPoints.map(d => `${d}`)}
+            defaultLinkOpacity={defaultLinkOpacity}
+            sourceTitle={sourceTitle}
+            targetTitle={targetTitle}
+            sortNodes={sortNodes}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            styles={styles}
+            classNames={classNames}
+            detailsOnClick={detailsOnClick}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            precision={precision}
+            customLayers={customLayers}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

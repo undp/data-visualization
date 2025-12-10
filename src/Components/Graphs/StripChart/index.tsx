@@ -250,75 +250,70 @@ export function StripChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale !== false && data.filter(el => el.color).length !== 0 ? (
-            <ColorLegendWithMouseOver
-              width={width}
-              colorLegendTitle={colorLegendTitle}
-              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
-              colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
-              setSelectedColor={setSelectedColor}
-              showNAColor={showNAColor}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Comp
-                data={data}
-                width={svgWidth}
-                height={svgHeight}
-                colorDomain={
-                  data.filter(el => el.color).length === 0
-                    ? []
-                    : colorDomain || (uniqBy(data, 'color', true) as string[])
-                }
-                colors={
-                  data.filter(el => el.color).length === 0
-                    ? colors
-                      ? [colors as string]
-                      : [Colors.primaryColors['blue-600']]
-                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
-                }
-                selectedColor={selectedColor}
-                radius={radius}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                highlightedDataPoints={highlightedDataPoints}
-                minValue={minValue}
-                maxValue={maxValue}
-                onSeriesMouseClick={onSeriesMouseClick}
-                prefix={prefix}
-                suffix={suffix}
-                stripType={stripType}
-                highlightColor={highlightColor}
-                dotOpacity={dotOpacity}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                styles={styles}
-                classNames={classNames}
-                valueColor={valueColor}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                noOfTicks={noOfTicks}
-                dimmedOpacity={dimmedOpacity}
-                precision={precision}
-                customLayers={customLayers}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale !== false && data.filter(el => el.color).length !== 0 && data.length > 0 ? (
+        <ColorLegendWithMouseOver
+          width={width}
+          colorLegendTitle={colorLegendTitle}
+          colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+          colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+          setSelectedColor={setSelectedColor}
+          showNAColor={showNAColor}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Comp
+            data={data}
+            width={svgWidth}
+            height={svgHeight}
+            colorDomain={
+              data.filter(el => el.color).length === 0
+                ? []
+                : colorDomain || (uniqBy(data, 'color', true) as string[])
+            }
+            colors={
+              data.filter(el => el.color).length === 0
+                ? colors
+                  ? [colors as string]
+                  : [Colors.primaryColors['blue-600']]
+                : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+            }
+            selectedColor={selectedColor}
+            radius={radius}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            highlightedDataPoints={highlightedDataPoints}
+            minValue={minValue}
+            maxValue={maxValue}
+            onSeriesMouseClick={onSeriesMouseClick}
+            prefix={prefix}
+            suffix={suffix}
+            stripType={stripType}
+            highlightColor={highlightColor}
+            dotOpacity={dotOpacity}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            styles={styles}
+            classNames={classNames}
+            valueColor={valueColor}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            noOfTicks={noOfTicks}
+            dimmedOpacity={dimmedOpacity}
+            precision={precision}
+            customLayers={customLayers}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

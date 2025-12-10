@@ -225,76 +225,73 @@ export function DonutChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
+      {showColorScale && data.length > 0 ? (
         <>
-          {showColorScale ? (
-            <div
-              className={cn(
-                'leading-0 flex mb-0 ml-auto mr-auto justify-center gap-x-3 gap-y-0 flex-wrap',
-                classNames?.colorLegend,
-              )}
-              style={{ maxWidth: colorScaleMaxWidth }}
-              aria-label='Color legend'
-            >
-              {sortedData.map((d, i) => (
-                <div className='flex gap-2 items-center pb-3' key={i}>
-                  <div
-                    className='w-3 h-3 rounded-full'
-                    style={{
-                      backgroundColor:
-                        (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) !== -1
-                          ? (colors || Colors[theme].categoricalColors.colors)[
-                              (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) %
-                                (colors || Colors[theme].categoricalColors.colors).length
-                            ]
-                          : Colors.gray,
-                    }}
-                  />
-                  <P
-                    marginBottom='none'
-                    size='sm'
-                    className='text-primary-gray-700 dark:text-primary-gray-100'
-                  >
-                    {d.label}:{' '}
-                    <span className='font-bold' style={{ fontSize: 'inherit' }}>
-                      {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
-                    </span>
-                  </P>
-                </div>
-              ))}
-            </div>
-          ) : null}
+          <div
+            className={cn(
+              'leading-0 flex mb-0 ml-auto mr-auto justify-center gap-x-3 gap-y-0 flex-wrap',
+              classNames?.colorLegend,
+            )}
+            style={{ maxWidth: colorScaleMaxWidth }}
+            aria-label='Color legend'
+          >
+            {sortedData.map((d, i) => (
+              <div className='flex gap-2 items-center pb-3' key={i}>
+                <div
+                  className='w-3 h-3 rounded-full'
+                  style={{
+                    backgroundColor:
+                      (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) !== -1
+                        ? (colors || Colors[theme].categoricalColors.colors)[
+                            (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) %
+                              (colors || Colors[theme].categoricalColors.colors).length
+                          ]
+                        : Colors.gray,
+                  }}
+                />
+                <P
+                  marginBottom='none'
+                  size='sm'
+                  className='text-primary-gray-700 dark:text-primary-gray-100'
+                >
+                  {d.label}:{' '}
+                  <span className='font-bold' style={{ fontSize: 'inherit' }}>
+                    {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
+                  </span>
+                </P>
+              </div>
+            ))}
+          </div>
           <Spacer size='lg' />
-          <GraphArea ref={graphDiv}>
-            {graphRadius ? (
-              <Graph
-                mainText={mainText}
-                data={sortedData}
-                colors={colors}
-                radius={graphRadius}
-                subNote={subNote}
-                strokeWidth={strokeWidth}
-                tooltip={tooltip}
-                colorDomain={colorDomain || sortedData.map(d => d.label)}
-                onSeriesMouseOver={onSeriesMouseOver}
-                onSeriesMouseClick={onSeriesMouseClick}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                styles={styles}
-                detailsOnClick={detailsOnClick}
-                precision={precision}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                trackColor={trackColor}
-              />
-            ) : null}
-          </GraphArea>
         </>
-      )}
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {graphRadius && data.length > 0 ? (
+          <Graph
+            mainText={mainText}
+            data={sortedData}
+            colors={colors}
+            radius={graphRadius}
+            subNote={subNote}
+            strokeWidth={strokeWidth}
+            tooltip={tooltip}
+            colorDomain={colorDomain || sortedData.map(d => d.label)}
+            onSeriesMouseOver={onSeriesMouseOver}
+            onSeriesMouseClick={onSeriesMouseClick}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            styles={styles}
+            detailsOnClick={detailsOnClick}
+            precision={precision}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            trackColor={trackColor}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

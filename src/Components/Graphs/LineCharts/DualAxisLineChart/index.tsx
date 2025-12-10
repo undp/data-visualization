@@ -241,61 +241,56 @@ export function DualAxisLineChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {!showColorScale ? null : (
-            <ColorLegend
-              colorDomain={labels}
-              colorLegendTitle={colorLegendTitle}
-              colors={lineColors}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          )}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                sameAxes={sameAxes}
-                lineColors={lineColors}
-                width={svgWidth}
-                height={svgHeight}
-                dateFormat={dateFormat}
-                showValues={showValues}
-                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                labels={labels}
-                highlightAreaSettings={highlightAreaSettings}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                strokeWidth={strokeWidth}
-                showDots={showDots}
-                noOfYTicks={noOfYTicks}
-                lineSuffixes={lineSuffixes}
-                linePrefixes={linePrefixes}
-                minDate={minDate}
-                maxDate={maxDate}
-                curveType={curveType}
-                styles={styles}
-                classNames={classNames}
-                precision={precision}
-                customLayers={customLayers}
-                showAxisLabels={showAxisLabels}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale && labels.length > 0 ? (
+        <ColorLegend
+          colorDomain={labels}
+          colorLegendTitle={colorLegendTitle}
+          colors={lineColors}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            sameAxes={sameAxes}
+            lineColors={lineColors}
+            width={svgWidth}
+            height={svgHeight}
+            dateFormat={dateFormat}
+            showValues={showValues}
+            noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            labels={labels}
+            highlightAreaSettings={highlightAreaSettings}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            strokeWidth={strokeWidth}
+            showDots={showDots}
+            noOfYTicks={noOfYTicks}
+            lineSuffixes={lineSuffixes}
+            linePrefixes={linePrefixes}
+            minDate={minDate}
+            maxDate={maxDate}
+            curveType={curveType}
+            styles={styles}
+            classNames={classNames}
+            precision={precision}
+            customLayers={customLayers}
+            showAxisLabels={showAxisLabels}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

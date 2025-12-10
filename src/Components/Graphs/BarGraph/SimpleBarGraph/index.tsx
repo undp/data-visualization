@@ -59,6 +59,7 @@ interface Props {
   showColorScale?: boolean;
   maxValue?: number;
   minValue?: number;
+  trackColor?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -158,6 +159,7 @@ export function SimpleBarGraphEl(props: Props) {
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     naLabel = 'NA',
     orientation = 'vertical',
+    trackColor,
   } = props;
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
   const [svgWidth, setSvgWidth] = useState(0);
@@ -277,147 +279,137 @@ export function SimpleBarGraphEl(props: Props) {
           />
         </div>
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale && data.filter(el => el.color).length !== 0 ? (
-            <ColorLegendWithMouseOver
-              width={width}
-              colorLegendTitle={colorLegendTitle}
-              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
-              colorDomain={colorDomain || (uniqBy(data, 'color', true) as (string | number)[])}
-              setSelectedColor={setSelectedColor}
-              showNAColor={showNAColor}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Comp
-                data={
-                  sortData
-                    ? orderBy(
-                        ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
-                          .filter(d =>
-                            timeline.enabled
-                              ? d.date ===
-                                format(
-                                  new Date(uniqDatesSorted[index]),
-                                  timeline.dateFormat || 'yyyy',
-                                )
-                              : d,
-                          )
-                          .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
-                        [
-                          d =>
-                            d.size === undefined
-                              ? sortData === 'asc'
-                                ? (orientation === 'horizontal' ? 1 : -1) * Infinity
-                                : (orientation === 'horizontal' ? -1 : 1) * Infinity
-                              : d.size,
-                        ],
-                        [sortData],
-                      ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                    : ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
-                        .filter(d =>
-                          timeline.enabled
-                            ? d.date ===
-                              format(
-                                new Date(uniqDatesSorted[index]),
-                                timeline.dateFormat || 'yyyy',
-                              )
-                            : d,
-                        )
-                        .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
-                        .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                }
-                barColor={
-                  data.filter(el => el.color).length === 0
-                    ? colors
-                      ? [colors as string]
-                      : [Colors.primaryColors['blue-600']]
-                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
-                }
-                colorDomain={
-                  data.filter(el => el.color).length === 0
-                    ? []
-                    : colorDomain || (uniqBy(data, 'color', true) as string[])
-                }
-                selectedColor={selectedColor}
-                width={svgWidth}
-                height={svgHeight}
-                suffix={suffix}
-                prefix={prefix}
-                barPadding={barPadding}
-                showValues={showValues}
-                showTicks={showTicks}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                truncateBy={truncateBy}
-                showLabels={showLabels}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                refValues={refValues}
-                maxValue={
-                  !checkIfNullOrUndefined(maxValue)
-                    ? (maxValue as number)
-                    : Math.max(
-                          ...data
-                            .filter(d => !checkIfNullOrUndefined(d.size))
-                            .map(d => d.size as number),
-                        ) < 0
-                      ? 0
-                      : Math.max(
-                          ...data
-                            .filter(d => !checkIfNullOrUndefined(d.size))
-                            .map(d => d.size as number),
-                        )
-                }
-                minValue={
-                  !checkIfNullOrUndefined(minValue)
-                    ? (minValue as number)
-                    : Math.min(
-                          ...data
-                            .filter(d => !checkIfNullOrUndefined(d.size))
-                            .map(d => d.size as number),
-                        ) >= 0
-                      ? 0
-                      : Math.min(
-                          ...data
-                            .filter(d => !checkIfNullOrUndefined(d.size))
-                            .map(d => d.size as number),
-                        )
-                }
-                highlightedDataPoints={highlightedDataPoints}
-                onSeriesMouseClick={onSeriesMouseClick}
-                labelOrder={labelOrder}
-                rtl={language === 'he' || language === 'ar'}
-                maxBarThickness={maxBarThickness}
-                minBarThickness={minBarThickness}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                barAxisTitle={barAxisTitle}
-                noOfTicks={noOfTicks}
-                valueColor={valueColor}
-                classNames={classNames}
-                styles={styles}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                dimmedOpacity={dimmedOpacity}
-                precision={precision}
-                customLayers={customLayers}
-                naLabel={naLabel}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale && data.filter(el => el.color).length !== 0 && data.length > 0 ? (
+        <ColorLegendWithMouseOver
+          width={width}
+          colorLegendTitle={colorLegendTitle}
+          colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+          colorDomain={colorDomain || (uniqBy(data, 'color', true) as (string | number)[])}
+          setSelectedColor={setSelectedColor}
+          showNAColor={showNAColor}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Comp
+            data={
+              sortData
+                ? orderBy(
+                    ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
+                      .filter(d =>
+                        timeline.enabled
+                          ? d.date ===
+                            format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                          : d,
+                      )
+                      .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
+                    [
+                      d =>
+                        d.size === undefined
+                          ? sortData === 'asc'
+                            ? (orientation === 'horizontal' ? 1 : -1) * Infinity
+                            : (orientation === 'horizontal' ? -1 : 1) * Infinity
+                          : d.size,
+                    ],
+                    [sortData],
+                  ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                : ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
+                    .filter(d =>
+                      timeline.enabled
+                        ? d.date ===
+                          format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                        : d,
+                    )
+                    .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
+                    .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+            }
+            barColor={
+              data.filter(el => el.color).length === 0
+                ? colors
+                  ? [colors as string]
+                  : [Colors.primaryColors['blue-600']]
+                : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+            }
+            colorDomain={
+              data.filter(el => el.color).length === 0
+                ? []
+                : colorDomain || (uniqBy(data, 'color', true) as string[])
+            }
+            selectedColor={selectedColor}
+            trackColor={trackColor}
+            width={svgWidth}
+            height={svgHeight}
+            suffix={suffix}
+            prefix={prefix}
+            barPadding={barPadding}
+            showValues={showValues}
+            showTicks={showTicks}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            truncateBy={truncateBy}
+            showLabels={showLabels}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            refValues={refValues}
+            maxValue={
+              !checkIfNullOrUndefined(maxValue)
+                ? (maxValue as number)
+                : Math.max(
+                      ...data
+                        .filter(d => !checkIfNullOrUndefined(d.size))
+                        .map(d => d.size as number),
+                    ) < 0
+                  ? 0
+                  : Math.max(
+                      ...data
+                        .filter(d => !checkIfNullOrUndefined(d.size))
+                        .map(d => d.size as number),
+                    )
+            }
+            minValue={
+              !checkIfNullOrUndefined(minValue)
+                ? (minValue as number)
+                : Math.min(
+                      ...data
+                        .filter(d => !checkIfNullOrUndefined(d.size))
+                        .map(d => d.size as number),
+                    ) >= 0
+                  ? 0
+                  : Math.min(
+                      ...data
+                        .filter(d => !checkIfNullOrUndefined(d.size))
+                        .map(d => d.size as number),
+                    )
+            }
+            highlightedDataPoints={highlightedDataPoints}
+            onSeriesMouseClick={onSeriesMouseClick}
+            labelOrder={labelOrder}
+            rtl={language === 'he' || language === 'ar'}
+            maxBarThickness={maxBarThickness}
+            minBarThickness={minBarThickness}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            barAxisTitle={barAxisTitle}
+            noOfTicks={noOfTicks}
+            valueColor={valueColor}
+            classNames={classNames}
+            styles={styles}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            dimmedOpacity={dimmedOpacity}
+            precision={precision}
+            customLayers={customLayers}
+            naLabel={naLabel}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           sources={sources}

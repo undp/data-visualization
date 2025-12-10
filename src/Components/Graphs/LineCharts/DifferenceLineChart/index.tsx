@@ -261,69 +261,64 @@ export function DifferenceLineChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorLegendAtTop ? (
-            <ColorLegend
-              colorDomain={labels}
-              colorLegendTitle={colorLegendTitle}
-              colors={lineColors}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                lineColors={lineColors}
-                colorDomain={labels}
-                width={svgWidth}
-                height={svgHeight}
-                suffix={suffix}
-                prefix={prefix}
-                dateFormat={dateFormat}
-                showValues={showValues}
-                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                highlightAreaSettings={highlightAreaSettings}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                showColorLegendAtTop={showColorLegendAtTop}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                rtl={language === 'he' || language === 'ar'}
-                diffAreaColors={diffAreaColors}
-                idSuffix={generateRandomString(8)}
-                strokeWidth={strokeWidth}
-                showDots={showDots}
-                refValues={refValues}
-                minValue={minValue}
-                maxValue={maxValue}
-                annotations={annotations}
-                customHighlightAreaSettings={customHighlightAreaSettings}
-                yAxisTitle={yAxisTitle}
-                noOfYTicks={noOfYTicks}
-                minDate={minDate}
-                maxDate={maxDate}
-                curveType={curveType}
-                styles={styles}
-                classNames={classNames}
-                precision={precision}
-                customLayers={customLayers}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorLegendAtTop && data.length > 0 ? (
+        <ColorLegend
+          colorDomain={labels}
+          colorLegendTitle={colorLegendTitle}
+          colors={lineColors}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            lineColors={lineColors}
+            colorDomain={labels}
+            width={svgWidth}
+            height={svgHeight}
+            suffix={suffix}
+            prefix={prefix}
+            dateFormat={dateFormat}
+            showValues={showValues}
+            noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            highlightAreaSettings={highlightAreaSettings}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            showColorLegendAtTop={showColorLegendAtTop}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            rtl={language === 'he' || language === 'ar'}
+            diffAreaColors={diffAreaColors}
+            idSuffix={generateRandomString(8)}
+            strokeWidth={strokeWidth}
+            showDots={showDots}
+            refValues={refValues}
+            minValue={minValue}
+            maxValue={maxValue}
+            annotations={annotations}
+            customHighlightAreaSettings={customHighlightAreaSettings}
+            yAxisTitle={yAxisTitle}
+            noOfYTicks={noOfYTicks}
+            minDate={minDate}
+            maxDate={maxDate}
+            curveType={curveType}
+            styles={styles}
+            classNames={classNames}
+            precision={precision}
+            customLayers={customLayers}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

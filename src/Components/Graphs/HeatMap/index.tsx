@@ -243,121 +243,116 @@ export function HeatMap(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale ? (
-            scale === 'categorical' ? (
-              <ColorLegendWithMouseOver
-                width={fillContainer ? undefined : width}
-                colorLegendTitle={colorLegendTitle}
-                colors={
-                  colors ||
-                  (typeof colorDomain[0] === 'string'
-                    ? Colors[theme].categoricalColors.colors
-                    : colorDomain.length === 2
-                      ? [
-                          Colors[theme].sequentialColors.neutralColorsx09[0],
-                          Colors[theme].sequentialColors.neutralColorsx09[8],
-                        ]
-                      : Colors[theme].sequentialColors[
-                          `neutralColorsx0${(colorDomain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
-                        ])
-                }
-                colorDomain={colorDomain.map(d => `${d}`)}
-                setSelectedColor={setSelectedColor}
-                showNAColor={showNAColor}
-                className={classNames?.colorLegend}
-              />
-            ) : scale === 'threshold' ? (
-              <ThresholdColorLegendWithMouseOver
-                width={fillContainer ? undefined : width}
-                colorLegendTitle={colorLegendTitle}
-                colors={
-                  colors ||
-                  (typeof colorDomain[0] === 'string'
-                    ? Colors[theme].categoricalColors.colors
-                    : colorDomain.length === 2
-                      ? [
-                          Colors[theme].sequentialColors.neutralColorsx09[0],
-                          Colors[theme].sequentialColors.neutralColorsx09[8],
-                        ]
-                      : Colors[theme].sequentialColors[
-                          `neutralColorsx0${(colorDomain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
-                        ])
-                }
-                colorDomain={colorDomain as number[]}
-                setSelectedColor={setSelectedColor}
-                naColor={noDataColor}
-                showNAColor={showNAColor}
-              />
-            ) : (
-              <LinearColorLegend
-                width={fillContainer ? undefined : width}
-                colorLegendTitle={colorLegendTitle}
-                colors={
-                  colors || [
-                    Colors[theme].sequentialColors.neutralColorsx09[0],
-                    Colors[theme].sequentialColors.neutralColorsx09[8],
-                  ]
-                }
-                colorDomain={colorDomain as number[]}
-                className={classNames?.colorLegend}
-              />
-            )
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                colorDomain={colorDomain}
-                width={fillContainer || !width ? svgWidth : svgWidth < width ? svgWidth : width}
-                height={svgHeight}
-                colors={
-                  colors ||
-                  (typeof colorDomain[0] === 'string'
-                    ? Colors[theme].categoricalColors.colors
-                    : colorDomain.length === 2
-                      ? [
-                          Colors[theme].sequentialColors.neutralColorsx09[0],
-                          Colors[theme].sequentialColors.neutralColorsx09[8],
-                        ]
-                      : Colors[theme].sequentialColors[
-                          `neutralColorsx0${(colorDomain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
-                        ])
-                }
-                noDataColor={noDataColor}
-                scaleType={scale}
-                showColumnLabels={showColumnLabels}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                selectedColor={selectedColor}
-                truncateBy={truncateBy}
-                showRowLabels={showRowLabels}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                showValues={showValues}
-                suffix={suffix}
-                prefix={prefix}
-                onSeriesMouseClick={onSeriesMouseClick}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                styles={styles}
-                classNames={classNames}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                precision={precision}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale && data.length > 0 ? (
+        scale === 'categorical' ? (
+          <ColorLegendWithMouseOver
+            width={fillContainer ? undefined : width}
+            colorLegendTitle={colorLegendTitle}
+            colors={
+              colors ||
+              (typeof colorDomain[0] === 'string'
+                ? Colors[theme].categoricalColors.colors
+                : colorDomain.length === 2
+                  ? [
+                      Colors[theme].sequentialColors.neutralColorsx09[0],
+                      Colors[theme].sequentialColors.neutralColorsx09[8],
+                    ]
+                  : Colors[theme].sequentialColors[
+                      `neutralColorsx0${(colorDomain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
+                    ])
+            }
+            colorDomain={colorDomain.map(d => `${d}`)}
+            setSelectedColor={setSelectedColor}
+            showNAColor={showNAColor}
+            className={classNames?.colorLegend}
+          />
+        ) : scale === 'threshold' ? (
+          <ThresholdColorLegendWithMouseOver
+            width={fillContainer ? undefined : width}
+            colorLegendTitle={colorLegendTitle}
+            colors={
+              colors ||
+              (typeof colorDomain[0] === 'string'
+                ? Colors[theme].categoricalColors.colors
+                : colorDomain.length === 2
+                  ? [
+                      Colors[theme].sequentialColors.neutralColorsx09[0],
+                      Colors[theme].sequentialColors.neutralColorsx09[8],
+                    ]
+                  : Colors[theme].sequentialColors[
+                      `neutralColorsx0${(colorDomain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
+                    ])
+            }
+            colorDomain={colorDomain as number[]}
+            setSelectedColor={setSelectedColor}
+            naColor={noDataColor}
+            showNAColor={showNAColor}
+          />
+        ) : (
+          <LinearColorLegend
+            width={fillContainer ? undefined : width}
+            colorLegendTitle={colorLegendTitle}
+            colors={
+              colors || [
+                Colors[theme].sequentialColors.neutralColorsx09[0],
+                Colors[theme].sequentialColors.neutralColorsx09[8],
+              ]
+            }
+            colorDomain={colorDomain as number[]}
+            className={classNames?.colorLegend}
+          />
+        )
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            colorDomain={colorDomain}
+            width={fillContainer || !width ? svgWidth : svgWidth < width ? svgWidth : width}
+            height={svgHeight}
+            colors={
+              colors ||
+              (typeof colorDomain[0] === 'string'
+                ? Colors[theme].categoricalColors.colors
+                : colorDomain.length === 2
+                  ? [
+                      Colors[theme].sequentialColors.neutralColorsx09[0],
+                      Colors[theme].sequentialColors.neutralColorsx09[8],
+                    ]
+                  : Colors[theme].sequentialColors[
+                      `neutralColorsx0${(colorDomain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
+                    ])
+            }
+            noDataColor={noDataColor}
+            scaleType={scale}
+            showColumnLabels={showColumnLabels}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            selectedColor={selectedColor}
+            truncateBy={truncateBy}
+            showRowLabels={showRowLabels}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            showValues={showValues}
+            suffix={suffix}
+            prefix={prefix}
+            onSeriesMouseClick={onSeriesMouseClick}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            styles={styles}
+            classNames={classNames}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            precision={precision}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

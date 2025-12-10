@@ -118,6 +118,8 @@ interface Props {
   barAxisTitle?: string;
   /** Sorting order for data. This is overwritten by labelOrder prop. */
   sortData?: 'asc' | 'desc';
+  /** Track color (i.e. the color of the bars background) of the bar chart */
+  trackColor?: string;
   /** Toggles if data point which are undefined or has value null are filtered out.  */
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
@@ -220,6 +222,7 @@ export function SimpleBarGraph(props: Props) {
     customLayers,
     timeline,
     naLabel,
+    trackColor,
   } = props;
   return (
     <SimpleBarGraphEl
@@ -283,6 +286,7 @@ export function SimpleBarGraph(props: Props) {
       timeline={timeline}
       naLabel={naLabel}
       orientation={orientation}
+      trackColor={trackColor}
     />
   );
 }

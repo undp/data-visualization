@@ -272,74 +272,69 @@ export function MultiLineChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorLegendAtTop && showColorScale ? (
-            <ColorLegend
-              colorDomain={labels}
-              colorLegendTitle={colorLegendTitle}
-              labelsToBeHidden={labelsToBeHidden}
-              colors={lineColors}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                lineColors={lineColors}
-                width={svgWidth}
-                height={svgHeight}
-                dateFormat={dateFormat}
-                noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                labels={labels}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                showColorLegendAtTop={showColorScale ? showColorLegendAtTop : true}
-                showValues={showValues}
-                suffix={suffix}
-                prefix={prefix}
-                highlightAreaSettings={highlightAreaSettings}
-                refValues={refValues}
-                minValue={minValue}
-                maxValue={maxValue}
-                highlightedLines={highlightedLines}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                rtl={language === 'he' || language === 'ar'}
-                strokeWidth={strokeWidth}
-                showDots={showDots}
-                annotations={annotations}
-                customHighlightAreaSettings={customHighlightAreaSettings}
-                yAxisTitle={yAxisTitle}
-                noOfYTicks={noOfYTicks}
-                minDate={minDate}
-                maxDate={maxDate}
-                curveType={curveType}
-                styles={styles}
-                classNames={classNames}
-                dimmedOpacity={dimmedOpacity}
-                precision={precision}
-                customLayers={customLayers}
-                labelsToBeHidden={labelsToBeHidden}
-                dashedLines={dashedLines}
-                dashSettings={dashSettings}
-                revealClipId={generateRandomString(8)}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorLegendAtTop && showColorScale && data.length > 0 ? (
+        <ColorLegend
+          colorDomain={labels}
+          colorLegendTitle={colorLegendTitle}
+          labelsToBeHidden={labelsToBeHidden}
+          colors={lineColors}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            lineColors={lineColors}
+            width={svgWidth}
+            height={svgHeight}
+            dateFormat={dateFormat}
+            noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            labels={labels}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            showColorLegendAtTop={showColorScale ? showColorLegendAtTop : true}
+            showValues={showValues}
+            suffix={suffix}
+            prefix={prefix}
+            highlightAreaSettings={highlightAreaSettings}
+            refValues={refValues}
+            minValue={minValue}
+            maxValue={maxValue}
+            highlightedLines={highlightedLines}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            rtl={language === 'he' || language === 'ar'}
+            strokeWidth={strokeWidth}
+            showDots={showDots}
+            annotations={annotations}
+            customHighlightAreaSettings={customHighlightAreaSettings}
+            yAxisTitle={yAxisTitle}
+            noOfYTicks={noOfYTicks}
+            minDate={minDate}
+            maxDate={maxDate}
+            curveType={curveType}
+            styles={styles}
+            classNames={classNames}
+            dimmedOpacity={dimmedOpacity}
+            precision={precision}
+            customLayers={customLayers}
+            labelsToBeHidden={labelsToBeHidden}
+            dashedLines={dashedLines}
+            dashSettings={dashSettings}
+            revealClipId={generateRandomString(8)}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

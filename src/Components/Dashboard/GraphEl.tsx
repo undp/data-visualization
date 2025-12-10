@@ -133,6 +133,7 @@ function GraphEl(props: Props) {
       case 'barChart':
         return {
           timeline: settings?.timeline,
+          trackColor: settings?.trackColor,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,

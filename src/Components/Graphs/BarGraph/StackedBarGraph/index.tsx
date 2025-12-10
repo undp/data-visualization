@@ -273,67 +273,26 @@ export function StackedBarGraphEl(props: Props) {
         </div>
       ) : null}
       <div className='grow flex flex-col justify-center gap-3 w-full'>
-        {data.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <>
-            {showColorScale ? (
-              <ColorLegendWithMouseOver
-                width={width}
-                colorDomain={colorDomain}
-                colors={colors}
-                colorLegendTitle={colorLegendTitle}
-                setSelectedColor={setSelectedColor}
-                showNAColor={false}
-                className={classNames?.colorLegend}
-              />
-            ) : null}
-            <GraphArea ref={graphDiv}>
-              {svgWidth && svgHeight ? (
-                <Comp
-                  data={
-                    sortParameter !== undefined
-                      ? sortParameter === 'total'
-                        ? orderBy(
-                            ensureCompleteDataForStackedBarChart(
-                              data,
-                              timeline.dateFormat || 'yyyy',
-                            )
-                              .filter(d =>
-                                timeline.enabled
-                                  ? d.date ===
-                                    format(
-                                      new Date(uniqDatesSorted[index]),
-                                      timeline.dateFormat || 'yyyy',
-                                    )
-                                  : d,
-                              )
-                              .filter(d => (filterNA ? !d.size.every(item => item == null) : d)),
-                            d => sum(d.size.filter(el => !checkIfNullOrUndefined(el))),
-                            [sortData || 'asc'],
-                          ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                        : orderBy(
-                            ensureCompleteDataForStackedBarChart(
-                              data,
-                              timeline.dateFormat || 'yyyy',
-                            )
-                              .filter(d =>
-                                timeline.enabled
-                                  ? d.date ===
-                                    format(
-                                      new Date(uniqDatesSorted[index]),
-                                      timeline.dateFormat || 'yyyy',
-                                    )
-                                  : d,
-                              )
-                              .filter(d => (filterNA ? !d.size.every(item => item == null) : d)),
-                            d =>
-                              checkIfNullOrUndefined(d.size[sortParameter])
-                                ? -Infinity
-                                : d.size[sortParameter],
-                            [sortData || 'asc'],
-                          ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                      : ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
+        {showColorScale && data.length > 0 ? (
+          <ColorLegendWithMouseOver
+            width={width}
+            colorDomain={colorDomain}
+            colors={colors}
+            colorLegendTitle={colorLegendTitle}
+            setSelectedColor={setSelectedColor}
+            showNAColor={false}
+            className={classNames?.colorLegend}
+          />
+        ) : null}
+        <GraphArea ref={graphDiv}>
+          {data.length === 0 && <EmptyState />}
+          {svgWidth && svgHeight && data.length > 0 ? (
+            <Comp
+              data={
+                sortParameter !== undefined
+                  ? sortParameter === 'total'
+                    ? orderBy(
+                        ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
                           .filter(d =>
                             timeline.enabled
                               ? d.date ===
@@ -343,62 +302,87 @@ export function StackedBarGraphEl(props: Props) {
                                 )
                               : d,
                           )
-                          .filter(d => (filterNA ? !d.size.every(item => item == null) : d))
-                          .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                  }
-                  barColors={colors}
-                  width={svgWidth}
-                  height={svgHeight}
-                  barPadding={barPadding}
-                  showTicks={showTicks}
-                  leftMargin={leftMargin}
-                  rightMargin={rightMargin}
-                  topMargin={topMargin}
-                  bottomMargin={bottomMargin}
-                  truncateBy={truncateBy}
-                  showLabels={showLabels}
-                  tooltip={tooltip}
-                  onSeriesMouseOver={onSeriesMouseOver}
-                  showValues={showValues}
-                  suffix={suffix}
-                  prefix={prefix}
-                  refValues={refValues}
-                  maxValue={
-                    !checkIfNullOrUndefined(maxValue)
-                      ? (maxValue as number)
-                      : Math.max(
-                          ...data.map(
-                            d => sum(d.size.filter(l => !checkIfNullOrUndefined(l))) || 0,
-                          ),
-                        )
-                  }
-                  onSeriesMouseClick={onSeriesMouseClick}
-                  selectedColor={selectedColor}
-                  rtl={language === 'he' || language === 'ar'}
-                  labelOrder={labelOrder}
-                  maxBarThickness={maxBarThickness}
-                  minBarThickness={minBarThickness}
-                  resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                  detailsOnClick={detailsOnClick}
-                  barAxisTitle={barAxisTitle}
-                  noOfTicks={noOfTicks}
-                  valueColor={valueColor}
-                  classNames={classNames}
-                  styles={styles}
-                  animate={
-                    animate === true
-                      ? { duration: 0.5, once: true, amount: 0.5 }
-                      : animate || { duration: 0, once: true, amount: 0 }
-                  }
-                  colorDomain={colorDomain}
-                  precision={precision}
-                  customLayers={customLayers}
-                  naLabel={naLabel}
-                />
-              ) : null}
-            </GraphArea>
-          </>
-        )}
+                          .filter(d => (filterNA ? !d.size.every(item => item == null) : d)),
+                        d => sum(d.size.filter(el => !checkIfNullOrUndefined(el))),
+                        [sortData || 'asc'],
+                      ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                    : orderBy(
+                        ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
+                          .filter(d =>
+                            timeline.enabled
+                              ? d.date ===
+                                format(
+                                  new Date(uniqDatesSorted[index]),
+                                  timeline.dateFormat || 'yyyy',
+                                )
+                              : d,
+                          )
+                          .filter(d => (filterNA ? !d.size.every(item => item == null) : d)),
+                        d =>
+                          checkIfNullOrUndefined(d.size[sortParameter])
+                            ? -Infinity
+                            : d.size[sortParameter],
+                        [sortData || 'asc'],
+                      ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                  : ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
+                      .filter(d =>
+                        timeline.enabled
+                          ? d.date ===
+                            format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                          : d,
+                      )
+                      .filter(d => (filterNA ? !d.size.every(item => item == null) : d))
+                      .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+              }
+              barColors={colors}
+              width={svgWidth}
+              height={svgHeight}
+              barPadding={barPadding}
+              showTicks={showTicks}
+              leftMargin={leftMargin}
+              rightMargin={rightMargin}
+              topMargin={topMargin}
+              bottomMargin={bottomMargin}
+              truncateBy={truncateBy}
+              showLabels={showLabels}
+              tooltip={tooltip}
+              onSeriesMouseOver={onSeriesMouseOver}
+              showValues={showValues}
+              suffix={suffix}
+              prefix={prefix}
+              refValues={refValues}
+              maxValue={
+                !checkIfNullOrUndefined(maxValue)
+                  ? (maxValue as number)
+                  : Math.max(
+                      ...data.map(d => sum(d.size.filter(l => !checkIfNullOrUndefined(l))) || 0),
+                    )
+              }
+              onSeriesMouseClick={onSeriesMouseClick}
+              selectedColor={selectedColor}
+              rtl={language === 'he' || language === 'ar'}
+              labelOrder={labelOrder}
+              maxBarThickness={maxBarThickness}
+              minBarThickness={minBarThickness}
+              resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+              detailsOnClick={detailsOnClick}
+              barAxisTitle={barAxisTitle}
+              noOfTicks={noOfTicks}
+              valueColor={valueColor}
+              classNames={classNames}
+              styles={styles}
+              animate={
+                animate === true
+                  ? { duration: 0.5, once: true, amount: 0.5 }
+                  : animate || { duration: 0, once: true, amount: 0 }
+              }
+              colorDomain={colorDomain}
+              precision={precision}
+              customLayers={customLayers}
+              naLabel={naLabel}
+            />
+          ) : null}
+        </GraphArea>
       </div>
       {sources || footNote ? (
         <GraphFooter

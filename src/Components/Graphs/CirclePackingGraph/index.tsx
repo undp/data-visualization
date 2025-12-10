@@ -217,79 +217,74 @@ export function CirclePackingGraph(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale && data.filter(el => el.color).length !== 0 ? (
-            <ColorLegendWithMouseOver
-              width={width}
-              colorLegendTitle={colorLegendTitle}
-              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
-              colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
-              setSelectedColor={setSelectedColor}
-              showNAColor={showNAColor === undefined || showNAColor === null ? true : showNAColor}
-              isCenter
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                colors={
-                  data.filter(el => el.color).length === 0
-                    ? colors
-                      ? [colors as string]
-                      : [Colors.primaryColors['blue-600']]
-                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
-                }
-                colorDomain={
-                  data.filter(el => el.color).length === 0
-                    ? []
-                    : colorDomain || (uniqBy(data, 'color', true) as string[])
-                }
-                width={svgWidth}
-                height={svgHeight}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                showLabels={showLabels}
-                showValues={
-                  showValues !== false
-                    ? data.filter(el => el.size).length !== 0
-                    : (showValues as boolean)
-                }
-                selectedColor={selectedColor}
-                suffix={suffix}
-                prefix={prefix}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                highlightedDataPoints={highlightedDataPoints}
-                onSeriesMouseClick={onSeriesMouseClick}
-                theme={theme}
-                radius={
-                  !radius
-                    ? getMaxCircleRadius(
-                        data.map(d => d.size),
-                        svgWidth,
-                        svgHeight,
-                      )
-                    : radius
-                }
-                maxRadiusValue={maxRadiusValue}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                styles={styles}
-                classNames={classNames}
-                dimmedOpacity={dimmedOpacity}
-                precision={precision}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale && data.filter(el => el.color).length !== 0 && data.length > 0 ? (
+        <ColorLegendWithMouseOver
+          width={width}
+          colorLegendTitle={colorLegendTitle}
+          colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+          colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+          setSelectedColor={setSelectedColor}
+          showNAColor={showNAColor === undefined || showNAColor === null ? true : showNAColor}
+          isCenter
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            colors={
+              data.filter(el => el.color).length === 0
+                ? colors
+                  ? [colors as string]
+                  : [Colors.primaryColors['blue-600']]
+                : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+            }
+            colorDomain={
+              data.filter(el => el.color).length === 0
+                ? []
+                : colorDomain || (uniqBy(data, 'color', true) as string[])
+            }
+            width={svgWidth}
+            height={svgHeight}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            showLabels={showLabels}
+            showValues={
+              showValues !== false
+                ? data.filter(el => el.size).length !== 0
+                : (showValues as boolean)
+            }
+            selectedColor={selectedColor}
+            suffix={suffix}
+            prefix={prefix}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            highlightedDataPoints={highlightedDataPoints}
+            onSeriesMouseClick={onSeriesMouseClick}
+            theme={theme}
+            radius={
+              !radius
+                ? getMaxCircleRadius(
+                    data.map(d => d.size),
+                    svgWidth,
+                    svgHeight,
+                  )
+                : radius
+            }
+            maxRadiusValue={maxRadiusValue}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            styles={styles}
+            classNames={classNames}
+            dimmedOpacity={dimmedOpacity}
+            precision={precision}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

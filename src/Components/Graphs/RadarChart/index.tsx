@@ -251,69 +251,64 @@ export function RadarChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale && data.filter(el => el.color).length !== 0 ? (
-            <ColorLegendWithMouseOver
-              width={width}
-              colorLegendTitle={colorLegendTitle}
-              colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
-              colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
-              setSelectedColor={setSelectedColor}
-              showNAColor={showNAColor}
-              className={classNames?.colorLegend}
-              isCenter
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {graphRadius ? (
-              <Graph
-                data={data}
-                lineColors={
-                  data.filter(el => el.color).length === 0
-                    ? colors
-                      ? [colors as string]
-                      : [Colors.primaryColors['blue-600']]
-                    : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
-                }
-                radius={graphRadius}
-                tooltip={tooltip}
-                colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
-                onSeriesMouseOver={onSeriesMouseOver}
-                onSeriesMouseClick={onSeriesMouseClick}
-                styles={styles}
-                detailsOnClick={detailsOnClick}
-                selectedColor={selectedColor}
-                axisLabels={axisLabels}
-                strokeWidth={strokeWidth}
-                showValues={showValues}
-                showDots={showDots}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                curveType={curveType}
-                noOfTicks={noOfTicks}
-                minValue={minValue}
-                maxValue={maxValue}
-                fillShape={fillShape}
-                highlightedLines={highlightedLines}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                dimmedOpacity={dimmedOpacity}
-                precision={precision}
-                customLayers={customLayers}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale && data.filter(el => el.color).length !== 0 && data.length > 0 ? (
+        <ColorLegendWithMouseOver
+          width={width}
+          colorLegendTitle={colorLegendTitle}
+          colors={(colors as string[] | undefined) || Colors[theme].categoricalColors.colors}
+          colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+          setSelectedColor={setSelectedColor}
+          showNAColor={showNAColor}
+          className={classNames?.colorLegend}
+          isCenter
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {graphRadius && data.length > 0 ? (
+          <Graph
+            data={data}
+            lineColors={
+              data.filter(el => el.color).length === 0
+                ? colors
+                  ? [colors as string]
+                  : [Colors.primaryColors['blue-600']]
+                : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+            }
+            radius={graphRadius}
+            tooltip={tooltip}
+            colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
+            onSeriesMouseOver={onSeriesMouseOver}
+            onSeriesMouseClick={onSeriesMouseClick}
+            styles={styles}
+            detailsOnClick={detailsOnClick}
+            selectedColor={selectedColor}
+            axisLabels={axisLabels}
+            strokeWidth={strokeWidth}
+            showValues={showValues}
+            showDots={showDots}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            curveType={curveType}
+            noOfTicks={noOfTicks}
+            minValue={minValue}
+            maxValue={maxValue}
+            fillShape={fillShape}
+            highlightedLines={highlightedLines}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            dimmedOpacity={dimmedOpacity}
+            precision={precision}
+            customLayers={customLayers}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

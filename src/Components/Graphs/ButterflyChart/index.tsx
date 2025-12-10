@@ -341,78 +341,71 @@ export function ButterflyChart(props: Props) {
           />
         </div>
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale ? (
-            <ColorLegend
-              colorLegendTitle={colorLegendTitle}
-              colorDomain={[leftBarTitle, rightBarTitle]}
-              colors={barColors}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={ensureCompleteDataForButterFlyChart(
-                  data,
-                  timeline.dateFormat || 'yyyy',
-                ).filter(d =>
-                  timeline.enabled
-                    ? d.date ===
-                      format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
-                    : d,
-                )}
-                barColors={barColors}
-                width={svgWidth}
-                centerGap={centerGap}
-                height={svgHeight}
-                truncateBy={truncateBy}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                axisTitles={[leftBarTitle, rightBarTitle]}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                barPadding={barPadding}
-                refValues={refValues}
-                maxValue={Math.max(
-                  getMinMax(data, 'leftBar', minValue, maxValue).max,
-                  getMinMax(data, 'rightBar', minValue, maxValue).max,
-                )}
-                minValue={Math.min(
-                  getMinMax(data, 'leftBar', minValue, maxValue).min,
-                  getMinMax(data, 'rightBar', minValue, maxValue).min,
-                )}
-                minValueLeftBar={getMinMax(data, 'leftBar', minValue, maxValue).min}
-                minValueRightBar={getMinMax(data, 'rightBar', minValue, maxValue).min}
-                showValues={showValues}
-                onSeriesMouseClick={onSeriesMouseClick}
-                showTicks={showTicks}
-                suffix={suffix}
-                prefix={prefix}
-                resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                detailsOnClick={detailsOnClick}
-                styles={styles}
-                classNames={classNames}
-                noOfTicks={noOfTicks}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-                precision={precision}
-                customLayers={customLayers}
-                naLabel={naLabel}
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale && data.length > 0 ? (
+        <ColorLegend
+          colorLegendTitle={colorLegendTitle}
+          colorDomain={[leftBarTitle, rightBarTitle]}
+          colors={barColors}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={ensureCompleteDataForButterFlyChart(data, timeline.dateFormat || 'yyyy').filter(
+              d =>
+                timeline.enabled
+                  ? d.date ===
+                    format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                  : d,
+            )}
+            barColors={barColors}
+            width={svgWidth}
+            centerGap={centerGap}
+            height={svgHeight}
+            truncateBy={truncateBy}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            axisTitles={[leftBarTitle, rightBarTitle]}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            barPadding={barPadding}
+            refValues={refValues}
+            maxValue={Math.max(
+              getMinMax(data, 'leftBar', minValue, maxValue).max,
+              getMinMax(data, 'rightBar', minValue, maxValue).max,
+            )}
+            minValue={Math.min(
+              getMinMax(data, 'leftBar', minValue, maxValue).min,
+              getMinMax(data, 'rightBar', minValue, maxValue).min,
+            )}
+            minValueLeftBar={getMinMax(data, 'leftBar', minValue, maxValue).min}
+            minValueRightBar={getMinMax(data, 'rightBar', minValue, maxValue).min}
+            showValues={showValues}
+            onSeriesMouseClick={onSeriesMouseClick}
+            showTicks={showTicks}
+            suffix={suffix}
+            prefix={prefix}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            styles={styles}
+            classNames={classNames}
+            noOfTicks={noOfTicks}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            precision={precision}
+            customLayers={customLayers}
+            naLabel={naLabel}
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

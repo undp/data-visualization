@@ -237,60 +237,55 @@ export function AreaChart(props: Props) {
           }
         />
       ) : null}
-      {data.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <>
-          {showColorScale !== false ? (
-            <ColorLegend
-              colorDomain={colorDomain}
-              colors={colors}
-              colorLegendTitle={colorLegendTitle}
-              showNAColor={false}
-              className={classNames?.colorLegend}
-            />
-          ) : null}
-          <GraphArea ref={graphDiv}>
-            {svgWidth && svgHeight ? (
-              <Graph
-                data={data}
-                colors={colors}
-                width={svgWidth}
-                height={svgHeight}
-                dateFormat={dateFormat}
-                noOfXTicks={noOfXTicks}
-                leftMargin={leftMargin}
-                rightMargin={rightMargin}
-                topMargin={topMargin}
-                bottomMargin={bottomMargin}
-                tooltip={tooltip}
-                onSeriesMouseOver={onSeriesMouseOver}
-                highlightAreaSettings={highlightAreaSettings}
-                refValues={refValues}
-                minValue={minValue}
-                maxValue={maxValue}
-                rtl={language === 'he' || language === 'ar'}
-                annotations={annotations}
-                customHighlightAreaSettings={customHighlightAreaSettings}
-                yAxisTitle={yAxisTitle}
-                noOfYTicks={noOfYTicks}
-                prefix={prefix}
-                suffix={suffix}
-                curveType={curveType}
-                styles={styles}
-                classNames={classNames}
-                precision={precision}
-                customLayers={customLayers}
-                animate={
-                  animate === true
-                    ? { duration: 0.5, once: true, amount: 0.5 }
-                    : animate || { duration: 0, once: true, amount: 0 }
-                }
-              />
-            ) : null}
-          </GraphArea>
-        </>
-      )}
+      {showColorScale !== false && data.length > 0 ? (
+        <ColorLegend
+          colorDomain={colorDomain}
+          colors={colors}
+          colorLegendTitle={colorLegendTitle}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Graph
+            data={data}
+            colors={colors}
+            width={svgWidth}
+            height={svgHeight}
+            dateFormat={dateFormat}
+            noOfXTicks={noOfXTicks}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            highlightAreaSettings={highlightAreaSettings}
+            refValues={refValues}
+            minValue={minValue}
+            maxValue={maxValue}
+            rtl={language === 'he' || language === 'ar'}
+            annotations={annotations}
+            customHighlightAreaSettings={customHighlightAreaSettings}
+            yAxisTitle={yAxisTitle}
+            noOfYTicks={noOfYTicks}
+            prefix={prefix}
+            suffix={suffix}
+            curveType={curveType}
+            styles={styles}
+            classNames={classNames}
+            precision={precision}
+            customLayers={customLayers}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+          />
+        ) : null}
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

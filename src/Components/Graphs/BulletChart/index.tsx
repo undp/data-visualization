@@ -365,115 +365,108 @@ export function BulletChart(props: Props) {
         </div>
       ) : null}
       <div className='grow flex flex-col justify-center gap-3 w-full'>
-        {data.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <>
-            {showColorScale &&
-            data.filter(el => el.qualitativeRange).length !== 0 &&
-            colorDomain ? (
-              <ColorLegend
-                width={width}
-                colorLegendTitle={colorLegendTitle}
-                colors={qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10}
-                colorDomain={colorDomain}
-                showNAColor={false}
-                className={classNames?.colorLegend}
-              />
-            ) : null}
-            <GraphArea ref={graphDiv}>
-              {svgWidth && svgHeight ? (
-                <Comp
-                  data={
-                    sortData
-                      ? orderBy(
-                          ensureCompleteDataForBulletChart(data, timeline.dateFormat || 'yyyy')
-                            .filter(d =>
-                              timeline.enabled
-                                ? d.date ===
-                                  format(
-                                    new Date(uniqDatesSorted[index]),
-                                    timeline.dateFormat || 'yyyy',
-                                  )
-                                : d,
-                            )
-                            .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
-                          [
-                            d =>
-                              d.size === undefined
-                                ? sortData === 'asc'
-                                  ? (orientation === 'horizontal' ? 1 : -1) * Infinity
-                                  : (orientation === 'horizontal' ? -1 : 1) * Infinity
-                                : d.size,
-                          ],
-                          [sortData],
-                        ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                      : ensureCompleteDataForBulletChart(data, timeline.dateFormat || 'yyyy')
-                          .filter(d =>
-                            timeline.enabled
-                              ? d.date ===
-                                format(
-                                  new Date(uniqDatesSorted[index]),
-                                  timeline.dateFormat || 'yyyy',
-                                )
-                              : d,
-                          )
-                          .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
-                          .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
-                  }
-                  barColor={barColor}
-                  targetColor={targetColor}
-                  width={svgWidth}
-                  refValues={refValues}
-                  height={svgHeight}
-                  suffix={suffix}
-                  prefix={prefix}
-                  barPadding={barPadding}
-                  showLabels={showLabels}
-                  showValues={showValues}
-                  showTicks={showTicks}
-                  truncateBy={truncateBy}
-                  leftMargin={leftMargin}
-                  rightMargin={rightMargin}
-                  qualitativeRangeColors={
-                    qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10
-                  }
-                  topMargin={topMargin}
-                  bottomMargin={bottomMargin}
-                  tooltip={tooltip}
-                  onSeriesMouseOver={onSeriesMouseOver}
-                  maxValue={maxValue}
-                  minValue={minValue}
-                  highlightedDataPoints={highlightedDataPoints}
-                  onSeriesMouseClick={onSeriesMouseClick}
-                  labelOrder={labelOrder}
-                  maxBarThickness={maxBarThickness}
-                  minBarThickness={minBarThickness}
-                  resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-                  detailsOnClick={detailsOnClick}
-                  barAxisTitle={barAxisTitle}
-                  noOfTicks={noOfTicks}
-                  valueColor={valueColor}
-                  styles={styles}
-                  classNames={classNames}
-                  targetStyle={targetStyle}
-                  dimmedOpacity={dimmedOpacity}
-                  measureBarWidthFactor={measureBarWidthFactor}
-                  animate={
-                    animate === true
-                      ? { duration: 0.5, once: true, amount: 0.5 }
-                      : animate || { duration: 0, once: true, amount: 0 }
-                  }
-                  precision={precision}
-                  customLayers={customLayers}
-                  naLabel={naLabel}
-                  targetLineThickness={targetLineThickness}
-                  rtl={language === 'ar' || language === 'he'}
-                />
-              ) : null}
-            </GraphArea>
-          </>
-        )}
+        {showColorScale &&
+        data.filter(el => el.qualitativeRange).length !== 0 &&
+        colorDomain &&
+        data.length > 0 ? (
+          <ColorLegend
+            width={width}
+            colorLegendTitle={colorLegendTitle}
+            colors={qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10}
+            colorDomain={colorDomain}
+            showNAColor={false}
+            className={classNames?.colorLegend}
+          />
+        ) : null}
+        <GraphArea ref={graphDiv}>
+          {data.length === 0 && <EmptyState />}
+          {svgWidth && svgHeight && data.length > 0 ? (
+            <Comp
+              data={
+                sortData
+                  ? orderBy(
+                      ensureCompleteDataForBulletChart(data, timeline.dateFormat || 'yyyy')
+                        .filter(d =>
+                          timeline.enabled
+                            ? d.date ===
+                              format(
+                                new Date(uniqDatesSorted[index]),
+                                timeline.dateFormat || 'yyyy',
+                              )
+                            : d,
+                        )
+                        .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)),
+                      [
+                        d =>
+                          d.size === undefined
+                            ? sortData === 'asc'
+                              ? (orientation === 'horizontal' ? 1 : -1) * Infinity
+                              : (orientation === 'horizontal' ? -1 : 1) * Infinity
+                            : d.size,
+                      ],
+                      [sortData],
+                    ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+                  : ensureCompleteDataForBulletChart(data, timeline.dateFormat || 'yyyy')
+                      .filter(d =>
+                        timeline.enabled
+                          ? d.date ===
+                            format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                          : d,
+                      )
+                      .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
+                      .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
+              }
+              barColor={barColor}
+              targetColor={targetColor}
+              width={svgWidth}
+              refValues={refValues}
+              height={svgHeight}
+              suffix={suffix}
+              prefix={prefix}
+              barPadding={barPadding}
+              showLabels={showLabels}
+              showValues={showValues}
+              showTicks={showTicks}
+              truncateBy={truncateBy}
+              leftMargin={leftMargin}
+              rightMargin={rightMargin}
+              qualitativeRangeColors={
+                qualitativeRangeColors || Colors[theme].sequentialColors.positiveColorsx10
+              }
+              topMargin={topMargin}
+              bottomMargin={bottomMargin}
+              tooltip={tooltip}
+              onSeriesMouseOver={onSeriesMouseOver}
+              maxValue={maxValue}
+              minValue={minValue}
+              highlightedDataPoints={highlightedDataPoints}
+              onSeriesMouseClick={onSeriesMouseClick}
+              labelOrder={labelOrder}
+              maxBarThickness={maxBarThickness}
+              minBarThickness={minBarThickness}
+              resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+              detailsOnClick={detailsOnClick}
+              barAxisTitle={barAxisTitle}
+              noOfTicks={noOfTicks}
+              valueColor={valueColor}
+              styles={styles}
+              classNames={classNames}
+              targetStyle={targetStyle}
+              dimmedOpacity={dimmedOpacity}
+              measureBarWidthFactor={measureBarWidthFactor}
+              animate={
+                animate === true
+                  ? { duration: 0.5, once: true, amount: 0.5 }
+                  : animate || { duration: 0, once: true, amount: 0 }
+              }
+              precision={precision}
+              customLayers={customLayers}
+              naLabel={naLabel}
+              targetLineThickness={targetLineThickness}
+              rtl={language === 'ar' || language === 'he'}
+            />
+          ) : null}
+        </GraphArea>
       </div>
       {sources || footNote ? (
         <GraphFooter
