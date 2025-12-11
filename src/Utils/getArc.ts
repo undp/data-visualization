@@ -18,7 +18,12 @@ export function getArc(
   endAngleInRadians: number,
 ) {
   const start = polarToCartesian(x, y, radius, startAngleInRadians);
-  const end = polarToCartesian(x, y, radius, endAngleInRadians);
+  const end = polarToCartesian(
+    x,
+    y,
+    radius,
+    endAngleInRadians === 2 * Math.PI ? 1.9999999999 * Math.PI : endAngleInRadians,
+  );
   const largeArcFlag = endAngleInRadians - startAngleInRadians <= Math.PI ? '0' : '1';
   const d = ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 1, end.x, end.y].join(
     ' ',

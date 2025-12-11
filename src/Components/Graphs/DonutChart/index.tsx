@@ -170,11 +170,7 @@ export function DonutChart(props: Props) {
     const resizeObserver = new ResizeObserver(entries => {
       setGraphRadius(
         (Math.min(
-          ...[
-            entries[0].target.clientWidth || 620,
-            entries[0].target.clientHeight || 480,
-            radius || Infinity,
-          ],
+          ...[entries[0].target.clientWidth || 620, entries[0].target.clientHeight || 480],
         ) || 420) / 2,
       );
     });
@@ -182,7 +178,7 @@ export function DonutChart(props: Props) {
       resizeObserver.observe(graphDiv.current);
     }
     return () => resizeObserver.disconnect();
-  }, [radius]);
+  }, []);
 
   const sortedData = sortData ? orderBy(data, ['size'], [sortData]) : data;
 
@@ -272,7 +268,7 @@ export function DonutChart(props: Props) {
             mainText={mainText}
             data={sortedData}
             colors={colors}
-            radius={graphRadius}
+            radius={radius || graphRadius}
             subNote={subNote}
             strokeWidth={strokeWidth}
             tooltip={tooltip}
