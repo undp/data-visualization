@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { P } from '@undp/design-system-react/Typography';
 import orderBy from 'lodash.orderby';
 import { Spacer } from '@undp/design-system-react/Spacer';
@@ -82,7 +82,7 @@ interface Props {
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
   /** Large text at the center of the donut chart. If the type is an object then the text is the value in the data for the label mentioned in the object */
-  mainText?: string | { label: string; suffix?: string; prefix?: string };
+  mainText?: string | { label: string; suffix?: string; prefix?: string } | ReactElement;
   /** Small text at the center of the donut chart */
   subNote?: string;
   /** Specifies the number of decimal places to display in the value. */

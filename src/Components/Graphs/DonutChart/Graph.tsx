@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import isEqual from 'fast-deep-equal';
 import { pie } from 'd3-shape';
-import { useRef, useState } from 'react';
+import { isValidElement, ReactElement, useRef, useState } from 'react';
 import { H2, P } from '@undp/design-system-react/Typography';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 
@@ -13,7 +13,7 @@ import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { getArc } from '@/Utils/getArc';
 
 interface Props {
-  mainText?: string | { label: string; suffix?: string; prefix?: string };
+  mainText?: string | { label: string; suffix?: string; prefix?: string } | ReactElement;
   radius: number;
   colors: string[];
   subNote?: string;
@@ -87,22 +87,26 @@ export function Graph(props: Props) {
             >
               <div className='flex flex-col gap-0.5 justify-center items-center h-inherit py-0 px-4'>
                 {mainText ? (
-                  <H2
-                    marginBottom='none'
-                    className='donut-main-text text-primary-gray-700 dark:text-primary-gray-100 leading-none text-center'
-                  >
-                    {typeof mainText === 'string'
-                      ? mainText
-                      : data.findIndex(d => d.label === mainText.label) !== -1
-                        ? numberFormattingFunction(
-                            data[data.findIndex(d => d.label === mainText.label)].size,
-                            'NA',
-                            precision,
-                            mainText.prefix,
-                            mainText.suffix,
-                          )
-                        : 'NA'}
-                  </H2>
+                  isValidElement(mainText) ? (
+                    mainText
+                  ) : (
+                    <H2
+                      marginBottom='none'
+                      className='donut-main-text text-primary-gray-700 dark:text-primary-gray-100 leading-none text-center'
+                    >
+                      {typeof mainText === 'string'
+                        ? mainText
+                        : data.findIndex(d => d.label === mainText.label) !== -1
+                          ? numberFormattingFunction(
+                              data[data.findIndex(d => d.label === mainText.label)].size,
+                              'NA',
+                              precision,
+                              mainText.prefix,
+                              mainText.suffix,
+                            )
+                          : 'NA'}
+                    </H2>
+                  )
                 ) : null}
                 {subNote ? (
                   <P
@@ -113,7 +117,7 @@ export function Graph(props: Props) {
                   >
                     {subNote}
                   </P>
-                ) : typeof mainText === 'string' || !mainText ? null : (
+                ) : typeof mainText === 'string' || !mainText || isValidElement(mainText) ? null : (
                   <P
                     size='base'
                     marginBottom='none'

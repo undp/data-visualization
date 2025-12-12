@@ -22,7 +22,9 @@ export function getArc(
     x,
     y,
     radius,
-    endAngleInRadians === 2 * Math.PI ? 1.9999999999 * Math.PI : endAngleInRadians,
+    Math.abs(endAngleInRadians - startAngleInRadians) === 2 * Math.PI
+      ? 0.999999 * endAngleInRadians
+      : endAngleInRadians,
   );
   const largeArcFlag = endAngleInRadians - startAngleInRadians <= Math.PI ? '0' : '1';
   const d = ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 1, end.x, end.y].join(
