@@ -550,8 +550,12 @@ export function Graph(props: Props) {
                           animate={isInView ? 'whileInView' : 'initial'}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                           y={0}
-                          className='text-sm'
-                          style={{ textAnchor: 'start', fill: labelColor || '#000' }}
+                          className={cn('text-sm', classNames?.graphObjectValues)}
+                          style={{
+                            textAnchor: 'start',
+                            fill: labelColor || '#000',
+                            ...(styles?.graphObjectValues || {}),
+                          }}
                           dx={4}
                           dy={5}
                         >

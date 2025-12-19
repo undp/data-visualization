@@ -390,19 +390,34 @@ export function Graph(props: Props) {
                           initial: {
                             opacity: 0,
                             x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                            fill:
+                              data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(`${d.color}`)],
                           },
                           whileInView: {
                             opacity: 1,
                             x: !radiusScale ? radius : radiusScale(d.radius || 0),
                             transition: { duration: animate.duration },
+                            fill:
+                              data.filter(el => el.color).length === 0
+                                ? colors[0]
+                                : !d.color
+                                  ? Colors.gray
+                                  : colors[colorDomain.indexOf(`${d.color}`)],
                           },
                         }}
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         y={0}
-                        className='fill-primary-gray-600 dark:fill-primary-gray-300 text-sm'
-                        style={{ textAnchor: 'start' }}
+                        className={cn('graph-value text-sm', classNames?.graphObjectValues)}
+                        style={{
+                          textAnchor: 'start',
+                          ...(styles?.graphObjectValues || {}),
+                        }}
                         dx={4}
                         dy={5}
                       >

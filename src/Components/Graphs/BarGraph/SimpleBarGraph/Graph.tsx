@@ -789,7 +789,7 @@ export function VerticalGraph(props: Props) {
                       className={cn(
                         'graph-value text-sm',
                         !valueColor && barColor.length > 1
-                          ? ' fill-primary-gray-600 dark:fill-primary-gray-300'
+                          ? 'fill-primary-gray-600 dark:fill-primary-gray-300'
                           : '',
                         classNames?.graphObjectValues,
                       )}

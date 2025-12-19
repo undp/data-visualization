@@ -48,7 +48,7 @@ interface Props {
   /** Color or array of colors for the circle */
   colors?: string | string[];
   /** Domain of colors for the graph */
-  colorDomain: string[];
+  colorDomain?: string[];
   /** Title for the color legend */
   colorLegendTitle?: string;
   /** Color for the areas where data is no available */

@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "2.1.7",
+  "version": "2.1.9",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "browser": "./dist/index.umd.js",
@@ -470,7 +470,7 @@
   "peerDependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
-    "@undp/design-system-react": "^1.5.3",
+    "@undp/design-system-react": "^1.5.5",
     "ajv": "^8.17.1",
     "dom-to-svg": "^0.12.2",
     "file-saver": "^2.0.5",

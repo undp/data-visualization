@@ -244,7 +244,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         centerPoint={parseValue(centerPoint)}
         zoomTranslateExtend={parseValue(zoomTranslateExtend)}
         zoomScaleExtend={parseValue(zoomScaleExtend)}
-        colorDomain={parseValue(colorDomain, [2, 4, 6, 8])}
+        colorDomain={parseValue(colorDomain)}
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
         }
