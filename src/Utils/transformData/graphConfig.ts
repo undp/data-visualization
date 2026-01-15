@@ -30,6 +30,26 @@ export const ChartConfiguration: {
     ],
   },
   {
+    chartID: 'waterfallChart',
+    configuration: [
+      {
+        id: 'label',
+        required: true,
+        multiple: false,
+      },
+      {
+        id: 'size',
+        required: true,
+        multiple: false,
+      },
+      {
+        id: 'color',
+        required: false,
+        multiple: false,
+      },
+    ],
+  },
+  {
     chartID: 'bulletChart',
     configuration: [
       {

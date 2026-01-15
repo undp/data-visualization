@@ -21,6 +21,13 @@ export const graphList = [
     availableInWideToLongFormat: false,
   },
   {
+    graphName: 'Waterfall chart',
+    graphID: 'waterfallChart',
+    availableInGriddedGraph: true,
+    geoHubMapPresentation: false,
+    availableInWideToLongFormat: false,
+  },
+  {
     graphName: 'Bee swarm chart',
     graphID: 'beeSwarmChart',
     availableInGriddedGraph: true,

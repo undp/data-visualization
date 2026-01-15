@@ -241,6 +241,10 @@ export const GraphNames = [
     id: 'unitChart',
   },
   {
+    name: 'Waterfall chart',
+    id: 'waterfallChart',
+  },
+  {
     name: 'Choropleth map',
     id: 'choroplethMap',
   },

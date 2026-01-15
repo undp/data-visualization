@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "2.1.9",
+  "version": "2.2.1",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "browser": "./dist/index.umd.js",
@@ -31,6 +31,11 @@
       "types": "./dist/ButterflyChart.d.ts",
       "import": "./dist/ButterflyChart.js",
       "require": "./dist/ButterflyChart.cjs"
+    },
+    "./WaterfallChart": {
+      "types": "./dist/WaterfallChart.d.ts",
+      "import": "./dist/WaterfallChart.js",
+      "require": "./dist/WaterfallChart.cjs"
     },
     "./CirclePackingGraph": {
       "types": "./dist/CirclePackingGraph.d.ts",
@@ -382,16 +387,6 @@
       "import": "./dist/transformData.js",
       "require": "./dist/transformData.cjs"
     },
-    "./validateSchema": {
-      "types": "./dist/validateSchema.d.ts",
-      "import": "./dist/validateSchema.js",
-      "require": "./dist/validateSchema.cjs"
-    },
-    "./getSchema": {
-      "types": "./dist/getSchema.d.ts",
-      "import": "./dist/getSchema.js",
-      "require": "./dist/getSchema.cjs"
-    },
     "./Types": {
       "types": "./dist/Types.d.ts",
       "import": "./dist/Types.js",
@@ -471,7 +466,6 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
     "@undp/design-system-react": "^1.5.5",
-    "ajv": "^8.17.1",
     "dom-to-svg": "^0.12.2",
     "file-saver": "^2.0.5",
     "handlebars": "^4.7.8",
@@ -538,15 +532,14 @@
     },
     "handlebars": {
       "optional": true
-    },
-    "ajv": {
-      "optional": true
     }
   },
   "optionalDependencies": {
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/rollup": "^3.1.1",
     "@nabla/vite-plugin-eslint": "^2.0.6",
@@ -584,8 +577,10 @@
     "@types/three": "^0.180.0",
     "@typescript-eslint/eslint-plugin": "^8.42.0",
     "@typescript-eslint/parser": "^8.42.0",
+    "@undp/design-system-react": "^1.5.5",
     "@vitejs/plugin-react": "^5.0.2",
     "autoprefixer": "^10.4.21",
+    "dom-to-svg": "^0.12.2",
     "eslint": "^9.34.0",
     "eslint-config-love": "^122.0.0",
     "eslint-config-prettier": "^10.1.8",
@@ -597,13 +592,26 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.0",
     "eslint-plugin-storybook": "^9.1.4",
+    "file-saver": "^2.0.5",
+    "handlebars": "^4.7.8",
+    "maplibre-gl": "^5.16.0",
+    "marked": "^17.0.1",
+    "math-expression-evaluator": "^2.0.7",
+    "pmtiles": "^4.3.2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
+    "react": "^19.2.3",
     "react-docgen-typescript": "^2.4.0",
+    "react-dom": "^19.2.3",
+    "react-globe.gl": "^2.37.0",
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^6.0.3",
     "storybook": "^9.1.4",
+    "tailwind-animate": "^0.2.10",
+    "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.12",
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.182.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.4",
     "vite-plugin-dts": "^4.5.4"

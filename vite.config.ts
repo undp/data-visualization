@@ -32,6 +32,7 @@ const entries = {
   Histogram: path.resolve(__dirname, 'src/Components/Graphs/Histogram/index.tsx'),
   SankeyChart: path.resolve(__dirname, 'src/Components/Graphs/SankeyChart/index.tsx'),
   RadarChart: path.resolve(__dirname, 'src/Components/Graphs/RadarChart/index.tsx'),
+  WaterfallChart: path.resolve(__dirname, 'src/Components/Graphs/WaterfallChart/index.tsx'),
 
   // Line Chart Components
   DualAxisLineChart: path.resolve(
@@ -180,9 +181,6 @@ const entries = {
   fetchAndParseData: path.resolve(__dirname, 'src/Utils/fetchAndParseData.ts'),
   transformData: path.resolve(__dirname, 'src/Utils/transformData/index.ts'),
 
-  // Schema Validation
-  validateSchema: path.resolve(__dirname, 'src/Utils/validateSchema.ts'),
-  getSchema: path.resolve(__dirname, 'src/Schemas/getSchema.ts'),
   // Types
   Types: path.resolve(__dirname, 'src/Types.ts'),
 };

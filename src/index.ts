@@ -58,6 +58,8 @@ export { ParetoChart } from './Components/Graphs/ParetoChart';
 export { ButterflyChart } from './Components/Graphs/ButterflyChart';
 // Histogram
 export { Histogram } from './Components/Graphs/Histogram';
+// Waterfall Chart
+export { WaterfallChart } from './Components/Graphs/WaterfallChart';
 // Sankey Chart
 export { SankeyChart } from './Components/Graphs/SankeyChart';
 // Radar Chart
@@ -135,29 +137,6 @@ export { transformDataForAggregation } from './Utils/transformData/transformData
 export { transformColumnsToArray } from './Utils/transformData/transformColumnsToArray';
 export { transformDataForGraphFromFile } from './Utils/transformData/transformDataForGraphFromFile';
 export { transformDataForGraph } from './Utils/transformData/transformDataForGraph';
-
-/* ------Schemas and Schema Validation-----------*/
-export {
-  validateDataSchema,
-  validateSettingsSchema,
-  validateConfigSchema,
-} from './Utils/validateSchema';
-
-export {
-  getDataSettingsSchema,
-  getReadableHeaderSchema,
-  getFiltersSchema,
-  getDataSelectionSchema,
-  getDataFiltersSchema,
-  getDataTransformSchema,
-  getGraphDataConfigurationSchema,
-  getSingleGraphJSONSchema,
-  getGriddedGraphJSONSchema,
-  getDashboardJSONSchema,
-  getDashboardWideToLongFormatJSONSchema,
-  getDataSchema,
-  getSettingsSchema,
-} from './Schemas/getSchema';
 
 /* ---------GraphTypes-------------*/
 export type { GraphType, GeoHubGraphType, GraphTypeForGriddedGraph } from '@/Types';

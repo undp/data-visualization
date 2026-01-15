@@ -32,6 +32,7 @@ import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
 import { RadarChart } from '../Graphs/RadarChart';
 import { BulletChart } from '../Graphs/BulletChart';
 import { HybridMap } from '../Graphs/Maps/HybridMap';
+import { WaterfallChart } from '../Graphs/WaterfallChart';
 
 import { getValues } from '@/Utils/getValues';
 import {
@@ -127,6 +128,7 @@ function GraphEl(props: Props) {
     dataCards: DataCards,
     radarChart: RadarChart,
     hybridMap: HybridMap,
+    waterfallChart: WaterfallChart,
   };
   const getGraphProps = (graphType: GraphType) => {
     switch (graphType) {
@@ -193,6 +195,69 @@ function GraphEl(props: Props) {
           barAxisTitle: settings?.barAxisTitle,
           noOfTicks: settings?.noOfTicks,
           valueColor: settings?.valueColor,
+          styles: settings?.styles,
+          classNames: settings?.classNames,
+          filterNA: settings?.filterNA,
+          animate: settings?.animate,
+          naLabel: settings?.naLabel,
+        };
+      case 'waterfallChart':
+        return {
+          customLayers: settings?.customLayers,
+          precision: settings?.precision,
+          theme: settings?.theme,
+          dimmedOpacity: settings?.dimmedOpacity,
+          data: graphData,
+          colors: settings?.colors as string | string[] | undefined,
+          graphTitle: settings?.graphTitle,
+          graphDescription: settings?.graphDescription,
+          footNote: settings?.footNote,
+          height: settings?.height,
+          width: settings?.width,
+          suffix: settings?.suffix,
+          prefix: settings?.prefix,
+          sources: settings?.sources,
+          barPadding: settings?.barPadding,
+          showValues: settings?.showValues,
+          showTicks: settings?.showTicks,
+          leftMargin: settings?.leftMargin,
+          rightMargin: settings?.rightMargin,
+          truncateBy: settings?.truncateBy,
+          colorDomain: settings?.colorDomain,
+          colorLegendTitle:
+            Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
+              ? settings?.colorLegendTitle
+              : getValues('color', graphDataConfiguration || [], readableHeader || []),
+          backgroundColor: settings?.backgroundColor,
+          padding: settings?.padding,
+          topMargin: settings?.topMargin,
+          bottomMargin: settings?.bottomMargin,
+          relativeHeight: settings?.relativeHeight,
+          showLabels: settings?.showLabels,
+          showColorScale: settings?.showColorScale,
+          maxValue: settings?.maxValue,
+          minValue: settings?.minValue,
+          labelOrder: settings?.labelOrder,
+          tooltip: settings?.tooltip,
+          refValues: settings?.refValues,
+          graphID: settings?.graphID,
+          highlightedDataPoints: settings?.highlightedDataPoints,
+          graphDownload: settings?.graphDownload,
+          dataDownload: settings?.dataDownload,
+          language: settings?.language,
+          minHeight: settings?.minHeight,
+          showNAColor: settings?.showNAColor,
+          maxBarThickness: settings?.maxBarThickness,
+          minBarThickness: settings?.minBarThickness,
+          maxNumberOfBars: settings?.maxNumberOfBars,
+          ariaLabel: settings?.ariaLabel,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onSeriesMouseClick: (el: any) => {
+            updateFilters?.(el.label);
+          },
+          detailsOnClick: settings?.detailsOnClick,
+          barAxisTitle: settings?.barAxisTitle,
+          noOfTicks: settings?.noOfTicks,
           styles: settings?.styles,
           classNames: settings?.classNames,
           filterNA: settings?.filterNA,

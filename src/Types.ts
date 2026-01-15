@@ -18,6 +18,7 @@ export type Languages =
 
 export type GraphTypeForGriddedGraph =
   | 'barChart'
+  | 'waterfallChart'
   | 'stackedBarChart'
   | 'groupedBarChart'
   | 'lineChart'
@@ -158,6 +159,13 @@ export interface ClassNameObject {
 export interface BarGraphDataType {
   label: string | number;
   date?: string | number;
+  size?: number | null;
+  color?: string | null;
+  data?: object;
+}
+
+export interface WaterfallChartDataType {
+  label: string | number;
   size?: number | null;
   color?: string | null;
   data?: object;

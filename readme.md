@@ -2,7 +2,7 @@
 
 ### Getting Started
 
-[UNDP data viz library](https://dataviz.design.undp.org) is dedicated to providing a good development experience for data visualization specialists. Before starting, it is recommended to learn React first, and correctly install and configure Node.js v18 or above. 
+[UNDP data viz library](https://dataviz.design.undp.org) is dedicated to providing a good development experience for data visualization specialists. Before starting, it is recommended to learn React first, and correctly install and configure Node.js v18 or above.
 
 We also assumes that you have intermediate knowledge about HTML, CSS, and JavaScript/TypeScript, and React.
 
@@ -13,52 +13,59 @@ Detailed documentation can be found [here](https://dataviz.design.undp.org)
 NPM Package can be found [here](https://www.npmjs.com/package/@undp/data-viz)
 
 ### Installation
+
 __Using npm__
+
 ```
 npm i @undp/data-viz
 ```
 
-
 __Using yarn__
+
 ```
 yarn add @undp/data-viz
 ```
 
 ### Import
+
 It is recommended to import what you need and the use it. For example, import the `HorizontalBarGraph` like this:
+
 ```
 import { HorizontalBarGraph } from '@undp/data-viz'
 ```
 
+It is also recommended to import the css because some setting expect the CSS to be imported to look good. You can import the css file like this:
 
-It is also recommended to import the css because some setting expect the CSS to be imported to look good. You can import the css file like this: 
 ```
 import '@undp/data-viz/style.css';
 ```
 
 ### TypeScript
+
 UNDP visualization library provides a built-in ts definition, you don't need to install any type definitions.
 
 ### Dependencies
+
 The dependencies that are pre-installed wit the library:
+
 * Various D3 libraries - For visualizations
-    * d3-array
-    * d3-delaunay
-    * d3-force
-    * d3-format
-    * d3-geo
-    * d3-hierarchy
-    * d3-scale
-    * d3-selection
-    * d3-shape
-    * d3-zoom
+  * d3-array
+  * d3-delaunay
+  * d3-force
+  * d3-format
+  * d3-geo
+  * d3-hierarchy
+  * d3-scale
+  * d3-selection
+  * d3-shape
+  * d3-zoom
 * Various Lodash libraries - For array and data manipulation
-    * lodash.flattendeep
-    * lodash.intersection
-    * lodash.orderby
-    * lodash.sortby
-    * lodash.sum
-    * lodash.uniqby
+  * lodash.flattendeep
+  * lodash.intersection
+  * lodash.orderby
+  * lodash.sortby
+  * lodash.sum
+  * lodash.uniqby
 * motion - For creating animations in the animated graphs
 * papaparse - For loading and parsing csv from links
 * simple-statistics - For statistical functions
@@ -67,12 +74,14 @@ The dependencies that are pre-installed wit the library:
 * modern-screenshot - For downloading div as images
 * react-csv - For generating a csv file
 
-__Required peer dependencies__ 
+__Required peer dependencies__
+
 * React (of course!) (Peer dependency)
 * React-dom (of course!) (Peer dependency)
 * @undp/design-system-react - For UI elements (Peer dependency)
 
-__Optional peer dependencies__ 
+__Optional peer dependencies__
+
 * maplibre-gl - For Maplibre maps (Peer optional dependency: only needed when using GeoHub maps)
 * pmtiles - For adding pmtiles to Maplibre maps (Peer optional dependency: only needed when using GeoHub maps)
 * dnd-kit - For creating comparison maps (Peer optional dependency: only needed when using GeoHub compare maps)
@@ -84,6 +93,7 @@ __Optional peer dependencies__
 ### How to add a new chart or graph
 
 Adding a new chart or graph to the library requires multiple steps:
+
 * Add the code for the graph to `./src/Components/Elements/Graphs/` folder
 * Once the code is done add the id of the graph to either `GraphTypeForGriddedGraph` or `GeoHubGraphType` in `./src/Types.tsx` depending if you want it to be available in `GriddedGraphDashboard` or not
 * Add the missing settings  to `GraphSettingsDataType` in `./src/Types.tsx`
@@ -95,13 +105,14 @@ Adding a new chart or graph to the library requires multiple steps:
 
 Adding schema
 __Schemas are in different repo: [undp-viz-library-schema](https://github.com/UNDP-Data/undp-viz-library-schemas)
+
 * Add the data schema for the graph and graph settings schema to the `dataSchema` folder.
 * Also add the missing properties to the `SettingSchema` in `settingSchema` folder
 
 Adding documentation and stories in storybook:
+
 * Add a new story in `./src/stories/Graph+Map+Chart` folder
 * Add a graph name and id to `GraphNames` in `./src/stories/assets/constants.ts`
 * Add a config file for the graph in `./src/stories/assets/config` folder
 * Add the graph in `./src/stories/assets/graphSettingsSelect.ts`
 * Add the graph in `./src/stories/assets/graphDataConfigSelect.ts`
-
