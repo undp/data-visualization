@@ -1017,6 +1017,7 @@ export interface GraphSettingsDataType {
   choroplethScaleType?: Exclude<ScaleDataType, 'linear'>;
   trackColor?: string;
   zoomAndCenterByHighlightedIds?: boolean;
+  hideAxisLine?: boolean;
 }
 
 export interface InfoBoxDataType {

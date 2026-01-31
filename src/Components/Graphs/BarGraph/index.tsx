@@ -106,6 +106,8 @@ interface Props {
   naLabel?: string;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis */
+  hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
@@ -223,6 +225,7 @@ export function SimpleBarGraph(props: Props) {
     timeline,
     naLabel,
     trackColor,
+    hideAxisLine = false,
   } = props;
   return (
     <SimpleBarGraphEl
@@ -287,6 +290,7 @@ export function SimpleBarGraph(props: Props) {
       naLabel={naLabel}
       orientation={orientation}
       trackColor={trackColor}
+      hideAxisLine={hideAxisLine}
     />
   );
 }
@@ -384,6 +388,8 @@ interface GroupedBarChartProps {
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis */
+  hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Title for the bar axis */
@@ -484,6 +490,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     showColorScale,
     timeline,
     naLabel,
+    hideAxisLine = false,
   } = props;
 
   return (
@@ -544,6 +551,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       showColorScale={showColorScale}
       timeline={timeline}
       naLabel={naLabel}
+      hideAxisLine={hideAxisLine}
     />
   );
 }
@@ -635,6 +643,8 @@ interface StackedBarChartProps {
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis */
+  hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Title for the bar axis */
@@ -744,6 +754,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     showColorScale,
     timeline,
     naLabel,
+    hideAxisLine = false,
   } = props;
 
   return (
@@ -805,6 +816,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       timeline={timeline}
       naLabel={naLabel}
       orientation={orientation}
+      hideAxisLine={hideAxisLine}
     />
   );
 }

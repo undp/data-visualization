@@ -95,6 +95,7 @@ interface Props {
   timeline?: TimelineDataType;
   naLabel?: string;
   orientation?: 'horizontal' | 'vertical';
+  hideAxisLine?: boolean;
 }
 
 export function SimpleBarGraphEl(props: Props) {
@@ -160,6 +161,7 @@ export function SimpleBarGraphEl(props: Props) {
     naLabel = 'NA',
     orientation = 'vertical',
     trackColor,
+    hideAxisLine = false,
   } = props;
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
   const [svgWidth, setSvgWidth] = useState(0);
@@ -294,6 +296,7 @@ export function SimpleBarGraphEl(props: Props) {
         {data.length === 0 && <EmptyState />}
         {svgWidth && svgHeight && data.length > 0 ? (
           <Comp
+            hideAxisLine={hideAxisLine}
             data={
               sortData
                 ? orderBy(

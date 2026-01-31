@@ -94,6 +94,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis. Only applicable if `graphType` is `barGraph`. */
+  hideAxisLine?: boolean;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Enable graph download option as png */
@@ -168,6 +170,7 @@ export function Histogram(props: Props) {
     styles,
     classNames,
     precision,
+    hideAxisLine = false,
   } = props;
 
   const bins = bin()
@@ -336,6 +339,7 @@ export function Histogram(props: Props) {
       styles={styles}
       classNames={classNames}
       precision={precision}
+      hideAxisLine={hideAxisLine}
     />
   );
 }

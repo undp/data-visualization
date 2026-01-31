@@ -73,6 +73,7 @@ interface Props {
   naLabel: string;
   rtl: boolean;
   targetLineThickness: number;
+  hideAxisLine: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -119,6 +120,7 @@ export function VerticalGraph(props: Props) {
     customLayers,
     naLabel,
     targetLineThickness,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -230,17 +232,22 @@ export function VerticalGraph(props: Props) {
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           <Axis
+            hideAxisLine={hideAxisLine}
             y1={y(xMinValue < 0 ? 0 : xMinValue)}
             y2={y(xMinValue < 0 ? 0 : xMinValue)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(
-              xMinValue < 0 ? 0 : xMinValue,
-              naLabel,
-              precision,
-              prefix,
-              suffix,
-            )}
+            label={
+              showTicks
+                ? numberFormattingFunction(
+                    xMinValue < 0 ? 0 : xMinValue,
+                    naLabel,
+                    precision,
+                    prefix,
+                    suffix,
+                  )
+                : undefined
+            }
             labelPos={{
               x: 0 - leftMargin,
               dx: 0,
@@ -622,6 +629,7 @@ export function HorizontalGraph(props: Props) {
     customLayers,
     naLabel,
     targetLineThickness,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -763,6 +771,7 @@ export function HorizontalGraph(props: Props) {
             text={barAxisTitle}
           />
           <Axis
+            hideAxisLine={hideAxisLine}
             x1={x(xMinValue < 0 ? 0 : xMinValue)}
             x2={x(xMinValue < 0 ? 0 : xMinValue)}
             y1={-2.5}

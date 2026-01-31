@@ -124,6 +124,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis */
+  hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Title for the left bars */
@@ -224,6 +226,7 @@ export function ButterflyChart(props: Props) {
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     naLabel = 'NA',
+    hideAxisLine = false,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -354,6 +357,7 @@ export function ButterflyChart(props: Props) {
         {data.length === 0 && <EmptyState />}
         {svgWidth && svgHeight && data.length > 0 ? (
           <Graph
+            hideAxisLine={hideAxisLine}
             data={ensureCompleteDataForButterFlyChart(data, timeline.dateFormat || 'yyyy').filter(
               d =>
                 timeline.enabled

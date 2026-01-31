@@ -58,6 +58,7 @@ interface Props {
   minValueLeftBar: number;
   minValueRightBar: number;
   naLabel: string;
+  hideAxisLine: boolean;
 }
 
 export function Graph(props: Props) {
@@ -95,6 +96,7 @@ export function Graph(props: Props) {
     minValueLeftBar,
     minValueRightBar,
     naLabel,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -268,6 +270,7 @@ export function Graph(props: Props) {
                 );
               })}
               <Axis
+                hideAxisLine={hideAxisLine}
                 y1={-2.5}
                 y2={graphHeight + margin.bottom}
                 x1={xLeftBar(minValueLeftBar < 0 ? 0 : minValueLeftBar)}
@@ -421,6 +424,7 @@ export function Graph(props: Props) {
                 );
               })}
               <Axis
+                hideAxisLine={hideAxisLine}
                 y1={-2.5}
                 y2={graphHeight + margin.bottom}
                 x1={xRightBar(minValueRightBar < 0 ? 0 : minValueRightBar)}

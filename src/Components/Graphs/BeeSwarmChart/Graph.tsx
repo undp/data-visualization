@@ -70,6 +70,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   rtl?: boolean;
+  hideAxisLine: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -106,6 +107,7 @@ export function VerticalGraph(props: Props) {
     dimmedOpacity,
     precision,
     customLayers,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -202,17 +204,22 @@ export function VerticalGraph(props: Props) {
             {showTicks ? (
               <>
                 <Axis
+                  hideAxisLine={hideAxisLine}
                   y1={y(yMinValue < 0 ? 0 : yMinValue)}
                   y2={y(yMinValue < 0 ? 0 : yMinValue)}
                   x1={0 - margin.left}
                   x2={graphWidth + margin.right}
-                  label={numberFormattingFunction(
-                    yMinValue < 0 ? 0 : yMinValue,
-                    'NA',
-                    precision,
-                    prefix,
-                    suffix,
-                  )}
+                  label={
+                    showTicks
+                      ? numberFormattingFunction(
+                          yMinValue < 0 ? 0 : yMinValue,
+                          'NA',
+                          precision,
+                          prefix,
+                          suffix,
+                        )
+                      : undefined
+                  }
                   labelPos={{
                     x: 0 - margin.left,
                     y: y(yMinValue < 0 ? 0 : yMinValue),
@@ -446,6 +453,7 @@ export function HorizontalGraph(props: Props) {
     dimmedOpacity,
     precision,
     customLayers,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -542,17 +550,22 @@ export function HorizontalGraph(props: Props) {
             {showTicks ? (
               <>
                 <Axis
+                  hideAxisLine={hideAxisLine}
                   x1={x(xMinValue < 0 ? 0 : xMinValue)}
                   x2={x(xMinValue < 0 ? 0 : xMinValue)}
                   y1={0 - margin.top}
                   y2={graphHeight + margin.bottom}
-                  label={numberFormattingFunction(
-                    xMinValue < 0 ? 0 : xMinValue,
-                    'NA',
-                    precision,
-                    prefix,
-                    suffix,
-                  )}
+                  label={
+                    showTicks
+                      ? numberFormattingFunction(
+                          xMinValue < 0 ? 0 : xMinValue,
+                          'NA',
+                          precision,
+                          prefix,
+                          suffix,
+                        )
+                      : undefined
+                  }
                   labelPos={{
                     x: x(xMinValue < 0 ? 0 : xMinValue),
                     y: 0 - topMargin,

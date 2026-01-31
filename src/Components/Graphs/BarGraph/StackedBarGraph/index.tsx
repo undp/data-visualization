@@ -91,6 +91,7 @@ interface Props {
   timeline?: TimelineDataType;
   naLabel?: string;
   orientation?: 'horizontal' | 'vertical';
+  hideAxisLine?: boolean;
 }
 
 export function StackedBarGraphEl(props: Props) {
@@ -152,6 +153,7 @@ export function StackedBarGraphEl(props: Props) {
     naLabel = 'NA',
     sortData,
     orientation = 'vertical',
+    hideAxisLine = false,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -288,6 +290,7 @@ export function StackedBarGraphEl(props: Props) {
           {data.length === 0 && <EmptyState />}
           {svgWidth && svgHeight && data.length > 0 ? (
             <Comp
+              hideAxisLine={hideAxisLine}
               data={
                 sortParameter !== undefined
                   ? sortParameter === 'total'

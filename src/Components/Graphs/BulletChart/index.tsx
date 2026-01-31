@@ -127,6 +127,8 @@ interface Props {
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis */
+  hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
@@ -245,6 +247,7 @@ export function BulletChart(props: Props) {
     noOfTicks = 5,
     targetLineThickness = 2,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
+    hideAxisLine = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -382,6 +385,7 @@ export function BulletChart(props: Props) {
           {data.length === 0 && <EmptyState />}
           {svgWidth && svgHeight && data.length > 0 ? (
             <Comp
+              hideAxisLine={hideAxisLine}
               data={
                 sortData
                   ? orderBy(

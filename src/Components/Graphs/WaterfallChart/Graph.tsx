@@ -67,6 +67,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   naLabel: string;
+  hideAxisLine: boolean;
 }
 function getWaterfallExtent(values: (number | null | undefined)[]) {
   let cumulative = 0;
@@ -124,6 +125,7 @@ export function Graph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -217,13 +219,18 @@ export function Graph(props: Props) {
             y2={y(minVal < 0 ? 0 : minVal)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(
-              minVal < 0 ? 0 : minVal,
-              naLabel,
-              precision,
-              prefix,
-              suffix,
-            )}
+            hideAxisLine={hideAxisLine}
+            label={
+              showTicks
+                ? numberFormattingFunction(
+                    minVal < 0 ? 0 : minVal,
+                    naLabel,
+                    precision,
+                    prefix,
+                    suffix,
+                  )
+                : undefined
+            }
             labelPos={{
               x: 0 - leftMargin,
               dx: 0,

@@ -119,6 +119,8 @@ interface Props {
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis. Only applicable to vertical charts. */
+  hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggle if the is a arrow head at the end of the connector */
@@ -239,6 +241,7 @@ export function DumbbellChart(props: Props) {
     dimmedOpacity = 0.3,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     sortData,
+    hideAxisLine = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -374,6 +377,7 @@ export function DumbbellChart(props: Props) {
         {data.length === 0 && <EmptyState />}
         {svgWidth && svgHeight && data.length > 0 ? (
           <Comp
+            hideAxisLine={hideAxisLine}
             data={
               sortParameter !== undefined
                 ? sortParameter === 'diff'

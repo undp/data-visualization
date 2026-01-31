@@ -68,6 +68,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   naLabel: string;
+  hideAxisLine: boolean;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -109,6 +110,7 @@ export function HorizontalGraph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -404,6 +406,7 @@ export function HorizontalGraph(props: Props) {
               ) : null,
             )}
             <Axis
+              hideAxisLine={hideAxisLine}
               x1={x(0)}
               x2={x(0)}
               y1={-2.5}
@@ -494,6 +497,7 @@ export function VerticalGraph(props: Props) {
     precision,
     customLayers,
     naLabel,
+    hideAxisLine,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -565,11 +569,16 @@ export function VerticalGraph(props: Props) {
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           <Axis
+            hideAxisLine={hideAxisLine}
             y1={y(0)}
             y2={y(0)}
             x1={0 - leftMargin}
             x2={graphWidth + margin.right}
-            label={numberFormattingFunction(0, naLabel, precision, prefix, suffix)}
+            label={
+              showTicks
+                ? numberFormattingFunction(0, naLabel, precision, prefix, suffix)
+                : undefined
+            }
             labelPos={{
               x: 0 - leftMargin,
               y: y(0),

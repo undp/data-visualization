@@ -200,6 +200,7 @@ function GraphEl(props: Props) {
           filterNA: settings?.filterNA,
           animate: settings?.animate,
           naLabel: settings?.naLabel,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'waterfallChart':
         return {
@@ -263,6 +264,7 @@ function GraphEl(props: Props) {
           filterNA: settings?.filterNA,
           animate: settings?.animate,
           naLabel: settings?.naLabel,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'groupedBarChart':
         return {
@@ -321,6 +323,7 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           animate: settings?.animate,
           naLabel: settings?.naLabel,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'stackedBarChart':
         return {
@@ -380,6 +383,7 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           animate: settings?.animate,
           naLabel: settings?.naLabel,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'bulletChart':
         return {
@@ -452,6 +456,7 @@ function GraphEl(props: Props) {
           measureBarWidthFactor: settings?.measureBarWidthFactor,
           animate: settings?.animate,
           naLabel: settings?.naLabel,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'lineChart':
         return {
@@ -1308,6 +1313,7 @@ function GraphEl(props: Props) {
           animate: settings?.animate,
           highlightedDataPoints: settings?.highlightedDataPoints,
           dimmedOpacity: settings?.dimmedOpacity,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'treeMap':
         return {
@@ -1559,6 +1565,7 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'butterflyChart':
         return {
@@ -1613,6 +1620,7 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'histogram':
         return {
@@ -1656,6 +1664,7 @@ function GraphEl(props: Props) {
           detailsOnClick: settings?.detailsOnClick,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          hideAxisLine: settings?.hideAxisLine,
         };
       case 'sparkLine':
         return {

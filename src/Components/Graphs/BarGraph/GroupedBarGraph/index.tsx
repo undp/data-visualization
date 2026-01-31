@@ -90,6 +90,7 @@ interface Props {
   timeline?: TimelineDataType;
   naLabel?: string;
   orientation?: 'horizontal' | 'vertical';
+  hideAxisLine?: boolean;
 }
 
 export function GroupedBarGraphEl(props: Props) {
@@ -150,6 +151,7 @@ export function GroupedBarGraphEl(props: Props) {
     sortParameter,
     sortData,
     orientation = 'vertical',
+    hideAxisLine = false,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -286,6 +288,7 @@ export function GroupedBarGraphEl(props: Props) {
           {data.length === 0 && <EmptyState />}
           {svgWidth && svgHeight && data.length > 0 ? (
             <Comp
+              hideAxisLine={hideAxisLine}
               data={
                 sortParameter !== undefined
                   ? sortParameter === 'total'

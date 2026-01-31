@@ -107,6 +107,8 @@ interface Props {
   naLabel?: string;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Toggle visibility of axis line for the  main axis */
+  hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
@@ -210,6 +212,7 @@ export function WaterfallChart(props: Props) {
     precision = 2,
     customLayers = [],
     naLabel = 'NA',
+    hideAxisLine = false,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -286,6 +289,7 @@ export function WaterfallChart(props: Props) {
         svgHeight &&
         data.filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)).length > 0 ? (
           <Graph
+            hideAxisLine={hideAxisLine}
             data={data
               .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
               .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))}
