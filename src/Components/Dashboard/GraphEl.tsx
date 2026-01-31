@@ -903,6 +903,7 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
+          zoomAndCenterByHighlightedIds: settings?.zoomAndCenterByHighlightedIds,
         };
       case 'biVariateChoroplethMap':
         return {
@@ -962,6 +963,7 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
+          zoomAndCenterByHighlightedIds: settings?.zoomAndCenterByHighlightedIds,
         };
       case 'dotDensityMap':
         return {

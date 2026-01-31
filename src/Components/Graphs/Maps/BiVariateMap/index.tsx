@@ -94,6 +94,8 @@ interface Props {
   isWorldMap?: boolean;
   /** Map projection type */
   mapProjection?: MapProjectionTypes;
+  /** Toggle if the map is centered and zoomed to the highlighted ids. */
+  zoomAndCenterByHighlightedIds?: boolean;
   /** Extend of the allowed zoom in the map */
   zoomScaleExtend?: [number, number];
   /** Extend of the allowed panning in the map */
@@ -197,6 +199,7 @@ export function BiVariateChoroplethMap(props: Props) {
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     collapseColorScaleByDefault,
+    zoomAndCenterByHighlightedIds = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -402,6 +405,7 @@ export function BiVariateChoroplethMap(props: Props) {
             dimmedOpacity={dimmedOpacity}
             customLayers={customLayers}
             collapseColorScaleByDefault={collapseColorScaleByDefault}
+            zoomAndCenterByHighlightedIds={zoomAndCenterByHighlightedIds}
           />
         ) : (
           <div

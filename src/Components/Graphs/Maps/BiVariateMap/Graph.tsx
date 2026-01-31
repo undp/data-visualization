@@ -73,6 +73,7 @@ interface Props {
   animate: AnimateDataType;
   dimmedOpacity: number;
   customLayers: CustomLayerDataType[];
+  zoomAndCenterByHighlightedIds: boolean;
 }
 
 export function Graph(props: Props) {
@@ -109,6 +110,7 @@ export function Graph(props: Props) {
     dimmedOpacity,
     customLayers,
     collapseColorScaleByDefault,
+    zoomAndCenterByHighlightedIds,
   } = props;
   const [showLegend, setShowLegend] = useState(
     collapseColorScaleByDefault === undefined ? !(width < 680) : !collapseColorScaleByDefault,
@@ -165,10 +167,29 @@ export function Graph(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, width, zoomInteraction]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bounds = bbox(mapData as any);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const center = centerOfMass(mapData as any);
+  const bounds = bbox({
+    ...mapData,
+    features: zoomAndCenterByHighlightedIds
+      ? mapData.features.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (d: any) =>
+            (highlightedIds || []).length === 0 ||
+            highlightedIds.indexOf(d.properties[mapProperty]) !== -1,
+        )
+      : mapData.features,
+  });
+
+  const center = centerOfMass({
+    ...mapData,
+    features: zoomAndCenterByHighlightedIds
+      ? mapData.features.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (d: any) =>
+            (highlightedIds || []).length === 0 ||
+            highlightedIds.indexOf(d.properties[mapProperty]) !== -1,
+        )
+      : mapData.features,
+  });
   const lonDiff = bounds[2] - bounds[0];
   const latDiff = bounds[3] - bounds[1];
   const scaleX = (((width * 190) / 960) * 360) / lonDiff;

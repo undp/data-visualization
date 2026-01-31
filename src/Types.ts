@@ -474,8 +474,7 @@ export interface DashboardColumnDataType extends DashboardColumnDataWithoutGraph
   graphType: GraphType;
 }
 
-export interface PerformanceIntensiveDashboardColumnDataType
-  extends DashboardColumnDataWithoutGraphType {
+export interface PerformanceIntensiveDashboardColumnDataType extends DashboardColumnDataWithoutGraphType {
   graphType: GraphType | ThreeDGraphType | GeoHubGraphType;
 }
 
@@ -517,8 +516,7 @@ export interface DashboardLayoutDataType extends DashboardLayoutDataWithoutRowsT
     height?: number;
   }[];
 }
-export interface PerformanceIntensiveDashboardLayoutDataType
-  extends DashboardLayoutDataWithoutRowsType {
+export interface PerformanceIntensiveDashboardLayoutDataType extends DashboardLayoutDataWithoutRowsType {
   rows: {
     columns: PerformanceIntensiveDashboardColumnDataType[];
     height?: number;
@@ -1018,6 +1016,7 @@ export interface GraphSettingsDataType {
   mapColorLegendTitle?: string;
   choroplethScaleType?: Exclude<ScaleDataType, 'linear'>;
   trackColor?: string;
+  zoomAndCenterByHighlightedIds?: boolean;
 }
 
 export interface InfoBoxDataType {

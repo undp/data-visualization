@@ -80,6 +80,8 @@ interface Props {
   mapData?: any;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
   scale?: number;
+  /** Toggle if the map is centered and zoomed to the highlighted ids. */
+  zoomAndCenterByHighlightedIds?: boolean;
   /** Center point of the map */
   centerPoint?: [number, number];
   /** Defines the zoom mode for the map */
@@ -196,6 +198,7 @@ export function ChoroplethMap(props: Props) {
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     collapseColorScaleByDefault,
+    zoomAndCenterByHighlightedIds = false,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -396,6 +399,7 @@ export function ChoroplethMap(props: Props) {
                 : animate || { duration: 0, once: true, amount: 0 }
             }
             customLayers={customLayers}
+            zoomAndCenterByHighlightedIds={zoomAndCenterByHighlightedIds}
             collapseColorScaleByDefault={collapseColorScaleByDefault}
           />
         ) : (
