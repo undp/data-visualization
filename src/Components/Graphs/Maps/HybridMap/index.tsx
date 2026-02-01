@@ -3,6 +3,7 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
+import { FeatureCollection } from 'geojson';
 
 import { Graph } from './Graph';
 
@@ -81,10 +82,14 @@ interface Props {
   /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
+  /** Defines if the coordinates in the map data should be rewinded or not. Try to change this is the visualization shows countries as holes instead of shapes. */
+  rewindCoordinatesInMapData?: boolean;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
   scale?: number;
   /** Center point of the map */
   centerPoint?: [number, number];
+  /** Controls the rotation of the map projection, in degrees, applied before rendering. Useful for shifting the antimeridian to focus the map on different regions */
+  projectionRotate?: [number, number] | [number, number, number];
   /** Defines the zoom mode for the map */
   zoomInteraction?: ZoomInteractionTypes;
   /** Stroke width of the regions in the map */
@@ -164,7 +169,7 @@ interface Props {
 export function HybridMap(props: Props) {
   const {
     data,
-    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-v2.json',
     graphTitle,
     colors,
     sources,
@@ -205,7 +210,7 @@ export function HybridMap(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    mapProjection,
+    mapProjection = 'naturalEarth',
     zoomInteraction = 'button',
     animate = false,
     dimmedOpacity = 0.3,
@@ -219,6 +224,8 @@ export function HybridMap(props: Props) {
     dotLegendTitle,
     dotBorderColor,
     labelColor = Colors.primaryColors['blue-600'],
+    projectionRotate = [0, 0],
+    rewindCoordinatesInMapData = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -237,8 +244,7 @@ export function HybridMap(props: Props) {
   }, [data, timeline.dateFormat]);
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [mapShape, setMapShape] = useState<any>(undefined);
+  const [mapShape, setMapShape] = useState<FeatureCollection | undefined>(undefined);
 
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
@@ -268,7 +274,7 @@ export function HybridMap(props: Props) {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
       fetchData.then(d => {
-        onUpdateShape(d);
+        onUpdateShape(d as FeatureCollection);
       });
     } else {
       onUpdateShape(mapData);
@@ -434,6 +440,8 @@ export function HybridMap(props: Props) {
             dotLegendTitle={dotLegendTitle}
             dotBorderColor={dotBorderColor}
             labelColor={labelColor}
+            projectionRotate={projectionRotate}
+            rewindCoordinatesInMapData={rewindCoordinatesInMapData}
           />
         ) : (
           <div

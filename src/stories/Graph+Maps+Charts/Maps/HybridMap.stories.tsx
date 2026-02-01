@@ -144,6 +144,13 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '[number, number]' } },
     },
+    projectionRotate: {
+      control: 'text',
+      table: {
+        type: { summary: '[number,number] | [number, number, number]' },
+        defaultValue: { summary: '[0, 0]' },
+      },
+    },
     zoomTranslateExtend: {
       control: 'text',
       table: { type: { summary: '[[number, number], [number, number]]' } },
@@ -171,6 +178,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
     resetSelectionOnDoubleClick: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'true' } },
+    },
+    rewindCoordinatesInMapData: {
       control: 'boolean',
       table: { defaultValue: { summary: 'true' } },
     },
@@ -243,6 +254,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     zoomTranslateExtend,
     animate,
     highlightedIds,
+    projectionRotate,
     ...args
   }) => {
     return (
@@ -268,6 +280,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
         }
+        projectionRotate={parseValue(projectionRotate)}
         {...args}
       />
     );

@@ -1018,6 +1018,8 @@ export interface GraphSettingsDataType {
   trackColor?: string;
   zoomAndCenterByHighlightedIds?: boolean;
   hideAxisLine?: boolean;
+  projectionRotate?: [number, number] | [number, number, number];
+  rewindCoordinatesInMapData?: boolean;
 }
 
 export interface InfoBoxDataType {

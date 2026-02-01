@@ -134,6 +134,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       table: { type: { summary: 'string[]' } },
     },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
+    hideAxisLine: { table: { defaultValue: { summary: 'false' } } },
     showColorScale: { table: { defaultValue: { summary: 'true' } } },
     showNAColor: { table: { defaultValue: { summary: 'true' } } },
     highlightedDataPoints: {

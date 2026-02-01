@@ -98,6 +98,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     // Graph parameters
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
+    hideAxisLine: { table: { defaultValue: { summary: 'false' } } },
     showColorScale: { table: { defaultValue: { summary: 'true' } } },
     showNAColor: { table: { defaultValue: { summary: 'true' } } },
     detailsOnClick: {

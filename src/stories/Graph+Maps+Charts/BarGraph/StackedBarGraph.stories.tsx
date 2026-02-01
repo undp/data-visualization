@@ -127,6 +127,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       table: { type: { summary: 'string[]' } },
     },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
+    hideAxisLine: { table: { defaultValue: { summary: 'false' } } },
     filterNA: { table: { defaultValue: { summary: 'true' } } },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },

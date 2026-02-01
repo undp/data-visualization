@@ -1,11 +1,12 @@
 import isEqual from 'fast-deep-equal';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   geoAlbersUsa,
   geoEqualEarth,
   geoMercator,
   geoNaturalEarth1,
   geoOrthographic,
+  geoPath,
 } from 'd3-geo';
 import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
@@ -17,6 +18,8 @@ import { AnimatePresence, motion, useInView } from 'motion/react';
 import { cn } from '@undp/design-system-react/cn';
 import { Spacer } from '@undp/design-system-react/Spacer';
 import { Separator } from '@undp/design-system-react/Separator';
+import { FeatureCollection } from 'geojson';
+import rewind from '@turf/rewind';
 
 import {
   AnimateDataType,
@@ -34,8 +37,7 @@ import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: HybridMapDataType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mapData: any;
+  mapData: FeatureCollection;
   colorDomain: (string | number)[];
   width: number;
   height: number;
@@ -78,6 +80,8 @@ interface Props {
   dotLegendTitle?: string;
   dotBorderColor?: string;
   labelColor: string;
+  projectionRotate: [number, number] | [number, number, number];
+  rewindCoordinatesInMapData: boolean;
 }
 
 export function Graph(props: Props) {
@@ -121,7 +125,14 @@ export function Graph(props: Props) {
     dotLegendTitle,
     dotBorderColor,
     labelColor,
+    projectionRotate,
+    rewindCoordinatesInMapData,
   } = props;
+  const formattedMapData = useMemo(() => {
+    if (!rewindCoordinatesInMapData) return mapData;
+
+    return rewind(mapData, { reverse: true }) as FeatureCollection;
+  }, [mapData, rewindCoordinatesInMapData]);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 
   const [showLegend, setShowLegend] = useState(
@@ -188,10 +199,9 @@ export function Graph(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, width, zoomInteraction]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bounds = bbox(mapData as any);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const center = centerOfMass(mapData as any);
+  const bounds = bbox(formattedMapData);
+
+  const center = centerOfMass(formattedMapData);
   const lonDiff = bounds[2] - bounds[0];
   const latDiff = bounds[3] - bounds[1];
   const scaleX = (((width * 190) / 960) * 360) / lonDiff;
@@ -201,40 +211,39 @@ export function Graph(props: Props) {
   const projection =
     mapProjection === 'mercator'
       ? geoMercator()
-          .rotate([0, 0])
+          .rotate(projectionRotate)
           .center(centerPoint || (center.geometry.coordinates as [number, number]))
           .translate([width / 2, height / 2])
           .scale(scaleVar)
       : mapProjection === 'equalEarth'
         ? geoEqualEarth()
-            .rotate([0, 0])
+            .rotate(projectionRotate)
             .center(centerPoint || (center.geometry.coordinates as [number, number]))
             .translate([width / 2, height / 2])
             .scale(scaleVar)
         : mapProjection === 'naturalEarth'
           ? geoNaturalEarth1()
-              .rotate([0, 0])
+              .rotate(projectionRotate)
               .center(centerPoint || (center.geometry.coordinates as [number, number]))
               .translate([width / 2, height / 2])
               .scale(scaleVar)
           : mapProjection === 'orthographic'
             ? geoOrthographic()
-                .rotate([0, 0])
+                .rotate(projectionRotate)
                 .center(centerPoint || (center.geometry.coordinates as [number, number]))
                 .translate([width / 2, height / 2])
                 .scale(scaleVar)
             : geoAlbersUsa()
-                .rotate([0, 0])
+                .rotate(projectionRotate)
                 .center(centerPoint || (center.geometry.coordinates as [number, number]))
                 .translate([width / 2, height / 2])
                 .scale(scaleVar);
-
+  const pathGenerator = geoPath().projection(projection);
   const handleZoom = (direction: 'in' | 'out') => {
     if (!mapSvg.current || !zoomRef.current) return;
     const svg = select(mapSvg.current);
     svg.call(zoomRef.current.scaleBy, direction === 'in' ? 1.2 : 1 / 1.2);
   };
-
   return (
     <>
       <div className='relative'>
@@ -247,81 +256,45 @@ export function Graph(props: Props) {
         >
           <g ref={mapG}>
             {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-            {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              mapData.features.map((d: any, i: number) => {
-                const index = data.findIndex(el => el.id === d.properties[mapProperty]);
-                if (index !== -1) return null;
-                return (
-                  <g
-                    key={i}
-                    opacity={
-                      selectedColor
-                        ? dimmedOpacity
-                        : highlightedIds.length !== 0
-                          ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
-                            ? 1
-                            : dimmedOpacity
-                          : 1
-                    }
-                  >
-                    {d.geometry.type === 'MultiPolygon'
-                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        d.geometry.coordinates.map((el: any, j: any) => {
-                          let masterPath = '';
-                          el.forEach((geo: number[][]) => {
-                            let path = ' M';
-                            geo.forEach((c: number[], k: number) => {
-                              const point = projection([c[0], c[1]]) as [number, number];
-                              if (k !== geo.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                              else path = `${path}${point[0]} ${point[1]}`;
-                            });
-                            masterPath += path;
-                          });
-                          return (
-                            <path
-                              key={j}
-                              d={masterPath}
-                              style={{
-                                stroke: mapBorderColor,
-                                strokeWidth: mapBorderWidth,
-                                fill: mapNoDataColor,
-                              }}
-                            />
-                          );
-                        })
-                      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        d.geometry.coordinates.map((el: any, j: number) => {
-                          let path = 'M';
-                          el.forEach((c: number[], k: number) => {
-                            const point = projection([c[0], c[1]]) as [number, number];
-                            if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                            else path = `${path}${point[0]} ${point[1]}`;
-                          });
-                          return (
-                            <path
-                              key={j}
-                              d={path}
-                              style={{
-                                stroke: mapBorderColor,
-                                strokeWidth: mapBorderWidth,
-                                fill: mapNoDataColor,
-                              }}
-                            />
-                          );
-                        })}
-                  </g>
-                );
-              })
-            }
+            {formattedMapData.features.map((d, i: number) => {
+              if (!d.properties?.[mapProperty]) return null;
+              const path = pathGenerator(d);
+              if (!path) return null;
+              return (
+                <motion.g
+                  key={i}
+                  opacity={
+                    selectedColor
+                      ? dimmedOpacity
+                      : highlightedIds.length !== 0
+                        ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
+                          ? 1
+                          : dimmedOpacity
+                        : 1
+                  }
+                >
+                  <path
+                    d={path}
+                    style={{
+                      stroke: mapBorderColor,
+                      strokeWidth: mapBorderWidth,
+                      fill: mapNoDataColor,
+                    }}
+                  />
+                </motion.g>
+              );
+            })}
             <AnimatePresence>
               {data
                 .filter(d => d.id)
                 .map(d => {
-                  const index = mapData.features.findIndex(
+                  const index = formattedMapData.features.findIndex(
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (el: any) => d.id === el.properties[mapProperty],
                   );
+                  if (index === -1) return null;
+                  const path = pathGenerator(formattedMapData.features[index]);
+                  if (!path) return null;
                   const color = !checkIfNullOrUndefined(d.x)
                     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       colorScale(d.x as any)
@@ -376,90 +349,39 @@ export function Graph(props: Props) {
                         }
                       }}
                     >
-                      {index === -1
-                        ? null
-                        : mapData.features[index].geometry.type === 'MultiPolygon'
-                          ? mapData.features[index].geometry.coordinates.map(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              (el: any, j: any) => {
-                                let masterPath = '';
-                                el.forEach((geo: number[][]) => {
-                                  let path = ' M';
-                                  geo.forEach((c: number[], k: number) => {
-                                    const point = projection([c[0], c[1]]) as [number, number];
-                                    if (k !== geo.length - 1)
-                                      path = `${path}${point[0]} ${point[1]}L`;
-                                    else path = `${path}${point[0]} ${point[1]}`;
-                                  });
-                                  masterPath += path;
-                                });
-                                return (
-                                  <motion.path
-                                    key={`${d.id}-${j}`}
-                                    d={masterPath}
-                                    variants={{
-                                      initial: { fill: color, opacity: 0 },
-                                      whileInView: {
-                                        fill: color,
-                                        opacity: 1,
-                                        transition: { duration: animate.duration },
-                                      },
-                                    }}
-                                    initial='initial'
-                                    animate={isInView ? 'whileInView' : 'initial'}
-                                    exit={{
-                                      opacity: 0,
-                                      transition: { duration: animate.duration },
-                                    }}
-                                    style={{
-                                      stroke: mapBorderColor,
-                                      strokeWidth: mapBorderWidth,
-                                    }}
-                                  />
-                                );
-                              },
-                            )
-                          : mapData.features[index].geometry.coordinates.map(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              (el: any, j: number) => {
-                                let path = 'M';
-                                el.forEach((c: number[], k: number) => {
-                                  const point = projection([c[0], c[1]]) as [number, number];
-                                  if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                                  else path = `${path}${point[0]} ${point[1]}`;
-                                });
-                                return (
-                                  <motion.path
-                                    key={`${d.id}-${j}`}
-                                    d={path}
-                                    variants={{
-                                      initial: { fill: color, opacity: 0 },
-                                      whileInView: {
-                                        fill: color,
-                                        opacity: 1,
-                                        transition: { duration: animate.duration },
-                                      },
-                                    }}
-                                    initial='initial'
-                                    animate={isInView ? 'whileInView' : 'initial'}
-                                    exit={{
-                                      opacity: 0,
-                                      transition: { duration: animate.duration },
-                                    }}
-                                    style={{
-                                      stroke: mapBorderColor,
-                                      strokeWidth: mapBorderWidth,
-                                    }}
-                                  />
-                                );
-                              },
-                            )}
+                      <motion.path
+                        key={`${d.id}`}
+                        d={path}
+                        variants={{
+                          initial: { fill: color, opacity: 0 },
+                          whileInView: {
+                            fill: color,
+                            opacity: 1,
+                            transition: { duration: animate.duration },
+                          },
+                        }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
+                        exit={{
+                          opacity: 0,
+                          transition: { duration: animate.duration },
+                        }}
+                        style={{
+                          stroke: mapBorderColor,
+                          strokeWidth: mapBorderWidth,
+                        }}
+                      />
                     </motion.g>
                   );
                 })}
               {data
                 .filter(d => !checkIfNullOrUndefined(d.lat) && !checkIfNullOrUndefined(d.long))
                 .map(d => {
+                  const labelPosMultiplier =
+                    (projection([d.long as number, d.lat as number]) as [number, number])[0] >
+                    0.6 * width
+                      ? -1
+                      : 1;
                   return (
                     <motion.g
                       key={d.label || `${d.lat}-${d.long}`}
@@ -538,11 +460,15 @@ export function Graph(props: Props) {
                           variants={{
                             initial: {
                               opacity: 0,
-                              x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                              x:
+                                labelPosMultiplier *
+                                (!radiusScale ? radius : radiusScale(d.radius || 0)),
                             },
                             whileInView: {
                               opacity: 1,
-                              x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                              x:
+                                labelPosMultiplier *
+                                (!radiusScale ? radius : radiusScale(d.radius || 0)),
                               transition: { duration: animate.duration },
                             },
                           }}
@@ -552,11 +478,11 @@ export function Graph(props: Props) {
                           y={0}
                           className={cn('text-sm', classNames?.graphObjectValues)}
                           style={{
-                            textAnchor: 'start',
+                            textAnchor: labelPosMultiplier === -1 ? 'end' : 'start',
                             fill: labelColor || '#000',
                             ...(styles?.graphObjectValues || {}),
                           }}
-                          dx={4}
+                          dx={labelPosMultiplier * 4}
                           dy={5}
                         >
                           {d.label}

@@ -78,10 +78,14 @@ interface Props {
   /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
+  /** Defines if the coordinates in the map data should be rewinded or not. Try to change this is the visualization shows countries as holes instead of shapes. */
+  rewindCoordinatesInMapData?: boolean;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
   scale?: number;
   /** Center point of the map */
   centerPoint?: [number, number];
+  /** Controls the rotation of the map projection, in degrees, applied before rendering. Useful for shifting the antimeridian to focus the map on different regions */
+  projectionRotate?: [number, number] | [number, number, number];
   /** Defines the zoom mode for the map */
   zoomInteraction?: ZoomInteractionTypes;
   /** Stroke width of the regions in the map */
@@ -149,7 +153,7 @@ interface Props {
 export function DotDensityMap(props: Props) {
   const {
     data,
-    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-v2.json',
     graphTitle,
     colors,
     sources,
@@ -189,7 +193,7 @@ export function DotDensityMap(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    mapProjection,
+    mapProjection = 'naturalEarth',
     zoomInteraction = 'button',
     animate = false,
     dimmedOpacity = 0.3,
@@ -197,6 +201,8 @@ export function DotDensityMap(props: Props) {
     maxRadiusValue,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     collapseColorScaleByDefault,
+    projectionRotate = [0, 0],
+    rewindCoordinatesInMapData = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -398,6 +404,8 @@ export function DotDensityMap(props: Props) {
                 : Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null))
             }
             collapseColorScaleByDefault={collapseColorScaleByDefault}
+            projectionRotate={projectionRotate}
+            rewindCoordinatesInMapData={rewindCoordinatesInMapData}
           />
         ) : (
           <div

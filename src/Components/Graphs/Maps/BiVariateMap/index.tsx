@@ -80,10 +80,14 @@ interface Props {
   /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
+  /** Defines if the coordinates in the map data should be rewinded or not. Try to change this is the visualization shows countries as holes instead of shapes. */
+  rewindCoordinatesInMapData?: boolean;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
   scale?: number;
   /** Center point of the map */
   centerPoint?: [number, number];
+  /** Controls the rotation of the map projection, in degrees, applied before rendering. Useful for shifting the antimeridian to focus the map on different regions */
+  projectionRotate?: [number, number] | [number, number, number];
   /** Defines the zoom mode for the map */
   zoomInteraction?: ZoomInteractionTypes;
   /** Stroke width of the regions in the map */
@@ -152,7 +156,7 @@ export function BiVariateChoroplethMap(props: Props) {
   const {
     data,
     graphTitle,
-    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap.json',
+    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-v2.json',
     colors = Colors.light.bivariateColors.colors05x05,
     sources,
     graphDescription,
@@ -192,7 +196,7 @@ export function BiVariateChoroplethMap(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    mapProjection,
+    mapProjection = 'naturalEarth',
     zoomInteraction = 'button',
     animate = false,
     dimmedOpacity = 0.3,
@@ -200,6 +204,8 @@ export function BiVariateChoroplethMap(props: Props) {
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     collapseColorScaleByDefault,
     zoomAndCenterByHighlightedIds = false,
+    projectionRotate = [0, 0],
+    rewindCoordinatesInMapData = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -406,6 +412,8 @@ export function BiVariateChoroplethMap(props: Props) {
             customLayers={customLayers}
             collapseColorScaleByDefault={collapseColorScaleByDefault}
             zoomAndCenterByHighlightedIds={zoomAndCenterByHighlightedIds}
+            projectionRotate={projectionRotate}
+            rewindCoordinatesInMapData={rewindCoordinatesInMapData}
           />
         ) : (
           <div

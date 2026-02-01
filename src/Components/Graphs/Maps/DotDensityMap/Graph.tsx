@@ -1,11 +1,12 @@
 import isEqual from 'fast-deep-equal';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   geoAlbersUsa,
   geoEqualEarth,
   geoMercator,
   geoNaturalEarth1,
   geoOrthographic,
+  geoPath,
 } from 'd3-geo';
 import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
 import { select } from 'd3-selection';
@@ -15,6 +16,8 @@ import bbox from '@turf/bbox';
 import centerOfMass from '@turf/center-of-mass';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 import { cn } from '@undp/design-system-react/cn';
+import rewind from '@turf/rewind';
+import { FeatureCollection } from 'geojson';
 
 import {
   AnimateDataType,
@@ -32,8 +35,8 @@ import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: DotDensityMapDataType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mapData: any;
+
+  mapData: FeatureCollection;
   colorDomain: string[];
   width: number;
   height: number;
@@ -69,6 +72,8 @@ interface Props {
   customLayers: CustomLayerDataType[];
   maxRadiusValue: number;
   collapseColorScaleByDefault?: boolean;
+  projectionRotate: [number, number] | [number, number, number];
+  rewindCoordinatesInMapData: boolean;
 }
 
 export function Graph(props: Props) {
@@ -105,7 +110,14 @@ export function Graph(props: Props) {
     customLayers,
     maxRadiusValue,
     collapseColorScaleByDefault,
+    projectionRotate,
+    rewindCoordinatesInMapData,
   } = props;
+  const formattedMapData = useMemo(() => {
+    if (!rewindCoordinatesInMapData) return mapData;
+
+    return rewind(mapData, { reverse: true }) as FeatureCollection;
+  }, [mapData, rewindCoordinatesInMapData]);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 
   const [showLegend, setShowLegend] = useState(
@@ -167,10 +179,9 @@ export function Graph(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, width, zoomInteraction]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bounds = bbox(mapData as any);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const center = centerOfMass(mapData as any);
+  const bounds = bbox(formattedMapData);
+
+  const center = centerOfMass(formattedMapData);
   const lonDiff = bounds[2] - bounds[0];
   const latDiff = bounds[3] - bounds[1];
   const scaleX = (((width * 190) / 960) * 360) / lonDiff;
@@ -180,34 +191,35 @@ export function Graph(props: Props) {
   const projection =
     mapProjection === 'mercator'
       ? geoMercator()
-          .rotate([0, 0])
+          .rotate(projectionRotate)
           .center(centerPoint || (center.geometry.coordinates as [number, number]))
           .translate([width / 2, height / 2])
           .scale(scaleVar)
       : mapProjection === 'equalEarth'
         ? geoEqualEarth()
-            .rotate([0, 0])
+            .rotate(projectionRotate)
             .center(centerPoint || (center.geometry.coordinates as [number, number]))
             .translate([width / 2, height / 2])
             .scale(scaleVar)
         : mapProjection === 'naturalEarth'
           ? geoNaturalEarth1()
-              .rotate([0, 0])
+              .rotate(projectionRotate)
               .center(centerPoint || (center.geometry.coordinates as [number, number]))
               .translate([width / 2, height / 2])
               .scale(scaleVar)
           : mapProjection === 'orthographic'
             ? geoOrthographic()
-                .rotate([0, 0])
+                .rotate(projectionRotate)
                 .center(centerPoint || (center.geometry.coordinates as [number, number]))
                 .translate([width / 2, height / 2])
                 .scale(scaleVar)
             : geoAlbersUsa()
-                .rotate([0, 0])
+                .rotate(projectionRotate)
                 .center(centerPoint || (center.geometry.coordinates as [number, number]))
                 .translate([width / 2, height / 2])
                 .scale(scaleVar);
 
+  const pathGenerator = geoPath().projection(projection);
   const handleZoom = (direction: 'in' | 'out') => {
     if (!mapSvg.current || !zoomRef.current) return;
     const svg = select(mapSvg.current);
@@ -226,60 +238,21 @@ export function Graph(props: Props) {
         >
           <g ref={mapG}>
             {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-            {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              mapData.features.map((d: any, i: number) => {
-                return (
-                  <g key={i}>
-                    {d.geometry.type === 'MultiPolygon'
-                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        d.geometry.coordinates.map((el: any, j: any) => {
-                          let masterPath = '';
-                          el.forEach((geo: number[][]) => {
-                            let path = ' M';
-                            geo.forEach((c: number[], k: number) => {
-                              const point = projection([c[0], c[1]]) as [number, number];
-                              if (k !== geo.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                              else path = `${path}${point[0]} ${point[1]}`;
-                            });
-                            masterPath += path;
-                          });
-                          return (
-                            <path
-                              key={j}
-                              d={masterPath}
-                              style={{
-                                stroke: mapBorderColor,
-                                strokeWidth: mapBorderWidth,
-                                fill: mapNoDataColor,
-                              }}
-                            />
-                          );
-                        })
-                      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        d.geometry.coordinates.map((el: any, j: number) => {
-                          let path = 'M';
-                          el.forEach((c: number[], k: number) => {
-                            const point = projection([c[0], c[1]]) as [number, number];
-                            if (k !== el.length - 1) path = `${path}${point[0]} ${point[1]}L`;
-                            else path = `${path}${point[0]} ${point[1]}`;
-                          });
-                          return (
-                            <path
-                              key={j}
-                              d={path}
-                              style={{
-                                stroke: mapBorderColor,
-                                strokeWidth: mapBorderWidth,
-                                fill: mapNoDataColor,
-                              }}
-                            />
-                          );
-                        })}
-                  </g>
-                );
-              })
-            }
+            {formattedMapData.features.map((d, i: number) => {
+              const path = pathGenerator(d);
+              if (!path) return null;
+              return (
+                <path
+                  d={path}
+                  key={i}
+                  style={{
+                    stroke: mapBorderColor,
+                    strokeWidth: mapBorderWidth,
+                    fill: mapNoDataColor,
+                  }}
+                />
+              );
+            })}
             <AnimatePresence>
               {data.map(d => {
                 const color =

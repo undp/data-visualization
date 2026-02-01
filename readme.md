@@ -99,15 +99,8 @@ Adding a new chart or graph to the library requires multiple steps:
 * Add the missing settings  to `GraphSettingsDataType` in `./src/Types.tsx`
 * Add the graph configuration settings in `./src/Utils/transformData/graphConfig.ts`
 * Add the graph to the list in `./src/Utils/getGraphList.tsx`
-* Add the file names in the next step to the `getDataSchema` and `getSettingsSchema` functions in `./src/Schemas/getSchema.tsx`
 * Add the graph to the `graphComponent` and `getGraphProps` functions in `./src/Components/Dashboard/GraphEl.tsx`
 * Finally add an export in `./src/index.ts`
-
-Adding schema
-__Schemas are in different repo: [undp-viz-library-schema](https://github.com/UNDP-Data/undp-viz-library-schemas)
-
-* Add the data schema for the graph and graph settings schema to the `dataSchema` folder.
-* Also add the missing properties to the `SettingSchema` in `settingSchema` folder
 
 Adding documentation and stories in storybook:
 

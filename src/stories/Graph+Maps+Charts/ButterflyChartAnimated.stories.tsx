@@ -115,6 +115,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
+    hideAxisLine: { table: { defaultValue: { summary: 'false' } } },
     showColorScale: { table: { defaultValue: { summary: 'false' } } },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },

@@ -909,6 +909,8 @@ function GraphEl(props: Props) {
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
           zoomAndCenterByHighlightedIds: settings?.zoomAndCenterByHighlightedIds,
+          projectionRotate: settings?.projectionRotate,
+          rewindCoordinatesInMapData: settings?.rewindCoordinatesInMapData,
         };
       case 'biVariateChoroplethMap':
         return {
@@ -969,6 +971,8 @@ function GraphEl(props: Props) {
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
           zoomAndCenterByHighlightedIds: settings?.zoomAndCenterByHighlightedIds,
+          projectionRotate: settings?.projectionRotate,
+          rewindCoordinatesInMapData: settings?.rewindCoordinatesInMapData,
         };
       case 'dotDensityMap':
         return {
@@ -1022,6 +1026,8 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           zoomInteraction: settings?.zoomInteraction,
           animate: settings?.animate,
+          projectionRotate: settings?.projectionRotate,
+          rewindCoordinatesInMapData: settings?.rewindCoordinatesInMapData,
         };
       case 'hybridMap':
         return {
@@ -1086,6 +1092,8 @@ function GraphEl(props: Props) {
           dotColor: settings?.dotColor,
           dotBorderColor: settings?.dotBorderColor,
           labelColor: settings?.labelColor,
+          projectionRotate: settings?.projectionRotate,
+          rewindCoordinatesInMapData: settings?.rewindCoordinatesInMapData,
         };
       case 'donutChart':
         return {

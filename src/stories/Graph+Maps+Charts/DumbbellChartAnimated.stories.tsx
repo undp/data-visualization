@@ -124,6 +124,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       table: { type: { summary: 'string[]' } },
     },
     showTicks: { table: { defaultValue: { summary: 'true' } } },
+    hideAxisLine: { table: { defaultValue: { summary: 'false' } } },
     arrowConnector: { table: { defaultValue: { summary: 'false' } } },
     connectorStrokeWidth: { table: { defaultValue: { summary: '2' } } },
     filterNA: { table: { defaultValue: { summary: 'true' } } },
