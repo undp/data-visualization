@@ -263,6 +263,7 @@ export function Graph(props: Props) {
                       : colors[colorDomain.indexOf(`${d.color}`)];
                 return (
                   <motion.g
+                    className='undp-map-dots'
                     key={d.label || `${d.lat}-${d.long}`}
                     variants={{
                       initial: { opacity: 0 },

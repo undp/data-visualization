@@ -302,6 +302,7 @@ export function Graph(props: Props) {
                   return (
                     <motion.g
                       key={d.id}
+                      className='undp-map-shapes'
                       variants={{
                         initial: { opacity: 0 },
                         whileInView: {
@@ -384,6 +385,7 @@ export function Graph(props: Props) {
                       : 1;
                   return (
                     <motion.g
+                      className='undp-map-dots'
                       key={d.label || `${d.lat}-${d.long}`}
                       variants={{
                         initial: { opacity: 0 },

@@ -298,6 +298,7 @@ export function Graph(props: Props) {
                   : mapNoDataColor;
                 return (
                   <motion.g
+                    className='undp-map-shapes'
                     key={d.id}
                     variants={{
                       initial: { opacity: 0 },
