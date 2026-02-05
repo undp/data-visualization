@@ -200,8 +200,8 @@ export function Graph(props: Props) {
         )
       : formattedMapData.features,
   });
-  const lonDiff = bounds[2] - bounds[0];
-  const latDiff = bounds[3] - bounds[1];
+  const lonDiff = (bounds[2] - bounds[0]) * 1.15;
+  const latDiff = (bounds[3] - bounds[1]) * 1.15;
   const scaleX = (((width * 190) / 960) * 360) / lonDiff;
   const scaleY = (((height * 190) / 678) * 180) / latDiff;
   const scaleVar = scale * Math.min(scaleX, scaleY);

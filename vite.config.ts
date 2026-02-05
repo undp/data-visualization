@@ -231,7 +231,6 @@ export default defineConfig({
         'marked',
         'math-expression-evaluator',
         'handlebars',
-        'ajv',
       ],
       output: {
         manualChunks: undefined,
