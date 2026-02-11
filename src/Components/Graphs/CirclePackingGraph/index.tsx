@@ -72,6 +72,8 @@ interface Props {
   maxRadiusValue?: number;
 
   // Graph Parameters
+  /** If true, the graph will be rendered in a circle layout */
+  circularBoundary?: boolean;
   /** Maximum radius of the circle */
   radius?: number;
   /** Toggle visibility of labels */
@@ -162,6 +164,7 @@ export function CirclePackingGraph(props: Props) {
     classNames,
     dimmedOpacity = 0.3,
     precision = 2,
+    circularBoundary = true,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -272,6 +275,7 @@ export function CirclePackingGraph(props: Props) {
                     data.map(d => d.size),
                     svgWidth,
                     svgHeight,
+                    circularBoundary,
                   )
                 : radius
             }

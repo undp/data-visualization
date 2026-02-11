@@ -91,6 +91,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     // Graph parameters
     showLabels: { table: { defaultValue: { summary: 'true' } } },
     showValues: { table: { defaultValue: { summary: 'true' } } },
+    circularBoundary: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'false' } } },
     showNAColor: { table: { defaultValue: { summary: 'true' } } },
     highlightedDataPoints: {

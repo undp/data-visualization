@@ -1020,6 +1020,7 @@ export interface GraphSettingsDataType {
   hideAxisLine?: boolean;
   projectionRotate?: [number, number] | [number, number, number];
   rewindCoordinatesInMapData?: boolean;
+  circularBoundary?: boolean;
 }
 
 export interface InfoBoxDataType {

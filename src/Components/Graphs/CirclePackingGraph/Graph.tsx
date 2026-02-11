@@ -3,6 +3,7 @@ import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3
 import orderBy from 'lodash.orderby';
 import { scaleSqrt } from 'd3-scale';
 import { extent } from 'd3-array';
+import forceBoundary from 'd3-force-boundary';
 import { cn } from '@undp/design-system-react/cn';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { P } from '@undp/design-system-react/Typography';
@@ -145,6 +146,7 @@ export const Graph = (props: Props) => {
           forceCollide((d: any) => (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1)),
         )
         .force('charge', forceManyBody().strength(-15))
+        .force('boundary', forceBoundary(0, 0, graphWidth, graphHeight).strength(0.2).border(50))
         .alphaDecay(0.05)
         .tick(10000);
 

@@ -1391,6 +1391,7 @@ function GraphEl(props: Props) {
           leftMargin: settings?.leftMargin,
           rightMargin: settings?.rightMargin,
           colorDomain: settings?.colorDomain,
+          circularBoundary: settings?.circularBoundary,
           colorLegendTitle:
             Object.keys(settings || {}).indexOf('colorLegendTitle') !== -1
               ? settings?.colorLegendTitle
