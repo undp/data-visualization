@@ -298,7 +298,7 @@ export function StackedBarGraphEl(props: Props) {
                         ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
                           .filter(d =>
                             timeline.enabled
-                              ? d.date ===
+                              ? `${d.date}` ===
                                 format(
                                   new Date(uniqDatesSorted[index]),
                                   timeline.dateFormat || 'yyyy',
@@ -313,7 +313,7 @@ export function StackedBarGraphEl(props: Props) {
                         ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
                           .filter(d =>
                             timeline.enabled
-                              ? d.date ===
+                              ? `${d.date}` ===
                                 format(
                                   new Date(uniqDatesSorted[index]),
                                   timeline.dateFormat || 'yyyy',
@@ -330,7 +330,7 @@ export function StackedBarGraphEl(props: Props) {
                   : ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
                       .filter(d =>
                         timeline.enabled
-                          ? d.date ===
+                          ? `${d.date}` ===
                             format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
                           : d,
                       )

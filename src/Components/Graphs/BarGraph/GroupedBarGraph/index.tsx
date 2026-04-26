@@ -296,7 +296,7 @@ export function GroupedBarGraphEl(props: Props) {
                         ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
                           .filter(d =>
                             timeline.enabled
-                              ? d.date ===
+                              ? `${d.date}` ===
                                 format(
                                   new Date(uniqDatesSorted[index]),
                                   timeline.dateFormat || 'yyyy',
@@ -311,7 +311,7 @@ export function GroupedBarGraphEl(props: Props) {
                         ensureCompleteDataForStackedBarChart(data, timeline.dateFormat || 'yyyy')
                           .filter(d =>
                             timeline.enabled
-                              ? d.date ===
+                              ? `${d.date}` ===
                                 format(
                                   new Date(uniqDatesSorted[index]),
                                   timeline.dateFormat || 'yyyy',

@@ -212,7 +212,6 @@ export function SimpleBarGraphEl(props: Props) {
     timeline.showOnlyActiveDate,
     timeline.dateFormat || 'yyyy',
   );
-
   return (
     <GraphContainer
       className={classNames?.graphContainer}
@@ -303,7 +302,7 @@ export function SimpleBarGraphEl(props: Props) {
                     ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
                       .filter(d =>
                         timeline.enabled
-                          ? d.date ===
+                          ? `${d.date}` ===
                             format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
                           : d,
                       )
@@ -321,7 +320,7 @@ export function SimpleBarGraphEl(props: Props) {
                 : ensureCompleteDataForBarChart(data, timeline.dateFormat || 'yyyy')
                     .filter(d =>
                       timeline.enabled
-                        ? d.date ===
+                        ? `${d.date}` ===
                           format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
                         : d,
                     )

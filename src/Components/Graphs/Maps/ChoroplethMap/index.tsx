@@ -351,7 +351,8 @@ export function ChoroplethMap(props: Props) {
           <Graph
             data={data.filter(d =>
               timeline.enabled
-                ? d.date === format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                ? `${d.date}` ===
+                  format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
                 : d,
             )}
             mapData={

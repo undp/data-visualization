@@ -361,7 +361,7 @@ export function ButterflyChart(props: Props) {
             data={ensureCompleteDataForButterFlyChart(data, timeline.dateFormat || 'yyyy').filter(
               d =>
                 timeline.enabled
-                  ? d.date ===
+                  ? `${d.date}` ===
                     format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
                   : d,
             )}

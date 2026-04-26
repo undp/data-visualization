@@ -89,6 +89,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   naLabel: string;
+  showHighlightedLinesLabels: boolean;
 }
 
 interface FormattedDataType {
@@ -138,6 +139,7 @@ export function Graph(props: Props) {
     precision,
     naLabel,
     customLayers,
+    showHighlightedLinesLabels,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -528,7 +530,7 @@ export function Graph(props: Props) {
                     ) : null}
                   </motion.g>
                 ))}
-                {(highlightedLines.indexOf(d[0].label) !== -1 ||
+                {((highlightedLines.indexOf(d[0].label) !== -1 && showHighlightedLinesLabels) ||
                   mouseOverData?.label === d[0].label) &&
                 showLabels ? (
                   <motion.text

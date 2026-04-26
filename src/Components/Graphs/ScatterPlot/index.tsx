@@ -121,6 +121,8 @@ interface Props {
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines if the data point labels should be shown for highlighted data points. */
+  showHighlightedDataPointsLabels?: boolean;
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Title for the x-axis */
@@ -205,6 +207,7 @@ export function ScatterPlot(props: Props) {
     highlightAreaSettings = [],
     showColorScale = true,
     highlightedDataPoints = [],
+    showHighlightedDataPointsLabels = false,
     graphID,
     maxRadiusValue,
     maxXValue,
@@ -374,7 +377,8 @@ export function ScatterPlot(props: Props) {
           <Graph
             data={ensureCompleteDataForScatterPlot(data, timeline.dateFormat || 'yyyy').filter(d =>
               timeline.enabled
-                ? d.date === format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                ? `${d.date}` ===
+                  format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
                 : d,
             )}
             width={svgWidth}
@@ -407,6 +411,7 @@ export function ScatterPlot(props: Props) {
             highlightedDataPoints={
               data.filter(el => el.label).length === 0 ? [] : highlightedDataPoints
             }
+            showHighlightedDataPointsLabels={showHighlightedDataPointsLabels}
             selectedColor={selectedColor}
             maxRadiusValue={
               checkIfNullOrUndefined(maxRadiusValue)

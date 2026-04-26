@@ -84,6 +84,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
+  showHighlightedDataPointsLabels: boolean;
 }
 
 export function Graph(props: Props) {
@@ -132,6 +133,7 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    showHighlightedDataPointsLabels,
     customLayers,
   } = props;
   const svgRef = useRef(null);
@@ -529,7 +531,9 @@ export function Graph(props: Props) {
                       >
                         {d.label}
                       </motion.text>
-                    ) : highlightedDataPoints.length !== 0 && !checkIfNullOrUndefined(d.label) ? (
+                    ) : highlightedDataPoints.length !== 0 &&
+                      !checkIfNullOrUndefined(d.label) &&
+                      showHighlightedDataPointsLabels ? (
                       highlightedDataPoints.indexOf(d.label as string | number) !== -1 ? (
                         <motion.text
                           style={{

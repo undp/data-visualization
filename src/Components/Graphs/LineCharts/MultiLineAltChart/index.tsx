@@ -117,6 +117,8 @@ interface Props {
   naLabel?: string;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedLines?: (string | number)[];
+  /** Defines if the labels should be shown for highlighted lines. */
+  showHighlightedLinesLabels?: boolean;
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Annotations on the chart */
@@ -180,6 +182,7 @@ export function MultiLineAltChart(props: Props) {
     relativeHeight,
     onSeriesMouseOver,
     showLabels = true,
+    showHighlightedLinesLabels = false,
     refValues = [],
     highlightAreaSettings = [],
     graphID,
@@ -307,6 +310,7 @@ export function MultiLineAltChart(props: Props) {
             minValue={minValue}
             maxValue={maxValue}
             highlightedLines={highlightedLines}
+            showHighlightedLinesLabels={showHighlightedLinesLabels}
             animate={
               animate === true
                 ? { duration: 0.5, once: true, amount: 0.5 }
