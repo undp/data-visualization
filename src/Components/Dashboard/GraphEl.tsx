@@ -1474,6 +1474,7 @@ function GraphEl(props: Props) {
         };
       case 'stripChart':
         return {
+          showDataMinMax: settings?.showDataMinMax,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,

@@ -106,6 +106,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
+  /** Toggles if the graph show the min and max value of the data.  */
+  showDataMinMax?: boolean;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -191,6 +193,7 @@ export function StripChart(props: Props) {
     dimmedOpacity = 0.3,
     precision = 2,
     customLayers = [],
+    showDataMinMax = false,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -267,6 +270,7 @@ export function StripChart(props: Props) {
           <Comp
             data={data}
             width={svgWidth}
+            showDataMinMax={showDataMinMax}
             height={svgHeight}
             colorDomain={
               data.filter(el => el.color).length === 0

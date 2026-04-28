@@ -1021,6 +1021,7 @@ export interface GraphSettingsDataType {
   projectionRotate?: [number, number] | [number, number, number];
   rewindCoordinatesInMapData?: boolean;
   circularBoundary?: boolean;
+  showDataMinMax?: boolean;
 }
 
 export interface InfoBoxDataType {

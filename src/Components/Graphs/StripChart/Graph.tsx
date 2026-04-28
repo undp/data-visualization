@@ -31,6 +31,7 @@ interface Props {
   rightMargin?: number;
   topMargin?: number;
   bottomMargin?: number;
+  showDataMinMax: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,6 +93,7 @@ export function VerticalGraph(props: Props) {
     dimmedOpacity,
     precision,
     customLayers,
+    showDataMinMax,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -366,6 +368,66 @@ export function VerticalGraph(props: Props) {
                 </motion.g>
               );
             })}
+            {showDataMinMax
+              ? [
+                  Math.min(
+                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                  ),
+                  Math.max(
+                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                  ),
+                ].map((d, i) => (
+                  <motion.g
+                    key={i}
+                    variants={{
+                      initial: {
+                        opacity: 0,
+                        x: graphWidth / 2,
+                        y: y(0),
+                      },
+                      whileInView: {
+                        x: graphWidth / 2,
+                        y: y(d),
+                        opacity: 1,
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  >
+                    <motion.text
+                      key={i}
+                      y={0}
+                      dy='0.33em'
+                      variants={{
+                        initial: {
+                          opacity: 0,
+                          x: 0 + radius + 3,
+                        },
+                        whileInView: {
+                          opacity: 1,
+                          x: 0 + radius + 3,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      style={{
+                        textAnchor: 'start',
+                        ...(styles?.graphObjectValues || {}),
+                      }}
+                      className={cn(
+                        'graph-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
+                        classNames?.graphObjectValues,
+                      )}
+                    >
+                      {numberFormattingFunction(d, 'NA', precision, prefix, suffix)}
+                    </motion.text>
+                  </motion.g>
+                ))
+              : null}
             {ticks.map((tick, i) => (
               <text
                 key={i}
@@ -443,6 +505,7 @@ export function HorizontalGraph(props: Props) {
     dimmedOpacity,
     precision,
     customLayers,
+    showDataMinMax,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -716,6 +779,64 @@ export function HorizontalGraph(props: Props) {
                 </motion.g>
               );
             })}
+            {showDataMinMax
+              ? [
+                  Math.min(
+                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                  ),
+                  Math.max(
+                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                  ),
+                ].map((d, i) => (
+                  <motion.g
+                    key={i}
+                    variants={{
+                      initial: {
+                        opacity: 0,
+                        x: x(0),
+                        y: graphHeight / 2,
+                      },
+                      whileInView: {
+                        x: x(d),
+                        y: graphHeight / 2,
+                        opacity: 1,
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  >
+                    <motion.text
+                      x={0}
+                      variants={{
+                        initial: {
+                          opacity: 0,
+                          y: 0 - radius - 5,
+                        },
+                        whileInView: {
+                          opacity: 1,
+                          y: 0 - radius - 5,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      style={{
+                        textAnchor: 'middle',
+                        ...(styles?.graphObjectValues || {}),
+                      }}
+                      className={cn(
+                        'graph-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
+                        classNames?.graphObjectValues,
+                      )}
+                    >
+                      {numberFormattingFunction(d, 'NA', precision, prefix, suffix)}
+                    </motion.text>
+                  </motion.g>
+                ))
+              : null}
             {ticks.map((tick, i) => (
               <text
                 key={i}
