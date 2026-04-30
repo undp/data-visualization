@@ -65,6 +65,12 @@ export const REF_VALUE_OBJECT = `{
   };
 }`;
 
+export const OVERLAY_MAP_OBJECT = `{
+  mapData: FeatureCollection | string;
+  mapBorderWidth?: number;
+  mapBorderColor?: string;
+}`;
+
 export const SOURCE_OBJECT = `{
   source: string; 
   link?: string; 

@@ -198,6 +198,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },
     },
+    showVoronoiTesselation: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    useVoronoiInteraction: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'true' } },
+    },
     tooltip: {
       control: 'text',
       table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },

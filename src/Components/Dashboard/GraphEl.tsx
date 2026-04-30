@@ -1196,6 +1196,7 @@ function GraphEl(props: Props) {
           precision: settings?.precision,
           theme: settings?.theme,
           showVoronoiTesselation: settings?.showVoronoiTesselation,
+          useVoronoiInteraction: settings?.useVoronoiInteraction,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,

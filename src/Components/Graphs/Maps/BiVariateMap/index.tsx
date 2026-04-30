@@ -18,6 +18,7 @@ import {
   CustomLayerDataType,
   AnimateDataType,
   TimelineDataType,
+  MapOverlayDataType,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -79,15 +80,9 @@ interface Props {
 
   // Graph Parameters
   /** Map data as an object in geoJson format or a url for geoJson */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mapData?: any;
+  mapData?: FeatureCollection | string;
   /** Detail if any other map needs to be overlayed over the main map */
-  mapOverlay?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mapData?: any;
-    mapBorderWidth?: number;
-    mapBorderColor?: string;
-  };
+  mapOverlay?: MapOverlayDataType;
   /** Defines if the coordinates in the map data should be rewinded or not. Try to change this is the visualization shows countries as holes instead of shapes. */
   rewindCoordinatesInMapData?: boolean;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
@@ -233,8 +228,7 @@ export function BiVariateChoroplethMap(props: Props) {
   }, [data, timeline.dateFormat]);
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [mapShape, setMapShape] = useState<any>(undefined);
+  const [mapShape, setMapShape] = useState<FeatureCollection | undefined>(undefined);
   const [overlayMapShape, setOverlayMapShape] = useState<FeatureCollection | undefined>(undefined);
 
   const graphDiv = useRef<HTMLDivElement>(null);
@@ -249,12 +243,12 @@ export function BiVariateChoroplethMap(props: Props) {
     }
     return () => resizeObserver.disconnect();
   }, []);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onUpdateShape = useEffectEvent((shape: any) => {
+
+  const onUpdateShape = useEffectEvent((shape: FeatureCollection) => {
     setMapShape(shape);
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onUpdateOverlayMapShape = useEffectEvent((shape: any) => {
+
+  const onUpdateOverlayMapShape = useEffectEvent((shape: FeatureCollection | undefined) => {
     setOverlayMapShape(shape);
   });
   useEffect(() => {
@@ -384,10 +378,7 @@ export function BiVariateChoroplethMap(props: Props) {
                 ? mapShape
                 : {
                     ...mapShape,
-                    features: mapShape.features.filter(
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (el: any) => el.properties.NAME !== 'Antarctica',
-                    ),
+                    features: mapShape.features.filter(el => el.properties?.NAME !== 'Antarctica'),
                   }
             }
             xDomain={

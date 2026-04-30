@@ -6,6 +6,7 @@ import {
   CLASS_NAME_OBJECT,
   CUSTOM_LAYERS_OBJECT,
   LANGUAGE_OPTIONS,
+  OVERLAY_MAP_OBJECT,
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../../assets/constants';
@@ -180,6 +181,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     rewindCoordinatesInMapData: {
       control: 'boolean',
       table: { defaultValue: { summary: 'true' } },
+    },
+    mapOverlay: {
+      table: {
+        type: {
+          summary: 'MapOverlayDataType',
+          detail: OVERLAY_MAP_OBJECT,
+        },
+      },
     },
 
     // Interactions and Callbacks

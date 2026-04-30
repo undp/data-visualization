@@ -86,6 +86,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   showHighlightedDataPointsLabels: boolean;
   showVoronoiTesselation: boolean;
+  useVoronoiInteraction: boolean;
 }
 
 export function Graph(props: Props) {
@@ -137,6 +138,7 @@ export function Graph(props: Props) {
     showHighlightedDataPointsLabels,
     customLayers,
     showVoronoiTesselation,
+    useVoronoiInteraction,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -164,9 +166,14 @@ export function Graph(props: Props) {
       : undefined;
   const dataOrdered =
     dataWithId.filter(d => !checkIfNullOrUndefined(d.radius)).length === 0
-      ? dataWithId
+      ? dataWithId.filter(d => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
       : orderBy(
-          dataWithId.filter(d => !checkIfNullOrUndefined(d.radius)),
+          dataWithId.filter(
+            d =>
+              !checkIfNullOrUndefined(d.radius) &&
+              !checkIfNullOrUndefined(d.x) &&
+              !checkIfNullOrUndefined(d.y),
+          ),
           'radius',
           'desc',
         );
@@ -175,7 +182,7 @@ export function Graph(props: Props) {
   const xTicks = x.ticks(noOfXTicks);
   const yTicks = y.ticks(noOfYTicks);
   const voronoiDiagram = Delaunay.from(
-    dataOrdered.filter(d => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y)),
+    dataOrdered,
     d => x(d.x as number),
     d => y(d.y as number),
   ).voronoi([0, 0, graphWidth < 0 ? 0 : graphWidth, graphHeight < 0 ? 0 : graphHeight]);
@@ -332,16 +339,15 @@ export function Graph(props: Props) {
           </g>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
-            {dataOrdered
-              .filter(d => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
-              .map((d, i) => {
+            {useVoronoiInteraction &&
+              dataOrdered.map((d, i) => {
                 return (
                   <path
                     key={`tesselation_${d.label || i}`}
                     d={voronoiDiagram.renderCell(dataOrdered.findIndex(el => el.id === d.id))}
                     opacity={showVoronoiTesselation ? 1 : 0}
                     className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
-                    style={{ fill: 'none', strokeWidth: 1 }}
+                    style={{ fillOpacity: 0, strokeWidth: 1 }}
                     onMouseEnter={event => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
@@ -373,129 +379,170 @@ export function Graph(props: Props) {
                   />
                 );
               })}
-            {dataOrdered
-              .filter(d => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
-              .map((d, i) => {
-                return (
-                  <motion.g
-                    key={`${d.label || i}`}
+            {dataOrdered.map((d, i) => {
+              return (
+                <motion.g
+                  key={`${d.label || i}`}
+                  variants={{
+                    initial: {
+                      x: x(d.x as number),
+                      y: y(d.y as number),
+                      opacity: selectedColor
+                        ? d.color
+                          ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
+                            ? 1
+                            : dimmedOpacity
+                          : dimmedOpacity
+                        : mouseOverData
+                          ? mouseOverData.id === d.id
+                            ? 1
+                            : dimmedOpacity
+                          : highlightedDataPoints.length !== 0
+                            ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : 1,
+                    },
+                    whileInView: {
+                      x: x(d.x as number),
+                      y: y(d.y as number),
+                      opacity: selectedColor
+                        ? d.color
+                          ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
+                            ? 1
+                            : dimmedOpacity
+                          : dimmedOpacity
+                        : mouseOverData
+                          ? mouseOverData.id === d.id
+                            ? 1
+                            : dimmedOpacity
+                          : highlightedDataPoints.length !== 0
+                            ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : 1,
+                      transition: { duration: animate.duration },
+                    },
+                  }}
+                  initial='initial'
+                  animate={isInView ? 'whileInView' : 'initial'}
+                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                  onMouseEnter={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                    onSeriesMouseOver?.(d);
+                  }}
+                  onMouseMove={event => {
+                    setMouseOverData(d);
+                    setEventY(event.clientY);
+                    setEventX(event.clientX);
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverData(undefined);
+                    setEventX(undefined);
+                    setEventY(undefined);
+                    onSeriesMouseOver?.(undefined);
+                  }}
+                  onClick={() => {
+                    if (onSeriesMouseClick || detailsOnClick) {
+                      if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
+                        setMouseClickData(undefined);
+                        onSeriesMouseClick?.(undefined);
+                      } else {
+                        setMouseClickData(d);
+                        onSeriesMouseClick?.(d);
+                      }
+                    }
+                  }}
+                >
+                  <motion.circle
+                    cx={0}
+                    cy={0}
+                    exit={{ r: 0, transition: { duration: animate.duration } }}
                     variants={{
                       initial: {
-                        x: x(d.x as number),
-                        y: y(d.y as number),
-                        opacity: selectedColor
-                          ? d.color
-                            ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
-                              ? 1
-                              : dimmedOpacity
-                            : dimmedOpacity
-                          : mouseOverData
-                            ? mouseOverData.id === d.id
-                              ? 1
-                              : dimmedOpacity
-                            : highlightedDataPoints.length !== 0
-                              ? highlightedDataPoints.indexOf(d.label || '') !== -1
-                                ? 1
-                                : dimmedOpacity
-                              : 1,
+                        r: 0,
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                        stroke:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
                       },
                       whileInView: {
-                        x: x(d.x as number),
-                        y: y(d.y as number),
-                        opacity: selectedColor
-                          ? d.color
-                            ? colors[colorDomain.indexOf(`${d.color}`)] === selectedColor
-                              ? 1
-                              : dimmedOpacity
-                            : dimmedOpacity
-                          : mouseOverData
-                            ? mouseOverData.id === d.id
-                              ? 1
-                              : dimmedOpacity
-                            : highlightedDataPoints.length !== 0
-                              ? highlightedDataPoints.indexOf(d.label || '') !== -1
-                                ? 1
-                                : dimmedOpacity
-                              : 1,
+                        r: !radiusScale ? radius : radiusScale(d.radius || 0),
+                        fill:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
+                        stroke:
+                          data.filter(el => el.color).length === 0
+                            ? colors[0]
+                            : !d.color
+                              ? Colors.gray
+                              : colors[colorDomain.indexOf(`${d.color}`)],
                         transition: { duration: animate.duration },
                       },
                     }}
                     initial='initial'
                     animate={isInView ? 'whileInView' : 'initial'}
-                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    onMouseEnter={event => {
-                      setMouseOverData(d);
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                      onSeriesMouseOver?.(d);
+                    style={{
+                      fillOpacity: 0.6,
                     }}
-                    onMouseMove={event => {
-                      setMouseOverData(d);
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                    }}
-                    onMouseLeave={() => {
-                      setMouseOverData(undefined);
-                      setEventX(undefined);
-                      setEventY(undefined);
-                      onSeriesMouseOver?.(undefined);
-                    }}
-                    onClick={() => {
-                      if (onSeriesMouseClick || detailsOnClick) {
-                        if (isEqual(mouseClickData, d) && resetSelectionOnDoubleClick) {
-                          setMouseClickData(undefined);
-                          onSeriesMouseClick?.(undefined);
-                        } else {
-                          setMouseClickData(d);
-                          onSeriesMouseClick?.(d);
-                        }
-                      }
-                    }}
-                  >
-                    <motion.circle
-                      cx={0}
-                      cy={0}
-                      exit={{ r: 0, transition: { duration: animate.duration } }}
+                  />
+                  {showLabels && !checkIfNullOrUndefined(d.label) ? (
+                    <motion.text
+                      style={{
+                        ...(styles?.graphObjectValues || {}),
+                      }}
+                      className={cn('graph-value text-sm', classNames?.graphObjectValues)}
+                      y={0}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       variants={{
                         initial: {
-                          r: 0,
+                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                          opacity: 0,
                           fill:
-                            data.filter(el => el.color).length === 0
+                            labelColor ||
+                            (data.filter(el => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)],
-                          stroke:
-                            data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)],
+                                : colors[colorDomain.indexOf(`${d.color}`)]),
                         },
                         whileInView: {
-                          r: !radiusScale ? radius : radiusScale(d.radius || 0),
+                          x: !radiusScale ? radius : radiusScale(d.radius || 0),
+                          opacity: 1,
                           fill:
-                            data.filter(el => el.color).length === 0
+                            labelColor ||
+                            (data.filter(el => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)],
-                          stroke:
-                            data.filter(el => el.color).length === 0
-                              ? colors[0]
-                              : !d.color
-                                ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)],
+                                : colors[colorDomain.indexOf(`${d.color}`)]),
                           transition: { duration: animate.duration },
                         },
                       }}
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
-                      style={{
-                        fillOpacity: 0.6,
-                      }}
-                    />
-                    {showLabels && !checkIfNullOrUndefined(d.label) ? (
+                      dy='0.33em'
+                      dx={3}
+                    >
+                      {d.label}
+                    </motion.text>
+                  ) : highlightedDataPoints.length !== 0 &&
+                    !checkIfNullOrUndefined(d.label) &&
+                    showHighlightedDataPointsLabels ? (
+                    highlightedDataPoints.indexOf(d.label as string | number) !== -1 ? (
                       <motion.text
                         style={{
                           ...(styles?.graphObjectValues || {}),
@@ -535,54 +582,11 @@ export function Graph(props: Props) {
                       >
                         {d.label}
                       </motion.text>
-                    ) : highlightedDataPoints.length !== 0 &&
-                      !checkIfNullOrUndefined(d.label) &&
-                      showHighlightedDataPointsLabels ? (
-                      highlightedDataPoints.indexOf(d.label as string | number) !== -1 ? (
-                        <motion.text
-                          style={{
-                            ...(styles?.graphObjectValues || {}),
-                          }}
-                          className={cn('graph-value text-sm', classNames?.graphObjectValues)}
-                          y={0}
-                          exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                          variants={{
-                            initial: {
-                              x: !radiusScale ? radius : radiusScale(d.radius || 0),
-                              opacity: 0,
-                              fill:
-                                labelColor ||
-                                (data.filter(el => el.color).length === 0
-                                  ? colors[0]
-                                  : !d.color
-                                    ? Colors.gray
-                                    : colors[colorDomain.indexOf(`${d.color}`)]),
-                            },
-                            whileInView: {
-                              x: !radiusScale ? radius : radiusScale(d.radius || 0),
-                              opacity: 1,
-                              fill:
-                                labelColor ||
-                                (data.filter(el => el.color).length === 0
-                                  ? colors[0]
-                                  : !d.color
-                                    ? Colors.gray
-                                    : colors[colorDomain.indexOf(`${d.color}`)]),
-                              transition: { duration: animate.duration },
-                            },
-                          }}
-                          initial='initial'
-                          animate={isInView ? 'whileInView' : 'initial'}
-                          dy='0.33em'
-                          dx={3}
-                        >
-                          {d.label}
-                        </motion.text>
-                      ) : null
-                    ) : null}
-                  </motion.g>
-                );
-              })}
+                    ) : null
+                  ) : null}
+                </motion.g>
+              );
+            })}
             {refXValues.map((el, i) => (
               <RefLineX
                 key={i}

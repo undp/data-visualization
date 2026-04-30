@@ -6,6 +6,7 @@ import {
   CLASS_NAME_OBJECT,
   CUSTOM_LAYERS_OBJECT,
   LANGUAGE_OPTIONS,
+  OVERLAY_MAP_OBJECT,
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../../assets/constants';
@@ -148,6 +149,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     zoomScaleExtend: {
       control: 'text',
       table: { type: { summary: '[number, number]' } },
+    },
+    mapOverlay: {
+      table: {
+        type: {
+          summary: 'MapOverlayDataType',
+          detail: OVERLAY_MAP_OBJECT,
+        },
+      },
     },
 
     // Graph parameters

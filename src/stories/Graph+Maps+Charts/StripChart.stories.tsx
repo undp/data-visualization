@@ -128,6 +128,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'boolean',
       table: { defaultValue: { summary: 'true' } },
     },
+    showDataMinMax: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
     detailsOnClick: {
       control: 'text',
       table: { type: { summary: 'string | (_d: any) => React.ReactNode' } },

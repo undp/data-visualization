@@ -3,7 +3,7 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
-import { Feature, FeatureCollection } from 'geojson';
+import { FeatureCollection } from 'geojson';
 
 import { Graph } from './Graph';
 
@@ -21,6 +21,7 @@ import {
   AnimateDataType,
   TimelineDataType,
   ScaleDataType,
+  MapOverlayDataType,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
@@ -82,11 +83,7 @@ interface Props {
   /** Map data as an object in geoJson format or a url for geoJson */
   mapData?: FeatureCollection | string;
   /** Detail if any other map needs to be overlayed over the main map */
-  mapOverlay?: {
-    mapData: FeatureCollection | string;
-    mapBorderWidth?: number;
-    mapBorderColor?: string;
-  };
+  mapOverlay?: MapOverlayDataType;
   /** Defines if the coordinates in the map data should be rewinded or not. Try to change this is the visualization shows countries as holes instead of shapes. */
   rewindCoordinatesInMapData?: boolean;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
@@ -402,9 +399,7 @@ export function HybridMap(props: Props) {
                 ? mapShape
                 : {
                     ...mapShape,
-                    features: mapShape.features.filter(
-                      (el: Feature) => el.properties?.NAME !== 'Antarctica',
-                    ),
+                    features: mapShape.features.filter(el => el.properties?.NAME !== 'Antarctica'),
                   }
             }
             overlayMapData={overlayMapShape}

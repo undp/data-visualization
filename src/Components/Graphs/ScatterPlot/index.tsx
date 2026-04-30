@@ -153,6 +153,8 @@ interface Props {
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
+  /** Toggle interaction of Voronoi cells */
+  useVoronoiInteraction?: boolean;
   /** Toggle visibility of Voronoi tesselation. Should be used for debugging only */
   showVoronoiTesselation?: boolean;
 
@@ -244,6 +246,7 @@ export function ScatterPlot(props: Props) {
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     showVoronoiTesselation = false,
+    useVoronoiInteraction = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -474,6 +477,7 @@ export function ScatterPlot(props: Props) {
             dimmedOpacity={dimmedOpacity}
             precision={precision}
             customLayers={customLayers}
+            useVoronoiInteraction={useVoronoiInteraction}
           />
         ) : null}
       </GraphArea>

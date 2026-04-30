@@ -768,6 +768,12 @@ export type LightConfig =
   | PointLightConfig
   | SpotLightConfig;
 
+export interface MapOverlayDataType {
+  mapData: FeatureCollection | string;
+  mapBorderWidth?: number;
+  mapBorderColor?: string;
+}
+
 export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
@@ -1025,11 +1031,8 @@ export interface GraphSettingsDataType {
   circularBoundary?: boolean;
   showDataMinMax?: boolean;
   showVoronoiTesselation?: boolean;
-  mapOverlay?: {
-    mapData: FeatureCollection | string;
-    mapBorderWidth?: number;
-    mapBorderColor?: string;
-  };
+  mapOverlay?: MapOverlayDataType;
+  useVoronoiInteraction?: boolean;
 }
 
 export interface InfoBoxDataType {

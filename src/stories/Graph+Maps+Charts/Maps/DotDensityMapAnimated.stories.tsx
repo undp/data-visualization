@@ -6,6 +6,7 @@ import {
   CLASS_NAME_OBJECT,
   CUSTOM_LAYERS_OBJECT,
   LANGUAGE_OPTIONS,
+  OVERLAY_MAP_OBJECT,
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../../assets/constants';
@@ -164,6 +165,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     highlightedDataPoints: {
       control: 'text',
       table: { type: { summary: '(string | number)[]' } },
+    },
+    mapOverlay: {
+      table: {
+        type: {
+          summary: 'MapOverlayDataType',
+          detail: OVERLAY_MAP_OBJECT,
+        },
+      },
     },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
