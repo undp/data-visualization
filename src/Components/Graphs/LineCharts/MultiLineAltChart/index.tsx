@@ -113,6 +113,8 @@ interface Props {
   showColorScale?: boolean;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
+  /** Toggle visibility of year labels on hover. */
+  showDateOnHover?: boolean;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Data points to highlight. Use the label value from data to highlight the data point */
@@ -212,6 +214,7 @@ export function MultiLineAltChart(props: Props) {
     precision = 2,
     customLayers = [],
     naLabel = 'NA',
+    showDateOnHover = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -339,6 +342,7 @@ export function MultiLineAltChart(props: Props) {
             precision={precision}
             customLayers={customLayers}
             naLabel={naLabel}
+            showDateOnHover={showDateOnHover}
           />
         ) : null}
       </GraphArea>

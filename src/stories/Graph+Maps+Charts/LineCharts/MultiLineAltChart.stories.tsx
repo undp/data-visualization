@@ -185,6 +185,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     highlightedLines: { control: 'text' },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
+    showDateOnHover: { control: 'boolean', table: { defaultValue: { summary: 'false' } } },
 
     // Interactions and Callbacks
     onSeriesMouseOver: { action: 'seriesMouseOver' },

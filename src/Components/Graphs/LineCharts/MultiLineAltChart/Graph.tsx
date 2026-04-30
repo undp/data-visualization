@@ -90,6 +90,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   naLabel: string;
   showHighlightedLinesLabels: boolean;
+  showDateOnHover: boolean;
 }
 
 interface FormattedDataType {
@@ -140,6 +141,7 @@ export function Graph(props: Props) {
     naLabel,
     customLayers,
     showHighlightedLinesLabels,
+    showDateOnHover,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -575,23 +577,41 @@ export function Graph(props: Props) {
               </motion.g>
             ))}
             {mouseOverData ? (
-              <text
-                y={y(mouseOverData.y) - 8}
-                x={x(mouseOverData.date)}
-                className={cn('graph-value text-sm font-bold', classNames?.graphObjectValues)}
-                style={{
-                  fill:
-                    data.filter(el => el.color).length === 0
-                      ? lineColors[0]
-                      : !mouseOverData.color
-                        ? Colors.gray
-                        : lineColors[colorDomain.indexOf(mouseOverData.color)],
-                  textAnchor: 'middle',
-                  ...(styles?.graphObjectValues || {}),
-                }}
-              >
-                {numberFormattingFunction(mouseOverData.y, naLabel, precision, prefix, suffix)}
-              </text>
+              <>
+                <text
+                  y={y(mouseOverData.y) - 8}
+                  x={x(mouseOverData.date)}
+                  className={cn('graph-value text-sm font-bold', classNames?.graphObjectValues)}
+                  style={{
+                    fill:
+                      data.filter(el => el.color).length === 0
+                        ? lineColors[0]
+                        : !mouseOverData.color
+                          ? Colors.gray
+                          : lineColors[colorDomain.indexOf(mouseOverData.color)],
+                    textAnchor: 'middle',
+                    ...(styles?.graphObjectValues || {}),
+                  }}
+                >
+                  {numberFormattingFunction(mouseOverData.y, naLabel, precision, prefix, suffix)}
+                </text>
+                {showDateOnHover && (
+                  <text
+                    y={y(mouseOverData.y) + 20}
+                    x={x(mouseOverData.date)}
+                    className={cn(
+                      'graph-value text-sm fill-primary-gray-500 dark:fill-primary-gray-400',
+                      classNames?.graphObjectValues,
+                    )}
+                    style={{
+                      textAnchor: 'middle',
+                      ...(styles?.graphObjectValues || {}),
+                    }}
+                  >
+                    {format(new Date(mouseOverData.date), dateFormat || 'yyyy')}
+                  </text>
+                )}
+              </>
             ) : null}
           </motion.g>
           {dataFormatted
