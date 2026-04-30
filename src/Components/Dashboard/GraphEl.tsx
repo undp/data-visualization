@@ -886,6 +886,7 @@ function GraphEl(props: Props) {
           relativeHeight: settings?.relativeHeight,
           padding: settings?.padding,
           isWorldMap: settings?.isWorldMap,
+          mapOverlay: settings?.mapOverlay,
           tooltip: settings?.tooltip,
           showColorScale: settings?.showColorScale,
           zoomScaleExtend: settings?.zoomScaleExtend,
@@ -929,6 +930,7 @@ function GraphEl(props: Props) {
           width: settings?.width,
           height: settings?.height,
           sources: settings?.sources,
+          mapOverlay: settings?.mapOverlay,
           xColorLegendTitle:
             Object.keys(settings || {}).indexOf('xColorLegendTitle') !== -1
               ? settings?.xColorLegendTitle
@@ -979,6 +981,7 @@ function GraphEl(props: Props) {
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
+          mapOverlay: settings?.mapOverlay,
           dimmedOpacity: settings?.dimmedOpacity,
           collapseColorScaleByDefault: settings?.collapseColorScaleByDefault,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1034,6 +1037,7 @@ function GraphEl(props: Props) {
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
+          mapOverlay: settings?.mapOverlay,
           dimmedOpacity: settings?.dimmedOpacity,
           collapseColorScaleByDefault: settings?.collapseColorScaleByDefault,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1191,6 +1195,7 @@ function GraphEl(props: Props) {
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
+          showVoronoiTesselation: settings?.showVoronoiTesselation,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,

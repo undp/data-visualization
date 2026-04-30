@@ -1,3 +1,5 @@
+import { FeatureCollection } from 'geojson';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type Languages =
   | 'en'
@@ -834,7 +836,7 @@ export interface GraphSettingsDataType {
   showColorLegendAtTop?: boolean;
   highlightedLines?: (string | number)[];
   area?: boolean;
-  mapData?: any;
+  mapData?: FeatureCollection | string;
   xColorLegendTitle?: string;
   yColorLegendTitle?: string;
   xDomain?: [number, number, number, number];
@@ -1022,6 +1024,12 @@ export interface GraphSettingsDataType {
   rewindCoordinatesInMapData?: boolean;
   circularBoundary?: boolean;
   showDataMinMax?: boolean;
+  showVoronoiTesselation?: boolean;
+  mapOverlay?: {
+    mapData: FeatureCollection | string;
+    mapBorderWidth?: number;
+    mapBorderColor?: string;
+  };
 }
 
 export interface InfoBoxDataType {

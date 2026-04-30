@@ -153,6 +153,8 @@ interface Props {
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
+  /** Toggle visibility of Voronoi tesselation. Should be used for debugging only */
+  showVoronoiTesselation?: boolean;
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
@@ -241,6 +243,7 @@ export function ScatterPlot(props: Props) {
     precision = 2,
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
+    showVoronoiTesselation = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -408,6 +411,7 @@ export function ScatterPlot(props: Props) {
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
             highlightAreaSettings={highlightAreaSettings}
+            showVoronoiTesselation={showVoronoiTesselation}
             highlightedDataPoints={
               data.filter(el => el.label).length === 0 ? [] : highlightedDataPoints
             }

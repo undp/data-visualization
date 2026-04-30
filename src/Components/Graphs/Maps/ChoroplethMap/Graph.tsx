@@ -74,6 +74,9 @@ interface Props {
   zoomAndCenterByHighlightedIds: boolean;
   projectionRotate: [number, number] | [number, number, number];
   rewindCoordinatesInMapData: boolean;
+  overlayMapData?: FeatureCollection;
+  overlayMapBorderColor?: string;
+  overlayMapBorderWidth?: number;
 }
 
 export function Graph(props: Props) {
@@ -112,12 +115,20 @@ export function Graph(props: Props) {
     zoomAndCenterByHighlightedIds,
     projectionRotate,
     rewindCoordinatesInMapData,
+    overlayMapData,
+    overlayMapBorderColor,
+    overlayMapBorderWidth,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
 
     return rewind(mapData, { reverse: true }) as FeatureCollection;
   }, [mapData, rewindCoordinatesInMapData]);
+  const formattedOverlayMapData = useMemo(() => {
+    if (!rewindCoordinatesInMapData || !overlayMapData) return overlayMapData;
+
+    return rewind(overlayMapData, { reverse: true }) as FeatureCollection;
+  }, [overlayMapData, rewindCoordinatesInMapData]);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const [showLegend, setShowLegend] = useState(
@@ -278,6 +289,7 @@ export function Graph(props: Props) {
                       stroke: mapBorderColor,
                       strokeWidth: mapBorderWidth,
                       fill: mapNoDataColor,
+                      vectorEffect: 'non-scaling-stroke',
                     }}
                   />
                 </motion.g>
@@ -364,6 +376,7 @@ export function Graph(props: Props) {
                       style={{
                         stroke: mapBorderColor,
                         strokeWidth: mapBorderWidth,
+                        vectorEffect: 'non-scaling-stroke',
                       }}
                     />
                   </motion.g>
@@ -385,10 +398,29 @@ export function Graph(props: Props) {
                         fill: 'none',
                         fillOpacity: 0,
                         strokeWidth: '0.5',
+                        vectorEffect: 'non-scaling-stroke',
                       }}
                     />
                   ))
               : null}
+            {formattedOverlayMapData?.features.map((d, i: number) => {
+              const path = pathGenerator(d);
+              if (!path) return null;
+              return (
+                <g key={i}>
+                  <path
+                    d={path}
+                    style={{
+                      stroke: overlayMapBorderColor || mapBorderColor,
+                      strokeWidth: overlayMapBorderWidth || mapBorderWidth + 1,
+                      fill: 'none',
+                      pointerEvents: 'none',
+                      vectorEffect: 'non-scaling-stroke',
+                    }}
+                  />
+                </g>
+              );
+            })}
             {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
           </g>
         </motion.svg>

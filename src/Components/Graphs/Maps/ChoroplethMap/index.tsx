@@ -3,6 +3,7 @@ import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
+import { FeatureCollection } from 'geojson';
 
 import { Graph } from './Graph';
 
@@ -78,6 +79,13 @@ interface Props {
   /** Map data as an object in geoJson format or a url for geoJson */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapData?: any;
+  /** Detail if any other map needs to be overlayed over the main map */
+  mapOverlay?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mapData?: any;
+    mapBorderWidth?: number;
+    mapBorderColor?: string;
+  };
   /** Defines if the coordinates in the map data should be rewinded or not. Try to change this is the visualization shows countries as holes instead of shapes. */
   rewindCoordinatesInMapData?: boolean;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
@@ -205,6 +213,7 @@ export function ChoroplethMap(props: Props) {
     projectionRotate = [0, 0],
     zoomAndCenterByHighlightedIds = false,
     rewindCoordinatesInMapData = true,
+    mapOverlay,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -224,6 +233,7 @@ export function ChoroplethMap(props: Props) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
+  const [overlayMapShape, setOverlayMapShape] = useState<FeatureCollection | undefined>(undefined);
 
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
@@ -241,6 +251,10 @@ export function ChoroplethMap(props: Props) {
   const onUpdateShape = useEffectEvent((shape: any) => {
     setMapShape(shape);
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onUpdateOverlayMapShape = useEffectEvent((shape: any) => {
+    setOverlayMapShape(shape);
+  });
   useEffect(() => {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
@@ -251,6 +265,17 @@ export function ChoroplethMap(props: Props) {
       onUpdateShape(mapData);
     }
   }, [mapData]);
+  useEffect(() => {
+    if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
+    if (typeof mapOverlay?.mapData === 'string') {
+      const fetchData = fetchAndParseJSON(mapOverlay?.mapData);
+      fetchData.then(d => {
+        onUpdateOverlayMapShape(d as FeatureCollection);
+      });
+    } else {
+      onUpdateOverlayMapShape(mapOverlay?.mapData);
+    }
+  }, [mapOverlay?.mapData]);
 
   const domain =
     colorDomain ||
@@ -395,6 +420,9 @@ export function ChoroplethMap(props: Props) {
             highlightedIds={highlightedIds}
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             styles={styles}
+            overlayMapData={overlayMapShape}
+            overlayMapBorderColor={mapOverlay?.mapBorderColor}
+            overlayMapBorderWidth={mapOverlay?.mapBorderWidth}
             classNames={classNames}
             detailsOnClick={detailsOnClick}
             mapProjection={mapProjection || (isWorldMap ? 'naturalEarth' : 'mercator')}

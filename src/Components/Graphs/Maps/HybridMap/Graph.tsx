@@ -82,6 +82,9 @@ interface Props {
   labelColor: string;
   projectionRotate: [number, number] | [number, number, number];
   rewindCoordinatesInMapData: boolean;
+  overlayMapData?: FeatureCollection;
+  overlayMapBorderColor?: string;
+  overlayMapBorderWidth?: number;
 }
 
 export function Graph(props: Props) {
@@ -127,12 +130,20 @@ export function Graph(props: Props) {
     labelColor,
     projectionRotate,
     rewindCoordinatesInMapData,
+    overlayMapData,
+    overlayMapBorderColor,
+    overlayMapBorderWidth,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
 
     return rewind(mapData, { reverse: true }) as FeatureCollection;
   }, [mapData, rewindCoordinatesInMapData]);
+  const formattedOverlayMapData = useMemo(() => {
+    if (!rewindCoordinatesInMapData || !overlayMapData) return overlayMapData;
+
+    return rewind(overlayMapData, { reverse: true }) as FeatureCollection;
+  }, [overlayMapData, rewindCoordinatesInMapData]);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
 
   const [showLegend, setShowLegend] = useState(
@@ -279,6 +290,7 @@ export function Graph(props: Props) {
                       stroke: mapBorderColor,
                       strokeWidth: mapBorderWidth,
                       fill: mapNoDataColor,
+                      vectorEffect: 'non-scaling-stroke',
                     }}
                   />
                 </motion.g>
@@ -370,11 +382,30 @@ export function Graph(props: Props) {
                         style={{
                           stroke: mapBorderColor,
                           strokeWidth: mapBorderWidth,
+                          vectorEffect: 'non-scaling-stroke',
                         }}
                       />
                     </motion.g>
                   );
                 })}
+              {formattedOverlayMapData?.features.map((d, i: number) => {
+                const path = pathGenerator(d);
+                if (!path) return null;
+                return (
+                  <g key={i}>
+                    <path
+                      d={path}
+                      style={{
+                        stroke: overlayMapBorderColor || mapBorderColor,
+                        strokeWidth: overlayMapBorderWidth || mapBorderWidth + 1,
+                        fill: 'none',
+                        pointerEvents: 'none',
+                        vectorEffect: 'non-scaling-stroke',
+                      }}
+                    />
+                  </g>
+                );
+              })}
               {data
                 .filter(d => !checkIfNullOrUndefined(d.lat) && !checkIfNullOrUndefined(d.long))
                 .map(d => {
@@ -455,6 +486,7 @@ export function Graph(props: Props) {
                         exit={{ r: 0, transition: { duration: animate.duration } }}
                         style={{
                           fillOpacity: 0.8,
+                          vectorEffect: 'non-scaling-stroke',
                         }}
                       />
                       {showLabels && d.label ? (
@@ -482,6 +514,7 @@ export function Graph(props: Props) {
                           style={{
                             textAnchor: labelPosMultiplier === -1 ? 'end' : 'start',
                             fill: labelColor || '#000',
+                            vectorEffect: 'non-scaling-stroke',
                             ...(styles?.graphObjectValues || {}),
                           }}
                           dx={labelPosMultiplier * 4}

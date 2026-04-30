@@ -85,6 +85,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   showHighlightedDataPointsLabels: boolean;
+  showVoronoiTesselation: boolean;
 }
 
 export function Graph(props: Props) {
@@ -135,6 +136,7 @@ export function Graph(props: Props) {
     precision,
     showHighlightedDataPointsLabels,
     customLayers,
+    showVoronoiTesselation,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -337,7 +339,9 @@ export function Graph(props: Props) {
                   <path
                     key={`tesselation_${d.label || i}`}
                     d={voronoiDiagram.renderCell(dataOrdered.findIndex(el => el.id === d.id))}
-                    opacity={0}
+                    opacity={showVoronoiTesselation ? 1 : 0}
+                    className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+                    style={{ fill: 'none', strokeWidth: 1 }}
                     onMouseEnter={event => {
                       setMouseOverData(d);
                       setEventY(event.clientY);

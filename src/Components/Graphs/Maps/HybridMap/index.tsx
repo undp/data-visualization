@@ -3,7 +3,7 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
-import { FeatureCollection } from 'geojson';
+import { Feature, FeatureCollection } from 'geojson';
 
 import { Graph } from './Graph';
 
@@ -80,8 +80,13 @@ interface Props {
   /** Maximum radius of the circle */
   radius?: number;
   /** Map data as an object in geoJson format or a url for geoJson */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mapData?: any;
+  mapData?: FeatureCollection | string;
+  /** Detail if any other map needs to be overlayed over the main map */
+  mapOverlay?: {
+    mapData: FeatureCollection | string;
+    mapBorderWidth?: number;
+    mapBorderColor?: string;
+  };
   /** Defines if the coordinates in the map data should be rewinded or not. Try to change this is the visualization shows countries as holes instead of shapes. */
   rewindCoordinatesInMapData?: boolean;
   /** Scaling factor for the map. Multiplies the scale number to scale. */
@@ -226,6 +231,7 @@ export function HybridMap(props: Props) {
     labelColor = Colors.primaryColors['blue-600'],
     projectionRotate = [0, 0],
     rewindCoordinatesInMapData = true,
+    mapOverlay,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -245,7 +251,7 @@ export function HybridMap(props: Props) {
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
   const [mapShape, setMapShape] = useState<FeatureCollection | undefined>(undefined);
-
+  const [overlayMapShape, setOverlayMapShape] = useState<FeatureCollection | undefined>(undefined);
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const domain =
@@ -266,9 +272,13 @@ export function HybridMap(props: Props) {
     }
     return () => resizeObserver.disconnect();
   }, []);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onUpdateShape = useEffectEvent((shape: any) => {
+
+  const onUpdateShape = useEffectEvent((shape: FeatureCollection) => {
     setMapShape(shape);
+  });
+
+  const onUpdateOverlayMapShape = useEffectEvent((shape: FeatureCollection | undefined) => {
+    setOverlayMapShape(shape);
   });
   useEffect(() => {
     if (typeof mapData === 'string') {
@@ -280,6 +290,17 @@ export function HybridMap(props: Props) {
       onUpdateShape(mapData);
     }
   }, [mapData]);
+  useEffect(() => {
+    if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
+    if (typeof mapOverlay?.mapData === 'string') {
+      const fetchData = fetchAndParseJSON(mapOverlay?.mapData);
+      fetchData.then(d => {
+        onUpdateOverlayMapShape(d as FeatureCollection);
+      });
+    } else {
+      onUpdateOverlayMapShape(mapOverlay?.mapData);
+    }
+  }, [mapOverlay?.mapData]);
 
   useEffect(() => {
     const interval = setInterval(
@@ -382,11 +403,13 @@ export function HybridMap(props: Props) {
                 : {
                     ...mapShape,
                     features: mapShape.features.filter(
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (el: any) => el.properties.NAME !== 'Antarctica',
+                      (el: Feature) => el.properties?.NAME !== 'Antarctica',
                     ),
                   }
             }
+            overlayMapData={overlayMapShape}
+            overlayMapBorderColor={mapOverlay?.mapBorderColor}
+            overlayMapBorderWidth={mapOverlay?.mapBorderWidth}
             colorDomain={domain}
             width={svgWidth}
             height={svgHeight}
