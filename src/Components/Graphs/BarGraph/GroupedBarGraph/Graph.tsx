@@ -67,6 +67,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   naLabel: string;
   hideAxisLine: boolean;
+  locale: string;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -109,6 +110,7 @@ export function HorizontalGraph(props: Props) {
     customLayers,
     naLabel,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -197,6 +199,7 @@ export function HorizontalGraph(props: Props) {
               labelType='secondary'
               showGridLines
               precision={precision}
+              locale={locale}
             />
           ) : null}
           <AxisTitle
@@ -320,7 +323,7 @@ export function HorizontalGraph(props: Props) {
                             transition: { duration: animate.duration },
                           }}
                         >
-                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix)}
+                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix, locale)}
                         </motion.text>
                       ) : null}
                     </motion.g>
@@ -438,6 +441,7 @@ export function VerticalGraph(props: Props) {
     customLayers,
     naLabel,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -521,6 +525,7 @@ export function VerticalGraph(props: Props) {
                     precision,
                     prefix,
                     suffix,
+                    locale,
                   )
                 : undefined
             }
@@ -557,6 +562,7 @@ export function VerticalGraph(props: Props) {
               showGridLines
               labelPos='vertical'
               precision={precision}
+              locale={locale}
             />
           ) : null}
           <AxisTitle
@@ -680,7 +686,7 @@ export function VerticalGraph(props: Props) {
                             transition: { duration: animate.duration },
                           }}
                         >
-                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix)}
+                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix, locale)}
                         </motion.text>
                       ) : null}
                     </motion.g>

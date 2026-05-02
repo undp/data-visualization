@@ -134,6 +134,7 @@ function GraphEl(props: Props) {
     switch (graphType) {
       case 'barChart':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           trackColor: settings?.trackColor,
           customLayers: settings?.customLayers,
@@ -204,6 +205,8 @@ function GraphEl(props: Props) {
         };
       case 'waterfallChart':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -263,11 +266,11 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           filterNA: settings?.filterNA,
           animate: settings?.animate,
-          naLabel: settings?.naLabel,
           hideAxisLine: settings?.hideAxisLine,
         };
       case 'groupedBarChart':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -327,6 +330,7 @@ function GraphEl(props: Props) {
         };
       case 'stackedBarChart':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -387,6 +391,7 @@ function GraphEl(props: Props) {
         };
       case 'bulletChart':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -460,6 +465,7 @@ function GraphEl(props: Props) {
         };
       case 'lineChart':
         return {
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -512,6 +518,7 @@ function GraphEl(props: Props) {
         };
       case 'lineChartWithConfidenceInterval':
         return {
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -573,6 +580,8 @@ function GraphEl(props: Props) {
         };
       case 'dualAxisLineChart':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           showAxisLabels: settings?.showAxisLabels,
           showColorScale: settings?.showColorScale,
           customLayers: settings?.customLayers,
@@ -628,6 +637,8 @@ function GraphEl(props: Props) {
         };
       case 'multiLineChart':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -690,6 +701,7 @@ function GraphEl(props: Props) {
         };
       case 'multiLineAltChart':
         return {
+          locale: settings?.locale,
           naLabel: settings?.naLabel,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -747,6 +759,8 @@ function GraphEl(props: Props) {
         };
       case 'differenceLineChart':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -805,6 +819,7 @@ function GraphEl(props: Props) {
         };
       case 'stackedAreaChart':
         return {
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -855,6 +870,7 @@ function GraphEl(props: Props) {
         };
       case 'choroplethMap':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -915,6 +931,7 @@ function GraphEl(props: Props) {
         };
       case 'biVariateChoroplethMap':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -1034,6 +1051,7 @@ function GraphEl(props: Props) {
         };
       case 'hybridMap':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -1101,6 +1119,8 @@ function GraphEl(props: Props) {
         };
       case 'donutChart':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           trackColor: settings?.trackColor,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1191,6 +1211,7 @@ function GraphEl(props: Props) {
         };
       case 'scatterPlot':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -1266,6 +1287,7 @@ function GraphEl(props: Props) {
         };
       case 'dumbbellChart':
         return {
+          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -1331,6 +1353,7 @@ function GraphEl(props: Props) {
         };
       case 'treeMap':
         return {
+          locale: settings?.locale,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1380,6 +1403,7 @@ function GraphEl(props: Props) {
         };
       case 'circlePacking':
         return {
+          locale: settings?.locale,
           precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1432,6 +1456,8 @@ function GraphEl(props: Props) {
         };
       case 'heatMap':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1480,6 +1506,7 @@ function GraphEl(props: Props) {
         };
       case 'stripChart':
         return {
+          locale: settings?.locale,
           showDataMinMax: settings?.showDataMinMax,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
@@ -1534,6 +1561,7 @@ function GraphEl(props: Props) {
         };
       case 'beeSwarmChart':
         return {
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1585,6 +1613,7 @@ function GraphEl(props: Props) {
         };
       case 'butterflyChart':
         return {
+          locale: settings?.locale,
           naLabel: settings?.naLabel,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
@@ -1640,6 +1669,7 @@ function GraphEl(props: Props) {
         };
       case 'histogram':
         return {
+          locale: settings?.locale,
           precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
@@ -1718,6 +1748,7 @@ function GraphEl(props: Props) {
         };
       case 'paretoChart':
         return {
+          locale: settings?.locale,
           showAxisLabels: settings?.showAxisLabels,
           showColorScale: settings?.showColorScale,
           naLabel: settings?.naLabel,
@@ -1776,6 +1807,7 @@ function GraphEl(props: Props) {
         };
       case 'dataTable':
         return {
+          locale: settings?.locale,
           naLabel: settings?.naLabel,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1799,6 +1831,8 @@ function GraphEl(props: Props) {
         };
       case 'statCard':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           precision: settings?.precision,
           theme: settings?.theme,
           year: settings?.year,
@@ -1827,6 +1861,8 @@ function GraphEl(props: Props) {
         };
       case 'unitChart':
         return {
+          naLabel: settings?.naLabel,
+          locale: settings?.locale,
           precision: settings?.precision,
           theme: settings?.theme,
           totalNoOfDots: settings?.totalNoOfDots,
@@ -1859,6 +1895,7 @@ function GraphEl(props: Props) {
         };
       case 'sankeyChart':
         return {
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           theme: settings?.theme,
@@ -1938,6 +1975,7 @@ function GraphEl(props: Props) {
         };
       case 'radarChart':
         return {
+          locale: settings?.locale,
           customLayers: settings?.customLayers,
           precision: settings?.precision,
           graphTitle: settings?.graphTitle,

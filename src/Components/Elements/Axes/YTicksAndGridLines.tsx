@@ -15,6 +15,7 @@ interface Props {
   showGridLines: boolean;
   labelPos: 'side' | 'vertical';
   precision: number;
+  locale?: string;
 }
 
 export function YTicksAndGridLines(props: Props) {
@@ -31,6 +32,7 @@ export function YTicksAndGridLines(props: Props) {
     showGridLines,
     labelPos = 'vertical',
     precision,
+    locale = 'en',
   } = props;
   if (!values && !showGridLines) return null;
   return (
@@ -67,7 +69,7 @@ export function YTicksAndGridLines(props: Props) {
                 classNames?.labels,
               )}
             >
-              {numberFormattingFunction(values[i], 'NA', precision, prefix, suffix)}
+              {numberFormattingFunction(values[i], undefined, precision, prefix, suffix, locale)}
             </text>
           ) : null}
         </g>

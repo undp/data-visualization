@@ -90,6 +90,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -165,6 +167,7 @@ export function CirclePackingGraph(props: Props) {
     dimmedOpacity = 0.3,
     precision = 2,
     circularBoundary = true,
+    locale = 'en',
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -286,6 +289,7 @@ export function CirclePackingGraph(props: Props) {
             classNames={classNames}
             dimmedOpacity={dimmedOpacity}
             precision={precision}
+            locale={locale}
           />
         ) : null}
       </GraphArea>

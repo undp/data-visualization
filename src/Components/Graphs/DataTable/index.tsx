@@ -81,6 +81,8 @@ interface Props {
   theme?: 'light' | 'dark';
   /** Unique ID for the graph */
   graphID?: string;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
 }
 
 const TotalWidth = (columns: (number | undefined)[]) => {
@@ -112,6 +114,7 @@ export function DataTable(props: Props) {
     minWidth,
     naLabel = 'NA',
     precision = 2,
+    locale = 'en',
   } = props;
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const [columnSortBy, setColumnSortBy] = useState<string | undefined>(undefined);
@@ -368,6 +371,7 @@ export function DataTable(props: Props) {
                                   precision,
                                   el.prefix,
                                   el.suffix,
+                                  locale,
                                 )}
                               </P>
                             ) : typeof d[el.columnId] === 'string' ? (
@@ -425,6 +429,7 @@ export function DataTable(props: Props) {
                                           precision,
                                           el.prefix,
                                           el.suffix,
+                                          locale,
                                         )}
                                       </P>
                                     ))}
@@ -468,6 +473,7 @@ export function DataTable(props: Props) {
                                     precision,
                                     el.prefix,
                                     el.suffix,
+                                    locale,
                                   )}
                                 </P>
                               )
@@ -479,6 +485,7 @@ export function DataTable(props: Props) {
                                   precision,
                                   el.prefix,
                                   el.suffix,
+                                  locale,
                                 )}
                               </div>
                             )}

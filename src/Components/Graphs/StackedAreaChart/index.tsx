@@ -107,6 +107,8 @@ interface Props {
   curveType?: CurveTypes;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Toggles if the graph animates in when loaded.  */
@@ -180,6 +182,7 @@ export function AreaChart(props: Props) {
     precision = 2,
     customLayers = [],
     animate = false,
+    locale = 'en',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -283,6 +286,7 @@ export function AreaChart(props: Props) {
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
+            locale={locale}
           />
         ) : null}
       </GraphArea>

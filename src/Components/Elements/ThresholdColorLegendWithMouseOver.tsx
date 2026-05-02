@@ -13,6 +13,8 @@ interface Props {
   naColor?: string;
   className?: string;
   showNAColor: boolean;
+  locale?: string;
+  naLabel: string;
 }
 
 export function ThresholdColorLegendWithMouseOver(props: Props) {
@@ -25,6 +27,8 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
     naColor,
     className,
     showNAColor,
+    locale = 'en',
+    naLabel = 'NA',
   } = props;
 
   const [hoveredColor, setHoveredColor] = useState<string | undefined>(undefined);
@@ -76,7 +80,7 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
                 className='fill-primary-gray-700 dark:fill-primary-gray-300 text-sm'
                 style={{ textAnchor: 'middle' }}
               >
-                {numberFormattingFunction(d as number, 'NA', 2, '', '')}
+                {numberFormattingFunction(d as number, undefined, 2, '', '', locale)}
               </text>
             </g>
           ))}
@@ -141,7 +145,7 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
                 className='fill-primary-gray-700 dark:fill-primary-gray-300 text-sm'
                 style={{ textAnchor: 'start' }}
               >
-                NA
+                {naLabel}
               </text>
             </g>
           ) : null}

@@ -59,6 +59,7 @@ interface Props {
   minValueRightBar: number;
   naLabel: string;
   hideAxisLine: boolean;
+  locale: string;
 }
 
 export function Graph(props: Props) {
@@ -97,6 +98,7 @@ export function Graph(props: Props) {
     minValueRightBar,
     naLabel,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -165,6 +167,7 @@ export function Graph(props: Props) {
                 showGridLines
                 leftLabel
                 precision={precision}
+                locale={locale}
               />
             ) : null}
             <AnimatePresence>
@@ -235,10 +238,10 @@ export function Graph(props: Props) {
                       <motion.text
                         y={(y(`${i}`) as number) + y.bandwidth() / 2}
                         style={{
-                          textAnchor: d.rightBar ? (d.rightBar > 0 ? 'end' : 'start') : 'start',
+                          textAnchor: d.leftBar ? (d.leftBar > 0 ? 'end' : 'start') : 'start',
                           ...(styles?.graphObjectValues || {}),
                         }}
-                        dx={d.rightBar ? (d.rightBar > 0 ? -5 : 5) : 5}
+                        dx={d.leftBar ? (d.leftBar > 0 ? -5 : 5) : 5}
                         dy='0.33em'
                         className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                         exit={{
@@ -263,7 +266,14 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.rightBar, naLabel, precision, prefix, suffix)}
+                        {numberFormattingFunction(
+                          d.leftBar,
+                          naLabel,
+                          precision,
+                          prefix,
+                          suffix,
+                          locale,
+                        )}
                       </motion.text>
                     ) : null}
                   </motion.g>
@@ -319,6 +329,7 @@ export function Graph(props: Props) {
                 labelType='secondary'
                 showGridLines
                 precision={precision}
+                locale={locale}
               />
             ) : null}
             <AnimatePresence>
@@ -417,7 +428,14 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.rightBar, naLabel, precision, prefix, suffix)}
+                        {numberFormattingFunction(
+                          d.rightBar,
+                          naLabel,
+                          precision,
+                          prefix,
+                          suffix,
+                          locale,
+                        )}
                       </motion.text>
                     ) : null}
                   </motion.g>

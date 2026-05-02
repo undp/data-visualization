@@ -110,6 +110,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -193,6 +195,7 @@ export function SankeyChart(props: Props) {
     animate = false,
     precision = 2,
     customLayers = [],
+    locale = 'en',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -353,6 +356,7 @@ export function SankeyChart(props: Props) {
             }
             precision={precision}
             customLayers={customLayers}
+            locale={locale}
           />
         ) : null}
       </GraphArea>

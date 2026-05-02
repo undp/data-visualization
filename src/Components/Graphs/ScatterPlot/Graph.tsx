@@ -87,6 +87,7 @@ interface Props {
   showHighlightedDataPointsLabels: boolean;
   showVoronoiTesselation: boolean;
   useVoronoiInteraction: boolean;
+  locale: string;
 }
 
 export function Graph(props: Props) {
@@ -139,6 +140,7 @@ export function Graph(props: Props) {
     customLayers,
     showVoronoiTesselation,
     useVoronoiInteraction,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -242,6 +244,7 @@ export function Graph(props: Props) {
               showGridLines
               labelPos='side'
               precision={precision}
+              locale={locale}
             />
             <Axis
               y1={y(minYValue < 0 ? 0 : minYValue)}
@@ -250,10 +253,11 @@ export function Graph(props: Props) {
               x2={graphWidth + margin.right}
               label={numberFormattingFunction(
                 minYValue < 0 ? 0 : minYValue,
-                'NA',
+                undefined,
                 precision,
                 yPrefix,
                 ySuffix,
+                locale,
               )}
               labelPos={{
                 x: 0,
@@ -298,6 +302,7 @@ export function Graph(props: Props) {
               labelType='primary'
               showGridLines
               precision={precision}
+              locale={locale}
             />
             <Axis
               x1={x(minXValue < 0 ? 0 : minXValue)}
@@ -306,10 +311,11 @@ export function Graph(props: Props) {
               y2={graphHeight}
               label={numberFormattingFunction(
                 minXValue < 0 ? 0 : minXValue,
-                'NA',
+                undefined,
                 precision,
                 xPrefix,
                 xSuffix,
+                locale,
               )}
               labelPos={{
                 x: x(minXValue < 0 ? 0 : minXValue),

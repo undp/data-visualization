@@ -9,10 +9,11 @@ interface Props {
   colorLegendTitle?: string;
   width?: number;
   className?: string;
+  locale?: string;
 }
 
 export function LinearColorLegend(props: Props) {
-  const { colorLegendTitle, colorDomain, colors, width, className } = props;
+  const { colorLegendTitle, colorDomain, colors, width, className, locale = 'en' } = props;
   return (
     <div
       className={cn('flex gap-0 flex-wrap justify-center leading-0 pb-3', className)}
@@ -32,10 +33,10 @@ export function LinearColorLegend(props: Props) {
         />
         <div className='flex justify-between w-full min-w-[360px]'>
           <P marginBottom='none' size='sm'>
-            {numberFormattingFunction(colorDomain[0], 'NA', 2, '', '')}
+            {numberFormattingFunction(colorDomain[0], undefined, 2, '', '', locale)}
           </P>
           <P marginBottom='none' size='sm'>
-            {numberFormattingFunction(colorDomain[1], 'NA', 2, '', '')}
+            {numberFormattingFunction(colorDomain[1], undefined, 2, '', '', locale)}
           </P>
         </div>
       </div>

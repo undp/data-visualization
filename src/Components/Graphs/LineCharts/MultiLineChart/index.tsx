@@ -133,6 +133,10 @@ interface Props {
   curveType?: CurveTypes;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -215,6 +219,8 @@ export function MultiLineChart(props: Props) {
     dashSettings = ['5 5'],
     labelsToBeHidden = [],
     showColorScale = true,
+    locale = 'en',
+    naLabel = 'NA',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -332,6 +338,8 @@ export function MultiLineChart(props: Props) {
             dashedLines={dashedLines}
             dashSettings={dashSettings}
             revealClipId={generateRandomString(8)}
+            locale={locale}
+            naLabel={naLabel}
           />
         ) : null}
       </GraphArea>

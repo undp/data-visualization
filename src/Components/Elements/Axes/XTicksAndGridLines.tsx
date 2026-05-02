@@ -15,6 +15,7 @@ interface Props {
   showGridLines: boolean;
   leftLabel?: boolean;
   precision: number;
+  locale?: string;
 }
 
 export function XTicksAndGridLines(props: Props) {
@@ -31,6 +32,7 @@ export function XTicksAndGridLines(props: Props) {
     showGridLines,
     precision,
     leftLabel = false,
+    locale = 'en',
   } = props;
   if (!values && !showGridLines) return null;
   return (
@@ -70,7 +72,7 @@ export function XTicksAndGridLines(props: Props) {
             >
               {typeof values[i] === 'string'
                 ? values[i]
-                : numberFormattingFunction(values[i], 'NA', precision, prefix, suffix)}
+                : numberFormattingFunction(values[i], undefined, precision, prefix, suffix, locale)}
             </text>
           ) : null}
         </g>

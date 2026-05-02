@@ -52,6 +52,7 @@ interface Props {
   classNames?: ClassNameObject;
   animate: AnimateDataType;
   precision: number;
+  locale: string;
 }
 
 export function Graph(props: Props) {
@@ -83,6 +84,7 @@ export function Graph(props: Props) {
     classNames,
     animate,
     precision,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -267,7 +269,14 @@ export function Graph(props: Props) {
                               ...(styles?.graphObjectValues || {}),
                             }}
                           >
-                            {numberFormattingFunction(d.value, 'NA', precision, prefix, suffix)}
+                            {numberFormattingFunction(
+                              d.value,
+                              undefined,
+                              precision,
+                              prefix,
+                              suffix,
+                              locale,
+                            )}
                           </p>
                         </div>
                       </foreignObject>

@@ -31,7 +31,7 @@ import {
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { X } from '@/Components/Icons';
+import { ExpandIcon, X } from '@/Components/Icons';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
@@ -80,6 +80,7 @@ interface Props {
   overlayMapData?: FeatureCollection;
   overlayMapBorderColor?: string;
   overlayMapBorderWidth?: number;
+  locale: string;
 }
 
 export function Graph(props: Props) {
@@ -122,6 +123,7 @@ export function Graph(props: Props) {
     overlayMapData,
     overlayMapBorderColor,
     overlayMapBorderWidth,
+    locale,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
@@ -489,7 +491,14 @@ export function Graph(props: Props) {
                             <text key={j} y={10} x={(j + 1) * 25} fontSize={10} textAnchor='middle'>
                               {typeof el === 'string' || el < 1
                                 ? el
-                                : numberFormattingFunction(el, 'NA')}
+                                : numberFormattingFunction(
+                                    el,
+                                    undefined,
+                                    undefined,
+                                    undefined,
+                                    undefined,
+                                    locale,
+                                  )}
                             </text>
                           ))}
                         </g>
@@ -509,7 +518,14 @@ export function Graph(props: Props) {
                             >
                               {typeof el === 'string' || el < 1
                                 ? el
-                                : numberFormattingFunction(el, 'NA')}
+                                : numberFormattingFunction(
+                                    el,
+                                    undefined,
+                                    undefined,
+                                    undefined,
+                                    undefined,
+                                    locale,
+                                  )}
                             </text>
                           </g>
                         ))}
@@ -551,14 +567,12 @@ export function Graph(props: Props) {
             ) : (
               <button
                 type='button'
-                className='mb-0 border-0 bg-transparent p-0 self-start'
+                className='p-1 border-0 rounded-[2px] text-primary-gray-700 bg-primary-gray-300 dark:bg-primary-gray-500 map-legend-button'
                 onClick={() => {
                   setShowLegend(true);
                 }}
               >
-                <div className='show-color-legend-button items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-600 border-primary-gray-400 dark:border-primary-gray-500'>
-                  Show Legend
-                </div>
+                <ExpandIcon />
               </button>
             )}
           </div>

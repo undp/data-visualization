@@ -98,6 +98,8 @@ interface Props {
   hideAxisLine?: boolean;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -171,6 +173,7 @@ export function Histogram(props: Props) {
     classNames,
     precision,
     hideAxisLine = false,
+    locale = 'en',
   } = props;
 
   const bins = bin()
@@ -228,6 +231,7 @@ export function Histogram(props: Props) {
         styles={styles}
         classNames={classNames}
         precision={precision}
+        locale={locale}
       />
     );
   if (graphType === 'treeMap')
@@ -265,6 +269,7 @@ export function Histogram(props: Props) {
         styles={styles}
         classNames={classNames}
         precision={precision}
+        locale={locale}
       />
     );
   if (graphType === 'donutChart')
@@ -295,6 +300,7 @@ export function Histogram(props: Props) {
         styles={styles}
         classNames={classNames}
         precision={precision}
+        locale={locale}
       />
     );
   return (
@@ -340,6 +346,7 @@ export function Histogram(props: Props) {
       classNames={classNames}
       precision={precision}
       hideAxisLine={hideAxisLine}
+      locale={locale}
     />
   );
 }

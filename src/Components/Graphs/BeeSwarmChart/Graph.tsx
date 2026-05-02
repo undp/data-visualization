@@ -71,6 +71,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   rtl?: boolean;
   hideAxisLine: boolean;
+  locale: string;
 }
 
 export function VerticalGraph(props: Props) {
@@ -108,6 +109,7 @@ export function VerticalGraph(props: Props) {
     precision,
     customLayers,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -213,10 +215,11 @@ export function VerticalGraph(props: Props) {
                     showTicks
                       ? numberFormattingFunction(
                           yMinValue < 0 ? 0 : yMinValue,
-                          'NA',
+                          undefined,
                           precision,
                           prefix,
                           suffix,
+                          locale,
                         )
                       : undefined
                   }
@@ -254,6 +257,7 @@ export function VerticalGraph(props: Props) {
                   showGridLines
                   labelPos='vertical'
                   precision={precision}
+                  locale={locale}
                 />
               </>
             ) : null}
@@ -454,6 +458,7 @@ export function HorizontalGraph(props: Props) {
     precision,
     customLayers,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -559,10 +564,11 @@ export function HorizontalGraph(props: Props) {
                     showTicks
                       ? numberFormattingFunction(
                           xMinValue < 0 ? 0 : xMinValue,
-                          'NA',
+                          undefined,
                           precision,
                           prefix,
                           suffix,
+                          locale,
                         )
                       : undefined
                   }
@@ -599,6 +605,7 @@ export function HorizontalGraph(props: Props) {
                   labelType='secondary'
                   showGridLines
                   precision={precision}
+                  locale={locale}
                 />
               </>
             ) : null}

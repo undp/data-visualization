@@ -57,6 +57,10 @@ interface Props {
   suffix?: string;
   /** Sub text next to main text */
   year?: number | string;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
 
   // Graph Parameters
   /** Data points that need to counted for aggregation.  */
@@ -101,6 +105,8 @@ export function StatCardFromData(props: Props) {
     styles,
     classNames,
     precision = 2,
+    locale = 'en',
+    naLabel = 'NA',
   } = props;
 
   return (
@@ -180,18 +186,20 @@ export function StatCardFromData(props: Props) {
                     : aggregationMethod === 'sum'
                       ? numberFormattingFunction(
                           sum(data.map(d => d.value)),
-                          'NA',
+                          naLabel,
                           precision,
                           prefix,
                           suffix,
+                          locale,
                         )
                       : aggregationMethod === 'average'
                         ? numberFormattingFunction(
                             parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
-                            'NA',
+                            naLabel,
                             precision,
                             prefix,
                             suffix,
+                            locale,
                           )
                         : aggregationMethod === 'max'
                           ? numberFormattingFunction(
@@ -200,10 +208,11 @@ export function StatCardFromData(props: Props) {
                                   .map(d => d.value as number | undefined)
                                   .filter(d => d !== undefined),
                               ),
-                              'NA',
+                              naLabel,
                               precision,
                               prefix,
                               suffix,
+                              locale,
                             )
                           : numberFormattingFunction(
                               Math.min(
@@ -211,10 +220,11 @@ export function StatCardFromData(props: Props) {
                                   .map(d => d.value as number | undefined)
                                   .filter(d => d !== undefined),
                               ),
-                              'NA',
+                              naLabel,
                               precision,
                               prefix,
                               suffix,
+                              locale,
                             )}{' '}
                   {year ? (
                     <span
@@ -267,18 +277,20 @@ export function StatCardFromData(props: Props) {
                   : aggregationMethod === 'sum'
                     ? numberFormattingFunction(
                         sum(data.map(d => d.value)),
-                        'NA',
+                        naLabel,
                         precision,
                         prefix,
                         suffix,
+                        locale,
                       )
                     : aggregationMethod === 'average'
                       ? numberFormattingFunction(
                           parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
-                          'NA',
+                          naLabel,
                           precision,
                           prefix,
                           suffix,
+                          locale,
                         )
                       : aggregationMethod === 'max'
                         ? numberFormattingFunction(
@@ -287,10 +299,11 @@ export function StatCardFromData(props: Props) {
                                 .map(d => d.value as number | undefined)
                                 .filter(d => d !== undefined),
                             ),
-                            'NA',
+                            naLabel,
                             precision,
                             prefix,
                             suffix,
+                            locale,
                           )
                         : numberFormattingFunction(
                             Math.min(
@@ -298,10 +311,11 @@ export function StatCardFromData(props: Props) {
                                 .map(d => d.value as number | undefined)
                                 .filter(d => d !== undefined),
                             ),
-                            'NA',
+                            naLabel,
                             precision,
                             prefix,
                             suffix,
+                            locale,
                           )}{' '}
                 {year ? (
                   <span

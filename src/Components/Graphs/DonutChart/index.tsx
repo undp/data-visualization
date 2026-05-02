@@ -95,6 +95,10 @@ interface Props {
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
@@ -159,6 +163,8 @@ export function DonutChart(props: Props) {
     precision = 2,
     animate = false,
     trackColor = Colors.light.grays['gray-200'],
+    locale = 'en',
+    naLabel = 'NA',
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
@@ -252,7 +258,7 @@ export function DonutChart(props: Props) {
                 >
                   {d.label}:{' '}
                   <span className='font-bold' style={{ fontSize: 'inherit' }}>
-                    {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
+                    {numberFormattingFunction(d.size, naLabel, precision, prefix, suffix, locale)}
                   </span>
                 </P>
               </div>
@@ -284,7 +290,9 @@ export function DonutChart(props: Props) {
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
+            locale={locale}
             trackColor={trackColor}
+            naLabel={naLabel}
           />
         ) : null}
       </GraphArea>

@@ -1033,6 +1033,7 @@ export interface GraphSettingsDataType {
   showVoronoiTesselation?: boolean;
   mapOverlay?: MapOverlayDataType;
   useVoronoiInteraction?: boolean;
+  locale?: string;
 }
 
 export interface InfoBoxDataType {

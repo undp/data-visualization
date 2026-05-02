@@ -101,6 +101,10 @@ interface Props {
   colorDomain: number[] | string[];
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -177,6 +181,8 @@ export function HeatMap(props: Props) {
     classNames,
     animate = false,
     precision = 2,
+    locale = 'en',
+    naLabel = 'NA',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -286,7 +292,9 @@ export function HeatMap(props: Props) {
             colorDomain={colorDomain as number[]}
             setSelectedColor={setSelectedColor}
             naColor={noDataColor}
+            locale={locale}
             showNAColor={showNAColor}
+            naLabel={naLabel}
           />
         ) : (
           <LinearColorLegend
@@ -298,6 +306,7 @@ export function HeatMap(props: Props) {
                 Colors[theme].sequentialColors.neutralColorsx09[8],
               ]
             }
+            locale={locale}
             colorDomain={colorDomain as number[]}
             className={classNames?.colorLegend}
           />
@@ -350,6 +359,7 @@ export function HeatMap(props: Props) {
                 : animate || { duration: 0, once: true, amount: 0 }
             }
             precision={precision}
+            locale={locale}
           />
         ) : null}
       </GraphArea>

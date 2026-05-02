@@ -53,6 +53,7 @@ interface Props {
   classNames?: ClassNameObject;
   precision: number;
   customLayers: CustomLayerDataType[];
+  locale: string;
 }
 
 export function Graph(props: Props) {
@@ -88,6 +89,7 @@ export function Graph(props: Props) {
     classNames,
     precision,
     customLayers,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -240,7 +242,14 @@ export function Graph(props: Props) {
                               ...styles?.graphObjectValues,
                             }}
                           >
-                            {numberFormattingFunction(d.value, 'NA', precision, prefix, suffix)}
+                            {numberFormattingFunction(
+                              d.value,
+                              undefined,
+                              precision,
+                              prefix,
+                              suffix,
+                              locale,
+                            )}
                           </P>
                         ) : null}
                       </div>
@@ -318,7 +327,14 @@ export function Graph(props: Props) {
                               ...styles?.graphObjectValues,
                             }}
                           >
-                            {numberFormattingFunction(d.value, 'NA', precision, prefix, suffix)}
+                            {numberFormattingFunction(
+                              d.value,
+                              undefined,
+                              precision,
+                              prefix,
+                              suffix,
+                              locale,
+                            )}
                           </P>
                         ) : null}
                       </div>

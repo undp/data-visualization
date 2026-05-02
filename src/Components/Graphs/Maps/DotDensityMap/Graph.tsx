@@ -30,7 +30,7 @@ import {
 } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { Colors } from '@/Components/ColorPalette';
-import { X } from '@/Components/Icons';
+import { ExpandIcon, X } from '@/Components/Icons';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
@@ -489,14 +489,12 @@ export function Graph(props: Props) {
             ) : (
               <button
                 type='button'
-                className='mb-0 border-0 bg-transparent p-0 self-start'
+                className='p-1 border-0 rounded-[2px] text-primary-gray-700 bg-primary-gray-300 dark:bg-primary-gray-500 map-legend-button'
                 onClick={() => {
                   setShowLegend(true);
                 }}
               >
-                <div className='show-color-legend-button items-start text-sm font-medium cursor-pointer p-2 mb-0 flex text-primary-black dark:text-primary-gray-300 bg-primary-gray-300 dark:bg-primary-gray-600 border-primary-gray-400 dark:border-primary-gray-500'>
-                  Show Legend
-                </div>
+                <ExpandIcon />
               </button>
             )}
           </div>

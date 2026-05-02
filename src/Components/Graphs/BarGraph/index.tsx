@@ -128,6 +128,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -226,6 +228,7 @@ export function SimpleBarGraph(props: Props) {
     naLabel,
     trackColor,
     hideAxisLine = false,
+    locale,
   } = props;
   return (
     <SimpleBarGraphEl
@@ -291,6 +294,7 @@ export function SimpleBarGraph(props: Props) {
       orientation={orientation}
       trackColor={trackColor}
       hideAxisLine={hideAxisLine}
+      locale={locale}
     />
   );
 }
@@ -398,6 +402,8 @@ interface GroupedBarChartProps {
   naLabel?: string;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -491,6 +497,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     timeline,
     naLabel,
     hideAxisLine = false,
+    locale,
   } = props;
 
   return (
@@ -552,6 +559,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       timeline={timeline}
       naLabel={naLabel}
       hideAxisLine={hideAxisLine}
+      locale={locale}
     />
   );
 }
@@ -661,6 +669,8 @@ interface StackedBarChartProps {
   animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -755,6 +765,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     timeline,
     naLabel,
     hideAxisLine = false,
+    locale,
   } = props;
 
   return (
@@ -817,6 +828,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       naLabel={naLabel}
       orientation={orientation}
       hideAxisLine={hideAxisLine}
+      locale={locale}
     />
   );
 }

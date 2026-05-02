@@ -48,6 +48,7 @@ interface Props {
   classNames?: ClassNameObject;
   dimmedOpacity: number;
   precision: number;
+  locale: string;
 }
 
 interface TreeMapDataTypeForBubbleChart extends TreeMapDataType {
@@ -85,6 +86,7 @@ export const Graph = (props: Props) => {
     classNames,
     dimmedOpacity,
     precision,
+    locale,
   } = props;
   const svgRef = useRef(null);
 
@@ -355,7 +357,14 @@ export const Graph = (props: Props) => {
                                   color: getTextColorBasedOnBgColor(circleColor),
                                 }}
                               >
-                                {numberFormattingFunction(d.size, 'NA', precision, prefix, suffix)}
+                                {numberFormattingFunction(
+                                  d.size,
+                                  undefined,
+                                  precision,
+                                  prefix,
+                                  suffix,
+                                  locale,
+                                )}
                               </P>
                             )}
                           </div>

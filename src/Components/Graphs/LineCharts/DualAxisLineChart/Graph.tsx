@@ -66,6 +66,8 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   showAxisLabels: boolean;
+  locale: string;
+  naLabel: string;
 }
 
 interface FormattedDataType {
@@ -106,6 +108,8 @@ export function Graph(props: Props) {
     precision,
     customLayers,
     showAxisLabels,
+    locale,
+    naLabel,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -294,7 +298,14 @@ export function Graph(props: Props) {
                     ...(styles?.yAxis?.labels || {}),
                   }}
                 >
-                  {numberFormattingFunction(d, 'NA', precision, linePrefixes[0], lineSuffixes[0])}
+                  {numberFormattingFunction(
+                    d,
+                    undefined,
+                    precision,
+                    linePrefixes[0],
+                    lineSuffixes[0],
+                    locale,
+                  )}
                 </text>
               </g>
             ))}
@@ -345,7 +356,14 @@ export function Graph(props: Props) {
                   }}
                   className={cn('text-xs', classNames?.yAxis?.labels)}
                 >
-                  {numberFormattingFunction(d, 'NA', precision, linePrefixes[1], lineSuffixes[1])}
+                  {numberFormattingFunction(
+                    d,
+                    undefined,
+                    precision,
+                    linePrefixes[1],
+                    lineSuffixes[1],
+                    locale,
+                  )}
                 </text>
               </g>
             ))}
@@ -396,6 +414,7 @@ export function Graph(props: Props) {
               labelType='primary'
               showGridLines
               precision={precision}
+              locale={locale}
             />
           </g>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
@@ -565,10 +584,11 @@ export function Graph(props: Props) {
                       >
                         {numberFormattingFunction(
                           d.y1,
-                          'NA',
+                          naLabel,
                           precision,
                           linePrefixes[0],
                           lineSuffixes[0],
+                          locale,
                         )}
                       </motion.text>
                     ) : null}
@@ -649,10 +669,11 @@ export function Graph(props: Props) {
                       >
                         {numberFormattingFunction(
                           d.y2,
-                          'NA',
+                          naLabel,
                           precision,
                           linePrefixes[1],
                           lineSuffixes[1],
+                          locale,
                         )}
                       </motion.text>
                     ) : null}

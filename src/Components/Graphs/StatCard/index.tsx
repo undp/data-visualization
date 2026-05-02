@@ -50,6 +50,8 @@ interface Props {
   value: number | string;
   /** Sub text next to main text */
   year?: number | string;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
 
   // Configuration and Options
   /** Language setting  */
@@ -84,6 +86,7 @@ export function BasicStatCard(props: Props) {
     styles,
     classNames,
     precision,
+    locale = 'en',
   } = props;
   return (
     <div className={`${theme || 'light'} w-full`}>
@@ -154,7 +157,7 @@ export function BasicStatCard(props: Props) {
                     letterSpacing: '0.05rem',
                   }}
                 >
-                  {numberFormattingFunction(value, 'NA', precision, prefix, suffix)}{' '}
+                  {numberFormattingFunction(value, undefined, precision, prefix, suffix, locale)}{' '}
                   {year ? (
                     <span
                       className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'
@@ -198,7 +201,7 @@ export function BasicStatCard(props: Props) {
                   letterSpacing: '0.05rem',
                 }}
               >
-                {numberFormattingFunction(value, 'NA', precision, prefix, suffix)}{' '}
+                {numberFormattingFunction(value, undefined, precision, prefix, suffix, locale)}{' '}
                 {year ? (
                   <span
                     className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'

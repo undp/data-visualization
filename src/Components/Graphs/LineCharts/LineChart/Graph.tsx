@@ -81,6 +81,7 @@ interface Props {
   classNames?: ClassNameObject;
   precision: number;
   customLayers: CustomLayerDataType[];
+  locale: string;
 }
 
 interface FormattedDataType {
@@ -125,6 +126,7 @@ export function Graph(props: Props) {
     classNames,
     precision,
     customLayers,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -294,6 +296,7 @@ export function Graph(props: Props) {
               showGridLines
               labelPos='vertical'
               precision={precision}
+              locale={locale}
             />
             <Axis
               y1={y(minParam < 0 ? 0 : minParam)}
@@ -302,10 +305,11 @@ export function Graph(props: Props) {
               x2={graphWidth + margin.right}
               label={numberFormattingFunction(
                 minParam < 0 ? 0 : minParam,
-                'NA',
+                undefined,
                 precision,
                 prefix,
                 suffix,
+                locale,
               )}
               labelPos={{
                 x: 0 - leftMargin,
@@ -352,6 +356,7 @@ export function Graph(props: Props) {
             labelType='primary'
             showGridLines
             precision={precision}
+            locale={locale}
           />
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g>
@@ -456,7 +461,14 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.y, 'NA', precision, prefix, suffix)}
+                        {numberFormattingFunction(
+                          d.y,
+                          undefined,
+                          precision,
+                          prefix,
+                          suffix,
+                          locale,
+                        )}
                       </motion.text>
                     ) : null}
                   </>

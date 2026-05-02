@@ -69,6 +69,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   naLabel: string;
   hideAxisLine: boolean;
+  locale: string;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -111,6 +112,7 @@ export function HorizontalGraph(props: Props) {
     customLayers,
     naLabel,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -200,6 +202,7 @@ export function HorizontalGraph(props: Props) {
               labelType='secondary'
               showGridLines
               precision={precision}
+              locale={locale}
             />
           ) : null}
           <AxisTitle
@@ -324,8 +327,14 @@ export function HorizontalGraph(props: Props) {
                               opacity:
                                 el &&
                                 x(el) /
-                                  numberFormattingFunction(el, naLabel, precision, prefix, suffix)
-                                    .length >
+                                  numberFormattingFunction(
+                                    el,
+                                    naLabel,
+                                    precision,
+                                    prefix,
+                                    suffix,
+                                    locale,
+                                  ).length >
                                   12
                                   ? 1
                                   : 0,
@@ -336,7 +345,7 @@ export function HorizontalGraph(props: Props) {
                           initial='initial'
                           animate={isInView ? 'whileInView' : 'initial'}
                         >
-                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix)}
+                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix, locale)}
                         </motion.text>
                       ) : null}
                     </motion.g>
@@ -399,6 +408,7 @@ export function HorizontalGraph(props: Props) {
                         precision,
                         prefix,
                         suffix,
+                        locale,
                       )}
                     </motion.text>
                   ) : null}
@@ -498,6 +508,7 @@ export function VerticalGraph(props: Props) {
     customLayers,
     naLabel,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -576,7 +587,7 @@ export function VerticalGraph(props: Props) {
             x2={graphWidth + margin.right}
             label={
               showTicks
-                ? numberFormattingFunction(0, naLabel, precision, prefix, suffix)
+                ? numberFormattingFunction(0, naLabel, precision, prefix, suffix, locale)
                 : undefined
             }
             labelPos={{
@@ -611,6 +622,7 @@ export function VerticalGraph(props: Props) {
               showGridLines
               labelPos='vertical'
               precision={precision}
+              locale={locale}
             />
           ) : null}
           <AxisTitle
@@ -743,7 +755,7 @@ export function VerticalGraph(props: Props) {
                           animate={isInView ? 'whileInView' : 'initial'}
                           exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         >
-                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix)}
+                          {numberFormattingFunction(el, naLabel, precision, prefix, suffix, locale)}
                         </motion.text>
                       ) : null}
                     </motion.g>
@@ -807,6 +819,7 @@ export function VerticalGraph(props: Props) {
                         precision,
                         prefix,
                         suffix,
+                        locale,
                       )}
                     </motion.text>
                   ) : null}

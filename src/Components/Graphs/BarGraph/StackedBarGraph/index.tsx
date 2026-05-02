@@ -86,6 +86,7 @@ interface Props {
   filterNA?: boolean;
   animate?: boolean | AnimateDataType;
   precision?: number;
+  locale?: string;
   showColorScale?: boolean;
   customLayers?: CustomLayerDataType[];
   timeline?: TimelineDataType;
@@ -148,6 +149,7 @@ export function StackedBarGraphEl(props: Props) {
     filterNA = true,
     animate = false,
     precision = 2,
+    locale = 'en',
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     naLabel = 'NA',
@@ -383,6 +385,7 @@ export function StackedBarGraphEl(props: Props) {
               precision={precision}
               customLayers={customLayers}
               naLabel={naLabel}
+              locale={locale}
             />
           ) : null}
         </GraphArea>

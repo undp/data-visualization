@@ -133,6 +133,8 @@ interface Props {
   curveType?: CurveTypes;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -215,6 +217,7 @@ export function MultiLineAltChart(props: Props) {
     customLayers = [],
     naLabel = 'NA',
     showDateOnHover = false,
+    locale = 'en',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -343,6 +346,7 @@ export function MultiLineAltChart(props: Props) {
             customLayers={customLayers}
             naLabel={naLabel}
             showDateOnHover={showDateOnHover}
+            locale={locale}
           />
         ) : null}
       </GraphArea>

@@ -57,6 +57,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
+  locale: string;
 }
 
 export function VerticalGraph(props: Props) {
@@ -94,6 +95,7 @@ export function VerticalGraph(props: Props) {
     precision,
     customLayers,
     showDataMinMax,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -361,7 +363,14 @@ export function VerticalGraph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.position, 'NA', precision, prefix, suffix)}
+                        {numberFormattingFunction(
+                          d.position,
+                          undefined,
+                          precision,
+                          prefix,
+                          suffix,
+                          locale,
+                        )}
                       </motion.text>
                     ) : null
                   ) : null}
@@ -423,7 +432,7 @@ export function VerticalGraph(props: Props) {
                         classNames?.graphObjectValues,
                       )}
                     >
-                      {numberFormattingFunction(d, 'NA', precision, prefix, suffix)}
+                      {numberFormattingFunction(d, undefined, precision, prefix, suffix, locale)}
                     </motion.text>
                   </motion.g>
                 ))
@@ -442,7 +451,14 @@ export function VerticalGraph(props: Props) {
                   classNames?.yAxis?.labels,
                 )}
               >
-                {numberFormattingFunction(y.invert(tick), 'NA', precision, prefix, suffix)}
+                {numberFormattingFunction(
+                  y.invert(tick),
+                  undefined,
+                  precision,
+                  prefix,
+                  suffix,
+                  locale,
+                )}
               </text>
             ))}
           </AnimatePresence>
@@ -506,6 +522,7 @@ export function HorizontalGraph(props: Props) {
     precision,
     customLayers,
     showDataMinMax,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -772,7 +789,14 @@ export function HorizontalGraph(props: Props) {
                           classNames?.graphObjectValues,
                         )}
                       >
-                        {numberFormattingFunction(d.position, 'NA', precision, prefix, suffix)}
+                        {numberFormattingFunction(
+                          d.position,
+                          undefined,
+                          precision,
+                          prefix,
+                          suffix,
+                          locale,
+                        )}
                       </motion.text>
                     ) : null
                   ) : null}
@@ -832,7 +856,7 @@ export function HorizontalGraph(props: Props) {
                         classNames?.graphObjectValues,
                       )}
                     >
-                      {numberFormattingFunction(d, 'NA', precision, prefix, suffix)}
+                      {numberFormattingFunction(d, undefined, precision, prefix, suffix, locale)}
                     </motion.text>
                   </motion.g>
                 ))
@@ -852,7 +876,14 @@ export function HorizontalGraph(props: Props) {
                 )}
                 dy='1em'
               >
-                {numberFormattingFunction(x.invert(tick), 'NA', precision, prefix, suffix)}
+                {numberFormattingFunction(
+                  x.invert(tick),
+                  undefined,
+                  precision,
+                  prefix,
+                  suffix,
+                  locale,
+                )}
               </text>
             ))}
           </AnimatePresence>

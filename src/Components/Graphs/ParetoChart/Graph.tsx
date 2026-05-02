@@ -66,6 +66,7 @@ interface Props {
   naLabel: string;
   customLayers: CustomLayerDataType[];
   showAxisLabels: boolean;
+  locale: string;
 }
 interface DataFormattedType {
   id: string;
@@ -108,6 +109,7 @@ export function Graph(props: Props) {
     customLayers,
     naLabel,
     showAxisLabels,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -226,7 +228,7 @@ export function Graph(props: Props) {
                     ...(styles?.yAxis?.labels || {}),
                   }}
                 >
-                  {numberFormattingFunction(d, naLabel, precision, barPrefix, barSuffix)}
+                  {numberFormattingFunction(d, naLabel, precision, barPrefix, barSuffix, locale)}
                 </text>
               </g>
             ))}
@@ -280,7 +282,7 @@ export function Graph(props: Props) {
                   }}
                   className={cn('text-xs', classNames?.yAxis?.labels)}
                 >
-                  {numberFormattingFunction(d, naLabel, precision, linePrefix, lineSuffix)}
+                  {numberFormattingFunction(d, naLabel, precision, linePrefix, lineSuffix, locale)}
                 </text>
               </g>
             ))}
@@ -409,7 +411,14 @@ export function Graph(props: Props) {
                       className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                       dy={d.bar ? (d.bar >= 0 ? '-5px' : '1em') : '-5px'}
                     >
-                      {numberFormattingFunction(d.bar, naLabel, precision, barPrefix, barSuffix)}
+                      {numberFormattingFunction(
+                        d.bar,
+                        naLabel,
+                        precision,
+                        barPrefix,
+                        barSuffix,
+                        locale,
+                      )}
                     </motion.text>
                   ) : null}
                   {showLabels ? (
@@ -557,6 +566,7 @@ export function Graph(props: Props) {
                           precision,
                           linePrefix,
                           lineSuffix,
+                          locale,
                         )}
                       </motion.text>
                     ) : null}

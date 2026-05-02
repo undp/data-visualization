@@ -96,6 +96,7 @@ interface Props {
   naLabel?: string;
   orientation?: 'horizontal' | 'vertical';
   hideAxisLine?: boolean;
+  locale?: string;
 }
 
 export function SimpleBarGraphEl(props: Props) {
@@ -162,6 +163,7 @@ export function SimpleBarGraphEl(props: Props) {
     orientation = 'vertical',
     trackColor,
     hideAxisLine = false,
+    locale = 'en',
   } = props;
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
   const [svgWidth, setSvgWidth] = useState(0);
@@ -409,6 +411,7 @@ export function SimpleBarGraphEl(props: Props) {
             precision={precision}
             customLayers={customLayers}
             naLabel={naLabel}
+            locale={locale}
           />
         ) : null}
       </GraphArea>

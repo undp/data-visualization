@@ -52,6 +52,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   customLayers: CustomLayerDataType[];
+  locale: string;
 }
 
 export function Graph(props: Props) {
@@ -86,6 +87,7 @@ export function Graph(props: Props) {
     dimmedOpacity,
     precision,
     customLayers,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -231,7 +233,14 @@ export function Graph(props: Props) {
                       )}
                       style={styles?.xAxis?.labels}
                     >
-                      {numberFormattingFunction(d, 'NA', precision)}
+                      {numberFormattingFunction(
+                        d,
+                        undefined,
+                        precision,
+                        undefined,
+                        undefined,
+                        locale,
+                      )}
                     </p>
                   </div>
                 </foreignObject>
@@ -445,7 +454,14 @@ export function Graph(props: Props) {
                                 animate={isInView ? 'whileInView' : 'initial'}
                                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
                               >
-                                {numberFormattingFunction(el, 'NA', precision)}
+                                {numberFormattingFunction(
+                                  el,
+                                  undefined,
+                                  precision,
+                                  undefined,
+                                  undefined,
+                                  locale,
+                                )}
                               </motion.text>
                             ) : null}
                           </>

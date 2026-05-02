@@ -138,6 +138,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -227,6 +229,7 @@ export function ButterflyChart(props: Props) {
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     naLabel = 'NA',
     hideAxisLine = false,
+    locale = 'en',
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -407,6 +410,7 @@ export function ButterflyChart(props: Props) {
             precision={precision}
             customLayers={customLayers}
             naLabel={naLabel}
+            locale={locale}
           />
         ) : null}
       </GraphArea>

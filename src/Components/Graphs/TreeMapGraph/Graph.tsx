@@ -42,6 +42,7 @@ interface Props {
   animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
+  locale: string;
 }
 
 export function Graph(props: Props) {
@@ -72,6 +73,7 @@ export function Graph(props: Props) {
     animate,
     dimmedOpacity,
     precision,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -349,10 +351,11 @@ export function Graph(props: Props) {
                               {numberFormattingFunction(
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 (d.data as any).value,
-                                'NA',
+                                undefined,
                                 precision,
                                 prefix,
                                 suffix,
+                                locale,
                               )}
                             </P>
                           ) : null}

@@ -149,6 +149,8 @@ interface Props {
   timeline?: TimelineDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -248,6 +250,7 @@ export function BulletChart(props: Props) {
     targetLineThickness = 2,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     hideAxisLine = false,
+    locale = 'en',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -468,6 +471,7 @@ export function BulletChart(props: Props) {
               naLabel={naLabel}
               targetLineThickness={targetLineThickness}
               rtl={language === 'ar' || language === 'he'}
+              locale={locale}
             />
           ) : null}
         </GraphArea>

@@ -68,6 +68,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   naLabel: string;
   hideAxisLine: boolean;
+  locale: string;
 }
 function getWaterfallExtent(values: (number | null | undefined)[]) {
   let cumulative = 0;
@@ -126,6 +127,7 @@ export function Graph(props: Props) {
     customLayers,
     naLabel,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -224,10 +226,11 @@ export function Graph(props: Props) {
               showTicks
                 ? numberFormattingFunction(
                     minVal < 0 ? 0 : minVal,
-                    naLabel,
+                    undefined,
                     precision,
                     prefix,
                     suffix,
+                    locale,
                   )
                 : undefined
             }
@@ -263,6 +266,7 @@ export function Graph(props: Props) {
               showGridLines
               labelPos='vertical'
               precision={precision}
+              locale={locale}
             />
           ) : null}
           <AxisTitle
@@ -446,6 +450,7 @@ export function Graph(props: Props) {
                         precision,
                         prefix,
                         suffix,
+                        locale,
                       )}
                     </motion.text>
                   ) : null}

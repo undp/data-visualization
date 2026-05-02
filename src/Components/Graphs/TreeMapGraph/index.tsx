@@ -94,6 +94,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -167,6 +169,7 @@ export function TreeMapGraph(props: Props) {
     animate = false,
     dimmedOpacity = 0.3,
     precision = 2,
+    locale = 'en',
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -278,6 +281,7 @@ export function TreeMapGraph(props: Props) {
             }
             dimmedOpacity={dimmedOpacity}
             precision={precision}
+            locale={locale}
           />
         ) : null}
       </GraphArea>

@@ -91,6 +91,7 @@ interface Props {
   naLabel: string;
   showHighlightedLinesLabels: boolean;
   showDateOnHover: boolean;
+  locale: string;
 }
 
 interface FormattedDataType {
@@ -142,6 +143,7 @@ export function Graph(props: Props) {
     customLayers,
     showHighlightedLinesLabels,
     showDateOnHover,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -328,6 +330,7 @@ export function Graph(props: Props) {
               showGridLines
               labelPos='vertical'
               precision={precision}
+              locale={locale}
             />
             <Axis
               y1={y(minParam < 0 ? 0 : minParam)}
@@ -336,10 +339,11 @@ export function Graph(props: Props) {
               x2={graphWidth + margin.right}
               label={numberFormattingFunction(
                 minParam < 0 ? 0 : minParam,
-                'NA',
+                undefined,
                 precision,
                 prefix,
                 suffix,
+                locale,
               )}
               labelPos={{
                 x: 0 - leftMargin,
@@ -387,6 +391,7 @@ export function Graph(props: Props) {
               labelType='primary'
               showGridLines
               precision={precision}
+              locale={locale}
             />
           </g>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
@@ -593,7 +598,14 @@ export function Graph(props: Props) {
                     ...(styles?.graphObjectValues || {}),
                   }}
                 >
-                  {numberFormattingFunction(mouseOverData.y, naLabel, precision, prefix, suffix)}
+                  {numberFormattingFunction(
+                    mouseOverData.y,
+                    naLabel,
+                    precision,
+                    prefix,
+                    suffix,
+                    locale,
+                  )}
                 </text>
                 {showDateOnHover && (
                   <text

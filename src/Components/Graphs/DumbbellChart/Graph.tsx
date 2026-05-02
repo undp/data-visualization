@@ -71,6 +71,7 @@ interface Props {
   dimmedOpacity: number;
   rtl: boolean;
   hideAxisLine: boolean;
+  locale: string;
 }
 
 export function VerticalGraph(props: Props) {
@@ -116,6 +117,7 @@ export function VerticalGraph(props: Props) {
     highlightedDataPoints,
     dimmedOpacity,
     hideAxisLine,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -214,7 +216,7 @@ export function VerticalGraph(props: Props) {
               showTicks
                 ? numberFormattingFunction(
                     minValue < 0 ? 0 : minValue,
-                    'NA',
+                    undefined,
                     precision,
                     prefix,
                     suffix,
@@ -253,6 +255,7 @@ export function VerticalGraph(props: Props) {
               showGridLines
               labelPos='vertical'
               precision={precision}
+              locale={locale}
             />
           ) : null}
           <AxisTitle
@@ -449,7 +452,14 @@ export function VerticalGraph(props: Props) {
                             initial='initial'
                             animate={isInView ? 'whileInView' : 'initial'}
                           >
-                            {numberFormattingFunction(el, 'NA', precision, prefix, suffix)}
+                            {numberFormattingFunction(
+                              el,
+                              undefined,
+                              precision,
+                              prefix,
+                              suffix,
+                              locale,
+                            )}
                           </motion.text>
                         ) : null}
                       </>
@@ -545,6 +555,7 @@ export function HorizontalGraph(props: Props) {
     customLayers,
     highlightedDataPoints,
     dimmedOpacity,
+    locale,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -652,6 +663,7 @@ export function HorizontalGraph(props: Props) {
               labelType='secondary'
               showGridLines
               precision={precision}
+              locale={locale}
             />
           ) : null}
           <AxisTitle
@@ -671,6 +683,7 @@ export function HorizontalGraph(props: Props) {
             showGridLines
             labelPos='vertical'
             precision={precision}
+            locale={locale}
           />
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
@@ -861,7 +874,14 @@ export function HorizontalGraph(props: Props) {
                             initial='initial'
                             animate={isInView ? 'whileInView' : 'initial'}
                           >
-                            {numberFormattingFunction(el, 'NA', precision, prefix, suffix)}
+                            {numberFormattingFunction(
+                              el,
+                              undefined,
+                              precision,
+                              prefix,
+                              suffix,
+                              locale,
+                            )}
                           </motion.text>
                         ) : null}
                       </>

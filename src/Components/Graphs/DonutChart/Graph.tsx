@@ -30,6 +30,8 @@ interface Props {
   precision: number;
   animate: AnimateDataType;
   trackColor: string;
+  locale: string;
+  naLabel: string;
 }
 
 export function Graph(props: Props) {
@@ -51,6 +53,8 @@ export function Graph(props: Props) {
     precision,
     animate,
     trackColor,
+    locale,
+    naLabel,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -99,12 +103,13 @@ export function Graph(props: Props) {
                         : data.findIndex(d => d.label === mainText.label) !== -1
                           ? numberFormattingFunction(
                               data[data.findIndex(d => d.label === mainText.label)].size,
-                              'NA',
+                              naLabel,
                               precision,
                               mainText.prefix,
                               mainText.suffix,
+                              locale,
                             )
-                          : 'NA'}
+                          : naLabel}
                     </H2>
                   )
                 ) : null}

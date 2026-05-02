@@ -75,10 +75,14 @@ interface Props {
   showColorScale?: boolean;
   /** Specifies the number of decimal places to display in the value. */
   precision?: number;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
   dataDownload?: boolean;
+  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
+  locale?: string;
 
   // Configuration and Options
   /** Language setting  */
@@ -120,6 +124,8 @@ export function UnitChart(props: Props) {
     classNames,
     animate = false,
     precision = 2,
+    locale,
+    naLabel = 'NA',
   } = props;
   const svgRef = useRef(null);
   const animateValue =
@@ -214,7 +220,14 @@ export function UnitChart(props: Props) {
                 >
                   {d.label}:{' '}
                   <span className='font-bold'>
-                    {numberFormattingFunction(d.value, 'NA', precision)}
+                    {numberFormattingFunction(
+                      d.value,
+                      naLabel,
+                      precision,
+                      undefined,
+                      undefined,
+                      locale || language,
+                    )}
                   </span>
                 </P>
               </div>
