@@ -192,7 +192,7 @@ export function MultiLineChart(props: Props) {
     graphID,
     minValue,
     maxValue,
-    highlightedLines = [],
+    highlightedLines,
     graphDownload = false,
     dataDownload = false,
     animate = false,

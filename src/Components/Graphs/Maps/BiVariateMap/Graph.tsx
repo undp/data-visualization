@@ -59,7 +59,7 @@ interface Props {
   isWorldMap: boolean;
   zoomScaleExtend: [number, number];
   zoomTranslateExtend?: [[number, number], [number, number]];
-  highlightedIds: string[];
+  highlightedIds?: string[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
@@ -197,7 +197,7 @@ export function Graph(props: Props) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (d: any) =>
             (highlightedIds || []).length === 0 ||
-            highlightedIds.indexOf(d.properties[mapProperty]) !== -1,
+            highlightedIds?.indexOf(d.properties[mapProperty]) !== -1,
         )
       : formattedMapData.features,
   });
@@ -209,7 +209,7 @@ export function Graph(props: Props) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (d: any) =>
             (highlightedIds || []).length === 0 ||
-            highlightedIds.indexOf(d.properties[mapProperty]) !== -1,
+            highlightedIds?.indexOf(d.properties[mapProperty]) !== -1,
         )
       : formattedMapData.features,
   });
@@ -285,7 +285,7 @@ export function Graph(props: Props) {
                   opacity={
                     selectedColor
                       ? dimmedOpacity
-                      : highlightedIds.length !== 0
+                      : highlightedIds
                         ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
                           ? 1
                           : dimmedOpacity
@@ -335,7 +335,7 @@ export function Graph(props: Props) {
                           ? selectedColor === color
                             ? 1
                             : dimmedOpacity
-                          : highlightedIds.length !== 0
+                          : highlightedIds
                             ? highlightedIds.indexOf(d.id) !== -1
                               ? 1
                               : dimmedOpacity

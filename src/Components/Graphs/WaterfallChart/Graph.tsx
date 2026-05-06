@@ -49,7 +49,7 @@ interface Props {
   selectedColor?: string;
   maxValue?: number;
   minValue?: number;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   labelOrder?: string[];
@@ -294,7 +294,7 @@ export function Graph(props: Props) {
                             ? 1
                             : dimmedOpacity
                           : dimmedOpacity
-                        : highlightedDataPoints.length !== 0
+                        : highlightedDataPoints
                           ? highlightedDataPoints.indexOf(d.label) !== -1
                             ? 0.85
                             : dimmedOpacity
@@ -307,7 +307,7 @@ export function Graph(props: Props) {
                             ? 1
                             : dimmedOpacity
                           : dimmedOpacity
-                        : highlightedDataPoints.length !== 0
+                        : highlightedDataPoints
                           ? highlightedDataPoints.indexOf(d.label) !== -1
                             ? 0.85
                             : dimmedOpacity

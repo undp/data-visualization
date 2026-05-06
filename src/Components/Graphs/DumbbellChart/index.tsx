@@ -239,7 +239,7 @@ export function DumbbellChart(props: Props) {
     precision = 2,
     showColorScale = true,
     customLayers = [],
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     dimmedOpacity = 0.3,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     sortData,

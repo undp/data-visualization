@@ -56,7 +56,7 @@ interface Props {
   refYValues: ReferenceDataType[];
   highlightAreaSettings: HighlightAreaSettingsForScatterPlotDataType[];
   selectedColor?: string;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   maxRadiusValue: number;
   maxXValue: number;
   minXValue: number;
@@ -403,7 +403,7 @@ export function Graph(props: Props) {
                           ? mouseOverData.id === d.id
                             ? 1
                             : dimmedOpacity
-                          : highlightedDataPoints.length !== 0
+                          : highlightedDataPoints
                             ? highlightedDataPoints.indexOf(d.label || '') !== -1
                               ? 1
                               : dimmedOpacity
@@ -422,7 +422,7 @@ export function Graph(props: Props) {
                           ? mouseOverData.id === d.id
                             ? 1
                             : dimmedOpacity
-                          : highlightedDataPoints.length !== 0
+                          : highlightedDataPoints
                             ? highlightedDataPoints.indexOf(d.label || '') !== -1
                               ? 1
                               : dimmedOpacity
@@ -545,7 +545,7 @@ export function Graph(props: Props) {
                     >
                       {d.label}
                     </motion.text>
-                  ) : highlightedDataPoints.length !== 0 &&
+                  ) : highlightedDataPoints &&
                     !checkIfNullOrUndefined(d.label) &&
                     showHighlightedDataPointsLabels ? (
                     highlightedDataPoints.indexOf(d.label as string | number) !== -1 ? (

@@ -47,7 +47,7 @@ interface Props {
   minValue?: number;
   fillShape: boolean;
   resetSelectionOnDoubleClick: boolean;
-  highlightedLines: (string | number)[];
+  highlightedLines?: (string | number)[];
   animate: AnimateDataType;
   dimmedOpacity: number;
   precision: number;
@@ -262,7 +262,7 @@ export function Graph(props: Props) {
                               ? 1
                               : dimmedOpacity
                             : dimmedOpacity
-                          : highlightedLines.length !== 0
+                          : highlightedLines
                             ? d.label
                               ? highlightedLines.indexOf(d.label) !== -1
                                 ? 1
@@ -281,7 +281,7 @@ export function Graph(props: Props) {
                               ? 1
                               : dimmedOpacity
                             : dimmedOpacity
-                          : highlightedLines.length !== 0
+                          : highlightedLines
                             ? d.label
                               ? highlightedLines.indexOf(d.label) !== -1
                                 ? 1

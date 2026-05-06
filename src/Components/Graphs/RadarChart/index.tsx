@@ -164,7 +164,7 @@ export function RadarChart(props: Props) {
     colorDomain,
     language = 'en',
     theme = 'light',
-    highlightedLines = [],
+    highlightedLines,
     width,
     height,
     minHeight = 0,

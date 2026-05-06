@@ -175,7 +175,7 @@ export function WaterfallChart(props: Props) {
     footNote,
     colorDomain,
     colorLegendTitle,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     padding,
     backgroundColor = false,
     topMargin,

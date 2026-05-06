@@ -183,7 +183,7 @@ export function DotDensityMap(props: Props) {
     zoomScaleExtend = [0.8, 6],
     zoomTranslateExtend,
     graphID,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     onSeriesMouseClick,
     graphDownload = false,
     dataDownload = false,

@@ -149,7 +149,7 @@ export function CirclePackingGraph(props: Props) {
     showColorScale = true,
     showValues,
     graphID,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     onSeriesMouseClick,
     graphDownload = false,
     dataDownload = false,

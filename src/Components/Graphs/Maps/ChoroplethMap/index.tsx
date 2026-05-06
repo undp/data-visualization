@@ -186,7 +186,7 @@ export function ChoroplethMap(props: Props) {
     zoomScaleExtend = [0.8, 6],
     zoomTranslateExtend,
     graphID,
-    highlightedIds = [],
+    highlightedIds,
     onSeriesMouseClick,
     mapProperty = 'ISO3',
     graphDownload = false,

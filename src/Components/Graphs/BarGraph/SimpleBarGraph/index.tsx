@@ -117,7 +117,7 @@ export function SimpleBarGraphEl(props: Props) {
     footNote,
     colorDomain,
     colorLegendTitle,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     padding,
     backgroundColor = false,
     topMargin,

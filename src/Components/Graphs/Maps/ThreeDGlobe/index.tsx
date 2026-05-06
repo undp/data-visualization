@@ -183,7 +183,7 @@ export function ThreeDGlobe(props: Props) {
     detailsOnClick,
     onSeriesMouseOver,
     onSeriesMouseClick,
-    highlightedIds = [],
+    highlightedIds,
     highlightedAltitude = 0.1,
     dimmedOpacity = 0.3,
     scale = 1,

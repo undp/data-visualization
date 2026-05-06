@@ -32,7 +32,7 @@ interface Props {
   onSeriesMouseOver?: (_d: any) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   resetSelectionOnDoubleClick: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
@@ -152,7 +152,7 @@ export function Graph(props: Props) {
                             ? 1
                             : dimmedOpacity
                           : dimmedOpacity
-                        : highlightedDataPoints.length !== 0
+                        : highlightedDataPoints
                           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             highlightedDataPoints.indexOf((d.data as any).id) !== -1
                             ? 0.85

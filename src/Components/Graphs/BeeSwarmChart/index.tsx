@@ -171,7 +171,7 @@ export function BeeSwarmChart(props: Props) {
     maxRadiusValue,
     maxValue,
     minValue,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     onSeriesMouseClick,
     ariaLabel,
     backgroundColor = false,

@@ -68,7 +68,7 @@ interface Props {
   refValues: ReferenceDataType[];
   maxValue?: number;
   minValue?: number;
-  highlightedLines: (string | number)[];
+  highlightedLines?: (string | number)[];
   animate: AnimateDataType;
   rtl: boolean;
   strokeWidth: number;
@@ -412,7 +412,7 @@ export function Graph(props: Props) {
                             ? 1
                             : dimmedOpacity
                           : dimmedOpacity
-                        : highlightedLines.length !== 0
+                        : highlightedLines
                           ? highlightedLines.indexOf(d[0].label) !== -1
                             ? 1
                             : dimmedOpacity
@@ -429,7 +429,7 @@ export function Graph(props: Props) {
                             ? 1
                             : dimmedOpacity
                           : dimmedOpacity
-                        : highlightedLines.length !== 0
+                        : highlightedLines
                           ? highlightedLines.indexOf(d[0].label) !== -1
                             ? 1
                             : dimmedOpacity
@@ -452,7 +452,7 @@ export function Graph(props: Props) {
                       ? d[0].label === mouseOverData.label
                         ? strokeWidth + Math.max(2, 0.5 * strokeWidth)
                         : strokeWidth
-                      : highlightedLines.length !== 0
+                      : highlightedLines
                         ? highlightedLines.indexOf(d[0].label) !== -1
                           ? strokeWidth + Math.max(2, 0.5 * strokeWidth)
                           : strokeWidth
@@ -537,7 +537,8 @@ export function Graph(props: Props) {
                     ) : null}
                   </motion.g>
                 ))}
-                {((highlightedLines.indexOf(d[0].label) !== -1 && showHighlightedLinesLabels) ||
+                {(((highlightedLines || []).indexOf(d[0].label) !== -1 &&
+                  showHighlightedLinesLabels) ||
                   mouseOverData?.label === d[0].label) &&
                 showLabels ? (
                   <motion.text

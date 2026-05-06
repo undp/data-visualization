@@ -59,7 +59,7 @@ interface Props {
   showColorScale: boolean;
   zoomScaleExtend: [number, number];
   zoomTranslateExtend?: [[number, number], [number, number]];
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
@@ -75,7 +75,7 @@ interface Props {
   maxRadiusValue: number;
   collapseColorScaleByDefault?: boolean;
   dotColor: string;
-  highlightedIds: string[];
+  highlightedIds?: string[];
   mapProperty: string;
   dotLegendTitle?: string;
   dotBorderColor?: string;
@@ -279,7 +279,7 @@ export function Graph(props: Props) {
                   opacity={
                     selectedColor
                       ? dimmedOpacity
-                      : highlightedIds.length !== 0
+                      : highlightedIds
                         ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
                           ? 1
                           : dimmedOpacity
@@ -324,7 +324,7 @@ export function Graph(props: Props) {
                             ? selectedColor === color
                               ? 1
                               : dimmedOpacity
-                            : highlightedIds.length !== 0
+                            : highlightedIds
                               ? highlightedIds.indexOf(d.id as string) !== -1
                                 ? 1
                                 : dimmedOpacity
@@ -423,12 +423,11 @@ export function Graph(props: Props) {
                       variants={{
                         initial: { opacity: 0 },
                         whileInView: {
-                          opacity:
-                            highlightedDataPoints.length !== 0
-                              ? highlightedDataPoints.indexOf(d.label || '') !== -1
-                                ? 1
-                                : dimmedOpacity
-                              : 1,
+                          opacity: highlightedDataPoints
+                            ? highlightedDataPoints.indexOf(d.label || '') !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : 1,
                           transition: { duration: animate.duration },
                         },
                       }}

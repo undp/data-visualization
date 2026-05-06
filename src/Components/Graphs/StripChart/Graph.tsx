@@ -36,7 +36,7 @@ interface Props {
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   maxValue?: number;
   minValue?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -173,7 +173,7 @@ export function VerticalGraph(props: Props) {
                             ? 0.95
                             : dimmedOpacity
                           : dimmedOpacity
-                        : highlightedDataPoints.length !== 0
+                        : highlightedDataPoints
                           ? highlightedDataPoints.indexOf(d.label) !== -1
                             ? 0.95
                             : dimmedOpacity
@@ -305,7 +305,7 @@ export function VerticalGraph(props: Props) {
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     />
                   )}
-                  {highlightedDataPoints.length !== 0 ? (
+                  {highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
                       <motion.text
                         y={0}
@@ -600,7 +600,7 @@ export function HorizontalGraph(props: Props) {
                             ? 0.95
                             : dimmedOpacity
                           : dimmedOpacity
-                        : highlightedDataPoints.length !== 0
+                        : highlightedDataPoints
                           ? highlightedDataPoints.indexOf(d.label) !== -1
                             ? 0.95
                             : dimmedOpacity
@@ -732,7 +732,7 @@ export function HorizontalGraph(props: Props) {
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     />
                   )}
-                  {highlightedDataPoints.length !== 0 ? (
+                  {highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
                       <motion.text
                         x={0}

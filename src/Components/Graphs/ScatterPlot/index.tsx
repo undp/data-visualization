@@ -212,7 +212,7 @@ export function ScatterPlot(props: Props) {
     refYValues = [],
     highlightAreaSettings = [],
     showColorScale = true,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     showHighlightedDataPointsLabels = false,
     graphID,
     maxRadiusValue,

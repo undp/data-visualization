@@ -187,7 +187,7 @@ export function BiVariateChoroplethMap(props: Props) {
     zoomTranslateExtend,
     graphID,
     showColorScale = true,
-    highlightedIds = [],
+    highlightedIds,
     onSeriesMouseClick,
     mapProperty = 'ISO3',
     graphDownload = false,

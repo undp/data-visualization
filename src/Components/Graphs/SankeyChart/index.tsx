@@ -182,8 +182,8 @@ export function SankeyChart(props: Props) {
     targetColorDomain,
     nodePadding = 5,
     nodeWidth = 5,
-    highlightedSourceDataPoints = [],
-    highlightedTargetDataPoints = [],
+    highlightedSourceDataPoints,
+    highlightedTargetDataPoints,
     defaultLinkOpacity = 0.3,
     sourceTitle,
     targetTitle,
@@ -339,8 +339,8 @@ export function SankeyChart(props: Props) {
             prefix={prefix}
             onSeriesMouseClick={onSeriesMouseClick}
             id={generateRandomString(8)}
-            highlightedSourceDataPoints={highlightedSourceDataPoints.map(d => `${d}`)}
-            highlightedTargetDataPoints={highlightedTargetDataPoints.map(d => `${d}`)}
+            highlightedSourceDataPoints={highlightedSourceDataPoints?.map(d => `${d}`)}
+            highlightedTargetDataPoints={highlightedTargetDataPoints?.map(d => `${d}`)}
             defaultLinkOpacity={defaultLinkOpacity}
             sourceTitle={sourceTitle}
             targetTitle={targetTitle}

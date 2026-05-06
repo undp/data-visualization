@@ -153,7 +153,7 @@ export function TreeMapGraph(props: Props) {
     showColorScale = true,
     showValues = true,
     graphID,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     onSeriesMouseClick,
     graphDownload = false,
     dataDownload = false,

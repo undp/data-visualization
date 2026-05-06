@@ -47,7 +47,7 @@ interface Props {
   hoverStrokeColor: string;
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   resetSelectionOnDoubleClick: boolean;
-  highlightedIds: string[];
+  highlightedIds?: string[];
   scale: number;
   globeOffset: [number, number];
   polygonAltitude: number;
@@ -295,7 +295,7 @@ function Graph(props: Props) {
         lineHoverPrecision={0}
         polygonsData={polygonData}
         polygonAltitude={(polygon: any) =>
-          highlightedIds.includes(polygon?.properties?.[mapProperty]) ||
+          highlightedIds?.includes(polygon?.properties?.[mapProperty]) ||
           polygon?.properties?.[mapProperty] === selectedId
             ? highlightedAltitude
             : polygon?.properties?.[mapProperty] === mouseOverData?.id ||
@@ -308,7 +308,7 @@ function Graph(props: Props) {
             ? polygon?.properties?.[mapProperty] === selectedId
               ? 1
               : dimmedOpacity
-            : highlightedIds.length !== 0
+            : highlightedIds
               ? highlightedIds.includes(polygon?.properties?.[mapProperty])
                 ? 1
                 : dimmedOpacity
@@ -325,7 +325,7 @@ function Graph(props: Props) {
             ? polygon?.properties?.[mapProperty] === selectedId
               ? 1
               : dimmedOpacity
-            : highlightedIds.length !== 0
+            : highlightedIds
               ? highlightedIds.includes(polygon?.properties?.[mapProperty])
                 ? 1
                 : dimmedOpacity

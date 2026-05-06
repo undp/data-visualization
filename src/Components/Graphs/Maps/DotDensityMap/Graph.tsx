@@ -57,7 +57,7 @@ interface Props {
   showColorScale: boolean;
   zoomScaleExtend: [number, number];
   zoomTranslateExtend?: [[number, number], [number, number]];
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
@@ -302,7 +302,7 @@ export function Graph(props: Props) {
                           ? selectedColor === color
                             ? 1
                             : dimmedOpacity
-                          : highlightedDataPoints.length !== 0
+                          : highlightedDataPoints
                             ? highlightedDataPoints.indexOf(d.label || '') !== -1
                               ? 1
                               : dimmedOpacity

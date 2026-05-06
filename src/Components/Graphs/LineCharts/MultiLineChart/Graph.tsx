@@ -67,7 +67,7 @@ interface Props {
   refValues: ReferenceDataType[];
   maxValue?: number;
   minValue?: number;
-  highlightedLines: (string | number)[];
+  highlightedLines?: (string | number)[];
   animate: AnimateDataType;
   rtl: boolean;
   strokeWidth: number;
@@ -424,20 +424,18 @@ export function Graph(props: Props) {
                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 variants={{
                   initial: {
-                    opacity:
-                      highlightedLines.length !== 0
-                        ? highlightedLines.indexOf(labels[i]) !== -1
-                          ? 1
-                          : dimmedOpacity
-                        : 1,
+                    opacity: highlightedLines
+                      ? highlightedLines.indexOf(labels[i]) !== -1
+                        ? 1
+                        : dimmedOpacity
+                      : 1,
                   },
                   whileInView: {
-                    opacity:
-                      highlightedLines.length !== 0
-                        ? highlightedLines.indexOf(labels[i]) !== -1
-                          ? 1
-                          : dimmedOpacity
-                        : 1,
+                    opacity: highlightedLines
+                      ? highlightedLines.indexOf(labels[i]) !== -1
+                        ? 1
+                        : dimmedOpacity
+                      : 1,
                     transition: { duration: animate.duration },
                   },
                 }}

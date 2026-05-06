@@ -153,7 +153,7 @@ export function SlopeChart(props: Props) {
     relativeHeight,
     onSeriesMouseOver,
     showColorScale = true,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     graphID,
     minValue,
     maxValue,

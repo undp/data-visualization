@@ -35,7 +35,7 @@ interface Props {
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   theme: 'light' | 'dark';
@@ -241,7 +241,7 @@ export const Graph = (props: Props) => {
           ? 1
           : dimmedOpacity
         : dimmedOpacity
-      : highlightedDataPoints.length !== 0
+      : highlightedDataPoints
         ? highlightedDataPoints.indexOf(d.label) !== -1
           ? 0.85
           : dimmedOpacity

@@ -48,7 +48,7 @@ interface Props {
   onSeriesMouseOver?: (_d: any) => void;
   maxValue?: number;
   minValue?: number;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   labelOrder?: string[];
@@ -334,22 +334,20 @@ export function VerticalGraph(props: Props) {
                     initial: {
                       x: x(`${d.id}`),
                       y: 0,
-                      opacity:
-                        highlightedDataPoints.length !== 0
-                          ? highlightedDataPoints.indexOf(d.label) !== -1
-                            ? 0.85
-                            : dimmedOpacity
-                          : 0.85,
+                      opacity: highlightedDataPoints
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
                     },
                     whileInView: {
                       x: x(`${d.id}`),
                       y: 0,
-                      opacity:
-                        highlightedDataPoints.length !== 0
-                          ? highlightedDataPoints.indexOf(d.label) !== -1
-                            ? 0.85
-                            : dimmedOpacity
-                          : 0.85,
+                      opacity: highlightedDataPoints
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
                       transition: { duration: animate.duration },
                     },
                   }}
@@ -825,22 +823,20 @@ export function HorizontalGraph(props: Props) {
                     initial: {
                       x: 0,
                       y: y(`${d.id}`),
-                      opacity:
-                        highlightedDataPoints.length !== 0
-                          ? highlightedDataPoints.indexOf(d.label) !== -1
-                            ? 0.85
-                            : dimmedOpacity
-                          : 0.85,
+                      opacity: highlightedDataPoints
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
                     },
                     whileInView: {
                       x: 0,
                       y: y(`${d.id}`),
-                      opacity:
-                        highlightedDataPoints.length !== 0
-                          ? highlightedDataPoints.indexOf(d.label) !== -1
-                            ? 0.85
-                            : dimmedOpacity
-                          : 0.85,
+                      opacity: highlightedDataPoints
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85,
                       transition: { duration: animate.duration },
                     },
                   }}

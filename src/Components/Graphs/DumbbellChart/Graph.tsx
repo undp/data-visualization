@@ -67,7 +67,7 @@ interface Props {
   animate: AnimateDataType;
   precision: number;
   customLayers: CustomLayerDataType[];
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   dimmedOpacity: number;
   rtl: boolean;
   hideAxisLine: boolean;
@@ -276,22 +276,20 @@ export function VerticalGraph(props: Props) {
                   initial: {
                     x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
                     y: 0,
-                    opacity:
-                      highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : 0.85,
+                    opacity: highlightedDataPoints
+                      ? highlightedDataPoints.indexOf(d.label) !== -1
+                        ? 0.85
+                        : dimmedOpacity
+                      : 0.85,
                   },
                   whileInView: {
                     x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
                     y: 0,
-                    opacity:
-                      highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : 0.85,
+                    opacity: highlightedDataPoints
+                      ? highlightedDataPoints.indexOf(d.label) !== -1
+                        ? 0.85
+                        : dimmedOpacity
+                      : 0.85,
                     transition: { duration: animate.duration },
                   },
                 }}
@@ -695,22 +693,20 @@ export function HorizontalGraph(props: Props) {
                   initial: {
                     x: 0,
                     y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
-                    opacity:
-                      highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : 0.85,
+                    opacity: highlightedDataPoints
+                      ? highlightedDataPoints.indexOf(d.label) !== -1
+                        ? 0.85
+                        : dimmedOpacity
+                      : 0.85,
                   },
                   whileInView: {
                     x: 0,
                     y: (y(`${d.id}`) as number) + y.bandwidth() / 2,
-                    opacity:
-                      highlightedDataPoints.length !== 0
-                        ? highlightedDataPoints.indexOf(d.label) !== -1
-                          ? 0.85
-                          : dimmedOpacity
-                        : 0.85,
+                    opacity: highlightedDataPoints
+                      ? highlightedDataPoints.indexOf(d.label) !== -1
+                        ? 0.85
+                        : dimmedOpacity
+                      : 0.85,
                     transition: { duration: animate.duration },
                   },
                 }}

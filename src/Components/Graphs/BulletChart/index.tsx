@@ -216,7 +216,7 @@ export function BulletChart(props: Props) {
     graphID,
     maxValue,
     minValue,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     onSeriesMouseClick,
     valueColor,
     orientation = 'vertical',

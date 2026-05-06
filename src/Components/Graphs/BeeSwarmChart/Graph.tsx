@@ -57,7 +57,7 @@ interface Props {
   maxRadiusValue?: number;
   maxValue?: number;
   minValue?: number;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
@@ -274,7 +274,7 @@ export function VerticalGraph(props: Props) {
                         ? 1
                         : dimmedOpacity
                       : dimmedOpacity
-                    : highlightedDataPoints.length !== 0
+                    : highlightedDataPoints
                       ? highlightedDataPoints.indexOf(d.label) !== -1
                         ? 0.85
                         : dimmedOpacity
@@ -622,7 +622,7 @@ export function HorizontalGraph(props: Props) {
                         ? 1
                         : dimmedOpacity
                       : dimmedOpacity
-                    : highlightedDataPoints.length !== 0
+                    : highlightedDataPoints
                       ? highlightedDataPoints.indexOf(d.label) !== -1
                         ? 0.85
                         : dimmedOpacity

@@ -40,8 +40,8 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseClick?: (_d: any) => void;
   id: string;
-  highlightedSourceDataPoints: string[];
-  highlightedTargetDataPoints: string[];
+  highlightedSourceDataPoints?: string[];
+  highlightedTargetDataPoints?: string[];
   sourceTitle?: string;
   targetTitle?: string;
   animate: AnimateDataType;
@@ -423,13 +423,12 @@ export function Graph(props: Props) {
                           (d.target as any).name === selectedNode.name
                           ? 0.85
                           : defaultLinkOpacity
-                        : highlightedSourceDataPoints.length !== 0 ||
-                            highlightedTargetDataPoints.length !== 0
-                          ? highlightedSourceDataPoints.indexOf(
+                        : highlightedSourceDataPoints || highlightedTargetDataPoints
+                          ? highlightedSourceDataPoints?.indexOf(
                               // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               (d.source as any).label,
                             ) !== -1 ||
-                            highlightedTargetDataPoints.indexOf(
+                            highlightedTargetDataPoints?.indexOf(
                               // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               (d.target as any).label,
                             ) !== -1
@@ -445,13 +444,12 @@ export function Graph(props: Props) {
                           (d.target as any).name === selectedNode.name
                           ? 0.85
                           : defaultLinkOpacity
-                        : highlightedSourceDataPoints.length !== 0 ||
-                            highlightedTargetDataPoints.length !== 0
-                          ? highlightedSourceDataPoints.indexOf(
+                        : highlightedSourceDataPoints || highlightedTargetDataPoints
+                          ? highlightedSourceDataPoints?.indexOf(
                               // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               (d.source as any).label,
                             ) !== -1 ||
-                            highlightedTargetDataPoints.indexOf(
+                            highlightedTargetDataPoints?.indexOf(
                               // eslint-disable-next-line @typescript-eslint/no-explicit-any
                               (d.target as any).label,
                             ) !== -1

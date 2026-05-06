@@ -167,7 +167,7 @@ export function StripChart(props: Props) {
     relativeHeight,
     onSeriesMouseOver,
     showColorScale = true,
-    highlightedDataPoints = [],
+    highlightedDataPoints,
     graphID,
     minValue,
     maxValue,

@@ -36,7 +36,7 @@ interface Props {
   tooltip?: string | ((_d: any) => React.ReactNode);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSeriesMouseOver?: (_d: any) => void;
-  highlightedDataPoints: (string | number)[];
+  highlightedDataPoints?: (string | number)[];
   maxValue?: number;
   minValue?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -185,7 +185,7 @@ export function Graph(props: Props) {
                           ? mouseOverData.label === d.label
                             ? 1
                             : dimmedOpacity
-                          : highlightedDataPoints.length !== 0
+                          : highlightedDataPoints
                             ? highlightedDataPoints.indexOf(d.label) !== -1
                               ? 1
                               : dimmedOpacity
@@ -202,7 +202,7 @@ export function Graph(props: Props) {
                           ? mouseOverData.label === d.label
                             ? 1
                             : dimmedOpacity
-                          : highlightedDataPoints.length !== 0
+                          : highlightedDataPoints
                             ? highlightedDataPoints.indexOf(d.label) !== -1
                               ? 1
                               : dimmedOpacity
@@ -328,7 +328,7 @@ export function Graph(props: Props) {
                     >
                       {d.label}
                     </motion.text>
-                  ) : highlightedDataPoints.length !== 0 ? (
+                  ) : highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
                       <motion.text
                         variants={{
@@ -455,7 +455,7 @@ export function Graph(props: Props) {
                     >
                       {d.label}
                     </motion.text>
-                  ) : highlightedDataPoints.length !== 0 ? (
+                  ) : highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
                       <motion.text
                         variants={{
