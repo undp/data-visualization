@@ -79,6 +79,9 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   align?: 'left' | 'right' | 'center';
   suffix?: string;
   prefix?: string;
+  locale?: string;
+  precision?: number;
+  padZeros?: boolean;
   columnWidth?: number;
 }`,
         },

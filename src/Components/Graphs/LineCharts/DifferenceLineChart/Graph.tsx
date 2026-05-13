@@ -85,6 +85,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   locale: string;
   naLabel: string;
+  padZeros: boolean;
 }
 
 interface FormattedDataType {
@@ -135,6 +136,7 @@ export function Graph(props: Props) {
     customLayers,
     locale,
     naLabel,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -351,6 +353,7 @@ export function Graph(props: Props) {
                 labelPos='vertical'
                 precision={precision}
                 locale={locale}
+                padZeros={padZeros}
               />
               <Axis
                 y1={y(minParam < 0 ? 0 : minParam)}
@@ -364,6 +367,7 @@ export function Graph(props: Props) {
                   prefix,
                   suffix,
                   locale,
+                  padZeros,
                 )}
                 labelPos={{
                   x: 0 - leftMargin,
@@ -412,6 +416,7 @@ export function Graph(props: Props) {
             showGridLines
             precision={precision}
             locale={locale}
+            padZeros={padZeros}
           />
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g>
@@ -611,7 +616,15 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.y1, naLabel, precision, prefix, suffix, locale)}
+                        {numberFormattingFunction(
+                          d.y1,
+                          naLabel,
+                          precision,
+                          prefix,
+                          suffix,
+                          locale,
+                          padZeros,
+                        )}
                       </motion.text>
                     ) : null}
                   </>
@@ -673,7 +686,15 @@ export function Graph(props: Props) {
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       >
-                        {numberFormattingFunction(d.y2, naLabel, precision, prefix, suffix, locale)}
+                        {numberFormattingFunction(
+                          d.y2,
+                          naLabel,
+                          precision,
+                          prefix,
+                          suffix,
+                          locale,
+                          padZeros,
+                        )}
                       </motion.text>
                     ) : null}
                   </>

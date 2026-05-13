@@ -12,6 +12,7 @@ import {
   FogDataType,
   Languages,
   LightConfig,
+  NumberFormatOptions,
   ScaleDataType,
   SourcesDataType,
   StyleObject,
@@ -95,8 +96,8 @@ interface Props {
   scaleType?: Exclude<ScaleDataType, 'linear'>;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, precision, and zero padding. */
+  numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
   /** Toggle if color scale is collapsed by default. */
   collapseColorScaleByDefault?: boolean;
   /** The max altitude of the atmosphere, in terms of globe radius units. */
@@ -207,7 +208,7 @@ export function ThreeDGlobe(props: Props) {
     ],
     selectedId,
     collapseColorScaleByDefault,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [mapShape, setMapShape] = useState<any>(undefined);
@@ -364,7 +365,7 @@ export function ThreeDGlobe(props: Props) {
             selectedId={selectedId}
             collapseColorScaleByDefault={collapseColorScaleByDefault}
             dimmedOpacity={dimmedOpacity}
-            locale={locale}
+            numberDisplayOptions={numberDisplayOptions}
           />
         ) : (
           <div

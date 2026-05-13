@@ -17,6 +17,7 @@ import {
   ClassNameObject,
   CurveTypes,
   CustomLayerDataType,
+  NumberFormatOptions,
   ParetoChartDataType,
   StyleObject,
 } from '@/Types';
@@ -53,20 +54,16 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   noOfTicks: number;
-  lineSuffix: string;
-  barSuffix: string;
-  linePrefix: string;
   showValues: boolean;
-  barPrefix: string;
   curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   animate: AnimateDataType;
-  precision: number;
   naLabel: string;
   customLayers: CustomLayerDataType[];
   showAxisLabels: boolean;
-  locale: string;
+  lineNumberDisplayOptions?: NumberFormatOptions;
+  barNumberDisplayOptions?: NumberFormatOptions;
 }
 interface DataFormattedType {
   id: string;
@@ -97,19 +94,15 @@ export function Graph(props: Props) {
     resetSelectionOnDoubleClick,
     detailsOnClick,
     noOfTicks,
-    lineSuffix,
-    barSuffix,
-    linePrefix,
-    barPrefix,
     curveType,
     styles,
     classNames,
     animate,
-    precision,
     customLayers,
     naLabel,
     showAxisLabels,
-    locale,
+    lineNumberDisplayOptions,
+    barNumberDisplayOptions,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -228,7 +221,15 @@ export function Graph(props: Props) {
                     ...(styles?.yAxis?.labels || {}),
                   }}
                 >
-                  {numberFormattingFunction(d, naLabel, precision, barPrefix, barSuffix, locale)}
+                  {numberFormattingFunction(
+                    d,
+                    naLabel,
+                    barNumberDisplayOptions?.precision ?? 2,
+                    barNumberDisplayOptions?.prefix,
+                    barNumberDisplayOptions?.suffix,
+                    barNumberDisplayOptions?.locale,
+                    barNumberDisplayOptions?.padZeros,
+                  )}
                 </text>
               </g>
             ))}
@@ -282,7 +283,15 @@ export function Graph(props: Props) {
                   }}
                   className={cn('text-xs', classNames?.yAxis?.labels)}
                 >
-                  {numberFormattingFunction(d, naLabel, precision, linePrefix, lineSuffix, locale)}
+                  {numberFormattingFunction(
+                    d,
+                    naLabel,
+                    lineNumberDisplayOptions?.precision ?? 2,
+                    lineNumberDisplayOptions?.prefix,
+                    lineNumberDisplayOptions?.suffix,
+                    lineNumberDisplayOptions?.locale,
+                    lineNumberDisplayOptions?.padZeros,
+                  )}
                 </text>
               </g>
             ))}
@@ -414,10 +423,11 @@ export function Graph(props: Props) {
                       {numberFormattingFunction(
                         d.bar,
                         naLabel,
-                        precision,
-                        barPrefix,
-                        barSuffix,
-                        locale,
+                        barNumberDisplayOptions?.precision ?? 2,
+                        barNumberDisplayOptions?.prefix,
+                        barNumberDisplayOptions?.suffix,
+                        barNumberDisplayOptions?.locale,
+                        barNumberDisplayOptions?.padZeros,
                       )}
                     </motion.text>
                   ) : null}
@@ -563,10 +573,11 @@ export function Graph(props: Props) {
                         {numberFormattingFunction(
                           d.line,
                           naLabel,
-                          precision,
-                          linePrefix,
-                          lineSuffix,
-                          locale,
+                          lineNumberDisplayOptions?.precision ?? 2,
+                          lineNumberDisplayOptions?.prefix,
+                          lineNumberDisplayOptions?.suffix,
+                          lineNumberDisplayOptions?.locale,
+                          lineNumberDisplayOptions?.padZeros,
                         )}
                       </motion.text>
                     ) : null}

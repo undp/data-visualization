@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -64,12 +65,6 @@ interface Props {
   /** Radius of the donut chart */
   radius?: number;
 
-  // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
-
   // Graph Parameters
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
@@ -82,11 +77,19 @@ interface Props {
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
   /** Large text at the center of the donut chart. If the type is an object then the text is the value in the data for the label mentioned in the object */
-  mainText?: string | { label: string; suffix?: string; prefix?: string } | ReactElement;
+  mainText?:
+    | string
+    | {
+        label: string;
+        suffix?: string;
+        prefix?: string;
+        locale?: string;
+        padZeros?: boolean;
+        precision?: number;
+      }
+    | ReactElement;
   /** Small text at the center of the donut chart */
   subNote?: string;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
   /** Track color (i.e. the color of the donut chart's background) of the donut chart */
   trackColor?: string;
   /** Enable graph download option as png */
@@ -95,8 +98,8 @@ interface Props {
   dataDownload?: boolean;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
 
@@ -128,9 +131,7 @@ export function DonutChart(props: Props) {
     mainText,
     graphTitle,
     colors = Colors.light.categoricalColors.colors,
-    suffix = '',
     sources,
-    prefix = '',
     strokeWidth = 50,
     graphDescription,
     subNote,
@@ -160,11 +161,10 @@ export function DonutChart(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    precision = 2,
     animate = false,
     trackColor = Colors.light.grays['gray-200'],
-    locale = 'en',
     naLabel = 'NA',
+    numberDisplayOptions,
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
@@ -258,7 +258,15 @@ export function DonutChart(props: Props) {
                 >
                   {d.label}:{' '}
                   <span className='font-bold' style={{ fontSize: 'inherit' }}>
-                    {numberFormattingFunction(d.size, naLabel, precision, prefix, suffix, locale)}
+                    {numberFormattingFunction(
+                      d.size,
+                      naLabel,
+                      numberDisplayOptions?.precision,
+                      numberDisplayOptions?.prefix,
+                      numberDisplayOptions?.suffix,
+                      numberDisplayOptions?.locale,
+                      numberDisplayOptions?.padZeros,
+                    )}
                   </span>
                 </P>
               </div>
@@ -284,13 +292,11 @@ export function DonutChart(props: Props) {
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             styles={styles}
             detailsOnClick={detailsOnClick}
-            precision={precision}
             animate={
               animate === true
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
-            locale={locale}
             trackColor={trackColor}
             naLabel={naLabel}
           />

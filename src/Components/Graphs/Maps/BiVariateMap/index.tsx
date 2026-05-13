@@ -19,6 +19,7 @@ import {
   AnimateDataType,
   TimelineDataType,
   MapOverlayDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -125,8 +126,10 @@ interface Props {
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
   timeline?: TimelineDataType;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, precision, and zero padding. */
+  xNumberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
+  /** Configuration options for controlling number formatting, localization, precision, and zero padding. */
+  yNumberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -212,7 +215,8 @@ export function BiVariateChoroplethMap(props: Props) {
     projectionRotate = [0, 0],
     rewindCoordinatesInMapData = true,
     mapOverlay,
-    locale = 'en',
+    xNumberDisplayOptions,
+    yNumberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -437,7 +441,8 @@ export function BiVariateChoroplethMap(props: Props) {
             zoomAndCenterByHighlightedIds={zoomAndCenterByHighlightedIds}
             projectionRotate={projectionRotate}
             rewindCoordinatesInMapData={rewindCoordinatesInMapData}
-            locale={locale}
+            xNumberDisplayOptions={xNumberDisplayOptions}
+            yNumberDisplayOptions={yNumberDisplayOptions}
           />
         ) : (
           <div

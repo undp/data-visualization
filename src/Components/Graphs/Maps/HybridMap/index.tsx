@@ -22,6 +22,7 @@ import {
   TimelineDataType,
   ScaleDataType,
   MapOverlayDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
@@ -138,8 +139,8 @@ interface Props {
   mapProperty?: string;
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
   timeline?: TimelineDataType;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, precision, and zero padding. */
+  numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -230,7 +231,7 @@ export function HybridMap(props: Props) {
     labelColor = Colors.primaryColors['blue-600'],
     projectionRotate = [0, 0],
     rewindCoordinatesInMapData = true,
-    locale = 'en',
+    numberDisplayOptions,
     mapOverlay,
   } = props;
 
@@ -464,7 +465,7 @@ export function HybridMap(props: Props) {
             labelColor={labelColor}
             projectionRotate={projectionRotate}
             rewindCoordinatesInMapData={rewindCoordinatesInMapData}
-            locale={locale}
+            numberDisplayOptions={numberDisplayOptions}
           />
         ) : (
           <div

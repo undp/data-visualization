@@ -32,6 +32,19 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    numberDisplayOptions: {
+      table: {
+        type: {
+          detail: `{
+  locale?: string; 
+  precision?: number;
+  prefix?: string;
+  suffix?: string;
+  padZeros?: boolean;
+}`,
+        },
+      },
+    },
 
     // Titles and colorDomain and Sources
 

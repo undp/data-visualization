@@ -15,6 +15,7 @@ import {
   CurveTypes,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -71,10 +72,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values of the lines */
-  linePrefixes?: [string, string];
-  /** Suffix for values of the lines */
-  lineSuffixes?: [string, string];
   /** Maximum value of the date for the chart */
   maxDate?: string | number;
   /** Minimum value of the date for the chart */
@@ -107,10 +104,10 @@ interface Props {
   highlightAreaSettings?: HighlightAreaSettingsDataType[];
   /** Curve type for the line */
   curveType?: CurveTypes;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding for left line. */
+  leftLineNumberDisplayOptions?: NumberFormatOptions;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding for right line. */
+  rightLineNumberDisplayOptions?: NumberFormatOptions;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -161,8 +158,8 @@ export function DualAxisLineChart(props: Props) {
     topMargin = 20,
     bottomMargin = 25,
     labels,
-    lineSuffixes = ['', ''],
-    linePrefixes = ['', ''],
+    rightLineNumberDisplayOptions,
+    leftLineNumberDisplayOptions,
     tooltip,
     highlightAreaSettings = [],
     relativeHeight,
@@ -185,10 +182,8 @@ export function DualAxisLineChart(props: Props) {
     curveType = 'curve',
     styles,
     classNames,
-    precision = 2,
     customLayers = [],
     showAxisLabels = true,
-    locale = 'en',
     naLabel = 'NA',
   } = props;
 
@@ -284,17 +279,15 @@ export function DualAxisLineChart(props: Props) {
             strokeWidth={strokeWidth}
             showDots={showDots}
             noOfYTicks={noOfYTicks}
-            lineSuffixes={lineSuffixes}
-            linePrefixes={linePrefixes}
+            leftLineNumberDisplayOptions={leftLineNumberDisplayOptions}
+            rightLineNumberDisplayOptions={rightLineNumberDisplayOptions}
             minDate={minDate}
             maxDate={maxDate}
             curveType={curveType}
             styles={styles}
             classNames={classNames}
-            precision={precision}
             customLayers={customLayers}
             showAxisLabels={showAxisLabels}
-            locale={locale}
             naLabel={naLabel}
           />
         ) : null}

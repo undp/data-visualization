@@ -15,6 +15,7 @@ import {
   Languages,
   StyleObject,
   ClassNameObject,
+  NumberFormatOptions,
 } from '@/Types';
 
 interface Props {
@@ -96,10 +97,8 @@ interface Props {
   showTicks?: boolean;
   /** Toggle visibility of axis line for the  main axis. Only applicable if `graphType` is `barGraph`. */
   hideAxisLine?: boolean;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -171,9 +170,8 @@ export function Histogram(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    precision,
     hideAxisLine = false,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const bins = bin()
@@ -230,8 +228,7 @@ export function Histogram(props: Props) {
         detailsOnClick={detailsOnClick}
         styles={styles}
         classNames={classNames}
-        precision={precision}
-        locale={locale}
+        numberDisplayOptions={numberDisplayOptions}
       />
     );
   if (graphType === 'treeMap')
@@ -268,8 +265,7 @@ export function Histogram(props: Props) {
         detailsOnClick={detailsOnClick}
         styles={styles}
         classNames={classNames}
-        precision={precision}
-        locale={locale}
+        numberDisplayOptions={numberDisplayOptions}
       />
     );
   if (graphType === 'donutChart')
@@ -299,8 +295,7 @@ export function Histogram(props: Props) {
         detailsOnClick={detailsOnClick}
         styles={styles}
         classNames={classNames}
-        precision={precision}
-        locale={locale}
+        numberDisplayOptions={numberDisplayOptions}
       />
     );
   return (
@@ -344,9 +339,8 @@ export function Histogram(props: Props) {
       detailsOnClick={detailsOnClick}
       styles={styles}
       classNames={classNames}
-      precision={precision}
       hideAxisLine={hideAxisLine}
-      locale={locale}
+      numberDisplayOptions={numberDisplayOptions}
     />
   );
 }

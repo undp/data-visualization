@@ -58,6 +58,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   locale: string;
+  padZeros: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -96,6 +97,7 @@ export function VerticalGraph(props: Props) {
     customLayers,
     showDataMinMax,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -370,6 +372,7 @@ export function VerticalGraph(props: Props) {
                           prefix,
                           suffix,
                           locale,
+                          padZeros,
                         )}
                       </motion.text>
                     ) : null
@@ -387,12 +390,12 @@ export function VerticalGraph(props: Props) {
                   ),
                 ].map((d, i) => (
                   <motion.g
-                    key={i}
+                    key={i === 0 ? 'min-value' : 'max-value'}
                     variants={{
                       initial: {
                         opacity: 0,
                         x: graphWidth / 2,
-                        y: y(0),
+                        y: y(d),
                       },
                       whileInView: {
                         x: graphWidth / 2,
@@ -406,7 +409,6 @@ export function VerticalGraph(props: Props) {
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   >
                     <motion.text
-                      key={i}
                       y={0}
                       dy='0.33em'
                       variants={{
@@ -428,18 +430,26 @@ export function VerticalGraph(props: Props) {
                         ...(styles?.graphObjectValues || {}),
                       }}
                       className={cn(
-                        'graph-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
+                        'graph-min-max-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
                         classNames?.graphObjectValues,
                       )}
                     >
-                      {numberFormattingFunction(d, undefined, precision, prefix, suffix, locale)}
+                      {numberFormattingFunction(
+                        d,
+                        undefined,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
                     </motion.text>
                   </motion.g>
                 ))
               : null}
             {ticks.map((tick, i) => (
               <text
-                key={i}
+                key={`tick-${i}`}
                 y={tick}
                 x={graphWidth / 2 + radius + 5}
                 style={{
@@ -458,6 +468,7 @@ export function VerticalGraph(props: Props) {
                   prefix,
                   suffix,
                   locale,
+                  padZeros,
                 )}
               </text>
             ))}
@@ -523,6 +534,7 @@ export function HorizontalGraph(props: Props) {
     customLayers,
     showDataMinMax,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -796,6 +808,7 @@ export function HorizontalGraph(props: Props) {
                           prefix,
                           suffix,
                           locale,
+                          padZeros,
                         )}
                       </motion.text>
                     ) : null
@@ -813,11 +826,11 @@ export function HorizontalGraph(props: Props) {
                   ),
                 ].map((d, i) => (
                   <motion.g
-                    key={i}
+                    key={i === 0 ? 'min-value' : 'max-value'}
                     variants={{
                       initial: {
                         opacity: 0,
-                        x: x(0),
+                        x: x(d),
                         y: graphHeight / 2,
                       },
                       whileInView: {
@@ -852,18 +865,26 @@ export function HorizontalGraph(props: Props) {
                         ...(styles?.graphObjectValues || {}),
                       }}
                       className={cn(
-                        'graph-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
+                        'graph-min-max-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
                         classNames?.graphObjectValues,
                       )}
                     >
-                      {numberFormattingFunction(d, undefined, precision, prefix, suffix, locale)}
+                      {numberFormattingFunction(
+                        d,
+                        undefined,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
                     </motion.text>
                   </motion.g>
                 ))
               : null}
             {ticks.map((tick, i) => (
               <text
-                key={i}
+                key={`tick-${i}`}
                 x={tick}
                 y={graphHeight / 2 + radius}
                 style={{
@@ -883,6 +904,7 @@ export function HorizontalGraph(props: Props) {
                   prefix,
                   suffix,
                   locale,
+                  padZeros,
                 )}
               </text>
             ))}

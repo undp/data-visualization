@@ -15,6 +15,7 @@ import {
   CurveTypes,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -79,10 +80,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -131,10 +128,8 @@ interface Props {
   customHighlightAreaSettings?: CustomHighlightAreaSettingsDataType[];
   /** Curve type for the line */
   curveType?: CurveTypes;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -166,9 +161,7 @@ export function MultiLineAltChart(props: Props) {
     showNAColor = true,
     colors,
     colorDomain,
-    suffix = '',
     sources,
-    prefix = '',
     graphDescription,
     height,
     width,
@@ -213,11 +206,10 @@ export function MultiLineAltChart(props: Props) {
     styles,
     classNames,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
     naLabel = 'NA',
     showDateOnHover = false,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -309,8 +301,6 @@ export function MultiLineAltChart(props: Props) {
             bottomMargin={bottomMargin}
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
-            suffix={suffix}
-            prefix={prefix}
             highlightAreaSettings={highlightAreaSettings}
             refValues={refValues}
             minValue={minValue}
@@ -342,11 +332,14 @@ export function MultiLineAltChart(props: Props) {
                 : colorDomain || (uniqBy(data, 'color', true) as string[])
             }
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
             customLayers={customLayers}
             naLabel={naLabel}
             showDateOnHover={showDateOnHover}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

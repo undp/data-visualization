@@ -14,8 +14,9 @@ interface Props {
   labelType: 'primary' | 'secondary';
   showGridLines: boolean;
   leftLabel?: boolean;
-  precision: number;
+  precision?: number;
   locale?: string;
+  padZeros?: boolean;
 }
 
 export function XTicksAndGridLines(props: Props) {
@@ -30,9 +31,10 @@ export function XTicksAndGridLines(props: Props) {
     suffix,
     labelType,
     showGridLines,
-    precision,
+    precision = 2,
     leftLabel = false,
     locale = 'en',
+    padZeros = false,
   } = props;
   if (!values && !showGridLines) return null;
   return (
@@ -72,7 +74,15 @@ export function XTicksAndGridLines(props: Props) {
             >
               {typeof values[i] === 'string'
                 ? values[i]
-                : numberFormattingFunction(values[i], undefined, precision, prefix, suffix, locale)}
+                : numberFormattingFunction(
+                    values[i],
+                    undefined,
+                    precision,
+                    prefix,
+                    suffix,
+                    locale,
+                    padZeros,
+                  )}
             </text>
           ) : null}
         </g>

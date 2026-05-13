@@ -11,6 +11,7 @@ import {
   CustomLayerDataType,
   Languages,
   NodesLinkDataType,
+  NumberFormatOptions,
   SankeyDataType,
   SourcesDataType,
   StyleObject,
@@ -82,10 +83,6 @@ interface Props {
   nodeWidth?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Truncate labels by specified length */
   truncateBy?: number;
 
@@ -108,10 +105,8 @@ interface Props {
   sortNodes?: 'asc' | 'desc' | 'mostReadable' | 'none';
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -163,8 +158,6 @@ export function SankeyChart(props: Props) {
     backgroundColor = false,
     tooltip,
     onSeriesMouseOver,
-    suffix = '',
-    prefix = '',
     relativeHeight,
     showValues = true,
     graphID,
@@ -193,9 +186,8 @@ export function SankeyChart(props: Props) {
     styles,
     classNames,
     animate = false,
-    precision = 2,
     customLayers = [],
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -335,8 +327,6 @@ export function SankeyChart(props: Props) {
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
             showValues={showValues}
-            suffix={suffix}
-            prefix={prefix}
             onSeriesMouseClick={onSeriesMouseClick}
             id={generateRandomString(8)}
             highlightedSourceDataPoints={highlightedSourceDataPoints?.map(d => `${d}`)}
@@ -354,9 +344,12 @@ export function SankeyChart(props: Props) {
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
-            precision={precision}
             customLayers={customLayers}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

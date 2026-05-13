@@ -69,6 +69,7 @@ interface Props {
   naLabel: string;
   hideAxisLine: boolean;
   locale: string;
+  padZeros: boolean;
 }
 function getWaterfallExtent(values: (number | null | undefined)[]) {
   let cumulative = 0;
@@ -128,6 +129,7 @@ export function Graph(props: Props) {
     naLabel,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -231,6 +233,7 @@ export function Graph(props: Props) {
                     prefix,
                     suffix,
                     locale,
+                    padZeros,
                   )
                 : undefined
             }
@@ -267,6 +270,7 @@ export function Graph(props: Props) {
               labelPos='vertical'
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
           <AxisTitle
@@ -451,6 +455,7 @@ export function Graph(props: Props) {
                         prefix,
                         suffix,
                         locale,
+                        padZeros,
                       )}
                     </motion.text>
                   ) : null}

@@ -82,6 +82,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   locale: string;
+  padZeros: boolean;
 }
 
 interface FormattedDataType {
@@ -127,6 +128,7 @@ export function Graph(props: Props) {
     precision,
     customLayers,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -297,6 +299,7 @@ export function Graph(props: Props) {
               labelPos='vertical'
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
             <Axis
               y1={y(minParam < 0 ? 0 : minParam)}
@@ -310,6 +313,7 @@ export function Graph(props: Props) {
                 prefix,
                 suffix,
                 locale,
+                padZeros,
               )}
               labelPos={{
                 x: 0 - leftMargin,
@@ -357,6 +361,7 @@ export function Graph(props: Props) {
             showGridLines
             precision={precision}
             locale={locale}
+            padZeros={padZeros}
           />
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <g>
@@ -468,6 +473,7 @@ export function Graph(props: Props) {
                           prefix,
                           suffix,
                           locale,
+                          padZeros,
                         )}
                       </motion.text>
                     ) : null}

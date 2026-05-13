@@ -23,6 +23,7 @@ import {
   CustomLayerDataType,
   DualAxisLineChartDataType,
   HighlightAreaSettingsDataType,
+  NumberFormatOptions,
   StyleObject,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -56,17 +57,15 @@ interface Props {
   strokeWidth: number;
   showDots: boolean;
   noOfYTicks: number;
-  lineSuffixes: [string, string];
-  linePrefixes: [string, string];
   minDate?: string | number;
   maxDate?: string | number;
   curveType: CurveTypes;
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  precision: number;
   customLayers: CustomLayerDataType[];
   showAxisLabels: boolean;
-  locale: string;
+  leftLineNumberDisplayOptions?: NumberFormatOptions;
+  rightLineNumberDisplayOptions?: NumberFormatOptions;
   naLabel: string;
 }
 
@@ -98,17 +97,15 @@ export function Graph(props: Props) {
     strokeWidth,
     showDots,
     noOfYTicks,
-    lineSuffixes,
-    linePrefixes,
+    leftLineNumberDisplayOptions,
+    rightLineNumberDisplayOptions,
     minDate,
     maxDate,
     curveType,
     styles,
     classNames,
-    precision,
     customLayers,
     showAxisLabels,
-    locale,
     naLabel,
   } = props;
   const svgRef = useRef(null);
@@ -301,10 +298,11 @@ export function Graph(props: Props) {
                   {numberFormattingFunction(
                     d,
                     undefined,
-                    precision,
-                    linePrefixes[0],
-                    lineSuffixes[0],
-                    locale,
+                    leftLineNumberDisplayOptions?.precision,
+                    leftLineNumberDisplayOptions?.prefix,
+                    leftLineNumberDisplayOptions?.suffix,
+                    leftLineNumberDisplayOptions?.locale,
+                    leftLineNumberDisplayOptions?.padZeros,
                   )}
                 </text>
               </g>
@@ -359,10 +357,11 @@ export function Graph(props: Props) {
                   {numberFormattingFunction(
                     d,
                     undefined,
-                    precision,
-                    linePrefixes[1],
-                    lineSuffixes[1],
-                    locale,
+                    rightLineNumberDisplayOptions?.precision,
+                    rightLineNumberDisplayOptions?.prefix,
+                    rightLineNumberDisplayOptions?.suffix,
+                    rightLineNumberDisplayOptions?.locale,
+                    rightLineNumberDisplayOptions?.padZeros,
                   )}
                 </text>
               </g>
@@ -413,8 +412,7 @@ export function Graph(props: Props) {
               }}
               labelType='primary'
               showGridLines
-              precision={precision}
-              locale={locale}
+              padZeros={false}
             />
           </g>
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
@@ -585,10 +583,11 @@ export function Graph(props: Props) {
                         {numberFormattingFunction(
                           d.y1,
                           naLabel,
-                          precision,
-                          linePrefixes[0],
-                          lineSuffixes[0],
-                          locale,
+                          leftLineNumberDisplayOptions?.precision ?? 2,
+                          leftLineNumberDisplayOptions?.prefix,
+                          leftLineNumberDisplayOptions?.suffix,
+                          leftLineNumberDisplayOptions?.locale,
+                          leftLineNumberDisplayOptions?.padZeros,
                         )}
                       </motion.text>
                     ) : null}
@@ -670,10 +669,11 @@ export function Graph(props: Props) {
                         {numberFormattingFunction(
                           d.y2,
                           naLabel,
-                          precision,
-                          linePrefixes[1],
-                          lineSuffixes[1],
-                          locale,
+                          rightLineNumberDisplayOptions?.precision ?? 2,
+                          rightLineNumberDisplayOptions?.prefix,
+                          rightLineNumberDisplayOptions?.suffix,
+                          rightLineNumberDisplayOptions?.locale,
+                          rightLineNumberDisplayOptions?.padZeros,
                         )}
                       </motion.text>
                     ) : null}

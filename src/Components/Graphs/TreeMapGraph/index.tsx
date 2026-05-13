@@ -10,6 +10,7 @@ import {
   StyleObject,
   ClassNameObject,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -71,12 +72,6 @@ interface Props {
   bottomMargin?: number;
   /** Maximum radius of the circle */
 
-  // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
-
   // Graph Parameters
   /** Toggle visibility of labels */
   showLabels?: boolean;
@@ -92,10 +87,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -131,9 +124,7 @@ export function TreeMapGraph(props: Props) {
     data,
     graphTitle,
     colors,
-    suffix = '',
     sources,
-    prefix = '',
     graphDescription,
     leftMargin = 0,
     rightMargin = 0,
@@ -168,8 +159,7 @@ export function TreeMapGraph(props: Props) {
     classNames,
     animate = false,
     dimmedOpacity = 0.3,
-    precision = 2,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -262,8 +252,6 @@ export function TreeMapGraph(props: Props) {
             bottomMargin={bottomMargin}
             showLabels={showLabels}
             showValues={showValues}
-            suffix={suffix}
-            prefix={prefix}
             selectedColor={selectedColor}
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
@@ -280,8 +268,11 @@ export function TreeMapGraph(props: Props) {
                 : animate || { duration: 0, once: true, amount: 0 }
             }
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

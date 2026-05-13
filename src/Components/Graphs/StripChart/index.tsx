@@ -12,6 +12,7 @@ import {
   ClassNameObject,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -78,10 +79,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -108,10 +105,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Toggles if the graph show the min and max value of the data.  */
   showDataMinMax?: boolean;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -175,8 +170,6 @@ export function StripChart(props: Props) {
     noOfTicks = 2,
     graphDownload = false,
     dataDownload = false,
-    prefix = '',
-    suffix = '',
     stripType = 'dot',
     language = 'en',
     highlightColor,
@@ -193,10 +186,9 @@ export function StripChart(props: Props) {
     classNames,
     animate = false,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
     showDataMinMax = false,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -299,8 +291,6 @@ export function StripChart(props: Props) {
             minValue={minValue}
             maxValue={maxValue}
             onSeriesMouseClick={onSeriesMouseClick}
-            prefix={prefix}
-            suffix={suffix}
             stripType={stripType}
             highlightColor={highlightColor}
             dotOpacity={dotOpacity}
@@ -316,9 +306,12 @@ export function StripChart(props: Props) {
             }
             noOfTicks={noOfTicks}
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
             customLayers={customLayers}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

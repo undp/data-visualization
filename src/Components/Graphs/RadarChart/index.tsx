@@ -10,6 +10,7 @@ import {
   ClassNameObject,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -105,10 +106,8 @@ interface Props {
   curveType?: 'linear' | 'curve';
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
   resetSelectionOnDoubleClick?: boolean;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, precision, and zero padding. */
+  numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -187,9 +186,8 @@ export function RadarChart(props: Props) {
     resetSelectionOnDoubleClick = true,
     animate = false,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const [graphRadius, setGraphRadius] = useState(0);
@@ -307,9 +305,10 @@ export function RadarChart(props: Props) {
                 : animate || { duration: 0, once: true, amount: 0 }
             }
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
+            precision={numberDisplayOptions?.precision ?? 2}
             customLayers={customLayers}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
           />
         ) : null}
       </GraphArea>

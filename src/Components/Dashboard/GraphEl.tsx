@@ -134,11 +134,10 @@ function GraphEl(props: Props) {
     switch (graphType) {
       case 'barChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           trackColor: settings?.trackColor,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           orientation: settings?.orientation,
@@ -149,8 +148,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           height: settings?.height,
           width: settings?.width,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           barPadding: settings?.barPadding,
           showValues: settings?.showValues,
@@ -206,9 +203,8 @@ function GraphEl(props: Props) {
       case 'waterfallChart':
         return {
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           data: graphData,
@@ -218,8 +214,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           height: settings?.height,
           width: settings?.width,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           barPadding: settings?.barPadding,
           showValues: settings?.showValues,
@@ -270,10 +264,8 @@ function GraphEl(props: Props) {
         };
       case 'groupedBarChart':
         return {
-          locale: settings?.locale,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
           sortParameter: settings?.sortParameter,
@@ -294,8 +286,6 @@ function GraphEl(props: Props) {
             settings?.colorDomain ||
             (getValues('size', graphDataConfiguration || [], readableHeader || []) as string[]),
           colorLegendTitle: settings?.colorLegendTitle,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           showValues: settings?.showValues,
           backgroundColor: settings?.backgroundColor,
           padding: settings?.padding,
@@ -327,13 +317,13 @@ function GraphEl(props: Props) {
           animate: settings?.animate,
           naLabel: settings?.naLabel,
           hideAxisLine: settings?.hideAxisLine,
+          numberDisplayOptions: settings?.numberDisplayOptions,
         };
       case 'stackedBarChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -359,8 +349,6 @@ function GraphEl(props: Props) {
           padding: settings?.padding,
           topMargin: settings?.topMargin,
           bottomMargin: settings?.bottomMargin,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           labelOrder: settings?.labelOrder,
           showValues: settings?.showValues,
           showLabels: settings?.showLabels,
@@ -391,10 +379,9 @@ function GraphEl(props: Props) {
         };
       case 'bulletChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           orientation: settings?.orientation,
@@ -405,8 +392,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           height: settings?.height,
           width: settings?.width,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           barPadding: settings?.barPadding,
           showValues: settings?.showValues,
@@ -465,9 +450,8 @@ function GraphEl(props: Props) {
         };
       case 'lineChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           curveType: settings?.curveType,
           data: graphData,
@@ -478,8 +462,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           width: settings?.width,
           height: settings?.height,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           noOfXTicks: settings?.noOfXTicks,
           dateFormat: settings?.dateFormat,
@@ -518,9 +500,8 @@ function GraphEl(props: Props) {
         };
       case 'lineChartWithConfidenceInterval':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
           curveType: settings?.curveType,
@@ -531,8 +512,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           width: settings?.width,
           height: settings?.height,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           noOfXTicks: settings?.noOfXTicks,
           dateFormat: settings?.dateFormat,
@@ -581,11 +560,9 @@ function GraphEl(props: Props) {
       case 'dualAxisLineChart':
         return {
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
           showAxisLabels: settings?.showAxisLabels,
           showColorScale: settings?.showColorScale,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
           curveType: settings?.curveType,
@@ -598,8 +575,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           width: settings?.width,
           height: settings?.height,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           noOfXTicks: settings?.noOfXTicks,
           dateFormat: settings?.dateFormat,
@@ -630,17 +605,16 @@ function GraphEl(props: Props) {
           noOfYTicks: settings?.noOfYTicks,
           minDate: settings?.minDate,
           maxDate: settings?.maxDate,
-          lineSuffixes: settings?.lineSuffixes,
-          linePrefixes: settings?.linePrefixes,
           styles: settings?.styles,
           classNames: settings?.classNames,
+          leftLineNumberDisplayOptions: settings?.leftLineNumberDisplayOptions,
+          rightLineNumberDisplayOptions: settings?.rightLineNumberDisplayOptions,
         };
       case 'multiLineChart':
         return {
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           data: graphData,
@@ -654,8 +628,6 @@ function GraphEl(props: Props) {
           sources: settings?.sources,
           noOfXTicks: settings?.noOfXTicks,
           dateFormat: settings?.dateFormat,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           showColorScale: settings?.showColorScale,
           labels:
             settings?.labels ||
@@ -701,10 +673,9 @@ function GraphEl(props: Props) {
         };
       case 'multiLineAltChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           naLabel: settings?.naLabel,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -718,8 +689,6 @@ function GraphEl(props: Props) {
           sources: settings?.sources,
           noOfXTicks: settings?.noOfXTicks,
           dateFormat: settings?.dateFormat,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           backgroundColor: settings?.backgroundColor,
           padding: settings?.padding,
           leftMargin: settings?.leftMargin,
@@ -759,10 +728,9 @@ function GraphEl(props: Props) {
         };
       case 'differenceLineChart':
         return {
+          numberDisplayOptions: settings?.numberDisplayOptions,
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
           curveType: settings?.curveType,
@@ -776,8 +744,6 @@ function GraphEl(props: Props) {
           sources: settings?.sources,
           noOfXTicks: settings?.noOfXTicks,
           dateFormat: settings?.dateFormat,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           labels: settings?.labels || [
             getValues('y1', graphDataConfiguration || [], readableHeader || []),
             getValues('y2', graphDataConfiguration || [], readableHeader || []),
@@ -819,9 +785,8 @@ function GraphEl(props: Props) {
         };
       case 'stackedAreaChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           data: graphData,
           curveType: settings?.curveType,
@@ -863,14 +828,12 @@ function GraphEl(props: Props) {
           ariaLabel: settings?.ariaLabel,
           yAxisTitle: settings?.yAxisTitle,
           noOfYTicks: settings?.noOfYTicks,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           styles: settings?.styles,
           classNames: settings?.classNames,
         };
       case 'choroplethMap':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -931,7 +894,8 @@ function GraphEl(props: Props) {
         };
       case 'biVariateChoroplethMap':
         return {
-          locale: settings?.locale,
+          xNumberDisplayOptions: settings?.xNumberDisplayOptions,
+          yNumberDisplayOptions: settings?.yNumberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -1051,7 +1015,7 @@ function GraphEl(props: Props) {
         };
       case 'hybridMap':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -1119,18 +1083,15 @@ function GraphEl(props: Props) {
         };
       case 'donutChart':
         return {
+          numberDisplayOptions: settings?.numberDisplayOptions,
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
           trackColor: settings?.trackColor,
-          precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           mainText: settings?.mainText,
           data: graphData,
           colors: settings?.colors as string[] | undefined,
           graphTitle: settings?.graphTitle,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           graphDescription: settings?.graphDescription,
           subNote: settings?.subNote,
@@ -1211,10 +1172,10 @@ function GraphEl(props: Props) {
         };
       case 'scatterPlot':
         return {
-          locale: settings?.locale,
+          xNumberDisplayOptions: settings?.xNumberDisplayOptions,
+          yNumberDisplayOptions: settings?.yNumberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           showVoronoiTesselation: settings?.showVoronoiTesselation,
           useVoronoiInteraction: settings?.useVoronoiInteraction,
@@ -1277,20 +1238,15 @@ function GraphEl(props: Props) {
           noOfXTicks: settings?.noOfXTicks,
           noOfYTicks: settings?.noOfYTicks,
           labelColor: settings?.labelColor,
-          xSuffix: settings?.xSuffix,
-          ySuffix: settings?.ySuffix,
-          xPrefix: settings?.xPrefix,
-          yPrefix: settings?.yPrefix,
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
         };
       case 'dumbbellChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           orientation: settings?.orientation,
           refValues: settings?.refValues,
@@ -1328,8 +1284,6 @@ function GraphEl(props: Props) {
           minValue: settings?.minValue,
           graphDownload: settings?.graphDownload,
           dataDownload: settings?.dataDownload,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           language: settings?.language,
           minHeight: settings?.minHeight,
           sortParameter: settings?.sortParameter,
@@ -1353,8 +1307,7 @@ function GraphEl(props: Props) {
         };
       case 'treeMap':
         return {
-          locale: settings?.locale,
-          precision: settings?.precision,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1365,8 +1318,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           width: settings?.width,
           height: settings?.height,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           leftMargin: settings?.leftMargin,
           rightMargin: settings?.rightMargin,
@@ -1403,8 +1354,7 @@ function GraphEl(props: Props) {
         };
       case 'circlePacking':
         return {
-          locale: settings?.locale,
-          precision: settings?.precision,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1415,8 +1365,6 @@ function GraphEl(props: Props) {
           footNote: settings?.footNote,
           width: settings?.width,
           height: settings?.height,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources,
           leftMargin: settings?.leftMargin,
           rightMargin: settings?.rightMargin,
@@ -1457,8 +1405,7 @@ function GraphEl(props: Props) {
       case 'heatMap':
         return {
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
-          precision: settings?.precision,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
@@ -1483,8 +1430,6 @@ function GraphEl(props: Props) {
           padding: settings?.padding,
           topMargin: settings?.topMargin,
           bottomMargin: settings?.bottomMargin,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           showValues: settings?.showValues,
           showRowLabels: settings?.showRowLabels,
           relativeHeight: settings?.relativeHeight,
@@ -1506,10 +1451,9 @@ function GraphEl(props: Props) {
         };
       case 'stripChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           showDataMinMax: settings?.showDataMinMax,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           orientation: settings?.orientation,
@@ -1544,8 +1488,6 @@ function GraphEl(props: Props) {
           noOfTicks: settings?.noOfTicks,
           graphDownload: settings?.graphDownload,
           dataDownload: settings?.dataDownload,
-          prefix: settings?.prefix,
-          suffix: settings?.suffix,
           stripType: settings?.stripType,
           valueColor: settings?.valueColor,
           language: settings?.language,
@@ -1561,9 +1503,7 @@ function GraphEl(props: Props) {
         };
       case 'beeSwarmChart':
         return {
-          locale: settings?.locale,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1610,14 +1550,14 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           animate: settings?.animate,
           hideAxisLine: settings?.hideAxisLine,
+          numberDisplayOptions: settings?.numberDisplayOptions,
         };
       case 'butterflyChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           naLabel: settings?.naLabel,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
@@ -1649,8 +1589,6 @@ function GraphEl(props: Props) {
           dataDownload: settings?.dataDownload,
           barPadding: settings?.barPadding,
           truncateBy: settings?.truncateBy,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           showTicks: settings?.showTicks,
           showValues: settings?.showValues,
           centerGap: settings?.centerGap,
@@ -1669,8 +1607,7 @@ function GraphEl(props: Props) {
         };
       case 'histogram':
         return {
-          locale: settings?.locale,
-          precision: settings?.precision,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           theme: settings?.theme,
           data: graphData,
           colors: settings?.colors,
@@ -1748,12 +1685,12 @@ function GraphEl(props: Props) {
         };
       case 'paretoChart':
         return {
-          locale: settings?.locale,
+          barNumberDisplayOptions: settings?.barNumberDisplayOptions,
+          lineNumberDisplayOptions: settings?.lineNumberDisplayOptions,
           showAxisLabels: settings?.showAxisLabels,
           showColorScale: settings?.showColorScale,
           naLabel: settings?.naLabel,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
@@ -1795,10 +1732,6 @@ function GraphEl(props: Props) {
           ariaLabel: settings?.ariaLabel,
           detailsOnClick: settings?.detailsOnClick,
           noOfTicks: settings?.noOfTicks,
-          lineSuffix: settings?.lineSuffix,
-          barSuffix: settings?.barSuffix,
-          linePrefix: settings?.lineSuffix,
-          barPrefix: settings?.barPrefix,
           barAxisTitle: settings?.barAxisTitle,
           lineAxisTitle: settings?.lineAxisTitle,
           styles: settings?.styles,
@@ -1807,9 +1740,7 @@ function GraphEl(props: Props) {
         };
       case 'dataTable':
         return {
-          locale: settings?.locale,
           naLabel: settings?.naLabel,
-          precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           graphTitle: settings?.graphTitle,
@@ -1832,15 +1763,12 @@ function GraphEl(props: Props) {
       case 'statCard':
         return {
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
-          precision: settings?.precision,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           theme: settings?.theme,
           year: settings?.year,
           data: graphData,
           graphTitle: settings?.graphTitle || '',
           graphDescription: settings?.graphDescription,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           sources: settings?.sources || [],
           footNote: settings?.footNote,
           backgroundColor: settings?.backgroundColor,
@@ -1862,8 +1790,7 @@ function GraphEl(props: Props) {
       case 'unitChart':
         return {
           naLabel: settings?.naLabel,
-          locale: settings?.locale,
-          precision: settings?.precision,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           theme: settings?.theme,
           totalNoOfDots: settings?.totalNoOfDots,
           gridSize: settings?.gridSize,
@@ -1895,9 +1822,8 @@ function GraphEl(props: Props) {
         };
       case 'sankeyChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,
@@ -1916,8 +1842,6 @@ function GraphEl(props: Props) {
           padding: settings?.padding,
           backgroundColor: settings?.backgroundColor,
           tooltip: settings?.tooltip,
-          suffix: settings?.suffix,
-          prefix: settings?.prefix,
           relativeHeight: settings?.relativeHeight,
           showValues: settings?.showValues,
           graphID: settings?.graphID,
@@ -1975,9 +1899,8 @@ function GraphEl(props: Props) {
         };
       case 'radarChart':
         return {
-          locale: settings?.locale,
+          numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
-          precision: settings?.precision,
           graphTitle: settings?.graphTitle,
           dimmedOpacity: settings?.dimmedOpacity,
           graphDescription: settings?.graphDescription,

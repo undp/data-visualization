@@ -53,6 +53,7 @@ interface Props {
   animate: AnimateDataType;
   precision: number;
   locale: string;
+  padZeros: boolean;
 }
 
 export function Graph(props: Props) {
@@ -85,6 +86,7 @@ export function Graph(props: Props) {
     animate,
     precision,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -276,6 +278,7 @@ export function Graph(props: Props) {
                               prefix,
                               suffix,
                               locale,
+                              padZeros,
                             )}
                           </p>
                         </div>

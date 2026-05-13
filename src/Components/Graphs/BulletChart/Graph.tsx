@@ -75,6 +75,7 @@ interface Props {
   targetLineThickness: number;
   hideAxisLine: boolean;
   locale: string;
+  padZeros: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -123,6 +124,7 @@ export function VerticalGraph(props: Props) {
     targetLineThickness,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -248,6 +250,7 @@ export function VerticalGraph(props: Props) {
                     prefix,
                     suffix,
                     locale,
+                    padZeros,
                   )
                 : undefined
             }
@@ -284,6 +287,7 @@ export function VerticalGraph(props: Props) {
               labelPos='vertical'
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
           <AxisTitle
@@ -536,7 +540,15 @@ export function VerticalGraph(props: Props) {
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
                     >
-                      {numberFormattingFunction(d.size, naLabel, precision, prefix, suffix, locale)}
+                      {numberFormattingFunction(
+                        d.size,
+                        naLabel,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
                     </motion.text>
                   ) : null}
                 </motion.g>
@@ -633,6 +645,7 @@ export function HorizontalGraph(props: Props) {
     targetLineThickness,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -765,6 +778,7 @@ export function HorizontalGraph(props: Props) {
               showGridLines
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
           <AxisTitle
@@ -1014,7 +1028,15 @@ export function HorizontalGraph(props: Props) {
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
                     >
-                      {numberFormattingFunction(d.size, naLabel, precision, prefix, suffix, locale)}
+                      {numberFormattingFunction(
+                        d.size,
+                        naLabel,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
                     </motion.text>
                   ) : null}
                 </motion.g>

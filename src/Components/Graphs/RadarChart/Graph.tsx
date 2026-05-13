@@ -53,6 +53,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   locale: string;
+  padZeros: boolean;
 }
 
 export function Graph(props: Props) {
@@ -88,6 +89,7 @@ export function Graph(props: Props) {
     precision,
     customLayers,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -240,6 +242,7 @@ export function Graph(props: Props) {
                         undefined,
                         undefined,
                         locale,
+                        padZeros,
                       )}
                     </p>
                   </div>
@@ -461,6 +464,7 @@ export function Graph(props: Props) {
                                   undefined,
                                   undefined,
                                   locale,
+                                  padZeros,
                                 )}
                               </motion.text>
                             ) : null}

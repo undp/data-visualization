@@ -18,6 +18,7 @@ import {
   CustomLayerDataType,
   AnimateDataType,
   TimelineDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -83,14 +84,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values on x-axis */
-  xPrefix?: string;
-  /** Suffix for values on x-axis */
-  xSuffix?: string;
-  /** Prefix for values on y-axis */
-  yPrefix?: string;
-  /** Suffix for values on y-axis */
-  ySuffix?: string;
   /** Maximum value for the x-axis */
   maxXValue?: number;
   /** Minimum value for the x-axis */
@@ -141,10 +134,10 @@ interface Props {
   labelColor?: string;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  xNumberDisplayOptions?: NumberFormatOptions;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  yNumberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -220,10 +213,6 @@ export function ScatterPlot(props: Props) {
     minXValue,
     maxYValue,
     minYValue,
-    xSuffix = '',
-    ySuffix = '',
-    xPrefix = '',
-    yPrefix = '',
     onSeriesMouseClick,
     graphDownload = false,
     dataDownload = false,
@@ -244,12 +233,12 @@ export function ScatterPlot(props: Props) {
     classNames,
     animate = false,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     showVoronoiTesselation = false,
     useVoronoiInteraction = true,
-    locale = 'en',
+    xNumberDisplayOptions,
+    yNumberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -466,10 +455,6 @@ export function ScatterPlot(props: Props) {
             noOfXTicks={noOfXTicks}
             noOfYTicks={noOfYTicks}
             labelColor={labelColor}
-            xSuffix={xSuffix}
-            ySuffix={ySuffix}
-            xPrefix={xPrefix}
-            yPrefix={yPrefix}
             styles={styles}
             classNames={classNames}
             animate={
@@ -478,10 +463,10 @@ export function ScatterPlot(props: Props) {
                 : animate || { duration: 0, once: true, amount: 0 }
             }
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
             customLayers={customLayers}
             useVoronoiInteraction={useVoronoiInteraction}
-            locale={locale}
+            xNumberDisplayOptions={xNumberDisplayOptions}
+            yNumberDisplayOptions={yNumberDisplayOptions}
           />
         ) : null}
       </GraphArea>

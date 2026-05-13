@@ -60,6 +60,7 @@ interface Props {
   naLabel: string;
   hideAxisLine: boolean;
   locale: string;
+  padZeros: boolean;
 }
 
 export function Graph(props: Props) {
@@ -99,6 +100,7 @@ export function Graph(props: Props) {
     naLabel,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -167,6 +169,7 @@ export function Graph(props: Props) {
                 showGridLines
                 leftLabel
                 precision={precision}
+                padZeros={padZeros}
                 locale={locale}
               />
             ) : null}
@@ -273,6 +276,7 @@ export function Graph(props: Props) {
                           prefix,
                           suffix,
                           locale,
+                          padZeros,
                         )}
                       </motion.text>
                     ) : null}
@@ -329,6 +333,7 @@ export function Graph(props: Props) {
                 labelType='secondary'
                 showGridLines
                 precision={precision}
+                padZeros={padZeros}
                 locale={locale}
               />
             ) : null}
@@ -435,6 +440,7 @@ export function Graph(props: Props) {
                           prefix,
                           suffix,
                           locale,
+                          padZeros,
                         )}
                       </motion.text>
                     ) : null}

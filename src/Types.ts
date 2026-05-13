@@ -1,4 +1,5 @@
 import { FeatureCollection } from 'geojson';
+import { ReactElement } from 'react';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type Languages =
@@ -9,7 +10,7 @@ export type Languages =
   | 'cy'
   | 'he'
   | 'hi'
-  | 'jp'
+  | 'ja'
   | 'ka'
   | 'km'
   | 'ko'
@@ -114,6 +115,14 @@ export interface AxesStyleObject {
   labels?: React.CSSProperties;
   title?: React.CSSProperties;
   axis?: React.CSSProperties;
+}
+
+export interface NumberFormatOptions {
+  locale?: string;
+  precision?: number;
+  prefix?: string;
+  suffix?: string;
+  padZeros?: boolean;
 }
 
 export interface StyleObject {
@@ -395,6 +404,9 @@ export interface DataTableColumnDataType {
   align?: 'left' | 'right' | 'center';
   suffix?: string;
   prefix?: string;
+  locale?: string;
+  precision?: number;
+  padZeros?: boolean;
   columnWidth?: number;
 }
 
@@ -784,8 +796,6 @@ export interface GraphSettingsDataType {
   footNote?: string | React.ReactNode;
   height?: number;
   width?: number;
-  suffix?: string;
-  prefix?: string;
   sources?: SourcesDataType[];
   barPadding?: number;
   showTicks?: boolean;
@@ -815,7 +825,17 @@ export interface GraphSettingsDataType {
   barColors?: [string, string];
   centerGap?: number;
   columnData?: DataTableColumnDataType[];
-  mainText?: string;
+  mainText?:
+    | string
+    | {
+        label: string;
+        suffix?: string;
+        prefix?: string;
+        locale?: string;
+        padZeros?: boolean;
+        precision?: number;
+      }
+    | ReactElement;
   subNote?: string;
   radius?: number;
   strokeWidth?: number;
@@ -967,16 +987,6 @@ export interface GraphSettingsDataType {
   colorLegendColors?: string[];
   colorLegendDomain?: string[];
   barAxisTitle?: string;
-  barSuffix?: string;
-  barPrefix?: string;
-  lineSuffix?: string;
-  linePrefix?: string;
-  xSuffix?: string;
-  xPrefix?: string;
-  ySuffix?: string;
-  yPrefix?: string;
-  lineSuffixes?: [string, string];
-  linePrefixes?: [string, string];
   allowDataDownloadOnDetail?: string | boolean;
   noOfItemsInAPage?: number;
   curveType?: CurveTypes;
@@ -996,7 +1006,6 @@ export interface GraphSettingsDataType {
   measureBarWidthFactor?: number;
   mapLegend?: string | React.ReactNode | MapLegendDataType[];
   dimmedOpacity?: number;
-  precision?: number;
   customLayers?: CustomLayerDataType[];
   dashedLines?: (string | number)[];
   dashSettings?: string[];
@@ -1033,7 +1042,13 @@ export interface GraphSettingsDataType {
   showVoronoiTesselation?: boolean;
   mapOverlay?: MapOverlayDataType;
   useVoronoiInteraction?: boolean;
-  locale?: string;
+  numberDisplayOptions?: NumberFormatOptions;
+  leftLineNumberDisplayOptions?: NumberFormatOptions;
+  rightLineNumberDisplayOptions?: NumberFormatOptions;
+  barNumberDisplayOptions?: NumberFormatOptions;
+  lineNumberDisplayOptions?: NumberFormatOptions;
+  xNumberDisplayOptions?: NumberFormatOptions;
+  yNumberDisplayOptions?: NumberFormatOptions;
 }
 
 export interface InfoBoxDataType {

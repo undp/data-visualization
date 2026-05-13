@@ -13,6 +13,7 @@ import {
   StyleObject,
   ClassNameObject,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
@@ -73,16 +74,14 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Toggle visibility of color scale */
   showColorScale?: boolean;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
   dataDownload?: boolean;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
 
   // Configuration and Options
   /** Language setting  */
@@ -123,9 +122,8 @@ export function UnitChart(props: Props) {
     styles,
     classNames,
     animate = false,
-    precision = 2,
-    locale,
     naLabel = 'NA',
+    numberDisplayOptions,
   } = props;
   const svgRef = useRef(null);
   const animateValue =
@@ -223,10 +221,11 @@ export function UnitChart(props: Props) {
                     {numberFormattingFunction(
                       d.value,
                       naLabel,
-                      precision,
-                      undefined,
-                      undefined,
-                      locale || language,
+                      numberDisplayOptions?.precision ?? 2,
+                      numberDisplayOptions?.prefix,
+                      numberDisplayOptions?.suffix,
+                      numberDisplayOptions?.locale || 'en',
+                      numberDisplayOptions?.padZeros || false,
                     )}
                   </span>
                 </P>

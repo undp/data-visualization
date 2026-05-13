@@ -72,6 +72,7 @@ interface Props {
   rtl?: boolean;
   hideAxisLine: boolean;
   locale: string;
+  padZeros: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -110,6 +111,7 @@ export function VerticalGraph(props: Props) {
     customLayers,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -220,6 +222,7 @@ export function VerticalGraph(props: Props) {
                           prefix,
                           suffix,
                           locale,
+                          padZeros,
                         )
                       : undefined
                   }
@@ -258,6 +261,7 @@ export function VerticalGraph(props: Props) {
                   labelPos='vertical'
                   precision={precision}
                   locale={locale}
+                  padZeros={padZeros}
                 />
               </>
             ) : null}
@@ -459,6 +463,7 @@ export function HorizontalGraph(props: Props) {
     customLayers,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -569,6 +574,7 @@ export function HorizontalGraph(props: Props) {
                           prefix,
                           suffix,
                           locale,
+                          padZeros,
                         )
                       : undefined
                   }
@@ -606,6 +612,7 @@ export function HorizontalGraph(props: Props) {
                   showGridLines
                   precision={precision}
                   locale={locale}
+                  padZeros={padZeros}
                 />
               </>
             ) : null}

@@ -11,6 +11,7 @@ import {
   StyleObject,
   ClassNameObject,
   CustomLayerDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -74,10 +75,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the radius of the circle */
   maxRadiusValue?: number;
   /** Minimum value for position of the circle */
@@ -106,10 +103,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Maximum radius of the circles  */
   radius?: number;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -184,16 +179,13 @@ export function BeeSwarmChart(props: Props) {
     resetSelectionOnDoubleClick = true,
     detailsOnClick,
     orientation = 'vertical',
-    suffix = '',
-    prefix = '',
+    numberDisplayOptions,
     styles,
     classNames,
     noOfTicks = 5,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
     hideAxisLine = false,
-    locale = 'en',
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -304,13 +296,14 @@ export function BeeSwarmChart(props: Props) {
             detailsOnClick={detailsOnClick}
             styles={styles}
             classNames={classNames}
-            suffix={suffix}
-            prefix={prefix}
             noOfTicks={noOfTicks || 5}
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
             customLayers={customLayers}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

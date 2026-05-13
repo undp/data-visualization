@@ -49,6 +49,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   locale: string;
+  padZeros: boolean;
 }
 
 interface TreeMapDataTypeForBubbleChart extends TreeMapDataType {
@@ -87,6 +88,7 @@ export const Graph = (props: Props) => {
     dimmedOpacity,
     precision,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
 
@@ -364,6 +366,7 @@ export const Graph = (props: Props) => {
                                   prefix,
                                   suffix,
                                   locale,
+                                  padZeros,
                                 )}
                               </P>
                             )}

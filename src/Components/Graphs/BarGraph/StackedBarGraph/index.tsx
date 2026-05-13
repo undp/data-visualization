@@ -93,6 +93,7 @@ interface Props {
   naLabel?: string;
   orientation?: 'horizontal' | 'vertical';
   hideAxisLine?: boolean;
+  padZeros?: boolean;
 }
 
 export function StackedBarGraphEl(props: Props) {
@@ -156,6 +157,7 @@ export function StackedBarGraphEl(props: Props) {
     sortData,
     orientation = 'vertical',
     hideAxisLine = false,
+    padZeros = false,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -386,6 +388,7 @@ export function StackedBarGraphEl(props: Props) {
               customLayers={customLayers}
               naLabel={naLabel}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
         </GraphArea>

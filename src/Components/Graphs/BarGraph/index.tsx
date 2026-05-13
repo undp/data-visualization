@@ -13,6 +13,7 @@ import {
   CustomLayerDataType,
   AnimateDataType,
   TimelineDataType,
+  NumberFormatOptions,
 } from '@/Types';
 
 interface Props {
@@ -80,10 +81,6 @@ interface Props {
   maxNumberOfBars?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -124,12 +121,10 @@ interface Props {
   trackColor?: string;
   /** Toggles if data point which are undefined or has value null are filtered out.  */
   filterNA?: boolean;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -179,8 +174,6 @@ export function SimpleBarGraph(props: Props) {
     showLabels,
     showValues,
     backgroundColor,
-    suffix,
-    prefix,
     sources,
     graphDescription,
     height,
@@ -222,13 +215,12 @@ export function SimpleBarGraph(props: Props) {
     filterNA,
     animate,
     dimmedOpacity,
-    precision,
     customLayers,
     timeline,
     naLabel,
     trackColor,
     hideAxisLine = false,
-    locale,
+    numberDisplayOptions,
   } = props;
   return (
     <SimpleBarGraphEl
@@ -245,8 +237,8 @@ export function SimpleBarGraph(props: Props) {
       showLabels={showLabels}
       showValues={showValues}
       backgroundColor={backgroundColor}
-      suffix={suffix}
-      prefix={prefix}
+      suffix={numberDisplayOptions?.suffix}
+      prefix={numberDisplayOptions?.prefix}
       sources={sources}
       graphDescription={graphDescription}
       height={height}
@@ -287,14 +279,15 @@ export function SimpleBarGraph(props: Props) {
       filterNA={filterNA}
       animate={animate}
       dimmedOpacity={dimmedOpacity}
-      precision={precision}
+      precision={numberDisplayOptions?.precision}
       customLayers={customLayers}
       timeline={timeline}
       naLabel={naLabel}
       orientation={orientation}
       trackColor={trackColor}
       hideAxisLine={hideAxisLine}
-      locale={locale}
+      locale={numberDisplayOptions?.locale}
+      padZeros={numberDisplayOptions?.padZeros}
     />
   );
 }
@@ -359,11 +352,7 @@ interface GroupedBarChartProps {
   /** Maximum thickness of bars */
   maxBarThickness?: number;
 
-  // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
+  // Values and Tick
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -400,10 +389,8 @@ interface GroupedBarChartProps {
   barAxisTitle?: string;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -453,8 +440,6 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     footNote,
     colorDomain,
     colorLegendTitle,
-    suffix,
-    prefix,
     showValues,
     padding,
     backgroundColor,
@@ -491,13 +476,12 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     classNames,
     filterNA,
     animate,
-    precision,
     customLayers,
     showColorScale,
     timeline,
     naLabel,
     hideAxisLine = false,
-    locale,
+    numberDisplayOptions,
   } = props;
 
   return (
@@ -516,8 +500,8 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       footNote={footNote}
       colorDomain={colorDomain}
       colorLegendTitle={colorLegendTitle}
-      suffix={suffix}
-      prefix={prefix}
+      suffix={numberDisplayOptions?.suffix}
+      prefix={numberDisplayOptions?.prefix}
       showValues={showValues}
       padding={padding}
       backgroundColor={backgroundColor}
@@ -553,13 +537,14 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       classNames={classNames}
       filterNA={filterNA}
       animate={animate}
-      precision={precision}
+      precision={numberDisplayOptions?.precision}
       customLayers={customLayers}
       showColorScale={showColorScale}
       timeline={timeline}
       naLabel={naLabel}
       hideAxisLine={hideAxisLine}
-      locale={locale}
+      locale={numberDisplayOptions?.locale}
+      padZeros={numberDisplayOptions?.padZeros}
     />
   );
 }
@@ -629,10 +614,6 @@ interface StackedBarChartProps {
   maxNumberOfBars?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -659,6 +640,8 @@ interface StackedBarChartProps {
   barAxisTitle?: string;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Parameter to sort the data. If a number is provided, it refers to the index of the size array to determine which value to sort by. If set to total, it sorts by the sum of all the values. */
   sortParameter?: number | 'total';
   /** Sorting order for data. This is overwritten by labelOrder prop. */
@@ -667,10 +650,6 @@ interface StackedBarChartProps {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -722,8 +701,6 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     showLabels,
     showValues,
     backgroundColor,
-    suffix,
-    prefix,
     height,
     width,
     footNote,
@@ -759,13 +736,12 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     classNames,
     filterNA,
     animate,
-    precision,
     customLayers,
     showColorScale,
     timeline,
     naLabel,
     hideAxisLine = false,
-    locale,
+    numberDisplayOptions,
   } = props;
 
   return (
@@ -785,8 +761,8 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       showLabels={showLabels}
       showValues={showValues}
       backgroundColor={backgroundColor}
-      suffix={suffix}
-      prefix={prefix}
+      suffix={numberDisplayOptions?.suffix}
+      prefix={numberDisplayOptions?.prefix}
       height={height}
       width={width}
       footNote={footNote}
@@ -821,14 +797,15 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       classNames={classNames}
       filterNA={filterNA}
       animate={animate}
-      precision={precision}
+      precision={numberDisplayOptions?.precision}
       customLayers={customLayers}
       showColorScale={showColorScale}
       timeline={timeline}
       naLabel={naLabel}
       orientation={orientation}
       hideAxisLine={hideAxisLine}
-      locale={locale}
+      locale={numberDisplayOptions?.locale}
+      padZeros={numberDisplayOptions?.padZeros}
     />
   );
 }

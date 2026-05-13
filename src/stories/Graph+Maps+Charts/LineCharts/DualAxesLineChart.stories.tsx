@@ -32,6 +32,32 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    leftLineNumberDisplayOptions: {
+      table: {
+        type: {
+          detail: `{
+  locale?: string; 
+  precision?: number;
+  prefix?: string;
+  suffix?: string;
+  padZeros?: boolean;
+}`,
+        },
+      },
+    },
+    rightLineNumberDisplayOptions: {
+      table: {
+        type: {
+          detail: `{
+  locale?: string; 
+  precision?: number;
+  prefix?: string;
+  suffix?: string;
+  padZeros?: boolean;
+}`,
+        },
+      },
+    },
 
     // Titles and Labels and Sources
     graphTitle: {
@@ -115,8 +141,6 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: 'curve' },
       },
     },
-    lineSuffixes: { control: 'text' },
-    linePrefixes: { control: 'text' },
     highlightAreaSettings: {
       control: 'object',
       table: {
@@ -175,15 +199,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
     labels: ['Apples', 'Oranges'],
   },
-  render: ({
-    animate,
-    backgroundColor,
-    lineColors,
-    linePrefixes,
-    lineSuffixes,
-    labels,
-    ...args
-  }) => {
+  render: ({ animate, backgroundColor, lineColors, labels, ...args }) => {
     return (
       <DualAxisLineChart
         animate={
@@ -198,8 +214,6 @@ const meta: Meta<PagePropsAndCustomArgs> = {
                 : animate
         }
         lineColors={parseValue(lineColors)}
-        lineSuffixes={parseValue(lineSuffixes)}
-        linePrefixes={parseValue(linePrefixes)}
         labels={parseValue(labels, ['Apples', 'Oranges'])}
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor

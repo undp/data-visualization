@@ -17,6 +17,7 @@ import {
   CustomLayerDataType,
   AnimateDataType,
   WaterfallChartDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils';
 import { uniqBy } from '@/Utils/uniqBy';
@@ -81,10 +82,6 @@ interface Props {
   maxNumberOfBars?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -123,10 +120,8 @@ interface Props {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -162,9 +157,7 @@ export function WaterfallChart(props: Props) {
     data,
     graphTitle,
     colors,
-    suffix = '',
     sources,
-    prefix = '',
     graphDescription,
     barPadding = 0.25,
     showValues = true,
@@ -211,11 +204,10 @@ export function WaterfallChart(props: Props) {
     filterNA = true,
     animate = false,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
     naLabel = 'NA',
     hideAxisLine = false,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -311,8 +303,6 @@ export function WaterfallChart(props: Props) {
             selectedColor={selectedColor}
             width={svgWidth}
             height={svgHeight}
-            suffix={suffix}
-            prefix={prefix}
             barPadding={barPadding}
             showValues={showValues}
             showTicks={showTicks}
@@ -344,10 +334,13 @@ export function WaterfallChart(props: Props) {
                 : animate || { duration: 0, once: true, amount: 0 }
             }
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
             customLayers={customLayers}
             naLabel={naLabel}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

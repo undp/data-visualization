@@ -17,11 +17,12 @@ export function numberFormattingFunction(
   prefix?: string,
   suffix?: string,
   locale?: string,
+  padZeros?: boolean,
 ) {
   if (checkIfNullOrUndefined(value)) return naLabel || 'NA';
   const formatWithLocale = (num: number, precisionValue: number) => {
     return new Intl.NumberFormat(locale || 'en', {
-      minimumFractionDigits: 0,
+      minimumFractionDigits: padZeros && num !== 0 ? precisionValue : 0,
       maximumFractionDigits: precisionValue,
       useGrouping: false,
     }).format(num);
@@ -36,31 +37,29 @@ export function numberFormattingFunction(
   }
 
   const num = value as number;
+  const resolvedPrecision = precision ?? 2;
 
   const formatCompact = (n: number) => {
     const suffixes = ['', 'K', 'M', 'B', 'T'];
     const tier = Math.floor(Math.log10(Math.abs(n)) / 3);
 
     if (tier === 0) {
-      return formatWithLocale(n, precision === 0 ? 0 : precision || 2);
+      return formatWithLocale(n, resolvedPrecision);
     }
 
     const scaled = n / Math.pow(10, tier * 3);
 
-    const formatted = formatWithLocale(scaled, precision === 0 ? 0 : precision || 2);
+    const formatted = formatWithLocale(scaled, resolvedPrecision);
 
     return formatted + suffixes[tier];
   };
-
   // Small numbers (no compacting)
   if (num < 10000 && num > -10000 && Number.isInteger(num)) {
     return `${prefix || ''}${formatWithLocale(num, 0)}${suffix || ''}`;
   }
 
   const formattedNumber =
-    Math.abs(num) < 1000
-      ? formatWithLocale(num, precision === 0 ? 0 : precision || 2)
-      : formatCompact(num);
+    Math.abs(num) < 1000 ? formatWithLocale(num, resolvedPrecision) : formatCompact(num);
 
   return `${prefix || ''}${formattedNumber}${suffix || ''}`;
 }

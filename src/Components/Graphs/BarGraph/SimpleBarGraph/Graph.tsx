@@ -73,6 +73,7 @@ interface Props {
   trackColor?: string;
   hideAxisLine: boolean;
   locale: string;
+  padZeros: boolean;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -120,6 +121,7 @@ export function HorizontalGraph(props: Props) {
     trackColor,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -211,6 +213,7 @@ export function HorizontalGraph(props: Props) {
               showGridLines
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
           <AxisTitle
@@ -414,7 +417,15 @@ export function HorizontalGraph(props: Props) {
                         transition: { duration: animate.duration },
                       }}
                     >
-                      {numberFormattingFunction(d.size, naLabel, precision, prefix, suffix, locale)}
+                      {numberFormattingFunction(
+                        d.size,
+                        naLabel,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
                     </motion.text>
                   ) : null}
                 </motion.g>
@@ -518,6 +529,7 @@ export function VerticalGraph(props: Props) {
     trackColor,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -604,6 +616,7 @@ export function VerticalGraph(props: Props) {
                     prefix,
                     suffix,
                     locale,
+                    padZeros,
                   )
                 : undefined
             }
@@ -640,6 +653,7 @@ export function VerticalGraph(props: Props) {
               labelPos='vertical'
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
           <AxisTitle
@@ -664,7 +678,9 @@ export function VerticalGraph(props: Props) {
                       opacity: selectedColor
                         ? d.color
                           ? barColor[colorDomain.indexOf(d.color)] === selectedColor
-                            ? 1
+                            ? !highlightedDataPoints || highlightedDataPoints.indexOf(d.id) !== -1
+                              ? 1
+                              : dimmedOpacity
                             : dimmedOpacity
                           : dimmedOpacity
                         : highlightedDataPoints
@@ -677,7 +693,9 @@ export function VerticalGraph(props: Props) {
                       opacity: selectedColor
                         ? d.color
                           ? barColor[colorDomain.indexOf(d.color)] === selectedColor
-                            ? 1
+                            ? !highlightedDataPoints || highlightedDataPoints.indexOf(d.id) !== -1
+                              ? 1
+                              : dimmedOpacity
                             : dimmedOpacity
                           : dimmedOpacity
                         : highlightedDataPoints
@@ -843,7 +861,15 @@ export function VerticalGraph(props: Props) {
                         transition: { duration: animate.duration },
                       }}
                     >
-                      {numberFormattingFunction(d.size, naLabel, precision, prefix, suffix, locale)}
+                      {numberFormattingFunction(
+                        d.size,
+                        naLabel,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
                     </motion.text>
                   ) : null}
                 </motion.g>

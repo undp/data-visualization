@@ -17,6 +17,7 @@ import {
   CustomLayerDataType,
   AnimateDataType,
   TimelineDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { ensureCompleteDataForDumbbellChart } from '@/Utils/ensureCompleteData';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
@@ -95,10 +96,6 @@ interface Props {
   radius?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -141,10 +138,8 @@ interface Props {
   filterNA?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -206,8 +201,6 @@ export function DumbbellChart(props: Props) {
     relativeHeight,
     onSeriesMouseOver,
     graphID,
-    suffix = '',
-    prefix = '',
     maxValue,
     minValue,
     onSeriesMouseClick,
@@ -236,7 +229,6 @@ export function DumbbellChart(props: Props) {
     refValues,
     filterNA = true,
     animate = false,
-    precision = 2,
     showColorScale = true,
     customLayers = [],
     highlightedDataPoints,
@@ -244,7 +236,7 @@ export function DumbbellChart(props: Props) {
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     sortData,
     hideAxisLine = false,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -437,8 +429,6 @@ export function DumbbellChart(props: Props) {
             showLabels={showLabels}
             showValues={showValues}
             tooltip={tooltip}
-            suffix={suffix}
-            prefix={prefix}
             onSeriesMouseOver={onSeriesMouseOver}
             maxValue={
               !checkIfNullOrUndefined(maxValue)
@@ -474,12 +464,15 @@ export function DumbbellChart(props: Props) {
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
-            precision={precision}
             customLayers={customLayers}
             highlightedDataPoints={highlightedDataPoints}
             dimmedOpacity={dimmedOpacity}
             rtl={language === 'ar' || language === 'he'}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

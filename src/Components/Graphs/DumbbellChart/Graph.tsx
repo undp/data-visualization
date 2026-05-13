@@ -72,6 +72,7 @@ interface Props {
   rtl: boolean;
   hideAxisLine: boolean;
   locale: string;
+  padZeros: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -118,6 +119,7 @@ export function VerticalGraph(props: Props) {
     dimmedOpacity,
     hideAxisLine,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -220,6 +222,8 @@ export function VerticalGraph(props: Props) {
                     precision,
                     prefix,
                     suffix,
+                    locale,
+                    padZeros,
                   )
                 : undefined
             }
@@ -256,6 +260,7 @@ export function VerticalGraph(props: Props) {
               labelPos='vertical'
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
           <AxisTitle
@@ -457,6 +462,7 @@ export function VerticalGraph(props: Props) {
                               prefix,
                               suffix,
                               locale,
+                              padZeros,
                             )}
                           </motion.text>
                         ) : null}
@@ -554,6 +560,7 @@ export function HorizontalGraph(props: Props) {
     highlightedDataPoints,
     dimmedOpacity,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -662,6 +669,7 @@ export function HorizontalGraph(props: Props) {
               showGridLines
               precision={precision}
               locale={locale}
+              padZeros={padZeros}
             />
           ) : null}
           <AxisTitle
@@ -682,6 +690,7 @@ export function HorizontalGraph(props: Props) {
             labelPos='vertical'
             precision={precision}
             locale={locale}
+            padZeros={padZeros}
           />
           {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
           <AnimatePresence>
@@ -877,6 +886,7 @@ export function HorizontalGraph(props: Props) {
                               prefix,
                               suffix,
                               locale,
+                              padZeros,
                             )}
                           </motion.text>
                         ) : null}

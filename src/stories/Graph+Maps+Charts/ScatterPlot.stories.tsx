@@ -34,6 +34,32 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    xNumberDisplayOptions: {
+      table: {
+        type: {
+          detail: `{
+  locale?: string; 
+  precision?: number;
+  prefix?: string;
+  suffix?: string;
+  padZeros?: boolean;
+}`,
+        },
+      },
+    },
+    yNumberDisplayOptions: {
+      table: {
+        type: {
+          detail: `{
+  locale?: string; 
+  precision?: number;
+  prefix?: string;
+  suffix?: string;
+  padZeros?: boolean;
+}`,
+        },
+      },
+    },
 
     // Titles and Labels and Sources
 

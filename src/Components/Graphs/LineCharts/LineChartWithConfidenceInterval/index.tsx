@@ -17,6 +17,7 @@ import {
   CurveTypes,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { ColorLegend } from '@/Components/Elements/ColorLegend';
@@ -82,10 +83,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -132,10 +129,8 @@ interface Props {
   regressionLine?: boolean | string;
   /** Curve type for the line */
   curveType?: CurveTypes;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -164,9 +159,7 @@ export function LineChartWithConfidenceInterval(props: Props) {
   const {
     data,
     graphTitle,
-    suffix = '',
     sources,
-    prefix = '',
     graphDescription,
     height,
     width,
@@ -217,9 +210,8 @@ export function LineChartWithConfidenceInterval(props: Props) {
     curveType = 'curve',
     styles,
     classNames,
-    precision = 2,
     customLayers = [],
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -295,8 +287,6 @@ export function LineChartWithConfidenceInterval(props: Props) {
             lineColor={lineColor || Colors.primaryColors['blue-600']}
             width={svgWidth}
             height={svgHeight}
-            suffix={suffix}
-            prefix={prefix}
             dateFormat={dateFormat}
             showValues={showValues}
             noOfXTicks={noOfXTicks ?? getNoOfTicks(svgWidth)}
@@ -334,9 +324,12 @@ export function LineChartWithConfidenceInterval(props: Props) {
             curveType={curveType}
             styles={styles}
             classNames={classNames}
-            precision={precision}
             customLayers={customLayers}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

@@ -27,6 +27,7 @@ import {
   CustomLayerDataType,
   HybridMapDataType,
   MapProjectionTypes,
+  NumberFormatOptions,
   StyleObject,
   ZoomInteractionTypes,
 } from '@/Types';
@@ -85,7 +86,7 @@ interface Props {
   overlayMapData?: FeatureCollection;
   overlayMapBorderColor?: string;
   overlayMapBorderWidth?: number;
-  locale: string;
+  numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
 }
 
 export function Graph(props: Props) {
@@ -134,7 +135,7 @@ export function Graph(props: Props) {
     overlayMapData,
     overlayMapBorderColor,
     overlayMapBorderWidth,
-    locale,
+    numberDisplayOptions,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
@@ -322,7 +323,9 @@ export function Graph(props: Props) {
                         whileInView: {
                           opacity: selectedColor
                             ? selectedColor === color
-                              ? 1
+                              ? !highlightedIds || highlightedIds.indexOf(d.id as string) !== -1
+                                ? 1
+                                : dimmedOpacity
                               : dimmedOpacity
                             : highlightedIds
                               ? highlightedIds.indexOf(d.id as string) !== -1
@@ -626,10 +629,11 @@ export function Graph(props: Props) {
                               {numberFormattingFunction(
                                 d as number,
                                 undefined,
+                                numberDisplayOptions?.precision ?? 2,
                                 undefined,
                                 undefined,
-                                undefined,
-                                locale,
+                                numberDisplayOptions?.locale || 'en',
+                                numberDisplayOptions?.padZeros || false,
                               )}
                             </text>
                           </g>

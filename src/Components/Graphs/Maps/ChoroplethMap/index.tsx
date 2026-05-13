@@ -20,6 +20,7 @@ import {
   AnimateDataType,
   TimelineDataType,
   MapOverlayDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -125,8 +126,8 @@ interface Props {
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
   timeline?: TimelineDataType;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, precision, and zero padding. */
+  numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -211,7 +212,7 @@ export function ChoroplethMap(props: Props) {
     zoomAndCenterByHighlightedIds = false,
     rewindCoordinatesInMapData = true,
     mapOverlay,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -432,7 +433,7 @@ export function ChoroplethMap(props: Props) {
             collapseColorScaleByDefault={collapseColorScaleByDefault}
             projectionRotate={projectionRotate}
             rewindCoordinatesInMapData={rewindCoordinatesInMapData}
-            locale={locale}
+            numberDisplayOptions={numberDisplayOptions}
           />
         ) : (
           <div

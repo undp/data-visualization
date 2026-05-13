@@ -63,8 +63,6 @@ interface Props {
   // Graph Parameters
   /** Column settings for each column shown in the table. */
   columnData: DataTableColumnDataType[];
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Reset selection on double-click. Only applicable when used in a dashboard context with filters. */
@@ -81,8 +79,6 @@ interface Props {
   theme?: 'light' | 'dark';
   /** Unique ID for the graph */
   graphID?: string;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
 }
 
 const TotalWidth = (columns: (number | undefined)[]) => {
@@ -113,8 +109,6 @@ export function DataTable(props: Props) {
     classNames,
     minWidth,
     naLabel = 'NA',
-    precision = 2,
-    locale = 'en',
   } = props;
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const [columnSortBy, setColumnSortBy] = useState<string | undefined>(undefined);
@@ -368,10 +362,11 @@ export function DataTable(props: Props) {
                                 {numberFormattingFunction(
                                   d[el.columnId],
                                   naLabel,
-                                  precision,
+                                  el.precision,
                                   el.prefix,
                                   el.suffix,
-                                  locale,
+                                  el.locale,
+                                  el.padZeros,
                                 )}
                               </P>
                             ) : typeof d[el.columnId] === 'string' ? (
@@ -426,10 +421,11 @@ export function DataTable(props: Props) {
                                         {numberFormattingFunction(
                                           element,
                                           naLabel,
-                                          precision,
+                                          el.precision,
                                           el.prefix,
                                           el.suffix,
-                                          locale,
+                                          el.locale,
+                                          el.padZeros,
                                         )}
                                       </P>
                                     ))}
@@ -470,10 +466,11 @@ export function DataTable(props: Props) {
                                   {numberFormattingFunction(
                                     d[el.columnId],
                                     naLabel,
-                                    precision,
+                                    el.precision,
                                     el.prefix,
                                     el.suffix,
-                                    locale,
+                                    el.locale,
+                                    el.padZeros,
                                   )}
                                 </P>
                               )
@@ -482,10 +479,11 @@ export function DataTable(props: Props) {
                                 {numberFormattingFunction(
                                   d[el.columnId],
                                   naLabel,
-                                  precision,
+                                  el.precision,
                                   el.prefix,
                                   el.suffix,
-                                  locale,
+                                  el.locale,
+                                  el.padZeros,
                                 )}
                               </div>
                             )}

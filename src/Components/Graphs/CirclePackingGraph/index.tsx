@@ -3,7 +3,14 @@ import { useState, useRef, useEffect } from 'react';
 import { Graph } from './Graph';
 import { getMaxCircleRadius } from './getMaxCircleRadius';
 
-import { Languages, SourcesDataType, StyleObject, ClassNameObject, TreeMapDataType } from '@/Types';
+import {
+  Languages,
+  SourcesDataType,
+  StyleObject,
+  ClassNameObject,
+  TreeMapDataType,
+  NumberFormatOptions,
+} from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
@@ -64,10 +71,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value mapped to the radius chart */
   maxRadiusValue?: number;
 
@@ -88,10 +91,8 @@ interface Props {
   highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Enable graph download option as png */
   graphDownload?: boolean;
   /** Enable data download option as a csv */
@@ -127,9 +128,7 @@ export function CirclePackingGraph(props: Props) {
     data,
     graphTitle,
     colors,
-    suffix = '',
     sources,
-    prefix = '',
     graphDescription,
     leftMargin = 0,
     rightMargin = 0,
@@ -165,9 +164,8 @@ export function CirclePackingGraph(props: Props) {
     styles,
     classNames,
     dimmedOpacity = 0.3,
-    precision = 2,
     circularBoundary = true,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -265,8 +263,6 @@ export function CirclePackingGraph(props: Props) {
                 : (showValues as boolean)
             }
             selectedColor={selectedColor}
-            suffix={suffix}
-            prefix={prefix}
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
             highlightedDataPoints={highlightedDataPoints}
@@ -288,8 +284,11 @@ export function CirclePackingGraph(props: Props) {
             styles={styles}
             classNames={classNames}
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

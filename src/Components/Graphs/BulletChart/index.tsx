@@ -16,6 +16,7 @@ import {
   CustomLayerDataType,
   AnimateDataType,
   TimelineDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -131,6 +132,8 @@ interface Props {
   hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
@@ -147,10 +150,6 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
   timeline?: TimelineDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -229,7 +228,6 @@ export function BulletChart(props: Props) {
     measureBarWidthFactor = 0.4,
     animate = false,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
     naLabel = 'NA',
     graphDownload = false,
@@ -250,7 +248,7 @@ export function BulletChart(props: Props) {
     targetLineThickness = 2,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     hideAxisLine = false,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -466,12 +464,13 @@ export function BulletChart(props: Props) {
                   ? { duration: 0.5, once: true, amount: 0.5 }
                   : animate || { duration: 0, once: true, amount: 0 }
               }
-              precision={precision}
               customLayers={customLayers}
               naLabel={naLabel}
               targetLineThickness={targetLineThickness}
               rtl={language === 'ar' || language === 'he'}
-              locale={locale}
+              locale={numberDisplayOptions?.locale || 'en'}
+              padZeros={numberDisplayOptions?.padZeros || false}
+              precision={numberDisplayOptions?.precision ?? 2}
             />
           ) : null}
         </GraphArea>

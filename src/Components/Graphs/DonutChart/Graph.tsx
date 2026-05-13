@@ -13,7 +13,17 @@ import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { getArc } from '@/Utils/getArc';
 
 interface Props {
-  mainText?: string | { label: string; suffix?: string; prefix?: string } | ReactElement;
+  mainText?:
+    | string
+    | {
+        label: string;
+        suffix?: string;
+        prefix?: string;
+        locale?: string;
+        padZeros?: boolean;
+        precision?: number;
+      }
+    | ReactElement;
   radius: number;
   colors: string[];
   subNote?: string;
@@ -27,10 +37,8 @@ interface Props {
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
-  precision: number;
   animate: AnimateDataType;
   trackColor: string;
-  locale: string;
   naLabel: string;
 }
 
@@ -50,10 +58,8 @@ export function Graph(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    precision,
     animate,
     trackColor,
-    locale,
     naLabel,
   } = props;
   const svgRef = useRef(null);
@@ -104,10 +110,11 @@ export function Graph(props: Props) {
                           ? numberFormattingFunction(
                               data[data.findIndex(d => d.label === mainText.label)].size,
                               naLabel,
-                              precision,
+                              mainText.precision,
                               mainText.prefix,
                               mainText.suffix,
-                              locale,
+                              mainText.locale,
+                              mainText.padZeros,
                             )
                           : naLabel}
                     </H2>

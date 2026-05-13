@@ -15,6 +15,7 @@ import {
   CurveTypes,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -75,10 +76,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -105,10 +102,8 @@ interface Props {
   customHighlightAreaSettings?: CustomHighlightAreaSettingsDataType[];
   /** Curve type for the line */
   curveType?: CurveTypes;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Toggles if the graph animates in when loaded.  */
@@ -174,15 +169,12 @@ export function AreaChart(props: Props) {
     ariaLabel,
     yAxisTitle,
     noOfYTicks = 5,
-    prefix = '',
-    suffix = '',
     curveType = 'curve',
     styles,
     classNames,
-    precision = 2,
     customLayers = [],
     animate = false,
-    locale = 'en',
+    numberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -274,19 +266,20 @@ export function AreaChart(props: Props) {
             customHighlightAreaSettings={customHighlightAreaSettings}
             yAxisTitle={yAxisTitle}
             noOfYTicks={noOfYTicks}
-            prefix={prefix}
-            suffix={suffix}
             curveType={curveType}
             styles={styles}
             classNames={classNames}
-            precision={precision}
             customLayers={customLayers}
             animate={
               animate === true
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

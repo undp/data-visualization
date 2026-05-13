@@ -13,6 +13,7 @@ import {
   ClassNameObject,
   FogDataType,
   LightConfig,
+  NumberFormatOptions,
   StyleObject,
 } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
@@ -60,7 +61,7 @@ interface Props {
   selectedId?: string;
   collapseColorScaleByDefault?: boolean;
   dimmedOpacity: number;
-  locale: string;
+  numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
 }
 
 function createLightFromConfig(config: LightConfig): THREE.Light {
@@ -181,7 +182,7 @@ function Graph(props: Props) {
     selectedId,
     collapseColorScaleByDefault,
     dimmedOpacity,
-    locale,
+    numberDisplayOptions,
   } = props;
   const [globeReady, setGlobeReady] = useState(false);
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
@@ -448,10 +449,11 @@ function Graph(props: Props) {
                             {numberFormattingFunction(
                               d as number,
                               undefined,
+                              numberDisplayOptions?.precision ?? 2,
                               undefined,
                               undefined,
-                              undefined,
-                              locale,
+                              numberDisplayOptions?.locale || 'en',
+                              numberDisplayOptions?.padZeros || false,
                             )}
                           </text>
                         </g>

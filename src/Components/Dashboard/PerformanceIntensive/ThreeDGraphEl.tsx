@@ -61,6 +61,7 @@ function ThreeDGraphEl(props: Props) {
     switch (graphType) {
       case 'threeDGlobe':
         return {
+          numberDisplayOptions: settings?.numberDisplayOptions,
           globeOffset: settings?.globeOffset,
           collapseColorScaleByDefault: settings?.collapseColorScaleByDefault,
           polygonAltitude: settings?.polygonAltitude,

@@ -15,6 +15,7 @@ import {
   CurveTypes,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
@@ -83,10 +84,6 @@ interface Props {
   bottomMargin?: number;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   maxValue?: number;
   /** Minimum value for the chart */
@@ -131,10 +128,8 @@ interface Props {
   customHighlightAreaSettings?: CustomHighlightAreaSettingsDataType[];
   /** Curve type for the line */
   curveType?: CurveTypes;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -166,9 +161,7 @@ export function MultiLineChart(props: Props) {
     data,
     graphTitle,
     lineColors = Colors.light.categoricalColors.colors,
-    suffix = '',
     sources,
-    prefix = '',
     graphDescription,
     height,
     width,
@@ -213,13 +206,12 @@ export function MultiLineChart(props: Props) {
     styles,
     classNames,
     dimmedOpacity = 0.3,
-    precision = 2,
     customLayers = [],
     dashedLines = [],
     dashSettings = ['5 5'],
     labelsToBeHidden = [],
     showColorScale = true,
-    locale = 'en',
+    numberDisplayOptions,
     naLabel = 'NA',
   } = props;
 
@@ -307,8 +299,6 @@ export function MultiLineChart(props: Props) {
             onSeriesMouseOver={onSeriesMouseOver}
             showColorLegendAtTop={showColorScale ? showColorLegendAtTop : true}
             showValues={showValues}
-            suffix={suffix}
-            prefix={prefix}
             highlightAreaSettings={highlightAreaSettings}
             refValues={refValues}
             minValue={minValue}
@@ -332,14 +322,17 @@ export function MultiLineChart(props: Props) {
             styles={styles}
             classNames={classNames}
             dimmedOpacity={dimmedOpacity}
-            precision={precision}
             customLayers={customLayers}
             labelsToBeHidden={labelsToBeHidden}
             dashedLines={dashedLines}
             dashSettings={dashSettings}
             revealClipId={generateRandomString(8)}
-            locale={locale}
             naLabel={naLabel}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

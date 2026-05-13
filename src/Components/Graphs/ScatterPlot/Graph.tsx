@@ -17,6 +17,7 @@ import {
   HighlightAreaSettingsForScatterPlotDataType,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
@@ -74,20 +75,16 @@ interface Props {
   noOfXTicks: number;
   noOfYTicks: number;
   labelColor?: string;
-  xSuffix: string;
-  ySuffix: string;
-  xPrefix: string;
-  yPrefix: string;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   animate: AnimateDataType;
   dimmedOpacity: number;
-  precision: number;
   customLayers: CustomLayerDataType[];
   showHighlightedDataPointsLabels: boolean;
   showVoronoiTesselation: boolean;
   useVoronoiInteraction: boolean;
-  locale: string;
+  xNumberDisplayOptions?: NumberFormatOptions;
+  yNumberDisplayOptions?: NumberFormatOptions;
 }
 
 export function Graph(props: Props) {
@@ -127,20 +124,16 @@ export function Graph(props: Props) {
     noOfXTicks,
     noOfYTicks,
     labelColor,
-    xSuffix,
-    ySuffix,
-    xPrefix,
-    yPrefix,
     styles,
     classNames,
     animate,
     dimmedOpacity,
-    precision,
     showHighlightedDataPointsLabels,
     customLayers,
     showVoronoiTesselation,
     useVoronoiInteraction,
-    locale,
+    xNumberDisplayOptions,
+    yNumberDisplayOptions,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -238,13 +231,14 @@ export function Graph(props: Props) {
                 gridLines: classNames?.yAxis?.gridLines,
                 labels: classNames?.yAxis?.labels,
               }}
-              suffix={ySuffix}
-              prefix={yPrefix}
               labelType='secondary'
               showGridLines
               labelPos='side'
-              precision={precision}
-              locale={locale}
+              suffix={yNumberDisplayOptions?.suffix || ''}
+              prefix={yNumberDisplayOptions?.prefix || ''}
+              precision={yNumberDisplayOptions?.precision ?? 2}
+              locale={yNumberDisplayOptions?.locale || 'en'}
+              padZeros={yNumberDisplayOptions?.padZeros || false}
             />
             <Axis
               y1={y(minYValue < 0 ? 0 : minYValue)}
@@ -254,10 +248,11 @@ export function Graph(props: Props) {
               label={numberFormattingFunction(
                 minYValue < 0 ? 0 : minYValue,
                 undefined,
-                precision,
-                yPrefix,
-                ySuffix,
-                locale,
+                yNumberDisplayOptions?.precision ?? 2,
+                yNumberDisplayOptions?.prefix || '',
+                yNumberDisplayOptions?.suffix || '',
+                yNumberDisplayOptions?.locale || 'en',
+                yNumberDisplayOptions?.padZeros || false,
               )}
               labelPos={{
                 x: 0,
@@ -297,12 +292,13 @@ export function Graph(props: Props) {
                 gridLines: classNames?.xAxis?.gridLines,
                 labels: classNames?.xAxis?.labels,
               }}
-              suffix={xSuffix}
-              prefix={xPrefix}
               labelType='primary'
               showGridLines
-              precision={precision}
-              locale={locale}
+              suffix={xNumberDisplayOptions?.suffix || ''}
+              prefix={xNumberDisplayOptions?.prefix || ''}
+              precision={xNumberDisplayOptions?.precision ?? 2}
+              locale={xNumberDisplayOptions?.locale || 'en'}
+              padZeros={xNumberDisplayOptions?.padZeros || false}
             />
             <Axis
               x1={x(minXValue < 0 ? 0 : minXValue)}
@@ -312,10 +308,11 @@ export function Graph(props: Props) {
               label={numberFormattingFunction(
                 minXValue < 0 ? 0 : minXValue,
                 undefined,
-                precision,
-                xPrefix,
-                xSuffix,
-                locale,
+                xNumberDisplayOptions?.precision ?? 2,
+                xNumberDisplayOptions?.prefix || '',
+                xNumberDisplayOptions?.suffix || '',
+                xNumberDisplayOptions?.locale || 'en',
+                xNumberDisplayOptions?.padZeros || false,
               )}
               labelPos={{
                 x: x(minXValue < 0 ? 0 : minXValue),

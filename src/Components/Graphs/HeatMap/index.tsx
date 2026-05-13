@@ -11,6 +11,7 @@ import {
   StyleObject,
   ClassNameObject,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
@@ -74,10 +75,6 @@ interface Props {
   fillContainer?: boolean;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
   /** Maximum value for the chart */
   truncateBy?: number;
   /** Reference values for comparison */
@@ -99,10 +96,8 @@ interface Props {
   animate?: boolean | AnimateDataType;
   /** Domain for the colors in the cell.  */
   colorDomain: number[] | string[];
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Enable graph download option as png */
@@ -158,8 +153,6 @@ export function HeatMap(props: Props) {
     bottomMargin = 10,
     tooltip,
     onSeriesMouseOver,
-    suffix = '',
-    prefix = '',
     showRowLabels = true,
     relativeHeight,
     showValues,
@@ -180,9 +173,8 @@ export function HeatMap(props: Props) {
     styles,
     classNames,
     animate = false,
-    precision = 2,
-    locale = 'en',
     naLabel = 'NA',
+    numberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -292,7 +284,7 @@ export function HeatMap(props: Props) {
             colorDomain={colorDomain as number[]}
             setSelectedColor={setSelectedColor}
             naColor={noDataColor}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
             showNAColor={showNAColor}
             naLabel={naLabel}
           />
@@ -306,7 +298,7 @@ export function HeatMap(props: Props) {
                 Colors[theme].sequentialColors.neutralColorsx09[8],
               ]
             }
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
             colorDomain={colorDomain as number[]}
             className={classNames?.colorLegend}
           />
@@ -346,8 +338,6 @@ export function HeatMap(props: Props) {
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
             showValues={showValues}
-            suffix={suffix}
-            prefix={prefix}
             onSeriesMouseClick={onSeriesMouseClick}
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             detailsOnClick={detailsOnClick}
@@ -358,8 +348,11 @@ export function HeatMap(props: Props) {
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
-            precision={precision}
-            locale={locale}
+            locale={numberDisplayOptions?.locale || 'en'}
+            padZeros={numberDisplayOptions?.padZeros || false}
+            suffix={numberDisplayOptions?.suffix || ''}
+            prefix={numberDisplayOptions?.prefix || ''}
+            precision={numberDisplayOptions?.precision ?? 2}
           />
         ) : null}
       </GraphArea>

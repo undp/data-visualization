@@ -43,6 +43,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   locale: string;
+  padZeros: boolean;
 }
 
 export function Graph(props: Props) {
@@ -74,6 +75,7 @@ export function Graph(props: Props) {
     dimmedOpacity,
     precision,
     locale,
+    padZeros,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -356,6 +358,7 @@ export function Graph(props: Props) {
                                 prefix,
                                 suffix,
                                 locale,
+                                padZeros,
                               )}
                             </P>
                           ) : null}

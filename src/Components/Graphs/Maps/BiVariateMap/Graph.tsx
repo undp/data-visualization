@@ -25,6 +25,7 @@ import {
   ClassNameObject,
   CustomLayerDataType,
   MapProjectionTypes,
+  NumberFormatOptions,
   StyleObject,
   ZoomInteractionTypes,
 } from '@/Types';
@@ -80,7 +81,8 @@ interface Props {
   overlayMapData?: FeatureCollection;
   overlayMapBorderColor?: string;
   overlayMapBorderWidth?: number;
-  locale: string;
+  xNumberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
+  yNumberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
 }
 
 export function Graph(props: Props) {
@@ -123,7 +125,8 @@ export function Graph(props: Props) {
     overlayMapData,
     overlayMapBorderColor,
     overlayMapBorderWidth,
-    locale,
+    xNumberDisplayOptions,
+    yNumberDisplayOptions,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
@@ -333,7 +336,9 @@ export function Graph(props: Props) {
                       whileInView: {
                         opacity: selectedColor
                           ? selectedColor === color
-                            ? 1
+                            ? !highlightedIds || highlightedIds.indexOf(d.id) !== -1
+                              ? 1
+                              : dimmedOpacity
                             : dimmedOpacity
                           : highlightedIds
                             ? highlightedIds.indexOf(d.id) !== -1
@@ -494,10 +499,11 @@ export function Graph(props: Props) {
                                 : numberFormattingFunction(
                                     el,
                                     undefined,
+                                    xNumberDisplayOptions?.precision ?? 2,
                                     undefined,
                                     undefined,
-                                    undefined,
-                                    locale,
+                                    xNumberDisplayOptions?.locale || 'en',
+                                    xNumberDisplayOptions?.padZeros || false,
                                   )}
                             </text>
                           ))}
@@ -521,10 +527,11 @@ export function Graph(props: Props) {
                                 : numberFormattingFunction(
                                     el,
                                     undefined,
+                                    yNumberDisplayOptions?.precision ?? 2,
                                     undefined,
                                     undefined,
-                                    undefined,
-                                    locale,
+                                    yNumberDisplayOptions?.locale || 'en',
+                                    yNumberDisplayOptions?.padZeros || false,
                                   )}
                             </text>
                           </g>

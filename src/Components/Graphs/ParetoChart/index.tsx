@@ -14,6 +14,7 @@ import {
   CurveTypes,
   CustomLayerDataType,
   AnimateDataType,
+  NumberFormatOptions,
 } from '@/Types';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
@@ -73,14 +74,6 @@ interface Props {
   barPadding?: number;
 
   // Values and Ticks
-  /** Suffix for values of the lines */
-  lineSuffix?: string;
-  /** Suffix for values of the bars */
-  barSuffix?: string;
-  /** Prefix for values of the lines */
-  linePrefix?: string;
-  /** Prefix for values of the bars */
-  barPrefix?: string;
   /** Truncate labels by specified length */
   truncateBy?: number;
   /** Number of ticks on the axis */
@@ -107,10 +100,10 @@ interface Props {
   naLabel?: string;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
+  /** Configuration options for lines controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  lineNumberDisplayOptions?: NumberFormatOptions;
+  /** Configuration options for bars controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  barNumberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Enable graph download option as png */
@@ -182,20 +175,16 @@ export function ParetoChart(props: Props) {
     detailsOnClick,
     showValues = true,
     noOfTicks = 5,
-    lineSuffix = '',
-    barSuffix = '',
-    linePrefix = '',
-    barPrefix = '',
     curveType = 'curve',
     styles,
     classNames,
     animate = false,
-    precision = 2,
     customLayers = [],
     naLabel = 'NA',
     showColorScale = true,
     showAxisLabels = true,
-    locale = 'en',
+    lineNumberDisplayOptions,
+    barNumberDisplayOptions,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -289,10 +278,6 @@ export function ParetoChart(props: Props) {
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             detailsOnClick={detailsOnClick}
             noOfTicks={noOfTicks}
-            lineSuffix={lineSuffix}
-            barSuffix={barSuffix}
-            linePrefix={linePrefix}
-            barPrefix={barPrefix}
             curveType={curveType}
             showValues={showValues}
             styles={styles}
@@ -302,11 +287,11 @@ export function ParetoChart(props: Props) {
                 ? { duration: 0.5, once: true, amount: 0.5 }
                 : animate || { duration: 0, once: true, amount: 0 }
             }
-            precision={precision}
             customLayers={customLayers}
             naLabel={naLabel}
             showAxisLabels={showAxisLabels}
-            locale={locale}
+            lineNumberDisplayOptions={lineNumberDisplayOptions}
+            barNumberDisplayOptions={barNumberDisplayOptions}
           />
         ) : null}
       </GraphArea>

@@ -4,7 +4,13 @@ import { cn } from '@undp/design-system-react/cn';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { ClassNameObject, Languages, SourcesDataType, StyleObject } from '@/Types';
+import {
+  ClassNameObject,
+  Languages,
+  NumberFormatOptions,
+  SourcesDataType,
+  StyleObject,
+} from '@/Types';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -40,18 +46,14 @@ interface Props {
   classNames?: ClassNameObject;
 
   // Values and Ticks
-  /** Prefix for values */
-  prefix?: string;
-  /** Suffix for values */
-  suffix?: string;
-  /** Specifies the number of decimal places to display in the value. */
-  precision?: number;
+  /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
+  numberDisplayOptions?: NumberFormatOptions;
+  /** Defines how “NA” values should be displayed/labelled in the graph */
+  naLabel?: string;
   /** Main text */
   value: number | string;
   /** Sub text next to main text */
   year?: number | string;
-  /** Locale for number formatting. Must matches what `Intl.NumberFormat` expects. */
-  locale?: string;
 
   // Configuration and Options
   /** Language setting  */
@@ -67,9 +69,7 @@ export function BasicStatCard(props: Props) {
     year,
     value,
     graphTitle,
-    suffix = '',
     sources,
-    prefix = '',
     graphDescription,
     footNote,
     padding,
@@ -85,8 +85,8 @@ export function BasicStatCard(props: Props) {
     layout = 'primary',
     styles,
     classNames,
-    precision,
-    locale = 'en',
+    numberDisplayOptions,
+    naLabel = 'NA',
   } = props;
   return (
     <div className={`${theme || 'light'} w-full`}>
@@ -157,7 +157,15 @@ export function BasicStatCard(props: Props) {
                     letterSpacing: '0.05rem',
                   }}
                 >
-                  {numberFormattingFunction(value, undefined, precision, prefix, suffix, locale)}{' '}
+                  {numberFormattingFunction(
+                    value,
+                    naLabel,
+                    numberDisplayOptions?.precision ?? 2,
+                    numberDisplayOptions?.prefix,
+                    numberDisplayOptions?.suffix,
+                    numberDisplayOptions?.locale,
+                    numberDisplayOptions?.padZeros,
+                  )}{' '}
                   {year ? (
                     <span
                       className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'
@@ -201,7 +209,15 @@ export function BasicStatCard(props: Props) {
                   letterSpacing: '0.05rem',
                 }}
               >
-                {numberFormattingFunction(value, undefined, precision, prefix, suffix, locale)}{' '}
+                {numberFormattingFunction(
+                  value,
+                  naLabel,
+                  numberDisplayOptions?.precision ?? 2,
+                  numberDisplayOptions?.prefix,
+                  numberDisplayOptions?.suffix,
+                  numberDisplayOptions?.locale,
+                  numberDisplayOptions?.padZeros,
+                )}{' '}
                 {year ? (
                   <span
                     className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'

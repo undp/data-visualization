@@ -30,6 +30,17 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    numberDisplayOptions: {
+      table: {
+        type: {
+          detail: `{
+  locale?: string; 
+  precision?: number;
+  padZeros?: boolean;
+}`,
+        },
+      },
+    },
 
     // Titles and Labels and Sources
 
