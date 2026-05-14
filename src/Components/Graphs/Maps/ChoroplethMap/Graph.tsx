@@ -451,7 +451,7 @@ export function Graph(props: Props) {
                 <div
                   className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
                   style={{
-                    width: categorical ? undefined : '340px',
+                    width: categorical || colorDomain.length < 2 ? undefined : '340px',
                   }}
                 >
                   {colorLegendTitle && colorLegendTitle !== '' ? (
@@ -468,7 +468,7 @@ export function Graph(props: Props) {
                       {colorLegendTitle}
                     </P>
                   ) : null}
-                  {!categorical ? (
+                  {!categorical && colorDomain.length > 1 ? (
                     <svg width='100%' viewBox='0 0 320 30' direction='ltr'>
                       <g>
                         {colorDomain.map((d, i) => (
@@ -542,7 +542,7 @@ export function Graph(props: Props) {
                         </g>
                       </g>
                     </svg>
-                  ) : (
+                  ) : categorical ? (
                     <div className='flex flex-col gap-3'>
                       {colorDomain.map((d, i) => (
                         <div
@@ -564,6 +564,59 @@ export function Graph(props: Props) {
                           </P>
                         </div>
                       ))}
+                    </div>
+                  ) : (
+                    <div className='flex flex-col gap-3'>
+                      <div
+                        className='flex gap-2 items-center'
+                        onMouseOver={() => {
+                          setSelectedColor(colors[0]);
+                        }}
+                        onMouseLeave={() => {
+                          setSelectedColor(undefined);
+                        }}
+                      >
+                        <div
+                          className='w-2 h-2 rounded-full'
+                          style={{ backgroundColor: colors[0] }}
+                        />
+                        <P size='sm' marginBottom='none' leading='none'>
+                          {`<= ${numberFormattingFunction(
+                            colorDomain[0] as number,
+                            'NA',
+                            numberDisplayOptions?.precision ?? 2,
+                            undefined,
+                            undefined,
+                            numberDisplayOptions?.locale || 'en',
+                            numberDisplayOptions?.padZeros || false,
+                          )}`}
+                        </P>
+                      </div>
+                      <div
+                        className='flex gap-2 items-center'
+                        onMouseOver={() => {
+                          setSelectedColor(colors[1]);
+                        }}
+                        onMouseLeave={() => {
+                          setSelectedColor(undefined);
+                        }}
+                      >
+                        <div
+                          className='w-2 h-2 rounded-full'
+                          style={{ backgroundColor: colors[1] }}
+                        />
+                        <P size='sm' marginBottom='none' leading='none'>
+                          {`> ${numberFormattingFunction(
+                            colorDomain[0] as number,
+                            'NA',
+                            numberDisplayOptions?.precision ?? 2,
+                            undefined,
+                            undefined,
+                            numberDisplayOptions?.locale || 'en',
+                            numberDisplayOptions?.padZeros || false,
+                          )}`}
+                        </P>
+                      </div>
                     </div>
                   )}
                 </div>
