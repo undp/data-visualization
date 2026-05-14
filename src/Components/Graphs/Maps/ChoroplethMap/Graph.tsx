@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import {
   geoAlbersUsa,
   geoEqualEarth,
@@ -34,6 +34,8 @@ import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { ExpandIcon, X } from '@/Components/Icons';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
+import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 
 interface Props {
   colorDomain: (number | string)[];
@@ -79,6 +81,9 @@ interface Props {
   overlayMapBorderColor?: string;
   overlayMapBorderWidth?: number;
   numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
+  graphDownload?: RefObject<HTMLDivElement | null>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dataDownload: any;
 }
 
 export function Graph(props: Props) {
@@ -121,6 +126,8 @@ export function Graph(props: Props) {
     overlayMapBorderColor,
     overlayMapBorderWidth,
     numberDisplayOptions,
+    graphDownload,
+    dataDownload,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
@@ -575,7 +582,7 @@ export function Graph(props: Props) {
           </div>
         )}
         {zoomInteraction === 'button' && (
-          <div className='absolute left-4 top-4 flex flex-col zoom-buttons'>
+          <div className='absolute left-4 top-4 flex flex-col undp-viz-zoom-buttons'>
             <button
               onClick={() => handleZoom('in')}
               className='leading-0 px-2 py-3.5 text-primary-gray-700 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'
@@ -588,6 +595,24 @@ export function Graph(props: Props) {
             >
               –
             </button>
+          </div>
+        )}
+        {(graphDownload || dataDownload) && (
+          <div className='absolute right-4 top-4 flex flex-col image-download-button gap-2'>
+            {graphDownload && (
+              <ImageDownloadButton nodeID={graphDownload} buttonSmall className='p-1' />
+            )}
+            {dataDownload && dataDownload.length > 0 && (
+              <CsvDownloadButton
+                csvData={dataDownload}
+                buttonSmall
+                headers={Object.keys(dataDownload[0]).map(d => ({
+                  label: d,
+                  key: d,
+                }))}
+                className='p-1'
+              />
+            )}
           </div>
         )}
       </div>

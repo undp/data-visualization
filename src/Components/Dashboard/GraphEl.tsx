@@ -1172,6 +1172,7 @@ function GraphEl(props: Props) {
         };
       case 'scatterPlot':
         return {
+          defaultColor: settings?.defaultColor,
           xNumberDisplayOptions: settings?.xNumberDisplayOptions,
           yNumberDisplayOptions: settings?.yNumberDisplayOptions,
           timeline: settings?.timeline,

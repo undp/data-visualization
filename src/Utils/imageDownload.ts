@@ -23,7 +23,10 @@ export function imageDownload(node: HTMLElement, filename: string) {
     },
     filter: node => {
       if (node instanceof Element) {
-        return !node.classList.contains('undp-viz-download-button');
+        return (
+          !node.classList.contains('undp-viz-download-button') &&
+          !node.classList.contains('undp-viz-zoom-buttons')
+        );
       }
       return true; // Include non-Element nodes
     },

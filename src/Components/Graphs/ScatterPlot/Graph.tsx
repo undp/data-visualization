@@ -85,6 +85,7 @@ interface Props {
   useVoronoiInteraction: boolean;
   xNumberDisplayOptions?: NumberFormatOptions;
   yNumberDisplayOptions?: NumberFormatOptions;
+  fallbackColor: string;
 }
 
 export function Graph(props: Props) {
@@ -134,6 +135,7 @@ export function Graph(props: Props) {
     useVoronoiInteraction,
     xNumberDisplayOptions,
     yNumberDisplayOptions,
+    fallbackColor,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -471,13 +473,19 @@ export function Graph(props: Props) {
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
+                              : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                  colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                ? fallbackColor
+                                : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
                           data.filter(el => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
+                              : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                  colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                ? fallbackColor
+                                : colors[colorDomain.indexOf(`${d.color}`)],
                       },
                       whileInView: {
                         r: !radiusScale ? radius : radiusScale(d.radius || 0),
@@ -486,13 +494,19 @@ export function Graph(props: Props) {
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
+                              : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                  colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                ? fallbackColor
+                                : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
                           data.filter(el => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
-                              : colors[colorDomain.indexOf(`${d.color}`)],
+                              : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                  colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                ? fallbackColor
+                                : colors[colorDomain.indexOf(`${d.color}`)],
                         transition: { duration: animate.duration },
                       },
                     }}
@@ -520,7 +534,10 @@ export function Graph(props: Props) {
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)]),
+                                : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                    colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                  ? fallbackColor
+                                  : colors[colorDomain.indexOf(`${d.color}`)]),
                         },
                         whileInView: {
                           x: !radiusScale ? radius : radiusScale(d.radius || 0),
@@ -531,7 +548,10 @@ export function Graph(props: Props) {
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
-                                : colors[colorDomain.indexOf(`${d.color}`)]),
+                                : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                    colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                  ? fallbackColor
+                                  : colors[colorDomain.indexOf(`${d.color}`)]),
                           transition: { duration: animate.duration },
                         },
                       }}
@@ -563,7 +583,10 @@ export function Graph(props: Props) {
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
-                                  : colors[colorDomain.indexOf(`${d.color}`)]),
+                                  : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                      colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                    ? fallbackColor
+                                    : colors[colorDomain.indexOf(`${d.color}`)]),
                           },
                           whileInView: {
                             x: !radiusScale ? radius : radiusScale(d.radius || 0),
@@ -574,7 +597,10 @@ export function Graph(props: Props) {
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
-                                  : colors[colorDomain.indexOf(`${d.color}`)]),
+                                  : colorDomain.indexOf(`${d.color}`) === -1 ||
+                                      colorDomain.indexOf(`${d.color}`) > colors.length - 1
+                                    ? fallbackColor
+                                    : colors[colorDomain.indexOf(`${d.color}`)]),
                             transition: { duration: animate.duration },
                           },
                         }}

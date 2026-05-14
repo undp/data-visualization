@@ -1,6 +1,7 @@
 import { Button } from '@undp/design-system-react/Button';
 import { Toaster } from '@undp/design-system-react/Toaster';
 import { useToast } from '@undp/design-system-react/ToasterHooks';
+import { cn } from '@undp/design-system-react/cn';
 
 import { Copy } from '@/Components/Icons';
 
@@ -25,7 +26,7 @@ export function CopyTextButton(props: Props) {
     <>
       <Button
         variant='tertiary'
-        className={`${buttonSmall ? 'p-2' : 'py-4 px-6'} ${className}`}
+        className={cn(buttonSmall ? 'p-2' : 'py-4 px-6', className)}
         onClick={() => {
           navigator.clipboard.writeText(text);
           toast({

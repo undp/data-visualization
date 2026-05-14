@@ -54,6 +54,8 @@ interface Props {
   colors?: string | string[];
   /** Domain of colors for the graph */
   colorDomain?: string[];
+  /** Color for circle if the label doesn't exist in `colorDomain`. */
+  fallbackColor?: string;
   /** Title for the color legend */
   colorLegendTitle?: string;
   /** Background color of the graph */
@@ -188,6 +190,7 @@ export function ScatterPlot(props: Props) {
     width,
     footNote,
     colorDomain,
+    fallbackColor = Colors.gray,
     colorLegendTitle,
     radius = 5,
     xAxisTitle = 'X Axis',
@@ -389,9 +392,13 @@ export function ScatterPlot(props: Props) {
             colors={
               data.filter(el => el.color).length === 0
                 ? colors
-                  ? [colors as string]
+                  ? typeof colors === 'string'
+                    ? [colors]
+                    : [colors[0]]
                   : [Colors.primaryColors['blue-600']]
-                : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
+                : typeof colors === 'string'
+                  ? [colors]
+                  : colors || Colors[theme].categoricalColors.colors
             }
             xAxisTitle={xAxisTitle}
             yAxisTitle={yAxisTitle}
@@ -467,6 +474,7 @@ export function ScatterPlot(props: Props) {
             useVoronoiInteraction={useVoronoiInteraction}
             xNumberDisplayOptions={xNumberDisplayOptions}
             yNumberDisplayOptions={yNumberDisplayOptions}
+            fallbackColor={fallbackColor}
           />
         ) : null}
       </GraphArea>

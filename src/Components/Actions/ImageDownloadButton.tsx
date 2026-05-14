@@ -1,5 +1,6 @@
 import { JSX, RefObject } from 'react';
 import { Button } from '@undp/design-system-react/Button';
+import { cn } from '@undp/design-system-react/cn';
 
 import { imageDownload } from '@/Utils/imageDownload';
 import { ImageDown } from '@/Components/Icons';
@@ -30,9 +31,11 @@ export function ImageDownloadButton(props: Props) {
   return (
     <Button
       variant={buttonType}
-      className={`undp-viz-download-button ${
-        buttonSmall ? 'p-2' : 'py-4 px-6'
-      } ${className} border border-primary-gray-400 dark:border-primary-gray-550`}
+      className={cn(
+        'undp-viz-download-button no-underline border border-primary-gray-400 dark:border-primary-gray-550',
+        buttonSmall ? 'p-2' : 'py-4 px-6',
+        className,
+      )}
       onClick={() => {
         if (typeof nodeID === 'string') {
           if (document.getElementById(nodeID)) {

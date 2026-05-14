@@ -1,5 +1,6 @@
 import { Button } from '@undp/design-system-react/Button';
 import { JSX } from 'react';
+import { cn } from '@undp/design-system-react/cn';
 
 import { excelDownload } from '@/Utils/excelDownload';
 import { FileDown } from '@/Components/Icons';
@@ -42,7 +43,7 @@ export function ExcelDownloadButton(props: Props) {
   return (
     <Button
       variant={buttonType}
-      className={`${buttonSmall ? 'p-2' : 'py-4 px-6'} ${className}`}
+      className={cn(buttonSmall ? 'p-2' : 'py-4 px-6', className)}
       onClick={() => excelDownload(csvData, fileName, headers, xlsxHeader, wscols)}
       aria-label='Click to download the data as xlsx'
     >

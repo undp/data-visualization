@@ -1,5 +1,6 @@
 import { Button } from '@undp/design-system-react/Button';
 import { JSX } from 'react';
+import { cn } from '@undp/design-system-react/cn';
 
 import { svgDownload } from '@/Utils/svgDownload';
 import { ImageDown } from '@/Components/Icons';
@@ -30,7 +31,7 @@ export function SVGDownloadButton(props: Props) {
   return (
     <Button
       variant={buttonType}
-      className={`undp-viz-download-button ${buttonSmall ? 'p-2' : 'py-4 px-6'} ${className}`}
+      className={cn('undp-viz-download-button', buttonSmall ? 'p-2' : 'py-4 px-6', className)}
       onClick={() => {
         if (typeof nodeID === 'string') {
           if (document.getElementById(nodeID)) {

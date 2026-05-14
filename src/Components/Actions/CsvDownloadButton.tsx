@@ -1,6 +1,7 @@
 import { CSVLink } from 'react-csv';
 import { Button } from '@undp/design-system-react/Button';
 import { JSX } from 'react';
+import { cn } from '@undp/design-system-react/cn';
 
 import { FileDown } from '@/Components/Icons';
 
@@ -70,9 +71,11 @@ export function CsvDownloadButton(props: Props) {
     >
       <Button
         variant={buttonType}
-        className={`undp-viz-download-button no-underline ${
-          buttonSmall ? 'p-2' : 'py-4 px-6'
-        } ${className} border border-primary-gray-400 dark:border-primary-gray-550`}
+        className={cn(
+          'undp-viz-download-button no-underline border border-primary-gray-400 dark:border-primary-gray-550',
+          buttonSmall ? 'p-2' : 'py-4 px-6',
+          className,
+        )}
       >
         {buttonContent || <FileDown />}
       </Button>

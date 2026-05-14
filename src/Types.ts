@@ -1049,6 +1049,7 @@ export interface GraphSettingsDataType {
   lineNumberDisplayOptions?: NumberFormatOptions;
   xNumberDisplayOptions?: NumberFormatOptions;
   yNumberDisplayOptions?: NumberFormatOptions;
+  defaultColor?: string;
 }
 
 export interface InfoBoxDataType {

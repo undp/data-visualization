@@ -319,7 +319,7 @@ export function BiVariateChoroplethMap(props: Props) {
       relativeHeight={relativeHeight}
       padding={padding}
     >
-      {graphTitle || graphDescription || graphDownload || dataDownload ? (
+      {graphTitle || graphDescription ? (
         <GraphHeader
           styles={{
             title: styles?.title,
@@ -332,14 +332,6 @@ export function BiVariateChoroplethMap(props: Props) {
           graphTitle={graphTitle}
           graphDescription={graphDescription}
           width={width}
-          graphDownload={graphDownload ? graphParentDiv : undefined}
-          dataDownload={
-            dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
-              : null
-          }
         />
       ) : null}
       {timeline.enabled && uniqDatesSorted.length > 0 && markObj ? (
@@ -443,6 +435,14 @@ export function BiVariateChoroplethMap(props: Props) {
             rewindCoordinatesInMapData={rewindCoordinatesInMapData}
             xNumberDisplayOptions={xNumberDisplayOptions}
             yNumberDisplayOptions={yNumberDisplayOptions}
+            graphDownload={graphDownload ? graphParentDiv : undefined}
+            dataDownload={
+              dataDownload
+                ? data.map(d => d.data).filter(d => d !== undefined).length > 0
+                  ? data.map(d => d.data).filter(d => d !== undefined)
+                  : data.filter(d => d !== undefined)
+                : null
+            }
           />
         ) : (
           <div
