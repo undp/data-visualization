@@ -222,7 +222,7 @@ export default defineConfig({
         'pmtiles',
         '@dnd-kit/core',
         '@dnd-kit/modifiers',
-        '@undp/design-system-react',
+        /^@undp\/design-system-react(\/.*)?/,
         'dom-to-svg',
         'tailwindcss-animate',
         'tailwind-merge',
