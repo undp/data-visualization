@@ -187,17 +187,12 @@ const entries = {
 
 export default defineConfig({
   plugins: [
-    react({
-      babel: {
-        plugins: ['babel-plugin-react-compiler'],
-      },
-    }),
+    react(),
     eslint(),
     tailwindcss(),
     dts({
       include: ['src/'],
       exclude: ['**/*.mdx', '**/*.test.tsx', 'stories'],
-      rollupTypes: true,
     }),
     visualizer({ filename: 'stats.html', open: true }),
   ],
