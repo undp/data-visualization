@@ -1,15 +1,14 @@
-import { useRef, useEffect, useState } from 'react';
 import maplibreGl from 'maplibre-gl';
 import * as pmtiles from 'pmtiles';
+import { useEffect, useRef, useState } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { select } from 'd3-selection';
 import React from 'react';
-
-import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
-import { filterData } from '@/Utils/transformData/filterData';
-import { ExpandIcon, X } from '@/Components/Icons';
-import { string2HTML } from '@/Utils/string2HTML';
 import { GraphArea } from '@/Components/Elements/GraphContainer';
+import { ExpandIcon, X } from '@/Components/Icons';
+import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { string2HTML } from '@/Utils/string2HTML';
+import { filterData } from '@/Utils/transformData/filterData';
 
 interface Props {
   mapStyle: string;
@@ -28,10 +27,10 @@ export function GeoHubMultipleMap(props: Props) {
   const [showLegend, setShowLegend] = useState(true);
   const graphDiv = useRef<HTMLDivElement>(null);
   const mapContainer = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const mapRef = useRef<any>(null);
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -42,14 +41,14 @@ export function GeoHubMultipleMap(props: Props) {
   }, []);
   useEffect(() => {
     if (mapContainer.current && svgWidth && !mapRef.current) {
-      fetchAndParseJSON(mapStyle).then(d => {
+      fetchAndParseJSON(mapStyle).then((d) => {
         const mapDiv = select(mapContainer.current);
         mapDiv.selectAll('div').remove();
         const protocol = new pmtiles.Protocol();
         maplibreGl.addProtocol('pmtiles', protocol.tile);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         const mapObj: any = {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           container: mapContainer.current as any,
           style:
             includeLayers.length === 0 && excludeLayers.length === 0
@@ -87,8 +86,8 @@ export function GeoHubMultipleMap(props: Props) {
   }, [svgWidth, center, zoomLevel, includeLayers, excludeLayers, mapStyle]);
   useEffect(() => {
     if (mapRef.current) {
-      fetchAndParseJSON(mapStyle).then(d => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fetchAndParseJSON(mapStyle).then((d) => {
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         const mapStyleObj: any = {
           ...d,
           layers: filterData(d.layers, [
@@ -121,16 +120,24 @@ export function GeoHubMultipleMap(props: Props) {
             <div className='absolute left-[22px] bottom-13'>
               {showLegend ? (
                 <>
-                  <div
+                  <button
+                    type='button'
                     className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
                     onClick={() => {
                       setShowLegend(false);
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        setShowLegend(false);
+                      }
+                    }}
                   >
                     <X />
-                  </div>
+                  </button>
                   <div
                     className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
+                    // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
                     dangerouslySetInnerHTML={
                       typeof mapLegend === 'string' ? { __html: string2HTML(mapLegend) } : undefined
                     }

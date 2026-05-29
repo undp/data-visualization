@@ -1,17 +1,17 @@
 import flattenDeep from 'lodash.flattendeep';
 import intersection from 'lodash.intersection';
 
-import { DataFilterDataType } from '@/Types';
+import type { DataFilterDataType } from '@/Types';
 
 export function filterData(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data: any,
   filters: DataFilterDataType[],
 ) {
   if (filters.length === 0) return data;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const filteredDataWithIncludeValue = data.filter((item: any) =>
-    filters.every(filter => {
+    filters.every((filter) => {
       return filter.includeValues
         ? filter.includeValues.length > 0
           ? intersection(flattenDeep([item[filter.column]]), filter.includeValues).length > 0
@@ -20,9 +20,9 @@ export function filterData(
     }),
   );
   const filteredDataWithExcludeValue = filteredDataWithIncludeValue.filter(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     (item: any) =>
-      filters.every(filter => {
+      filters.every((filter) => {
         return filter.excludeValues
           ? filter.excludeValues.length > 0
             ? intersection(flattenDeep([item[filter.column]]), filter.excludeValues).length === 0

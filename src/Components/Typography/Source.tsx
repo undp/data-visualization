@@ -1,8 +1,8 @@
-import { A, P } from '@undp/design-system-react/Typography';
 import { cn } from '@undp/design-system-react/cn';
 import { Spacer } from '@undp/design-system-react/Spacer';
+import { A, P } from '@undp/design-system-react/Typography';
 
-import { SourcesDataType } from '@/Types';
+import type { SourcesDataType } from '@/Types';
 
 interface SourceProps {
   sources: SourcesDataType[];
@@ -22,9 +22,9 @@ export function Source(props: SourceProps) {
         style={style}
       >
         Source:{' '}
-        {sources.map((d, i) => (
+        {sources.map((d) => (
           <span
-            key={i}
+            key={d.source}
             className={cn('text-primary-gray-550 dark:text-primary-gray-400', className)}
             style={{ fontFamily: 'inherit' }}
           >

@@ -28,7 +28,7 @@ interface WsColInterface {
  */
 
 export const excelDownload = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any,
   fileName: string,
   headers: string[],

@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import isEqual from 'fast-deep-equal';
-import { pie } from 'd3-shape';
-import { isValidElement, ReactElement, useRef, useState } from 'react';
 import { H2, P } from '@undp/design-system-react/Typography';
+import { pie } from 'd3-shape';
+import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import { AnimateDataType, ClassNameObject, DonutChartDataType, StyleObject } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
+import { isValidElement, type ReactElement, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type { AnimateDataType, ClassNameObject, DonutChartDataType, StyleObject } from '@/Types';
 import { getArc } from '@/Utils/getArc';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   mainText?:
@@ -29,11 +27,15 @@ interface Props {
   subNote?: string;
   strokeWidth: number;
   data: DonutChartDataType[];
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   colorDomain: string[];
   resetSelectionOnDoubleClick: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -70,10 +72,11 @@ export function Graph(props: Props) {
   const pieData = pie()
     .sort(null)
     .startAngle(0)
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     .value((d: any) => d.size);
-
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -106,9 +109,9 @@ export function Graph(props: Props) {
                     >
                       {typeof mainText === 'string'
                         ? mainText
-                        : data.findIndex(d => d.label === mainText.label) !== -1
+                        : data.findIndex((d) => d.label === mainText.label) !== -1
                           ? numberFormattingFunction(
-                              data[data.findIndex(d => d.label === mainText.label)].size,
+                              data[data.findIndex((d) => d.label === mainText.label)].size,
                               naLabel,
                               mainText.precision,
                               mainText.prefix,
@@ -151,8 +154,10 @@ export function Graph(props: Props) {
             strokeWidth={strokeWidth}
           />
           <AnimatePresence>
+            {/* biome-ignore lint/suspicious/noExplicitAny: undefined data type */}
             {pieData(data as any).map((d, i) => (
               <motion.path
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={i}
                 variants={{
                   initial: {
@@ -165,7 +170,8 @@ export function Graph(props: Props) {
                       d.endAngle - Math.PI / 2,
                     ),
                     opacity: mouseOverData
-                      ? mouseOverData.label === (d.data as any).label
+                      ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                        mouseOverData.label === (d.data as any).label
                         ? 1
                         : 0.3
                       : 1,
@@ -180,7 +186,8 @@ export function Graph(props: Props) {
                       d.endAngle - Math.PI / 2,
                     ),
                     opacity: mouseOverData
-                      ? mouseOverData.label === (d.data as any).label
+                      ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                        mouseOverData.label === (d.data as any).label
                         ? 1
                         : 0.3
                       : 1,
@@ -192,13 +199,15 @@ export function Graph(props: Props) {
                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 style={{
                   stroke:
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     colorDomain.indexOf((d.data as any).label) !== -1
-                      ? colors[colorDomain.indexOf((d.data as any).label) % colors.length]
+                      ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                        colors[colorDomain.indexOf((d.data as any).label) % colors.length]
                       : Colors.gray,
                   strokeWidth,
                   fill: 'none',
                 }}
-                onMouseEnter={event => {
+                onMouseEnter={(event) => {
                   setMouseOverData(d.data);
                   setEventY(event.clientY);
                   setEventX(event.clientX);
@@ -215,7 +224,7 @@ export function Graph(props: Props) {
                     }
                   }
                 }}
-                onMouseMove={event => {
+                onMouseMove={(event) => {
                   setMouseOverData(d.data);
                   setEventY(event.clientY);
                   setEventX(event.clientX);

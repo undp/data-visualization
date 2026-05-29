@@ -1,13 +1,12 @@
 import { P } from '@undp/design-system-react/Typography';
-
-import { ThreeDGlobe } from '../../Graphs/Maps/ThreeDGlobe';
+import type { GraphConfigurationDataType, GraphSettingsDataType, ThreeDGraphType } from '@/Types';
 
 import { getValues } from '@/Utils/getValues';
-import { GraphConfigurationDataType, GraphSettingsDataType, ThreeDGraphType } from '@/Types';
+import { ThreeDGlobe } from '../../Graphs/Maps/ThreeDGlobe';
 
 interface Props {
   graph: ThreeDGraphType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   graphData: any;
   settings?: GraphSettingsDataType;
   debugMode?: boolean;
@@ -30,11 +29,11 @@ function ThreeDGraphEl(props: Props) {
     updateFilters,
   } = props;
   if (debugMode) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log(`Graph: ${graph}`);
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Transformed data:', graphData);
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Settings:', settings);
   }
   if (typeof graphData === 'string')
@@ -98,7 +97,7 @@ function ThreeDGraphEl(props: Props) {
           language: settings?.language,
           minHeight: settings?.minHeight,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.id);
           },

@@ -1,10 +1,18 @@
-import isEqual from 'fast-deep-equal';
-import { scaleLinear, scaleBand } from 'd3-scale';
-import { useMemo, useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
+import { scaleBand, scaleLinear } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import {
+import { useMemo, useRef, useState } from 'react';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
+import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
+import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
+import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -12,17 +20,8 @@ import {
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
-import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
-import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
-import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
-import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: DumbbellChartDataType[];
@@ -38,9 +37,9 @@ interface Props {
   height: number;
   radius: number;
   showLabels: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   maxValue: number;
   minValue: number;
@@ -48,14 +47,14 @@ interface Props {
   prefix: string;
   showValues: boolean;
   selectedColor?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   arrowConnector: boolean;
   connectorStrokeWidth: number;
   maxBarThickness?: number;
   minBarThickness?: number;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   axisTitle?: string;
   noOfTicks: number;
@@ -134,9 +133,9 @@ export function VerticalGraph(props: Props) {
   };
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -150,11 +149,11 @@ export function VerticalGraph(props: Props) {
       return { ...d, id };
     });
 
-    const missingIds = labelOrder ? labelOrder.filter(id => !idSet.has(id)) : [];
+    const missingIds = labelOrder ? labelOrder.filter((id) => !idSet.has(id)) : [];
 
     return [
       ...dataWithIdWithoutMissingIds,
-      ...missingIds.map(id => ({
+      ...missingIds.map((id) => ({
         id,
         label: id,
         x: Array(data[0].x.length).fill(null),
@@ -163,7 +162,7 @@ export function VerticalGraph(props: Props) {
   }, [data, labelOrder]);
 
   const barOrder = useMemo(() => {
-    return labelOrder ?? dataWithId.map(d => `${d.id}`);
+    return labelOrder ?? dataWithId.map((d) => `${d.id}`);
   }, [labelOrder, dataWithId]);
 
   const y = scaleLinear().domain([minValue, maxValue]).range([graphHeight, 0]).nice();
@@ -241,8 +240,8 @@ export function VerticalGraph(props: Props) {
           />
           {showTicks ? (
             <YTicksAndGridLines
-              values={yTicks.filter(d => d !== 0)}
-              y={yTicks.filter(d => d !== 0).map(d => y(d))}
+              values={yTicks.filter((d) => d !== 0)}
+              y={yTicks.filter((d) => d !== 0).map((d) => y(d))}
               x1={0 - leftMargin}
               x2={graphWidth + margin.right}
               styles={{
@@ -271,9 +270,9 @@ export function VerticalGraph(props: Props) {
             text={axisTitle}
             rotate90
           />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
-            {dataWithId.map(d => (
+            {dataWithId.map((d) => (
               <motion.g
                 className='undp-viz-g-with-hover'
                 key={d.label}
@@ -333,13 +332,14 @@ export function VerticalGraph(props: Props) {
                     classNames?.dataConnectors,
                   )}
                   markerEnd={
-                    arrowConnector && d.x.indexOf(Math.min(...d.x.filter(el => el !== null))) === 0
+                    arrowConnector &&
+                    d.x.indexOf(Math.min(...d.x.filter((el) => el !== null))) === 0
                       ? 'url(#arrow)'
                       : ''
                   }
                   markerStart={
                     arrowConnector &&
-                    d.x.indexOf(Math.min(...d.x.filter(el => el !== null))) === d.x.length - 1
+                    d.x.indexOf(Math.min(...d.x.filter((el) => el !== null))) === d.x.length - 1
                       ? 'url(#arrow)'
                       : ''
                   }
@@ -350,8 +350,8 @@ export function VerticalGraph(props: Props) {
                       y2: 0,
                     },
                     whileInView: {
-                      y1: y(Math.min(...d.x.filter(el => el !== null))) + radius,
-                      y2: y(Math.max(...d.x.filter(el => el !== null))) - radius,
+                      y1: y(Math.min(...d.x.filter((el) => el !== null))) + radius,
+                      y2: y(Math.max(...d.x.filter((el) => el !== null))) - radius,
                       transition: { duration: animate.duration },
                     },
                   }}
@@ -360,8 +360,9 @@ export function VerticalGraph(props: Props) {
                 />
                 {d.x.map((el, j) => (
                   <motion.g
+                    // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                     key={j}
-                    onMouseEnter={event => {
+                    onMouseEnter={(event) => {
                       setMouseOverData({ ...d, xIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -381,7 +382,7 @@ export function VerticalGraph(props: Props) {
                         }
                       }
                     }}
-                    onMouseMove={event => {
+                    onMouseMove={(event) => {
                       setMouseOverData({ ...d, xIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -472,26 +473,22 @@ export function VerticalGraph(props: Props) {
                 ))}
               </motion.g>
             ))}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineY
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    y={y(el.value as number)}
-                    x1={0 - leftMargin}
-                    x2={graphWidth + margin.right}
-                    classNames={el.classNames}
-                    styles={el.styles}
-                    animate={animate}
-                    isInView={isInView}
-                  />
-                ))}
-              </>
-            ) : null}
+            {refValues?.map((el) => (
+              <RefLineY
+                key={el.text}
+                text={el.text}
+                color={el.color}
+                y={y(el.value as number)}
+                x1={0 - leftMargin}
+                x2={graphWidth + margin.right}
+                classNames={el.classNames}
+                styles={el.styles}
+                animate={animate}
+                isInView={isInView}
+              />
+            ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
@@ -575,9 +572,9 @@ export function HorizontalGraph(props: Props) {
   };
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -591,11 +588,11 @@ export function HorizontalGraph(props: Props) {
       return { ...d, id };
     });
 
-    const missingIds = labelOrder ? labelOrder.filter(id => !idSet.has(id)) : [];
+    const missingIds = labelOrder ? labelOrder.filter((id) => !idSet.has(id)) : [];
 
     return [
       ...dataWithIdWithoutMissingIds,
-      ...missingIds.map(id => ({
+      ...missingIds.map((id) => ({
         id,
         label: id,
         x: Array(data[0].x.length).fill(null),
@@ -604,7 +601,7 @@ export function HorizontalGraph(props: Props) {
   }, [data, labelOrder]);
 
   const barOrder = useMemo(() => {
-    return labelOrder ?? dataWithId.map(d => `${d.id}`);
+    return labelOrder ?? dataWithId.map((d) => `${d.id}`);
   }, [labelOrder, dataWithId]);
 
   const x = scaleLinear().domain([minValue, maxValue]).range([0, graphWidth]).nice();
@@ -652,7 +649,7 @@ export function HorizontalGraph(props: Props) {
           {showTicks ? (
             <XTicksAndGridLines
               values={xTicks.filter((_d, i) => i !== 0)}
-              x={xTicks.filter((_d, i) => i !== 0).map(d => x(d))}
+              x={xTicks.filter((_d, i) => i !== 0).map((d) => x(d))}
               y1={0 - topMargin}
               y2={graphHeight + margin.bottom}
               styles={{
@@ -680,7 +677,7 @@ export function HorizontalGraph(props: Props) {
             text={axisTitle}
           />
           <YTicksAndGridLines
-            y={dataWithId.map(d => (y(`${d.id}`) as number) + y.bandwidth() / 2)}
+            y={dataWithId.map((d) => (y(`${d.id}`) as number) + y.bandwidth() / 2)}
             x1={0}
             x2={graphWidth}
             styles={{ gridLines: styles?.yAxis?.gridLines }}
@@ -692,9 +689,9 @@ export function HorizontalGraph(props: Props) {
             locale={locale}
             padZeros={padZeros}
           />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
-            {dataWithId.map(d => (
+            {dataWithId.map((d) => (
               <motion.g
                 className='undp-viz-g-with-hover'
                 key={d.label}
@@ -755,13 +752,13 @@ export function HorizontalGraph(props: Props) {
                   )}
                   markerEnd={
                     arrowConnector &&
-                    d.x.indexOf(Math.min(...d.x.filter(el => el !== null)) as number) === 0
+                    d.x.indexOf(Math.min(...d.x.filter((el) => el !== null)) as number) === 0
                       ? 'url(#arrow)'
                       : ''
                   }
                   markerStart={
                     arrowConnector &&
-                    d.x.indexOf(Math.min(...d.x.filter(el => el !== null)) as number) ===
+                    d.x.indexOf(Math.min(...d.x.filter((el) => el !== null)) as number) ===
                       d.x.length - 1
                       ? 'url(#arrow)'
                       : ''
@@ -773,8 +770,8 @@ export function HorizontalGraph(props: Props) {
                       x2: 0,
                     },
                     whileInView: {
-                      x1: x(Math.min(...d.x.filter(el => el !== null))) + radius,
-                      x2: x(Math.max(...d.x.filter(el => el !== null)) as number) - radius,
+                      x1: x(Math.min(...d.x.filter((el) => el !== null))) + radius,
+                      x2: x(Math.max(...d.x.filter((el) => el !== null)) as number) - radius,
                       transition: { duration: animate.duration },
                     },
                   }}
@@ -783,8 +780,9 @@ export function HorizontalGraph(props: Props) {
                 />
                 {d.x.map((el, j) => (
                   <motion.g
+                    // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                     key={j}
-                    onMouseEnter={event => {
+                    onMouseEnter={(event) => {
                       setMouseOverData({ ...d, xIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -804,7 +802,7 @@ export function HorizontalGraph(props: Props) {
                         }
                       }
                     }}
-                    onMouseMove={event => {
+                    onMouseMove={(event) => {
                       setMouseOverData({ ...d, xIndex: j });
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -896,27 +894,23 @@ export function HorizontalGraph(props: Props) {
                 ))}
               </motion.g>
             ))}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineX
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    x={x(el.value as number)}
-                    y1={0 - margin.top}
-                    y2={graphHeight + margin.bottom}
-                    textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-                    classNames={el.classNames}
-                    styles={el.styles}
-                    animate={animate}
-                    isInView={isInView}
-                  />
-                ))}
-              </>
-            ) : null}
+            {refValues?.map((el) => (
+              <RefLineX
+                key={el.text}
+                text={el.text}
+                color={el.color}
+                x={x(el.value as number)}
+                y1={0 - margin.top}
+                y2={graphHeight + margin.bottom}
+                textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                classNames={el.classNames}
+                styles={el.styles}
+                animate={animate}
+                isInView={isInView}
+              />
+            ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

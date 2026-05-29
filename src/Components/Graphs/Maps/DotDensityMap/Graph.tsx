@@ -1,5 +1,8 @@
-import isEqual from 'fast-deep-equal';
-import { RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import bbox from '@turf/bbox';
+import centerOfMass from '@turf/center-of-mass';
+import rewind from '@turf/rewind';
+import { cn } from '@undp/design-system-react/cn';
+import { P } from '@undp/design-system-react/Typography';
 import {
   geoAlbersUsa,
   geoEqualEarth,
@@ -8,18 +11,20 @@ import {
   geoOrthographic,
   geoPath,
 } from 'd3-geo';
-import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
-import { select } from 'd3-selection';
 import { scaleSqrt } from 'd3-scale';
-import { P } from '@undp/design-system-react/Typography';
-import bbox from '@turf/bbox';
-import centerOfMass from '@turf/center-of-mass';
+import { select } from 'd3-selection';
+import { type D3ZoomEvent, type ZoomBehavior, zoom } from 'd3-zoom';
+import isEqual from 'fast-deep-equal';
+import type { FeatureCollection } from 'geojson';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-import { cn } from '@undp/design-system-react/cn';
-import rewind from '@turf/rewind';
-import { FeatureCollection } from 'geojson';
-
-import {
+import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
+import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
+import { Colors } from '@/Components/ColorPalette';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import { ExpandIcon, X } from '@/Components/Icons';
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -28,12 +33,6 @@ import {
   StyleObject,
   ZoomInteractionTypes,
 } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { Colors } from '@/Components/ColorPalette';
-import { ExpandIcon, X } from '@/Components/Icons';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
-import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
-import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 
 interface Props {
   data: DotDensityMapDataType[];
@@ -51,19 +50,19 @@ interface Props {
   mapNoDataColor: string;
   showLabels: boolean;
   mapBorderColor: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   isWorldMap: boolean;
   showColorScale: boolean;
   zoomScaleExtend: [number, number];
   zoomTranslateExtend?: [[number, number], [number, number]];
   highlightedDataPoints?: (string | number)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -80,7 +79,7 @@ interface Props {
   overlayMapBorderColor?: string;
   overlayMapBorderWidth?: number;
   graphDownload?: RefObject<HTMLDivElement | null>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   dataDownload: any;
 }
 
@@ -143,9 +142,9 @@ export function Graph(props: Props) {
   );
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -156,7 +155,7 @@ export function Graph(props: Props) {
   });
   const mapG = useRef<SVGGElement>(null);
   const radiusScale =
-    data.filter(d => d.radius === undefined || d.radius === null).length !== data.length
+    data.filter((d) => d.radius === undefined || d.radius === null).length !== data.length
       ? scaleSqrt().domain([0, maxRadiusValue]).range([0.25, radius]).nice()
       : undefined;
 
@@ -190,11 +189,10 @@ export function Graph(props: Props) {
         mapGSelect.attr('transform', transform);
       });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     mapSvgSelect.call(zoomBehavior as any);
 
     zoomRef.current = zoomBehavior;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [height, width, zoomInteraction]);
 
   const bounds = bbox(formattedMapData);
@@ -255,13 +253,14 @@ export function Graph(props: Props) {
           direction='ltr'
         >
           <g ref={mapG}>
-            {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+            {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
             {formattedMapData.features.map((d, i: number) => {
               const path = pathGenerator(d);
               if (!path) return null;
               return (
                 <path
                   d={path}
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                   key={i}
                   style={{
                     stroke: mapBorderColor,
@@ -276,6 +275,7 @@ export function Graph(props: Props) {
               const path = pathGenerator(d);
               if (!path) return null;
               return (
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 <g key={i}>
                   <path
                     d={path}
@@ -291,9 +291,9 @@ export function Graph(props: Props) {
               );
             })}
             <AnimatePresence>
-              {data.map(d => {
+              {data.map((d) => {
                 const color =
-                  data.filter(el => el.color).length === 0
+                  data.filter((el) => el.color).length === 0
                     ? colors[0]
                     : !d.color
                       ? Colors.gray
@@ -320,13 +320,13 @@ export function Graph(props: Props) {
                     initial='initial'
                     animate={isInView ? 'whileInView' : 'initial'}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    onMouseEnter={event => {
+                    onMouseEnter={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
                       onSeriesMouseOver?.(d);
                     }}
-                    onMouseMove={event => {
+                    onMouseMove={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -359,13 +359,13 @@ export function Graph(props: Props) {
                         initial: {
                           r: 0,
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
                                 : colors[colorDomain.indexOf(`${d.color}`)],
                           stroke:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -374,13 +374,13 @@ export function Graph(props: Props) {
                         whileInView: {
                           r: !radiusScale ? radius : radiusScale(d.radius || 0),
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
                                 : colors[colorDomain.indexOf(`${d.color}`)],
                           stroke:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -403,7 +403,7 @@ export function Graph(props: Props) {
                             opacity: 0,
                             x: !radiusScale ? radius : radiusScale(d.radius || 0),
                             fill:
-                              data.filter(el => el.color).length === 0
+                              data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -414,7 +414,7 @@ export function Graph(props: Props) {
                             x: !radiusScale ? radius : radiusScale(d.radius || 0),
                             transition: { duration: animate.duration },
                             fill:
-                              data.filter(el => el.color).length === 0
+                              data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -441,21 +441,22 @@ export function Graph(props: Props) {
                 );
               })}
             </AnimatePresence>
-            {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+            {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           </g>
         </motion.svg>
-        {data.filter(el => el.color).length === 0 || showColorScale === false ? null : (
+        {data.filter((el) => el.color).length === 0 || showColorScale === false ? null : (
           <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
             {showLegend ? (
               <>
-                <div
+                <button
+                  type='button'
                   className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
                   onClick={() => {
                     setShowLegend(false);
                   }}
                 >
                   <X />
-                </div>
+                </button>
                 <div className='p-2' style={{ backgroundColor: 'rgba(240,240,240, 0.7)' }}>
                   {colorLegendTitle && colorLegendTitle !== '' ? (
                     <p
@@ -471,10 +472,15 @@ export function Graph(props: Props) {
                   ) : null}
                   <div className='flex flex-col gap-3'>
                     {colorDomain.map((d, i) => (
+                      // biome-ignore lint/a11y/noStaticElementInteractions: interaction for color legend
                       <div
+                        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                         key={i}
                         className='flex gap-2 items-center'
                         onMouseOver={() => {
+                          setSelectedColor(colors[i % colors.length]);
+                        }}
+                        onFocus={() => {
                           setSelectedColor(colors[i % colors.length]);
                         }}
                         onMouseLeave={() => {
@@ -509,12 +515,14 @@ export function Graph(props: Props) {
         {zoomInteraction === 'button' && (
           <div className='absolute left-4 top-4 flex flex-col undp-viz-zoom-buttons'>
             <button
+              type='button'
               onClick={() => handleZoom('in')}
               className='leading-0 px-2 py-3.5 text-primary-gray-700 border border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'
             >
               +
             </button>
             <button
+              type='button'
               onClick={() => handleZoom('out')}
               className='leading-0 px-2 py-3.5 text-primary-gray-700 border border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'
             >
@@ -531,7 +539,7 @@ export function Graph(props: Props) {
               <CsvDownloadButton
                 csvData={dataDownload}
                 buttonSmall
-                headers={Object.keys(dataDownload[0]).map(d => ({
+                headers={Object.keys(dataDownload[0]).map((d) => ({
                   label: d,
                   key: d,
                 }))}

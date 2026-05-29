@@ -1,5 +1,5 @@
-import * as ss from 'simple-statistics';
 import { format } from 'd3-format';
+import * as ss from 'simple-statistics';
 
 import { padNumberArray } from './padArray';
 
@@ -19,14 +19,14 @@ import { padNumberArray } from './padArray';
  */
 
 export function getJenks(data: (number | null | undefined)[], noOfSteps: number) {
-  const d1 = data.filter(d => d != null && d !== undefined).sort((a, b) => a - b);
+  const d1 = data.filter((d) => d != null && d !== undefined).sort((a, b) => a - b);
   const bins =
     [...new Set(d1)].length < noOfSteps
       ? padNumberArray(d1, noOfSteps).slice(1, -1)
       : ss.jenks(d1, noOfSteps).slice(1, -1);
-  const valueArray = bins.map(d => {
+  const valueArray = bins.map((d) => {
     const formattedValue = parseFloat(format('.2r')(d));
-    if (isNaN(formattedValue)) {
+    if (Number.isNaN(formattedValue)) {
       if (d < -1) return Math.round(d);
       return d;
     }

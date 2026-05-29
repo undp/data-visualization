@@ -1,22 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+import { cn } from '@undp/design-system-react/cn';
+import { bisectCenter } from 'd3-array';
+import { scaleLinear, scaleTime } from 'd3-scale';
+import { pointer, select } from 'd3-selection';
 import {
-  line,
-  curveMonotoneX,
   curveLinear,
+  curveMonotoneX,
   curveStep,
   curveStepAfter,
   curveStepBefore,
+  line,
 } from 'd3-shape';
-import { scaleLinear, scaleTime } from 'd3-scale';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
-import { bisectCenter } from 'd3-array';
-import { pointer, select } from 'd3-selection';
-import { motion, useInView } from 'motion/react';
-import { cn } from '@undp/design-system-react/cn';
 import orderBy from 'lodash.orderby';
-
-import {
+import { motion, useInView } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
+import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { HighlightArea } from '@/Components/Elements/HighlightArea';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CurveTypes,
@@ -26,13 +30,8 @@ import {
   NumberFormatOptions,
   StyleObject,
 } from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
-import { HighlightArea } from '@/Components/Elements/HighlightArea';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: DualAxisLineChartDataType[];
@@ -49,9 +48,9 @@ interface Props {
   bottomMargin: number;
   sameAxes: boolean;
   highlightAreaSettings: HighlightAreaSettingsDataType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   animate: AnimateDataType;
   strokeWidth: number;
@@ -136,7 +135,7 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -148,14 +147,14 @@ export function Graph(props: Props) {
   };
   const MouseoverRectRef = useRef(null);
   const dataFormatted = orderBy(
-    data.map(d => ({
+    data.map((d) => ({
       ...d,
       date: parse(`${d.date}`, dateFormat, new Date()),
     })),
     ['date'],
     ['asc'],
   );
-  const highlightAreaSettingsFormatted = highlightAreaSettings.map(d => ({
+  const highlightAreaSettingsFormatted = highlightAreaSettings.map((d) => ({
     ...d,
     coordinates: [
       d.coordinates[0] === null ? null : parse(`${d.coordinates[0]}`, dateFormat, new Date()),
@@ -169,28 +168,28 @@ export function Graph(props: Props) {
     ? parse(`${maxDate}`, dateFormat, new Date())
     : dataFormatted[dataFormatted.length - 1].date;
   const minParam1 =
-    Math.min(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null)) !==
+    Math.min(...dataFormatted.map((d) => d.y1).filter((d) => d !== undefined && d !== null)) !==
     Infinity
-      ? Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) > 0
+      ? Math.min(...dataFormatted.map((d) => d.y2).filter((d) => d !== undefined && d !== null)) > 0
         ? 0
-        : Math.min(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null))
+        : Math.min(...dataFormatted.map((d) => d.y1).filter((d) => d !== undefined && d !== null))
       : 0;
   const minParam2 =
-    Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) !==
+    Math.min(...dataFormatted.map((d) => d.y2).filter((d) => d !== undefined && d !== null)) !==
     Infinity
-      ? Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) > 0
+      ? Math.min(...dataFormatted.map((d) => d.y2).filter((d) => d !== undefined && d !== null)) > 0
         ? 0
-        : Math.min(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null))
+        : Math.min(...dataFormatted.map((d) => d.y2).filter((d) => d !== undefined && d !== null))
       : 0;
   const maxParam1 =
-    Math.max(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null)) !==
+    Math.max(...dataFormatted.map((d) => d.y1).filter((d) => d !== undefined && d !== null)) !==
     Infinity
-      ? Math.max(...dataFormatted.map(d => d.y1).filter(d => d !== undefined && d !== null))
+      ? Math.max(...dataFormatted.map((d) => d.y1).filter((d) => d !== undefined && d !== null))
       : 0;
   const maxParam2 =
-    Math.max(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null)) !==
+    Math.max(...dataFormatted.map((d) => d.y2).filter((d) => d !== undefined && d !== null)) !==
     Infinity
-      ? Math.max(...dataFormatted.map(d => d.y2).filter(d => d !== undefined && d !== null))
+      ? Math.max(...dataFormatted.map((d) => d.y2).filter((d) => d !== undefined && d !== null))
       : 0;
 
   const minParam = minParam1 < minParam2 ? minParam1 : minParam2;
@@ -213,26 +212,26 @@ export function Graph(props: Props) {
     .nice();
 
   const lineShape1 = line<FormattedDataType>()
-    .defined(d => !checkIfNullOrUndefined(d.y1))
-    .x(d => x(d.date))
-    .y(d => y1(d.y1))
+    .defined((d) => !checkIfNullOrUndefined(d.y1))
+    .x((d) => x(d.date))
+    .y((d) => y1(d.y1))
     .curve(curve);
 
   const lineShape2 = line<FormattedDataType>()
-    .defined(d => !checkIfNullOrUndefined(d.y2))
-    .x(d => x(d.date))
-    .y(d => y2(d.y2))
+    .defined((d) => !checkIfNullOrUndefined(d.y2))
+    .x((d) => x(d.date))
+    .y((d) => y2(d.y2))
     .curve(curve);
   const y1Ticks = y1.ticks(noOfYTicks);
   const y2Ticks = y2.ticks(noOfYTicks);
   const xTicks = x.ticks(noOfXTicks);
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const mousemove = (event: any) => {
       const selectedData =
         dataFormatted[
           bisectCenter(
-            dataFormatted.map(d => d.date),
+            dataFormatted.map((d) => d.date),
             x.invert(pointer(event)[0]),
             0,
           )
@@ -271,6 +270,7 @@ export function Graph(props: Props) {
           />
           <g>
             {y1Ticks.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <g key={i}>
                 <line
                   y1={y1(d)}
@@ -329,6 +329,7 @@ export function Graph(props: Props) {
           </g>
           <g>
             {y2Ticks.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <g key={i}>
                 <line
                   y1={y2(d)}
@@ -395,8 +396,8 @@ export function Graph(props: Props) {
               styles={{ axis: styles?.xAxis?.axis }}
             />
             <XTicksAndGridLines
-              values={xTicks.map(d => format(d, dateFormat))}
-              x={xTicks.map(d => x(d))}
+              values={xTicks.map((d) => format(d, dateFormat))}
+              x={xTicks.map((d) => x(d))}
               y1={0}
               y2={graphHeight}
               styles={{
@@ -415,7 +416,7 @@ export function Graph(props: Props) {
               padZeros={false}
             />
           </g>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
             <motion.path
               style={{
@@ -506,6 +507,7 @@ export function Graph(props: Props) {
           </g>
           <g>
             {dataFormatted.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <motion.g key={i}>
                 {!checkIfNullOrUndefined(d.y1) ? (
                   <>
@@ -682,7 +684,7 @@ export function Graph(props: Props) {
               </motion.g>
             ))}
           </g>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           <rect
             ref={MouseoverRectRef}
             style={{

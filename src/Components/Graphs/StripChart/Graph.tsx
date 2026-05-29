@@ -1,23 +1,22 @@
-import isEqual from 'fast-deep-equal';
-import { useRef, useState } from 'react';
-import { scaleLinear } from 'd3-scale';
 import { cn } from '@undp/design-system-react/cn';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { scaleLinear } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import orderBy from 'lodash.orderby';
-
-import {
+import { AnimatePresence, motion, useInView } from 'motion/react';
+import { useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   StripChartDataType,
   StyleObject,
 } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Colors } from '@/Components/ColorPalette';
 import { getTickPositions } from '@/Utils/getTickPosition';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: StripChartDataType[];
@@ -32,14 +31,14 @@ interface Props {
   topMargin?: number;
   bottomMargin?: number;
   showDataMinMax: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   highlightedDataPoints?: (string | number)[];
   maxValue?: number;
   minValue?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   prefix: string;
   suffix: string;
@@ -47,7 +46,7 @@ interface Props {
   highlightColor?: string;
   dotOpacity: number;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -104,9 +103,9 @@ export function VerticalGraph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -124,7 +123,7 @@ export function VerticalGraph(props: Props) {
   const sortedData = orderBy(
     dataWithId,
     [
-      item => {
+      (item) => {
         const index = (highlightedDataPoints || []).indexOf(item.label);
         return index === -1 ? Infinity : index;
       },
@@ -133,14 +132,16 @@ export function VerticalGraph(props: Props) {
   );
   const yMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
-    : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) < 0
+    : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) <
+        0
       ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+      : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
   const yMinValue = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
-    : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) >= 0
+    : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) >=
+        0
       ? 0
-      : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+      : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
   const y = scaleLinear().domain([yMinValue, yMaxValue]).range([graphHeight, 0]).nice();
   const ticks = getTickPositions(noOfTicks, graphHeight);
   return (
@@ -153,9 +154,9 @@ export function VerticalGraph(props: Props) {
         ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
-            {sortedData.map(d => {
+            {sortedData.map((d) => {
               return (
                 <motion.g
                   className='undp-viz-g-with-hover'
@@ -186,7 +187,7 @@ export function VerticalGraph(props: Props) {
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -203,7 +204,7 @@ export function VerticalGraph(props: Props) {
                       }
                     }
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -225,12 +226,12 @@ export function VerticalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -241,12 +242,12 @@ export function VerticalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -271,12 +272,12 @@ export function VerticalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -289,12 +290,12 @@ export function VerticalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -321,12 +322,12 @@ export function VerticalGraph(props: Props) {
                               (highlightColor && highlightedDataPoints
                                 ? highlightedDataPoints.indexOf(d.label) !== -1
                                   ? highlightColor
-                                  : data.filter(el => el.color).length === 0
+                                  : data.filter((el) => el.color).length === 0
                                     ? colors[0]
                                     : !d.color
                                       ? Colors.gray
                                       : colors[colorDomain.indexOf(d.color)]
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
@@ -340,12 +341,12 @@ export function VerticalGraph(props: Props) {
                               (highlightColor && highlightedDataPoints
                                 ? highlightedDataPoints.indexOf(d.label) !== -1
                                   ? highlightColor
-                                  : data.filter(el => el.color).length === 0
+                                  : data.filter((el) => el.color).length === 0
                                     ? colors[0]
                                     : !d.color
                                       ? Colors.gray
                                       : colors[colorDomain.indexOf(d.color)]
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
@@ -383,10 +384,14 @@ export function VerticalGraph(props: Props) {
             {showDataMinMax
               ? [
                   Math.min(
-                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                    ...data
+                      .filter((d) => !checkIfNullOrUndefined(d.position))
+                      .map((d) => d.position),
                   ),
                   Math.max(
-                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                    ...data
+                      .filter((d) => !checkIfNullOrUndefined(d.position))
+                      .map((d) => d.position),
                   ),
                 ].map((d, i) => (
                   <motion.g
@@ -449,6 +454,7 @@ export function VerticalGraph(props: Props) {
               : null}
             {ticks.map((tick, i) => (
               <text
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={`tick-${i}`}
                 y={tick}
                 x={graphWidth / 2 + radius + 5}
@@ -473,7 +479,7 @@ export function VerticalGraph(props: Props) {
               </text>
             ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
@@ -541,9 +547,9 @@ export function HorizontalGraph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -561,7 +567,7 @@ export function HorizontalGraph(props: Props) {
   const sortedData = orderBy(
     dataWithId,
     [
-      item => {
+      (item) => {
         const index = (highlightedDataPoints || []).indexOf(item.label);
         return index === -1 ? Infinity : index;
       },
@@ -570,14 +576,16 @@ export function HorizontalGraph(props: Props) {
   );
   const xMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
-    : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) < 0
+    : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) <
+        0
       ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+      : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
   const xMinValue = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
-    : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) >= 0
+    : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) >=
+        0
       ? 0
-      : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+      : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
   const x = scaleLinear().domain([xMinValue, xMaxValue]).range([0, graphWidth]).nice();
   const ticks = getTickPositions(noOfTicks, graphWidth);
   return (
@@ -590,9 +598,9 @@ export function HorizontalGraph(props: Props) {
         ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
-            {sortedData.map(d => {
+            {sortedData.map((d) => {
               return (
                 <motion.g
                   className='undp-viz-g-with-hover'
@@ -623,7 +631,7 @@ export function HorizontalGraph(props: Props) {
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -640,7 +648,7 @@ export function HorizontalGraph(props: Props) {
                       }
                     }
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -662,12 +670,12 @@ export function HorizontalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -678,12 +686,12 @@ export function HorizontalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -708,12 +716,12 @@ export function HorizontalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -726,12 +734,12 @@ export function HorizontalGraph(props: Props) {
                             highlightColor && highlightedDataPoints
                               ? highlightedDataPoints.indexOf(d.label) !== -1
                                 ? highlightColor
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
                                     : colors[colorDomain.indexOf(d.color)]
-                              : data.filter(el => el.color).length === 0
+                              : data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -757,12 +765,12 @@ export function HorizontalGraph(props: Props) {
                               (highlightColor && highlightedDataPoints
                                 ? highlightedDataPoints.indexOf(d.label) !== -1
                                   ? highlightColor
-                                  : data.filter(el => el.color).length === 0
+                                  : data.filter((el) => el.color).length === 0
                                     ? colors[0]
                                     : !d.color
                                       ? Colors.gray
                                       : colors[colorDomain.indexOf(d.color)]
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
@@ -776,12 +784,12 @@ export function HorizontalGraph(props: Props) {
                               (highlightColor && highlightedDataPoints
                                 ? highlightedDataPoints.indexOf(d.label) !== -1
                                   ? highlightColor
-                                  : data.filter(el => el.color).length === 0
+                                  : data.filter((el) => el.color).length === 0
                                     ? colors[0]
                                     : !d.color
                                       ? Colors.gray
                                       : colors[colorDomain.indexOf(d.color)]
-                                : data.filter(el => el.color).length === 0
+                                : data.filter((el) => el.color).length === 0
                                   ? colors[0]
                                   : !d.color
                                     ? Colors.gray
@@ -819,10 +827,14 @@ export function HorizontalGraph(props: Props) {
             {showDataMinMax
               ? [
                   Math.min(
-                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                    ...data
+                      .filter((d) => !checkIfNullOrUndefined(d.position))
+                      .map((d) => d.position),
                   ),
                   Math.max(
-                    ...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position),
+                    ...data
+                      .filter((d) => !checkIfNullOrUndefined(d.position))
+                      .map((d) => d.position),
                   ),
                 ].map((d, i) => (
                   <motion.g
@@ -884,6 +896,7 @@ export function HorizontalGraph(props: Props) {
               : null}
             {ticks.map((tick, i) => (
               <text
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={`tick-${i}`}
                 x={tick}
                 y={graphHeight / 2 + radius}
@@ -909,7 +922,7 @@ export function HorizontalGraph(props: Props) {
               </text>
             ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

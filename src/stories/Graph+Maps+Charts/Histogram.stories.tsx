@@ -1,7 +1,6 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { parseValue } from '../assets/parseValue';
+import type React from 'react';
+import { Histogram } from '@/index';
 import {
   CLASS_NAME_OBJECT,
   LANGUAGE_OPTIONS,
@@ -9,8 +8,7 @@ import {
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../assets/constants';
-
-import { Histogram } from '@/index';
+import { parseValue } from '../assets/parseValue';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof Histogram>;
 

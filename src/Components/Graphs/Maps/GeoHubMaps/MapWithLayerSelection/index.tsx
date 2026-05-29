@@ -1,20 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import flattenDeep from 'lodash.flattendeep';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
 import { Spacer } from '@undp/design-system-react/Spacer';
-
-import { MapEl } from './MapEl';
-
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import flattenDeep from 'lodash.flattendeep';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import {
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type {
   ClassNameObject,
   Languages,
   MapLegendDataType,
   SourcesDataType,
   StyleObject,
 } from '@/Types';
-import { GraphContainer } from '@/Components/Elements/GraphContainer';
+import { MapEl } from './MapEl';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -149,7 +147,7 @@ export function GeoHubMapWithLayerSelection(props: Props) {
         />
       ) : null}
       <DropdownSelect
-        options={layerSelection.map(d => ({
+        options={layerSelection.map((d) => ({
           label: d.name,
           value: d.layerID,
         }))}
@@ -164,7 +162,7 @@ export function GeoHubMapWithLayerSelection(props: Props) {
           value: layerSelection[0].layerID,
         }}
         controlShouldRenderValue
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         onChange={(el: any) => {
           if (el) setSelectedLayer(el.value);
         }}
@@ -175,11 +173,12 @@ export function GeoHubMapWithLayerSelection(props: Props) {
         center={center}
         zoomLevel={zoomLevel}
         selectedLayer={selectedLayer}
-        layerIdList={flattenDeep(layerSelection.map(d => d.layerID))}
+        layerIdList={flattenDeep(layerSelection.map((d) => d.layerID))}
         excludeLayers={excludeLayers}
         mapLegend={
           (mapLegend as MapLegendDataType[]).find(
-            d => d.mapStyleName === layerSelection.find(el => el.layerID === selectedLayer)?.name,
+            (d) =>
+              d.mapStyleName === layerSelection.find((el) => el.layerID === selectedLayer)?.name,
           )?.legend
         }
       />

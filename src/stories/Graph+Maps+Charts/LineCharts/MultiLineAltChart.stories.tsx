@@ -1,6 +1,6 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
+import type React from 'react';
+import { MultiLineAltChart } from '@/index';
 import {
   CLASS_NAME_OBJECT,
   CUSTOM_LAYERS_OBJECT,
@@ -10,8 +10,6 @@ import {
   STYLE_OBJECT,
 } from '../../assets/constants';
 import { parseValue } from '../../assets/parseValue';
-
-import { MultiLineAltChart } from '@/index';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof MultiLineAltChart>;
 
@@ -256,10 +254,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     return (
       <MultiLineAltChart
         animate={
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           (animate as any) === 'false' || animate === false
             ? false
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
               (animate as any) === 'true' || animate === true
               ? true
               : animate

@@ -1,18 +1,22 @@
-import isEqual from 'fast-deep-equal';
-import { useRef, useState } from 'react';
+import { cn } from '@undp/design-system-react/cn';
+import { scaleBand, scaleLinear } from 'd3-scale';
 import {
-  line,
-  curveMonotoneX,
   curveLinear,
+  curveMonotoneX,
   curveStep,
   curveStepAfter,
   curveStepBefore,
+  line,
 } from 'd3-shape';
-import { scaleBand, scaleLinear } from 'd3-scale';
-import { cn } from '@undp/design-system-react/cn';
+import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import {
+import { useRef, useState } from 'react';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
+import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CurveTypes,
@@ -21,13 +25,8 @@ import {
   ParetoChartDataType,
   StyleObject,
 } from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
-import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: ParetoChartDataType[];
@@ -41,17 +40,17 @@ interface Props {
   topMargin: number;
   bottomMargin: number;
   sameAxes: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   barPadding: number;
   truncateBy: number;
   showLabels: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   noOfTicks: number;
   showValues: boolean;
@@ -119,9 +118,9 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -136,28 +135,32 @@ export function Graph(props: Props) {
 
   const dataWithId = data.map((d, i) => ({ ...d, id: `${i}` }));
   const x = scaleBand()
-    .domain(dataWithId.map(d => `${d.id}`))
+    .domain(dataWithId.map((d) => `${d.id}`))
     .range([0, graphWidth])
     .paddingInner(barPadding);
   const minParam1 =
-    Math.min(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null)) !== Infinity
-      ? Math.min(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null)) > 0
+    Math.min(...dataWithId.map((d) => d.bar).filter((d) => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.min(...dataWithId.map((d) => d.bar).filter((d) => d !== undefined && d !== null)) > 0
         ? 0
-        : Math.min(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null))
+        : Math.min(...dataWithId.map((d) => d.bar).filter((d) => d !== undefined && d !== null))
       : 0;
   const minParam2 =
-    Math.min(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null)) !== Infinity
-      ? Math.min(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null)) > 0
+    Math.min(...dataWithId.map((d) => d.line).filter((d) => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.min(...dataWithId.map((d) => d.line).filter((d) => d !== undefined && d !== null)) > 0
         ? 0
-        : Math.min(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null))
+        : Math.min(...dataWithId.map((d) => d.line).filter((d) => d !== undefined && d !== null))
       : 0;
   const maxParam1 =
-    Math.max(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null)) !== Infinity
-      ? Math.max(...dataWithId.map(d => d.bar).filter(d => d !== undefined && d !== null))
+    Math.max(...dataWithId.map((d) => d.bar).filter((d) => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.max(...dataWithId.map((d) => d.bar).filter((d) => d !== undefined && d !== null))
       : 0;
   const maxParam2 =
-    Math.max(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null)) !== Infinity
-      ? Math.max(...dataWithId.map(d => d.line).filter(d => d !== undefined && d !== null))
+    Math.max(...dataWithId.map((d) => d.line).filter((d) => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.max(...dataWithId.map((d) => d.line).filter((d) => d !== undefined && d !== null))
       : 0;
 
   const minParam = minParam1 < minParam2 ? minParam1 : minParam2;
@@ -179,9 +182,9 @@ export function Graph(props: Props) {
     .nice();
 
   const lineShape = line<DataFormattedType>()
-    .defined(d => !checkIfNullOrUndefined(d.line))
-    .x(d => (x(`${d.id}`) as number) + x.bandwidth() / 2)
-    .y(d => y2(d.line as number))
+    .defined((d) => !checkIfNullOrUndefined(d.line))
+    .x((d) => (x(`${d.id}`) as number) + x.bandwidth() / 2)
+    .y((d) => y2(d.line as number))
     .curve(curve);
   const y1Ticks = y1.ticks(noOfTicks);
   const y2Ticks = y2.ticks(noOfTicks);
@@ -197,6 +200,7 @@ export function Graph(props: Props) {
         <g transform={`translate(${margin.left},${margin.top})`}>
           <g>
             {y1Ticks.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <g key={i}>
                 <line
                   y1={y1(d)}
@@ -258,6 +262,7 @@ export function Graph(props: Props) {
           </g>
           <g>
             {y2Ticks.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <g key={i}>
                 <line
                   y1={y2(d)}
@@ -326,7 +331,7 @@ export function Graph(props: Props) {
             classNames={{ axis: classNames?.xAxis?.axis }}
             styles={{ axis: styles?.xAxis?.axis }}
           />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
             {dataWithId.map((d, i) => {
               return (
@@ -334,7 +339,7 @@ export function Graph(props: Props) {
                   className='undp-viz-g-with-hover'
                   key={d.label}
                   opacity={0.85}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -351,7 +356,7 @@ export function Graph(props: Props) {
                       }
                     }
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -459,7 +464,7 @@ export function Graph(props: Props) {
               }}
               variants={{
                 initial: {
-                  d: lineShape(dataWithId.map(d => ({ ...d, line: 0 }))) as string,
+                  d: lineShape(dataWithId.map((d) => ({ ...d, line: 0 }))) as string,
                   opacity: 0,
                   stroke: lineColor,
                 },
@@ -477,11 +482,12 @@ export function Graph(props: Props) {
                 strokeWidth: 2,
               }}
             />
-            {dataWithId.map((d, i) => (
-              <g key={i}>
+            {dataWithId.map((d) => (
+              <g key={d.label}>
                 {!checkIfNullOrUndefined(d.line) ? (
+                  // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
                   <g
-                    onMouseEnter={event => {
+                    onMouseEnter={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -498,7 +504,7 @@ export function Graph(props: Props) {
                         }
                       }
                     }}
-                    onMouseMove={event => {
+                    onMouseMove={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -586,7 +592,7 @@ export function Graph(props: Props) {
               </g>
             ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

@@ -1,10 +1,8 @@
+import type { GraphConfigurationDataType, GraphType, ThreeDGraphType } from '@/Types';
 import { checkDataConfigValidity } from '../checkDataValidity';
 import { checkIfNullOrUndefined } from '../checkIfNullOrUndefined';
 import { graphList } from '../getGraphList';
-
 import { ChartConfiguration } from './graphConfig';
-
-import { GraphConfigurationDataType, GraphType, ThreeDGraphType } from '@/Types';
 /**
  * Transforms the input data into a format suitable for graph visualization based on the given graph type and configuration.
  *
@@ -39,15 +37,15 @@ import { GraphConfigurationDataType, GraphType, ThreeDGraphType } from '@/Types'
  * console.log(transformedData);
  */
 export function transformDataForGraph(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data: any,
   graph: GraphType | ThreeDGraphType,
   config?: GraphConfigurationDataType[],
 ) {
   if (
     graphList
-      .filter(el => el.geoHubMapPresentation)
-      .map(el => el.graphID)
+      .filter((el) => el.geoHubMapPresentation)
+      .map((el) => el.graphID)
       .indexOf(graph) !== -1
   )
     return data;
@@ -60,23 +58,23 @@ export function transformDataForGraph(
   const dataConfigValidity = checkDataConfigValidity(config, graph, Object.keys(data[0]));
   if (dataConfigValidity.isValid) {
     const chartConfig =
-      ChartConfiguration[ChartConfiguration.findIndex(d => d.chartID === graph)].configuration;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ChartConfiguration[ChartConfiguration.findIndex((d) => d.chartID === graph)].configuration;
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const dataFormatted = data.map((d: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       const obj: any = {};
       config
-        .filter(el => el.columnId)
-        .forEach(el => {
-          if (chartConfig[chartConfig.findIndex(k => k.id === el.chartConfigId)].multiple) {
-            obj[chartConfig[chartConfig.findIndex(k => k.id === el.chartConfigId)].id] = [];
-            (el.columnId as string[]).forEach(l => {
-              obj[chartConfig[chartConfig.findIndex(k => k.id === el.chartConfigId)].id].push(
+        .filter((el) => el.columnId)
+        .forEach((el) => {
+          if (chartConfig[chartConfig.findIndex((k) => k.id === el.chartConfigId)].multiple) {
+            obj[chartConfig[chartConfig.findIndex((k) => k.id === el.chartConfigId)].id] = [];
+            (el.columnId as string[]).forEach((l) => {
+              obj[chartConfig[chartConfig.findIndex((k) => k.id === el.chartConfigId)].id].push(
                 checkIfNullOrUndefined(d[l]) ? null : d[l],
               );
             });
           } else {
-            obj[chartConfig[chartConfig.findIndex(k => k.id === el.chartConfigId)].id] =
+            obj[chartConfig[chartConfig.findIndex((k) => k.id === el.chartConfigId)].id] =
               checkIfNullOrUndefined(d[el.columnId as string]) ? null : d[el.columnId as string];
           }
           obj[`${el.chartConfigId}Columns`] = el.columnId;

@@ -1,6 +1,6 @@
 import area from '@turf/area';
 import centerOfMass from '@turf/center-of-mass';
-import { Feature, Polygon, MultiPolygon, GeoJsonProperties } from 'geojson';
+import type { Feature, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 
 export function getCentroidCoordinates(
   multiPolygonFeature: Feature<Polygon | MultiPolygon, GeoJsonProperties>,

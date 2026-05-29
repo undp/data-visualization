@@ -1,21 +1,20 @@
-import React, { useEffect, useEffectEvent, useRef, useState } from 'react';
-import intersection from 'lodash.intersection';
-import flattenDeep from 'lodash.flattendeep';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
-import { P } from '@undp/design-system-react/Typography';
 import { Pagination } from '@undp/design-system-react/Pagination';
 import { Search } from '@undp/design-system-react/Search';
-import orderBy from 'lodash.orderby';
 import { Spacer } from '@undp/design-system-react/Spacer';
-
-import { Graph } from './Graph';
-
-import { Languages, SourcesDataType, StyleObject, ClassNameObject } from '@/Types';
+import { P } from '@undp/design-system-react/Typography';
+import flattenDeep from 'lodash.flattendeep';
+import intersection from 'lodash.intersection';
+import orderBy from 'lodash.orderby';
+import type React from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type { ClassNameObject, Languages, SourcesDataType, StyleObject } from '@/Types';
 import { getUniqValue } from '@/Utils/getUniqValue';
 import { transformDefaultValue } from '@/Utils/transformDataForSelect';
-import { GraphContainer } from '@/Components/Elements/GraphContainer';
+import { Graph } from './Graph';
 
 export type FilterDataType = {
   column: string;
@@ -62,7 +61,7 @@ interface Props {
 
   // Graph Parameters
   /** Html for each card. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   cardTemplate: string | ((_d: any) => React.ReactNode);
   /** Allows users to add a dropdown menus, that can be used as filters in the graph. Each filter is an object that specifies the column to filter by, and the default value. All the filters are single select only.  */
   cardFilters?: FilterDataType[];
@@ -87,10 +86,10 @@ interface Props {
 
   // Interactions and Callbacks
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -104,12 +103,12 @@ interface Props {
   graphID?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: undefined data type
 const filterByKeys = (jsonArray: any, keys: string[], substring: string) => {
   if (keys.length === 0) return jsonArray;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   return jsonArray.filter((item: any) =>
-    keys.some(key => item[key]?.toLowerCase().includes(substring.toLowerCase())),
+    keys.some((key) => item[key]?.toLowerCase().includes(substring.toLowerCase())),
   );
 };
 
@@ -149,20 +148,20 @@ export function DataCards(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const filterSettings = (cardFilters || []).map(el => ({
+  const filterSettings = (cardFilters || []).map((el) => ({
     filter: el.column,
     label: el.label || `Filter by ${el.column}`,
     singleSelect: true,
     clearable: true,
     defaultValue: transformDefaultValue(el.defaultValue),
     availableValues: getUniqValue(data, el.column)
-      .filter(v => !el.excludeValues?.includes(`${v}`))
-      .map(v => ({ value: v, label: v })),
+      .filter((v) => !el.excludeValues?.includes(`${v}`))
+      .map((v) => ({ value: v, label: v })),
     width: el.width,
   }));
 
   const [selectedFilters, setSelectedFilters] = useState(
-    (cardFilters || []).map(el => ({
+    (cardFilters || []).map((el) => ({
       filter: el.column,
       value: transformDefaultValue(el.defaultValue),
     })),
@@ -177,11 +176,14 @@ export function DataCards(props: Props) {
   >(
     cardSortingOptions
       ? !cardSortingOptions.defaultValue ||
-        cardSortingOptions.options.findIndex(el => el.label === cardSortingOptions.defaultValue) ===
-          -1
+        cardSortingOptions.options.findIndex(
+          (el) => el.label === cardSortingOptions.defaultValue,
+        ) === -1
         ? cardSortingOptions.options[0]
         : cardSortingOptions.options[
-            cardSortingOptions.options.findIndex(el => el.label === cardSortingOptions.defaultValue)
+            cardSortingOptions.options.findIndex(
+              (el) => el.label === cardSortingOptions.defaultValue,
+            )
           ]
       : undefined,
   );
@@ -196,12 +198,12 @@ export function DataCards(props: Props) {
       cardSortingOptions
         ? !cardSortingOptions.defaultValue ||
           cardSortingOptions.options.findIndex(
-            el => el.label === cardSortingOptions.defaultValue,
+            (el) => el.label === cardSortingOptions.defaultValue,
           ) === -1
           ? cardSortingOptions.options[0]
           : cardSortingOptions.options[
               cardSortingOptions.options.findIndex(
-                el => el.label === cardSortingOptions.defaultValue,
+                (el) => el.label === cardSortingOptions.defaultValue,
               )
             ]
         : undefined,
@@ -211,20 +213,20 @@ export function DataCards(props: Props) {
     cardSortingEvent();
   }, [cardSortingOptions]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const cardDataEvent = useEffectEvent((data: any) => {
     setCardData(data);
     setPage(1);
   });
   useEffect(() => {
     const filteredData = filterByKeys(data, cardSearchColumns || [], searchQuery).filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       (item: any) =>
-        selectedFilters.every(filter =>
+        selectedFilters.every((filter) =>
           filter.value && flattenDeep([filter.value]).length > 0
             ? intersection(
                 flattenDeep([item[filter.filter]]),
-                flattenDeep([filter.value]).map(el => el.value),
+                flattenDeep([filter.value]).map((el) => el.value),
               ).length > 0
             : true,
         ),
@@ -284,7 +286,7 @@ export function DataCards(props: Props) {
                 isRtl={language === 'he' || language === 'ar'}
                 isSearchable
                 filterOption={createFilter(filterConfig)}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                 onChange={(el: any) => {
                   setSortedBy(el || undefined);
                 }}
@@ -293,23 +295,23 @@ export function DataCards(props: Props) {
                 defaultValue={
                   !cardSortingOptions.defaultValue ||
                   cardSortingOptions.options.findIndex(
-                    el => el.label === cardSortingOptions.defaultValue,
+                    (el) => el.label === cardSortingOptions.defaultValue,
                   ) === -1
                     ? cardSortingOptions.options[0]
                     : cardSortingOptions.options[
                         cardSortingOptions.options.findIndex(
-                          el => el.label === cardSortingOptions.defaultValue,
+                          (el) => el.label === cardSortingOptions.defaultValue,
                         )
                       ]
                 }
               />
             </div>
           ) : null}
-          {filterSettings?.map((d, i) => (
+          {filterSettings?.map((d) => (
             <div
               className='grow shrink-0 min-w-[240px]'
               style={{ width: d.width || 'calc(25% - 0.75rem)' }}
-              key={i}
+              key={d.label}
             >
               <P
                 marginBottom='xs'
@@ -327,10 +329,10 @@ export function DataCards(props: Props) {
                 size='sm'
                 controlShouldRenderValue
                 filterOption={createFilter(filterConfig)}
-                onChange={el => {
-                  setSelectedFilters(prev =>
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    prev.map(f => (f.filter === d.filter ? { ...f, value: el as any } : f)),
+                onChange={(el) => {
+                  setSelectedFilters((prev) =>
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                    prev.map((f) => (f.filter === d.filter ? { ...f, value: el as any } : f)),
                   );
                 }}
                 defaultValue={d.defaultValue}
@@ -344,7 +346,7 @@ export function DataCards(props: Props) {
         <div style={{ paddingTop: '1px' }}>
           <Search
             placeholder='Search...'
-            onSearch={e => {
+            onSearch={(e) => {
               setSearchQuery(e || '');
             }}
             buttonVariant='icon'

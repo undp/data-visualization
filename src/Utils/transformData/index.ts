@@ -1,4 +1,4 @@
-export { transformDataForAggregation } from './transformDataForAggregation';
 export { transformColumnsToArray } from './transformColumnsToArray';
-export { transformDataForGraphFromFile } from './transformDataForGraphFromFile';
+export { transformDataForAggregation } from './transformDataForAggregation';
 export { transformDataForGraph } from './transformDataForGraph';
+export { transformDataForGraphFromFile } from './transformDataForGraphFromFile';

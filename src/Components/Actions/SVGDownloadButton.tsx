@@ -1,9 +1,8 @@
 import { Button } from '@undp/design-system-react/Button';
-import { JSX } from 'react';
 import { cn } from '@undp/design-system-react/cn';
-
-import { svgDownload } from '@/Utils/svgDownload';
+import type { JSX } from 'react';
 import { ImageDown } from '@/Components/Icons';
+import { svgDownload } from '@/Utils/svgDownload';
 
 interface Props {
   buttonContent?: string | JSX.Element;

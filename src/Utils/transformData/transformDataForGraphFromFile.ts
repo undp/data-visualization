@@ -1,18 +1,16 @@
-import {
-  fetchAndParseJSON,
-  fetchAndParseCSV,
-  fetchAndTransformDataFromAPI,
-  fetchAndParseMultipleDataSources,
-} from '../fetchAndParseData';
-
-import { transformDataForGraph } from './transformDataForGraph';
-
-import {
+import type {
   ColumnConfigurationDataType,
   FileSettingsDataType,
   GraphConfigurationDataType,
   GraphType,
 } from '@/Types';
+import {
+  fetchAndParseCSV,
+  fetchAndParseJSON,
+  fetchAndParseMultipleDataSources,
+  fetchAndTransformDataFromAPI,
+} from '../fetchAndParseData';
+import { transformDataForGraph } from './transformDataForGraph';
 /**
  * Fetches data from a given URL or multiple data sources, processes it according to the specified graph configuration,
  * and formats it for use in a graph.
@@ -57,11 +55,11 @@ export async function transformDataForGraphFromFile(
   fileType?: 'csv' | 'json' | 'api',
   delimiter?: string,
   columnsToArray?: ColumnConfigurationDataType[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any,
   dataTransformation?: string,
   idColumnTitle?: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
 ): Promise<any> {
   // Ensure the function returns a Promise
   try {

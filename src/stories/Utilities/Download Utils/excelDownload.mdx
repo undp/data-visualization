@@ -14,7 +14,7 @@ __For this to work you will have to install `xlsx` and `file-saver` package to y
 
 ```ts
 function excelDownload = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any,
   fileName: string,
   headers: string[],

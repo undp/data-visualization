@@ -31,7 +31,6 @@ export function ColorLegend(props: Props) {
     <div
       className={cn('flex leading-0 pb-3', isCenter && 'justify-center', className)}
       style={{ maxWidth: width ? `${width}px` : 'none' }}
-      aria-label='Color legend'
     >
       <div>
         {colorLegendTitle && colorLegendTitle !== '' ? (
@@ -42,6 +41,7 @@ export function ColorLegend(props: Props) {
         <div className='flex flex-wrap mb-0 gap-3.5'>
           {colorDomain.map((d, i) =>
             labelsToBeHidden.includes(d) ? null : (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <div key={i} className='flex items-center gap-1'>
                 <div
                   className='w-3 h-3 rounded-full'

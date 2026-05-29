@@ -1,25 +1,23 @@
-import { useState, useRef, useEffect } from 'react';
-
-import { Graph } from './Graph';
-
+import { useEffect, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import {
+import { LinearColorLegend } from '@/Components/Elements/LinearColorLegend';
+import { ThresholdColorLegendWithMouseOver } from '@/Components/Elements/ThresholdColorLegendWithMouseOver';
+import type {
+  AnimateDataType,
+  ClassNameObject,
   HeatMapDataType,
   Languages,
+  NumberFormatOptions,
   ScaleDataType,
   SourcesDataType,
   StyleObject,
-  ClassNameObject,
-  AnimateDataType,
-  NumberFormatOptions,
 } from '@/Types';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
-import { LinearColorLegend } from '@/Components/Elements/LinearColorLegend';
-import { ThresholdColorLegendWithMouseOver } from '@/Components/Elements/ThresholdColorLegendWithMouseOver';
-import { Colors } from '@/Components/ColorPalette';
-import { EmptyState } from '@/Components/Elements/EmptyState';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { Graph } from './Graph';
 
 interface Props {
   // Data
@@ -109,16 +107,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -185,7 +183,7 @@ export function HeatMap(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -234,9 +232,9 @@ export function HeatMap(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
@@ -259,7 +257,7 @@ export function HeatMap(props: Props) {
                       `neutralColorsx0${(colorDomain.length + 1) as 4 | 5 | 6 | 7 | 8 | 9}`
                     ])
             }
-            colorDomain={colorDomain.map(d => `${d}`)}
+            colorDomain={colorDomain.map((d) => `${d}`)}
             setSelectedColor={setSelectedColor}
             showNAColor={showNAColor}
             className={classNames?.colorLegend}

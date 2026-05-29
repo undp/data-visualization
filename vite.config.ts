@@ -1,11 +1,9 @@
-import path from 'path';
-
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import eslint from '@nabla/vite-plugin-eslint';
-import dts from 'vite-plugin-dts';
+import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
 const entries = {
   // Main entry point
@@ -188,16 +186,22 @@ const entries = {
 export default defineConfig({
   plugins: [
     react(),
-    eslint(),
     tailwindcss(),
     dts({
       include: ['src/'],
+      entryRoot: 'src',
+      tsconfigPath: './tsconfig.json',
+      staticImport: true,
+      insertTypesEntry: true,
+      bundleTypes: false,
       exclude: ['**/*.mdx', '**/*.test.tsx', 'stories'],
     }),
     visualizer({ filename: 'stats.html', open: true }),
   ],
   build: {
     cssCodeSplit: false,
+    outDir: 'dist',
+    emptyOutDir: true,
     lib: {
       entry: entries,
       formats: ['es', 'cjs'],
@@ -207,6 +211,7 @@ export default defineConfig({
       },
     },
     rollupOptions: {
+      input: entries,
       external: [
         'react',
         'react-dom',
@@ -229,8 +234,8 @@ export default defineConfig({
       ],
       output: {
         manualChunks: undefined,
-        assetFileNames: assetInfo => {
-          if (assetInfo.names && assetInfo.names.includes('data-viz.css')) {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.names.includes('data-viz.css')) {
             return 'style.css';
           }
           return 'assets/[name][extname]';
@@ -239,7 +244,6 @@ export default defineConfig({
       treeshake: true,
     },
     sourcemap: true,
-    emptyOutDir: true,
   },
   server: {
     cors: {

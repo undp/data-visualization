@@ -1,7 +1,7 @@
 import { cn } from '@undp/design-system-react/cn';
 import { motion } from 'motion/react';
 
-import { AnimateDataType } from '@/Types';
+import type { AnimateDataType } from '@/Types';
 
 interface RefLineYProps {
   text?: string;

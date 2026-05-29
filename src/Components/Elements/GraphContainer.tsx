@@ -1,7 +1,7 @@
 import { cn } from '@undp/design-system-react/cn';
 import React from 'react';
 
-import { Languages } from '@/Types';
+import type { Languages } from '@/Types';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   width?: number;
@@ -62,7 +62,6 @@ export const GraphContainer = React.forwardRef<HTMLDivElement, Props>(
         }}
         id={graphID}
         ref={ref}
-        aria-label={ariaLabel || 'This is a graph'}
       >
         <div className='flex flex-col w-full h-full grow justify-between'>{children}</div>
       </div>
@@ -73,12 +72,7 @@ export const GraphContainer = React.forwardRef<HTMLDivElement, Props>(
 export const GraphArea = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div
-        {...props}
-        className={cn('w-full grow min-h-0 leading-0', className)}
-        ref={ref}
-        aria-label='Graph area'
-      >
+      <div {...props} className={cn('w-full grow min-h-0 leading-0', className)} ref={ref}>
         {children}
       </div>
     );

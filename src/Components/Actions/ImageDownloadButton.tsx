@@ -1,9 +1,8 @@
-import { JSX, RefObject } from 'react';
 import { Button } from '@undp/design-system-react/Button';
 import { cn } from '@undp/design-system-react/cn';
-
-import { imageDownload } from '@/Utils/imageDownload';
+import type { JSX, RefObject } from 'react';
 import { ImageDown } from '@/Components/Icons';
+import { imageDownload } from '@/Utils/imageDownload';
 
 interface Props {
   buttonContent?: string | JSX.Element;

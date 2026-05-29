@@ -1,30 +1,28 @@
-import { useState, useRef, useEffect } from 'react';
-
-import { Graph } from './Graph';
-
-import {
+import { useEffect, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { ColorLegend } from '@/Components/Elements/ColorLegend';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type {
+  AnimateDataType,
   AnnotationSettingsDataType,
+  ClassNameObject,
+  CurveTypes,
   CustomHighlightAreaSettingsDataType,
+  CustomLayerDataType,
+  HighlightAreaSettingsDataType,
   Languages,
   MultiLineChartDataType,
+  NumberFormatOptions,
   ReferenceDataType,
   SourcesDataType,
   StyleObject,
-  ClassNameObject,
-  HighlightAreaSettingsDataType,
-  CurveTypes,
-  CustomLayerDataType,
-  AnimateDataType,
-  NumberFormatOptions,
 } from '@/Types';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { ColorLegend } from '@/Components/Elements/ColorLegend';
-import { Colors } from '@/Components/ColorPalette';
-import { EmptyState } from '@/Components/Elements/EmptyState';
 import { generateRandomString } from '@/Utils/generateRandomString';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { getNoOfTicks } from '@/Utils/getNoOfTicks';
+import { Graph } from './Graph';
 
 interface Props {
   // Data
@@ -141,10 +139,10 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
 
   // Configuration and Options
@@ -221,7 +219,7 @@ export function MultiLineChart(props: Props) {
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -263,9 +261,9 @@ export function MultiLineChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />

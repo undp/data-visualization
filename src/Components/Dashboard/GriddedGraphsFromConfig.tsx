@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { GriddedGraphs } from './GriddedGraphs';
-
-import {
+import { useEffect, useState } from 'react';
+import type {
   AdvancedDataSelectionDataType,
   AggregationSettingsDataType,
   DataFilterDataType,
@@ -15,6 +12,7 @@ import {
   GraphType,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { GriddedGraphs } from './GriddedGraphs';
 
 interface ConfigObject {
   noOfColumns?: number;

@@ -1,7 +1,7 @@
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
 
-import {
+import type {
   BarGraphDataType,
   BulletChartDataType,
   ButterflyChartDataType,
@@ -12,17 +12,17 @@ import {
 
 export function ensureCompleteDataForBarChart(data: BarGraphDataType[], dateFormat: string) {
   // Extract unique labels and dates
-  const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  const labels = Array.from(new Set(data.map((d) => d.label)));
+  const dates = Array.from(new Set(data.map((d) => d.date))).filter((d) => d !== undefined);
   if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.map((d: any) => `${d.label}-${d.date}`),
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const colors = data.reduce((acc: any, curr: any) => {
     if (!acc[curr.label]) {
       acc[curr.label] = curr.color;
@@ -33,8 +33,8 @@ export function ensureCompleteDataForBarChart(data: BarGraphDataType[], dateForm
   // Add missing label-date combinations with size as undefined
   const completeData = [...data];
 
-  labels.forEach(label => {
-    dates.forEach(date => {
+  labels.forEach((label) => {
+    dates.forEach((date) => {
       if (!existingCombinations.has(`${label}-${date}`)) {
         completeData.push({
           label,
@@ -48,7 +48,7 @@ export function ensureCompleteDataForBarChart(data: BarGraphDataType[], dateForm
 
   return orderBy(
     completeData,
-    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    [(d) => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
     ['asc'],
   );
 }
@@ -58,24 +58,24 @@ export function ensureCompleteDataForStackedBarChart(
   dateFormat: string,
 ) {
   // Extract unique labels and dates
-  const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  const labels = Array.from(new Set(data.map((d) => d.label)));
+  const dates = Array.from(new Set(data.map((d) => d.date))).filter((d) => d !== undefined);
   if (dates.length === 0) return data;
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.map((d: any) => `${d.label}-${d.date}`),
   );
 
   // Add missing label-date combinations with size as undefined
   const completeData = [...data];
 
-  labels.forEach(label => {
-    dates.forEach(date => {
+  labels.forEach((label) => {
+    dates.forEach((date) => {
       if (!existingCombinations.has(`${label}-${date}`)) {
         completeData.push({
           label,
-          size: data[0].size.map(_d => null),
+          size: data[0].size.map((_d) => null),
           date,
         });
       }
@@ -84,7 +84,7 @@ export function ensureCompleteDataForStackedBarChart(
 
   return orderBy(
     completeData,
-    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    [(d) => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
     ['asc'],
   );
 }
@@ -94,21 +94,21 @@ export function ensureCompleteDataForButterFlyChart(
   dateFormat: string,
 ) {
   // Extract unique labels and dates
-  const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  const labels = Array.from(new Set(data.map((d) => d.label)));
+  const dates = Array.from(new Set(data.map((d) => d.date))).filter((d) => d !== undefined);
   if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.map((d: any) => `${d.label}-${d.date}`),
   );
 
   // Add missing label-date combinations with size as undefined
   const completeData = [...data];
 
-  labels.forEach(label => {
-    dates.forEach(date => {
+  labels.forEach((label) => {
+    dates.forEach((date) => {
       if (!existingCombinations.has(`${label}-${date}`)) {
         completeData.push({
           label,
@@ -122,24 +122,24 @@ export function ensureCompleteDataForButterFlyChart(
 
   return orderBy(
     completeData,
-    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    [(d) => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
     ['asc'],
   );
 }
 
 export function ensureCompleteDataForScatterPlot(data: ScatterPlotDataType[], dateFormat: string) {
   // Extract unique labels and dates
-  const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  const labels = Array.from(new Set(data.map((d) => d.label)));
+  const dates = Array.from(new Set(data.map((d) => d.date))).filter((d) => d !== undefined);
   if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.map((d: any) => `${d.label}-${d.date}`),
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const colors = data.reduce((acc: any, curr: any) => {
     if (!acc[curr.label]) {
       acc[curr.label] = curr.color;
@@ -150,8 +150,8 @@ export function ensureCompleteDataForScatterPlot(data: ScatterPlotDataType[], da
   // Add missing label-date combinations with size as undefined
   const completeData = [...data];
 
-  labels.forEach(label => {
-    dates.forEach(date => {
+  labels.forEach((label) => {
+    dates.forEach((date) => {
       if (!existingCombinations.has(`${label}-${date}`)) {
         completeData.push({
           label,
@@ -167,7 +167,7 @@ export function ensureCompleteDataForScatterPlot(data: ScatterPlotDataType[], da
 
   return orderBy(
     completeData,
-    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    [(d) => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
     ['asc'],
   );
 }
@@ -177,25 +177,25 @@ export function ensureCompleteDataForDumbbellChart(
   dateFormat: string,
 ) {
   // Extract unique labels and dates
-  const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  const labels = Array.from(new Set(data.map((d) => d.label)));
+  const dates = Array.from(new Set(data.map((d) => d.date))).filter((d) => d !== undefined);
   if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.map((d: any) => `${d.label}-${d.date}`),
   );
 
   // Add missing label-date combinations with size as undefined
   const completeData = [...data];
 
-  labels.forEach(label => {
-    dates.forEach(date => {
+  labels.forEach((label) => {
+    dates.forEach((date) => {
       if (!existingCombinations.has(`${label}-${date}`)) {
         completeData.push({
           label,
-          x: data[0].x.map(_d => null),
+          x: data[0].x.map((_d) => null),
           date,
         });
       }
@@ -204,28 +204,28 @@ export function ensureCompleteDataForDumbbellChart(
 
   return orderBy(
     completeData,
-    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    [(d) => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
     ['asc'],
   );
 }
 
 export function ensureCompleteDataForBulletChart(data: BulletChartDataType[], dateFormat: string) {
   // Extract unique labels and dates
-  const labels = Array.from(new Set(data.map(d => d.label)));
-  const dates = Array.from(new Set(data.map(d => d.date))).filter(d => d !== undefined);
+  const labels = Array.from(new Set(data.map((d) => d.label)));
+  const dates = Array.from(new Set(data.map((d) => d.date))).filter((d) => d !== undefined);
   if (dates.length === 0) return data;
 
   // Create a set of existing label-date combinations
   const existingCombinations = new Set(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.map((d: any) => `${d.label}-${d.date}`),
   );
 
   // Add missing label-date combinations with size as undefined
   const completeData = [...data];
 
-  labels.forEach(label => {
-    dates.forEach(date => {
+  labels.forEach((label) => {
+    dates.forEach((date) => {
       if (!existingCombinations.has(`${label}-${date}`)) {
         completeData.push({
           label,
@@ -240,7 +240,7 @@ export function ensureCompleteDataForBulletChart(data: BulletChartDataType[], da
 
   return orderBy(
     completeData,
-    [d => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
+    [(d) => parse(`${d.date}`, dateFormat || 'yyyy', new Date())],
     ['asc'],
   );
 }

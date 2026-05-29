@@ -1,5 +1,5 @@
 export function wideToLongTransformation(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data: any,
   keyColumn: string,
   readableHeader: {
@@ -8,17 +8,17 @@ export function wideToLongTransformation(
   }[],
   debugMode?: boolean,
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const transformedData: any = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data.forEach((row: any) => {
     Object.entries(row).forEach(([key, value]) => {
       if (key !== keyColumn) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         const obj: any = {
           indicator:
-            readableHeader.findIndex(d => d.value === key) !== -1
-              ? readableHeader[readableHeader.findIndex(d => d.value === key)].label
+            readableHeader.findIndex((d) => d.value === key) !== -1
+              ? readableHeader[readableHeader.findIndex((d) => d.value === key)].label
               : key,
           value,
         };
@@ -28,7 +28,7 @@ export function wideToLongTransformation(
     });
   });
   if (debugMode) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log(transformedData);
   }
   return transformedData;

@@ -1,11 +1,9 @@
 import flattenDeep from 'lodash.flattendeep';
-
+import type { GraphConfigurationDataType, GraphType, ThreeDGraphType } from '@/Types';
 import { ChartConfiguration } from './transformData/graphConfig';
 
-import { GraphConfigurationDataType, GraphType, ThreeDGraphType } from '@/Types';
-
 function missingValuesInArray(superset: string[], subset: string[]): string[] {
-  return subset.filter(value => !superset.includes(value));
+  return subset.filter((value) => !superset.includes(value));
 }
 
 export function checkDataConfigValidity(
@@ -13,7 +11,7 @@ export function checkDataConfigValidity(
   graph: GraphType | ThreeDGraphType,
   dataKeys: string[],
 ) {
-  const dataKeyFromDataConfig = flattenDeep(dataConfig.map(d => d.columnId));
+  const dataKeyFromDataConfig = flattenDeep(dataConfig.map((d) => d.columnId));
   const checkDataKeys = missingValuesInArray(dataKeys, dataKeyFromDataConfig);
   if (checkDataKeys.length !== 0)
     return {
@@ -22,12 +20,12 @@ export function checkDataConfigValidity(
         ', ',
       )}. Possible reason: If you are using 'dataTransform' then the allowed keys (columns) are only the one present in 'aggregationColumnsSetting' array in 'dataTransform' object plus an additional key called 'count'.`,
     };
-  const ids = dataConfig.map(el => el.chartConfigId);
+  const ids = dataConfig.map((el) => el.chartConfigId);
   const requiredIds = ChartConfiguration[
-    ChartConfiguration.findIndex(el => el.chartID === graph)
+    ChartConfiguration.findIndex((el) => el.chartID === graph)
   ].configuration
-    .filter(el => el.required)
-    .map(el => el.id);
+    .filter((el) => el.required)
+    .map((el) => el.id);
   const ifRequiredIdsPresent = missingValuesInArray(ids, requiredIds);
   return {
     isValid: ifRequiredIdsPresent.length === 0,

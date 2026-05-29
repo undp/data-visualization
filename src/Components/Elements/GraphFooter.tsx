@@ -1,6 +1,6 @@
-import { SourcesDataType } from '@/Types';
 import { FootNote } from '@/Components/Typography/FootNote';
 import { Source } from '@/Components/Typography/Source';
+import type { SourcesDataType } from '@/Types';
 
 interface Props {
   footNote?: string | React.ReactNode;
@@ -15,11 +15,7 @@ export function GraphFooter(props: Props) {
   if ((sources === undefined || (sources || []).length === 0) && footNote === undefined)
     return null;
   return (
-    <div
-      className='flex flex-col pt-4'
-      style={{ maxWidth: width ? `${width}px` : 'none' }}
-      aria-label='Graph footer'
-    >
+    <div className='flex flex-col pt-4' style={{ maxWidth: width ? `${width}px` : 'none' }}>
       {sources ? (
         <Source sources={sources} style={styles?.source} className={classNames?.source} />
       ) : null}

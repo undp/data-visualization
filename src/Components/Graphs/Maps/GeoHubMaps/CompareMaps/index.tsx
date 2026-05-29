@@ -1,11 +1,9 @@
-import { useRef, useEffect, useState } from 'react';
-
-import { Graph } from './Graph';
-
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { ClassNameObject, Languages, SourcesDataType, StyleObject } from '@/Types';
+import { useEffect, useRef, useState } from 'react';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type { ClassNameObject, Languages, SourcesDataType, StyleObject } from '@/Types';
+import { Graph } from './Graph';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -88,7 +86,7 @@ export function GeoHubCompareMaps(props: Props) {
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });

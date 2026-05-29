@@ -1,7 +1,6 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { parseValue } from '../assets/parseValue';
+import type React from 'react';
+import { DumbbellChart } from '@/index';
 import {
   CLASS_NAME_OBJECT,
   CUSTOM_LAYERS_OBJECT,
@@ -10,8 +9,7 @@ import {
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../assets/constants';
-
-import { DumbbellChart } from '@/index';
+import { parseValue } from '../assets/parseValue';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof DumbbellChart>;
 
@@ -308,10 +306,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     return (
       <DumbbellChart
         animate={
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           (animate as any) === 'false' || animate === false
             ? false
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
               (animate as any) === 'true' || animate === true
               ? true
               : animate
@@ -325,9 +323,9 @@ const meta: Meta<PagePropsAndCustomArgs> = {
             ? undefined
             : sortParameter === 'diff'
               ? 'diff'
-              : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                 /^\d+$/.test(sortParameter as any)
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   parseInt(sortParameter as any, 10)
                 : undefined
         }

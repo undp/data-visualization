@@ -1,29 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
+import { cn } from '@undp/design-system-react/cn';
+import { bisectCenter } from 'd3-array';
+import { scaleLinear, scaleTime } from 'd3-scale';
+import { pointer, select } from 'd3-selection';
 import {
-  line,
-  curveMonotoneX,
   area,
   curveLinear,
+  curveMonotoneX,
   curveStep,
   curveStepAfter,
   curveStepBefore,
+  line,
 } from 'd3-shape';
-import { scaleLinear, scaleTime } from 'd3-scale';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
-import { bisectCenter } from 'd3-array';
-import { pointer, select } from 'd3-selection';
-import { cn } from '@undp/design-system-react/cn';
 import orderBy from 'lodash.orderby';
-
-import {
+import { useEffect, useRef, useState } from 'react';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   ClassNameObject,
   CurveTypes,
   CustomLayerDataType,
   LineChartDataType,
   StyleObject,
 } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 
 interface Props {
@@ -37,9 +36,9 @@ interface Props {
   rightMargin: number;
   topMargin: number;
   bottomMargin: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   maxValue?: number;
   minValue?: number;
@@ -85,7 +84,7 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -97,7 +96,7 @@ export function Graph(props: Props) {
   };
   const MouseoverRectRef = useRef(null);
   const dataFormatted = orderBy(
-    data.map(d => ({
+    data.map((d) => ({
       ...d,
       date: parse(`${d.date}`, dateFormat, new Date()),
     })),
@@ -109,14 +108,16 @@ export function Graph(props: Props) {
   const minYear = dataFormatted[0].date;
   const maxYear = dataFormatted[dataFormatted.length - 1].date;
   const minParam: number =
-    Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) !== Infinity
-      ? Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) > 0
+    Math.min(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.min(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null)) > 0
         ? 0
-        : Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null))
+        : Math.min(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null))
       : 0;
   const maxParam: number =
-    Math.max(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) !== Infinity
-      ? Math.max(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null))
+    Math.max(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.max(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null))
       : 0;
 
   const x = scaleTime().domain([minYear, maxYear]).range([0, graphWidth]);
@@ -129,21 +130,21 @@ export function Graph(props: Props) {
     .nice();
 
   const mainGraphArea = area<FormattedDataType>()
-    .x(d => x(d.date))
-    .y1(d => y(d.y))
+    .x((d) => x(d.date))
+    .y1((d) => y(d.y))
     .y0(graphHeight)
     .curve(curve);
   const lineShape = line<FormattedDataType>()
-    .x(d => x(d.date))
-    .y(d => y(d.y))
+    .x((d) => x(d.date))
+    .y((d) => y(d.y))
     .curve(curve);
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const mousemove = (event: any) => {
       const selectedData =
         dataFormatted[
           bisectCenter(
-            dataFormatted.map(d => d.date),
+            dataFormatted.map((d) => d.date),
             x.invert(pointer(event)[0]),
             0,
           )
@@ -177,7 +178,7 @@ export function Graph(props: Props) {
           </linearGradient>
         ) : null}
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
             <text
               className={cn(
@@ -236,7 +237,7 @@ export function Graph(props: Props) {
               />
             ) : null}
           </g>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           <rect
             ref={MouseoverRectRef}
             style={{

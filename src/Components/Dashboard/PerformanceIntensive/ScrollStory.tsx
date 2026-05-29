@@ -1,20 +1,17 @@
 // Scrollytelling.tsx
 import { motion, useInView } from 'motion/react';
 import { useRef, useState } from 'react';
-
-import { SingleGraphDashboard } from '../SingleGraphDashboard';
-
-import { SingleGraphDashboardThreeDGraphs } from './SingleGraphDashboardThreeDGraphs';
-import { SingleGraphDashboardGeoHubMaps } from './SingleGraphDashboardGeoHubMaps';
-
-import {
-  PerformanceIntensiveChaptersDataType,
-  InfoBoxDataType,
-  SectionsArrDataType,
-  ThreeDGraphType,
+import type {
   GeoHubGraphType,
   GraphType,
+  InfoBoxDataType,
+  PerformanceIntensiveChaptersDataType,
+  SectionsArrDataType,
+  ThreeDGraphType,
 } from '@/Types';
+import { SingleGraphDashboard } from '../SingleGraphDashboard';
+import { SingleGraphDashboardGeoHubMaps } from './SingleGraphDashboardGeoHubMaps';
+import { SingleGraphDashboardThreeDGraphs } from './SingleGraphDashboardThreeDGraphs';
 
 interface Props {
   /** Defines if the information is shown as overlay or on the side */

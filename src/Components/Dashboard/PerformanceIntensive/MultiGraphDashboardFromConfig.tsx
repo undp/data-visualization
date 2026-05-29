@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { PerformanceIntensiveMultiGraphDashboard } from './MultiGraphDashboard';
-
-import {
+import { useEffect, useState } from 'react';
+import type {
   ClassNameObject,
   DataFilterDataType,
   DataSettingsDataType,
@@ -12,6 +9,7 @@ import {
   StyleObject,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { PerformanceIntensiveMultiGraphDashboard } from './MultiGraphDashboard';
 
 interface ConfigObject {
   dashboardID?: string;

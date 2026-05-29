@@ -4,7 +4,7 @@
  */
 const ArrToString = (d: string[] | number[]) => {
   let stringValTemp = '';
-  d.forEach(el => {
+  d.forEach((el) => {
     stringValTemp += `~${`${el}`.replace(/ /g, '+')}`;
   });
   const stringVal = stringValTemp.substring(1);
@@ -27,7 +27,7 @@ interface ParamsProps {
  */
 export function generateEmbedLink(link: string, params: ParamsProps[]) {
   let queryParams = '';
-  params.forEach(d => {
+  params.forEach((d) => {
     let paramToString = '';
     switch (typeof d.value) {
       case 'number':

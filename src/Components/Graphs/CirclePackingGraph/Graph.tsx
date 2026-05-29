@@ -1,20 +1,19 @@
-import { useEffect, useState, useRef } from 'react';
-import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
-import orderBy from 'lodash.orderby';
-import { scaleSqrt } from 'd3-scale';
-import { extent } from 'd3-array';
-import forceBoundary from 'd3-force-boundary';
 import { cn } from '@undp/design-system-react/cn';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { P } from '@undp/design-system-react/Typography';
-
-import { ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
+import { extent } from 'd3-array';
+import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
+import forceBoundary from 'd3-force-boundary';
+import { scaleSqrt } from 'd3-scale';
+import orderBy from 'lodash.orderby';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
-import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type { ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
+import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: TreeMapDataType[];
@@ -31,18 +30,18 @@ interface Props {
   suffix: string;
   prefix: string;
   selectedColor?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   highlightedDataPoints?: (string | number)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   theme: 'light' | 'dark';
   maxRadiusValue?: number;
   radius: number;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -92,9 +91,9 @@ export const Graph = (props: Props) => {
   } = props;
   const svgRef = useRef(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [viewPortDimensions, setViewPortDimensions] = useState<
     [number, number, number, number] | undefined
@@ -113,40 +112,45 @@ export const Graph = (props: Props) => {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  // Memoize data ordering and radius scale
-  const dataOrdered =
-    data.filter(d => !checkIfNullOrUndefined(d.size)).length === 0
-      ? data
-      : orderBy(
-          data.filter(d => !checkIfNullOrUndefined(d.size)),
-          'radius',
-          'asc',
-        );
+  const dataOrdered = useMemo(
+    () =>
+      data.filter((d) => !checkIfNullOrUndefined(d.size)).length === 0
+        ? data
+        : orderBy(
+            data.filter((d) => !checkIfNullOrUndefined(d.size)),
+            'radius',
+            'asc',
+          ),
+    [data],
+  );
 
-  const radiusScale =
-    data.filter(d => d.size === undefined || d.size === null).length !== data.length
-      ? scaleSqrt()
-          .domain([
-            0,
-            checkIfNullOrUndefined(maxRadiusValue)
-              ? Math.max(...data.map(d => d.size).filter(d => d !== undefined && d !== null))
-              : (maxRadiusValue as number),
-          ])
-          .range([0.25, radius])
-          .nice()
-      : undefined;
+  const radiusScale = useMemo(
+    () =>
+      data.filter((d) => d.size === undefined || d.size === null).length !== data.length
+        ? scaleSqrt()
+            .domain([
+              0,
+              checkIfNullOrUndefined(maxRadiusValue)
+                ? Math.max(...data.map((d) => d.size).filter((d) => d !== undefined && d !== null))
+                : (maxRadiusValue as number),
+            ])
+            .range([0.25, radius])
+            .nice()
+        : undefined,
+    [data, radius, maxRadiusValue],
+  );
 
   // Memoize simulation setup
   useEffect(() => {
     const setupSimulation = () => {
-      const dataTemp = dataOrdered.map(d => ({ ...d, ...(d.data && { data: { ...d.data } }) }));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const dataTemp = dataOrdered.map((d) => ({ ...d, ...(d.data && { data: { ...d.data } }) }));
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       const simulation = forceSimulation(dataTemp as any)
-        .force('y', forceY(_d => graphHeight / 2).strength(1))
-        .force('x', forceX(_d => graphWidth / 2).strength(1))
+        .force('y', forceY((_d) => graphHeight / 2).strength(1))
+        .force('x', forceX((_d) => graphWidth / 2).strength(1))
         .force(
           'collide',
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           forceCollide((d: any) => (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1)),
         )
         .force('charge', forceManyBody().strength(-15))
@@ -163,22 +167,22 @@ export const Graph = (props: Props) => {
           const xMinExtent =
             extent(
               dataTemp as TreeMapDataTypeForBubbleChart[],
-              d => d.x - (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
+              (d) => d.x - (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
             )[0] || 0;
           const yMinExtent =
             extent(
               dataTemp as TreeMapDataTypeForBubbleChart[],
-              d => d.y - (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
+              (d) => d.y - (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
             )[0] || 0;
           const xMaxExtent =
             extent(
               dataTemp as TreeMapDataTypeForBubbleChart[],
-              d => d.x + (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
+              (d) => d.x + (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
             )[1] || 0;
           const yMaxExtent =
             extent(
               dataTemp as TreeMapDataTypeForBubbleChart[],
-              d => d.y + (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
+              (d) => d.y + (radiusScale ? radiusScale(d.size || 0) + 1 : radius + 1),
             )[1] || 0;
           setViewPortDimensions([
             xMinExtent,
@@ -190,9 +194,9 @@ export const Graph = (props: Props) => {
     };
 
     setupSimulation();
-  }, [data, radius, graphHeight, graphWidth, maxRadiusValue, dataOrdered, radiusScale]);
+  }, [radius, graphHeight, graphWidth, dataOrdered, radiusScale]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const handleMouseEnter = (event: any, d: any) => {
     setMouseOverData(d);
     setEventY(event.clientY);
@@ -200,14 +204,14 @@ export const Graph = (props: Props) => {
     onSeriesMouseOver?.(d);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const handleMouseMove = (event: any, d: any) => {
     setMouseOverData(d);
     setEventY(event.clientY);
     setEventX(event.clientX);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const handleClick = (d: any) => {
     if (onSeriesMouseClick || detailsOnClick) {
       if (mouseClickData === d.label && resetSelectionOnDoubleClick) {
@@ -227,15 +231,15 @@ export const Graph = (props: Props) => {
     onSeriesMouseOver?.(undefined);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const getCircleColor = (d: any) =>
-    data.filter(el => el.color).length === 0
+    data.filter((el) => el.color).length === 0
       ? colors[0]
       : !d.color
         ? Colors.gray
         : colors[colorDomain.indexOf(d.color)];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const getOpacity = (d: any) =>
     selectedColor
       ? d.color
@@ -274,19 +278,20 @@ export const Graph = (props: Props) => {
           ref={svgRef}
         >
           <g transform={`translate(${margin.left},${margin.top})`}>
-            {finalData.map(d => {
+            {finalData.map((d) => {
               const circleColor = getCircleColor(d);
               const opacity = getOpacity(d);
               const bubbleRadius = radiusScale ? radiusScale(d.size || 0) : radius;
               const showLabel = bubbleRadius > 20 && (showLabels || showValues);
               return (
+                // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
                 <g
                   className='undp-viz-g-with-hover'
                   key={d.label}
                   opacity={opacity}
                   transform={`translate(${d.x},${d.y})`}
-                  onMouseEnter={event => handleMouseEnter(event, d)}
-                  onMouseMove={event => handleMouseMove(event, d)}
+                  onMouseEnter={(event) => handleMouseEnter(event, d)}
+                  onMouseMove={(event) => handleMouseMove(event, d)}
                   onClick={() => handleClick(d)}
                   onMouseLeave={handleMouseLeave}
                 >

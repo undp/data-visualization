@@ -1,9 +1,8 @@
-import { NumberValue } from 'd3-scale';
 import { cn } from '@undp/design-system-react/cn';
+import type { NumberValue } from 'd3-scale';
 import { motion } from 'motion/react';
-
+import type { AnimateDataType } from '@/Types';
 import { getPathFromPoints } from '@/Utils/getPathFromPoints';
-import { AnimateDataType } from '@/Types';
 
 interface Props {
   areaSettings: {
@@ -23,10 +22,10 @@ export function CustomArea(props: Props) {
   const { areaSettings, scaleX, scaleY, animate, isInView } = props;
   return (
     <>
-      {areaSettings.map(d => (
+      {areaSettings.map((d) => (
         <motion.g
           key={d.coordinates
-            .map(item => (item instanceof Date ? item.toISOString() : item.toString()))
+            .map((item) => (item instanceof Date ? item.toISOString() : item.toString()))
             .join('~')}
           variants={{
             initial: {

@@ -21,7 +21,7 @@ export function imageDownload(node: HTMLElement, filename: string) {
     features: {
       copyScrollbar: false,
     },
-    filter: node => {
+    filter: (node) => {
       if (node instanceof Element) {
         return (
           !node.classList.contains('undp-viz-download-button') &&
@@ -37,7 +37,7 @@ export function imageDownload(node: HTMLElement, filename: string) {
       link.href = dataUrl;
       link.click();
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('Error generating image:', error);
     });
 }

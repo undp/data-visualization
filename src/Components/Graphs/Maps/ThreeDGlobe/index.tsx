@@ -1,12 +1,12 @@
-import React, { useEffect, useEffectEvent, useRef, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-import * as THREE from 'three';
-
-import Graph from './Graph';
-
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type React from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import type * as THREE from 'three';
+import { Colors } from '@/Components/ColorPalette';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import {
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type {
   ChoroplethMapDataType,
   ClassNameObject,
   FogDataType,
@@ -18,10 +18,9 @@ import {
   StyleObject,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
-import { Colors } from '@/Components/ColorPalette';
-import { getUniqValue } from '@/Utils/getUniqValue';
 import { getJenks } from '@/Utils/getJenks';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getUniqValue } from '@/Utils/getUniqValue';
+import Graph from './Graph';
 
 interface Props {
   // Data
@@ -70,7 +69,7 @@ interface Props {
 
   // Graph Parameters
   /** Map data as an object in geoJson format or a url for geoJson */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   mapData?: any;
   /** Stroke color of the regions in the map */
   mapBorderColor?: string;
@@ -123,16 +122,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -210,7 +209,7 @@ export function ThreeDGlobe(props: Props) {
     collapseColorScaleByDefault,
     numberDisplayOptions,
   } = props;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mapShape, setMapShape] = useState<any>(undefined);
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -220,7 +219,7 @@ export function ThreeDGlobe(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -229,28 +228,28 @@ export function ThreeDGlobe(props: Props) {
     }
     return () => resizeObserver.disconnect();
   }, []);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const onUpdateShape = useEffectEvent((shape: any) => {
     setMapShape(shape);
   });
   useEffect(() => {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
-      fetchData.then(d => {
+      fetchData.then((d) => {
         if (
           mapData ===
           'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-simplified.json'
         ) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           const features = d.features.map((el: any) => {
             if (el.geometry.type === 'Polygon') {
               const reversed = [...el.geometry.coordinates[0]].reverse();
               const geometry = { ...el.geometry, coordinates: [reversed] };
               return { ...el, geometry };
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
             const coord: any = [];
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
             el.geometry.coordinates.forEach((c: any) => {
               const reversed = [...c[0]].reverse();
               coord.push([reversed]);
@@ -271,7 +270,7 @@ export function ThreeDGlobe(props: Props) {
     (scaleType === 'categorical'
       ? getUniqValue(data, 'x')
       : getJenks(
-          data.map(d => d.x as number | null | undefined),
+          data.map((d) => d.x as number | null | undefined),
           colors?.length || 4,
         ));
   return (
@@ -306,9 +305,9 @@ export function ThreeDGlobe(props: Props) {
           graphDownload={undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />

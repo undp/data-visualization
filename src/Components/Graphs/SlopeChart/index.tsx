@@ -1,24 +1,22 @@
-import { useState, useRef, useEffect } from 'react';
-
-import { Graph } from './Graph';
-
-import {
+import { useEffect, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type {
+  AnimateDataType,
+  ClassNameObject,
+  CustomLayerDataType,
   Languages,
   SlopeChartDataType,
   SourcesDataType,
   StyleObject,
-  ClassNameObject,
-  CustomLayerDataType,
-  AnimateDataType,
 } from '@/Types';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
-import { Colors } from '@/Components/ColorPalette';
-import { EmptyState } from '@/Components/Elements/EmptyState';
 import { uniqBy } from '@/Utils/uniqBy';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { Graph } from './Graph';
 
 interface Props {
   // Data
@@ -107,16 +105,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -183,7 +181,7 @@ export function SlopeChart(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -224,14 +222,14 @@ export function SlopeChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
       ) : null}
-      {showColorScale && data.filter(el => el.color).length !== 0 && data.length > 0 ? (
+      {showColorScale && data.filter((el) => el.color).length !== 0 && data.length > 0 ? (
         <ColorLegendWithMouseOver
           width={width}
           colorLegendTitle={colorLegendTitle}
@@ -246,16 +244,18 @@ export function SlopeChart(props: Props) {
         {data.length === 0 && <EmptyState />}
         {svgWidth && svgHeight && data.length > 0 ? (
           <Graph
-            data={data.filter(d => !checkIfNullOrUndefined(d.y1) && !checkIfNullOrUndefined(d.y2))}
+            data={data.filter(
+              (d) => !checkIfNullOrUndefined(d.y1) && !checkIfNullOrUndefined(d.y2),
+            )}
             width={fillContainer || !width ? svgWidth : svgWidth < width ? svgWidth : width}
             height={svgHeight}
             colorDomain={
-              data.filter(el => el.color).length === 0
+              data.filter((el) => el.color).length === 0
                 ? []
                 : colorDomain || (uniqBy(data, 'color', true) as string[])
             }
             colors={
-              data.filter(el => el.color).length === 0
+              data.filter((el) => el.color).length === 0
                 ? colors
                   ? [colors as string]
                   : [Colors.primaryColors['blue-600']]

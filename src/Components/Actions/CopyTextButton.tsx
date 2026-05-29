@@ -1,7 +1,7 @@
 import { Button } from '@undp/design-system-react/Button';
+import { cn } from '@undp/design-system-react/cn';
 import { Toaster } from '@undp/design-system-react/Toaster';
 import { useToast } from '@undp/design-system-react/ToasterHooks';
-import { cn } from '@undp/design-system-react/cn';
 
 import { Copy } from '@/Components/Icons';
 

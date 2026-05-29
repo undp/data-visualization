@@ -1,39 +1,39 @@
+import animatedScatterPlot from './config/animatedScatterPlot.json';
 import barGraph from './config/barGraph.json';
-import stackedBarGraph from './config/stackedBarGraph.json';
-import groupedBarGraph from './config/groupedBarGraph.json';
-import circlePacking from './config/circlePacking.json';
-import treeMap from './config/treeMap.json';
-import donutGraph from './config/donutGraph.json';
 import beeswarmChart from './config/beeswarmChart.json';
+import biVariateChoroplethMap from './config/biVariateChoroplethMap.json';
+import bulletChart from './config/bulletChart.json';
 import butterflyChart from './config/butterflyChart.json';
+import choroplethMap from './config/choroplethMap.json';
+import circlePacking from './config/circlePacking.json';
 import dataCards from './config/dataCards.json';
 import dataTable from './config/dataTable.json';
-import dumbbellChart from './config/dumbbellChart.json';
 import differenceLineChart from './config/differenceLineChart.json';
-import dualAxisLineChart from './config/dualAxisLineChart.json';
-import lineChart from './config/lineChart.json';
-import lineChartWithInterval from './config/lineChartWithInterval.json';
-import sparkline from './config/sparkline.json';
-import multiLineChart from './config/multiLineChart.json';
-import multiLineAltChart from './config/multiLineAltChart.json';
-import paretoChart from './config/paretoChart.json';
-import sankeyChart from './config/sankeyChart.json';
-import scatterPlot from './config/scatterPlot.json';
-import animatedScatterPlot from './config/animatedScatterPlot.json';
-import slopeChart from './config/slopeChart.json';
-import stripChart from './config/stripChart.json';
-import stackedAreaChart from './config/stackedAreaChart.json';
-import bulletChart from './config/bulletChart.json';
-import statCard from './config/statCard.json';
-import unitChart from './config/unitChart.json';
-import choroplethMap from './config/choroplethMap.json';
-import biVariateChoroplethMap from './config/biVariateChoroplethMap.json';
+import donutGraph from './config/donutGraph.json';
 import dotDensityMap from './config/dotDensityMap.json';
-import radarChart from './config/radarChart.json';
+import dualAxisLineChart from './config/dualAxisLineChart.json';
+import dumbbellChart from './config/dumbbellChart.json';
+import geoHubCompareMap from './config/geoHubCompareMap.json';
 import geoHubMap from './config/geoHubMap.json';
 import geoHubMapWithLayerSelection from './config/geoHubMapWithLayerSelection.json';
-import geoHubCompareMap from './config/geoHubCompareMap.json';
 import griddedChartExtraParam from './config/griddedChartExtraParam.json';
+import groupedBarGraph from './config/groupedBarGraph.json';
+import lineChart from './config/lineChart.json';
+import lineChartWithInterval from './config/lineChartWithInterval.json';
+import multiLineAltChart from './config/multiLineAltChart.json';
+import multiLineChart from './config/multiLineChart.json';
+import paretoChart from './config/paretoChart.json';
+import radarChart from './config/radarChart.json';
+import sankeyChart from './config/sankeyChart.json';
+import scatterPlot from './config/scatterPlot.json';
+import slopeChart from './config/slopeChart.json';
+import sparkline from './config/sparkline.json';
+import stackedAreaChart from './config/stackedAreaChart.json';
+import stackedBarGraph from './config/stackedBarGraph.json';
+import statCard from './config/statCard.json';
+import stripChart from './config/stripChart.json';
+import treeMap from './config/treeMap.json';
+import unitChart from './config/unitChart.json';
 
 export function GraphSettingsSelector(
   graph: string,
@@ -78,21 +78,21 @@ export function GraphSettingsSelector(
     'GeoHub compare map': geoHubCompareMap,
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   return typeof (configFiles as any)[graph] === 'string'
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       (configFiles as any)[graph]
     : JSON.stringify(
         onlySettings
-          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
             (configFiles as any)[graph].graphSettings
           : forGriddedGraph
             ? {
                 ...griddedChartExtraParam,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                 ...(configFiles as any)[graph],
               }
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
               (configFiles as any)[graph],
         null,
         2,

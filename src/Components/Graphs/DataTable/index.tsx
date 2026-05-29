@@ -1,18 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import isEqual from 'fast-deep-equal';
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import intersection from 'lodash.intersection';
 import { P } from '@undp/design-system-react/Typography';
+import isEqual from 'fast-deep-equal';
+import intersection from 'lodash.intersection';
 import orderBy from 'lodash.orderby';
-
-import {
-  DataTableColumnDataType,
-  Languages,
-  SourcesDataType,
-  StyleObject,
-  ClassNameObject,
-} from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import {
@@ -22,8 +13,15 @@ import {
   SortingIconAscending,
   SortingIconDescending,
 } from '@/Components/Icons';
+import type {
+  ClassNameObject,
+  DataTableColumnDataType,
+  Languages,
+  SourcesDataType,
+  StyleObject,
+} from '@/Types';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
-import { GraphContainer } from '@/Components/Elements/GraphContainer';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   // Data
@@ -70,6 +68,7 @@ interface Props {
 
   // Interactions and Callbacks
   /** Callback for mouse click event */
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -82,7 +81,7 @@ interface Props {
 }
 
 const TotalWidth = (columns: (number | undefined)[]) => {
-  const columnWidth = columns.map(d => d || 1);
+  const columnWidth = columns.map((d) => d || 1);
   const sum = columnWidth.reduce((acc, cur) => acc + cur, 0);
   return sum;
 };
@@ -113,14 +112,15 @@ export function DataTable(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const [columnSortBy, setColumnSortBy] = useState<string | undefined>(undefined);
 
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [popupVisible, setPopupVisible] = useState<string | undefined>(undefined);
   const [popupStyle, setPopupStyle] = useState({});
   const [filterOption, setFilterOption] = useState(
     columnData
-      .filter(d => d.filterOptions && d.filterOptions.length > 0)
-      .map(d => ({ id: d.columnId, option: d.filterOptions as string[] })),
+      .filter((d) => d.filterOptions && d.filterOptions.length > 0)
+      .map((d) => ({ id: d.columnId, option: d.filterOptions as string[] })),
   );
   const [sortedData, setSortedData] = useState(data);
 
@@ -129,19 +129,21 @@ export function DataTable(props: Props) {
   });
 
   useEffect(() => {
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const dataFiltered: any = [];
 
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.forEach((d: any) => {
       let filter = true;
-      filterOption.forEach(el => {
+      filterOption.forEach((el) => {
         if (
           typeof d[el.id] !== 'object' &&
           typeof d[el.id] !== 'function' &&
           typeof d[el.id] !== 'symbol'
         ) {
-          if (columnData[columnData.findIndex(cd => cd.columnId === el.id)].separator) {
+          if (columnData[columnData.findIndex((cd) => cd.columnId === el.id)].separator) {
             const arr = d[el.id].split(
-              columnData[columnData.findIndex(cd => cd.columnId === el.id)].separator,
+              columnData[columnData.findIndex((cd) => cd.columnId === el.id)].separator,
             );
             if (intersection(arr, el.option).length === 0) filter = false;
           } else if (el.option.indexOf(d[el.id]) === -1) filter = false;
@@ -198,16 +200,16 @@ export function DataTable(props: Props) {
               <table className='w-full' style={{ borderCollapse: 'collapse' }}>
                 <thead className='text-left bg-primary-gray-300 dark:bg-primary-gray-550'>
                   <tr>
-                    {columnData?.map((d, i) => (
+                    {columnData?.map((d) => (
                       <th
                         className='text-primary-gray-700 dark:text-primary-gray-100 text-sm'
                         style={{
                           width: `calc(${
                             (100 * (d.columnWidth || 1)) /
-                            TotalWidth(columnData.map(cd => cd.columnWidth || 1))
+                            TotalWidth(columnData.map((cd) => cd.columnWidth || 1))
                           }%`,
                         }}
-                        key={i}
+                        key={d.columnId}
                       >
                         <div className='flex gap-2 justify-between items-center p-4'>
                           <P
@@ -246,11 +248,11 @@ export function DataTable(props: Props) {
                               )}
                             </button>
                           ) : null}
-                          {d.filterOptions && d.filterOptions.length ? (
+                          {d.filterOptions?.length ? (
                             <button
                               type='button'
                               className='bg-transparent cursor-pointer m-0 p-0 border-0'
-                              onClick={event => {
+                              onClick={(event) => {
                                 if (popupVisible === d.columnId) {
                                   setPopupVisible(undefined);
                                 } else if (event.currentTarget) {
@@ -267,7 +269,7 @@ export function DataTable(props: Props) {
                                 }
                               }}
                             >
-                              {filterOption[filterOption.findIndex(el => el.id === d.columnId)]
+                              {filterOption[filterOption.findIndex((el) => el.id === d.columnId)]
                                 .option.length === d.filterOptions?.length ? (
                                 <FilterIcon />
                               ) : (
@@ -281,8 +283,10 @@ export function DataTable(props: Props) {
                   </tr>
                 </thead>
                 <tbody>
+                  {/* biome-ignore lint/suspicious/noExplicitAny: undefined data type */}
                   {sortedData?.map((d: any, i: number) => (
                     <tr
+                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                       key={i}
                       className={`cursor-${
                         onSeriesMouseClick ? 'pointer' : 'auto'
@@ -304,16 +308,16 @@ export function DataTable(props: Props) {
                         }
                       }}
                     >
-                      {columnData.map((el, j) => (
+                      {columnData.map((el) => (
                         <td
-                          key={j}
+                          key={el.columnId}
                           className={`text-primary-gray-700 dark:text-primary-gray-100 text-sm text-${
                             el.align || 'left'
                           }`}
                           style={{
                             width: `calc(${
                               (100 * (d.columnWidth || 1)) /
-                              TotalWidth(columnData.map(cd => cd.columnWidth || 1))
+                              TotalWidth(columnData.map((cd) => cd.columnWidth || 1))
                             }%`,
                           }}
                         >
@@ -345,13 +349,13 @@ export function DataTable(props: Props) {
                                         backgroundColor:
                                           el.chipColors[
                                             el.chipColors.findIndex(
-                                              c => c.value === d[el.chipColumnId || el.columnId],
+                                              (c) => c.value === d[el.chipColumnId || el.columnId],
                                             )
                                           ].color,
                                         color: getTextColorBasedOnBgColor(
                                           el.chipColors[
                                             el.chipColors.findIndex(
-                                              c => c.value === d[el.chipColumnId || el.columnId],
+                                              (c) => c.value === d[el.chipColumnId || el.columnId],
                                             )
                                           ].color,
                                         ),
@@ -372,63 +376,59 @@ export function DataTable(props: Props) {
                             ) : typeof d[el.columnId] === 'string' ? (
                               el.separator ? (
                                 <div className='text-primary-gray-700 dark:text-primary-gray-100 flex flex-wrap gap-2'>
-                                  {d[el.columnId]
-                                    .split(el.separator)
-                                    .map((element: string, indx: number) => (
-                                      <P
-                                        key={indx}
-                                        marginBottom='none'
-                                        size='sm'
-                                        className={`text-primary-gray-700 dark:text-primary-gray-100 w-fit ${
-                                          el.chip
-                                            ? 'grow-0 rounded-sm p-2'
-                                            : 'grow rounded-none p-0'
-                                        } text-${el.align || 'left'} ${
-                                          el.chip
-                                            ? !el.chipColors
-                                              ? 'bg-primary-gray-300 dark:bg-primary-gray-500'
-                                              : ''
-                                            : 'bg-transparent'
-                                        }`}
-                                        style={{
-                                          ...(el.chip && el.chipColors
-                                            ? {
-                                                backgroundColor:
-                                                  el.chipColors[
-                                                    el.chipColors.findIndex(
-                                                      c =>
-                                                        c.value ===
-                                                        (el.chipColumnId
-                                                          ? d[el.chipColumnId]
-                                                          : element),
-                                                    )
-                                                  ].color,
-                                                color: getTextColorBasedOnBgColor(
-                                                  el.chipColors[
-                                                    el.chipColors.findIndex(
-                                                      c =>
-                                                        c.value ===
-                                                        (el.chipColumnId
-                                                          ? d[el.chipColumnId]
-                                                          : element),
-                                                    )
-                                                  ].color,
-                                                ),
-                                              }
-                                            : {}),
-                                        }}
-                                      >
-                                        {numberFormattingFunction(
-                                          element,
-                                          naLabel,
-                                          el.precision,
-                                          el.prefix,
-                                          el.suffix,
-                                          el.locale,
-                                          el.padZeros,
-                                        )}
-                                      </P>
-                                    ))}
+                                  {d[el.columnId].split(el.separator).map((element: string) => (
+                                    <P
+                                      key={element}
+                                      marginBottom='none'
+                                      size='sm'
+                                      className={`text-primary-gray-700 dark:text-primary-gray-100 w-fit ${
+                                        el.chip ? 'grow-0 rounded-sm p-2' : 'grow rounded-none p-0'
+                                      } text-${el.align || 'left'} ${
+                                        el.chip
+                                          ? !el.chipColors
+                                            ? 'bg-primary-gray-300 dark:bg-primary-gray-500'
+                                            : ''
+                                          : 'bg-transparent'
+                                      }`}
+                                      style={{
+                                        ...(el.chip && el.chipColors
+                                          ? {
+                                              backgroundColor:
+                                                el.chipColors[
+                                                  el.chipColors.findIndex(
+                                                    (c) =>
+                                                      c.value ===
+                                                      (el.chipColumnId
+                                                        ? d[el.chipColumnId]
+                                                        : element),
+                                                  )
+                                                ].color,
+                                              color: getTextColorBasedOnBgColor(
+                                                el.chipColors[
+                                                  el.chipColors.findIndex(
+                                                    (c) =>
+                                                      c.value ===
+                                                      (el.chipColumnId
+                                                        ? d[el.chipColumnId]
+                                                        : element),
+                                                  )
+                                                ].color,
+                                              ),
+                                            }
+                                          : {}),
+                                      }}
+                                    >
+                                      {numberFormattingFunction(
+                                        element,
+                                        naLabel,
+                                        el.precision,
+                                        el.prefix,
+                                        el.suffix,
+                                        el.locale,
+                                        el.padZeros,
+                                      )}
+                                    </P>
+                                  ))}
                                 </div>
                               ) : (
                                 <P
@@ -449,13 +449,15 @@ export function DataTable(props: Props) {
                                           backgroundColor:
                                             el.chipColors[
                                               el.chipColors.findIndex(
-                                                c => c.value === d[el.chipColumnId || el.columnId],
+                                                (c) =>
+                                                  c.value === d[el.chipColumnId || el.columnId],
                                               )
                                             ].color,
                                           color: getTextColorBasedOnBgColor(
                                             el.chipColors[
                                               el.chipColors.findIndex(
-                                                c => c.value === d[el.chipColumnId || el.columnId],
+                                                (c) =>
+                                                  c.value === d[el.chipColumnId || el.columnId],
                                               )
                                             ].color,
                                           ),
@@ -521,20 +523,20 @@ export function DataTable(props: Props) {
             </P>
             <div className='flex flex-col gap-2'>
               {columnData[
-                columnData.findIndex(d => d.columnId === popupVisible)
-              ].filterOptions?.map((el, i) => (
-                <div key={i}>
-                  <label key={i} className='undp-viz-label'>
+                columnData.findIndex((d) => d.columnId === popupVisible)
+              ].filterOptions?.map((el) => (
+                <div key={el}>
+                  <label className='undp-viz-label'>
                     <input
                       type='checkbox'
                       className='undp-viz-checkbox'
                       checked={
                         filterOption[
-                          filterOption.findIndex(d => d.id === popupVisible)
+                          filterOption.findIndex((d) => d.id === popupVisible)
                         ].option.indexOf(el) !== -1
                       }
                       onChange={() => {
-                        const indx = filterOption.findIndex(d => d.id === popupVisible);
+                        const indx = filterOption.findIndex((d) => d.id === popupVisible);
                         const opt = [...filterOption[indx].option];
                         if (opt.indexOf(el) !== -1) {
                           opt.splice(opt.indexOf(el), 1);

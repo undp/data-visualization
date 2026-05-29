@@ -1,16 +1,16 @@
-import { H3 } from '@undp/design-system-react/Typography';
 import { cn } from '@undp/design-system-react/cn';
+import { H3 } from '@undp/design-system-react/Typography';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import {
+import type {
   ClassNameObject,
   Languages,
   NumberFormatOptions,
   SourcesDataType,
   StyleObject,
 } from '@/Types';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -22,8 +22,6 @@ interface Props {
   footNote?: string | React.ReactNode;
   /** Source data for the graph */
   sources?: SourcesDataType[];
-  /** Accessibility label */
-  ariaLabel?: string;
 
   // Colors and Styling
   /** Background color of the graph */
@@ -77,7 +75,6 @@ export function BasicStatCard(props: Props) {
     graphID,
     language = 'en',
     theme = 'light',
-    ariaLabel,
     textBackground = false,
     headingFontSize = '4.375rem',
     centerAlign = false,
@@ -108,12 +105,6 @@ export function BasicStatCard(props: Props) {
           ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
           padding: backgroundColor ? padding || '1rem' : padding || 0,
         }}
-        aria-label={
-          ariaLabel ||
-          `${graphTitle ? `The graph shows ${graphTitle}. ` : ''}This is a statistic card.${
-            graphDescription ? ` ${graphDescription}` : ''
-          }`
-        }
       >
         <div
           className={`flex flex-col w-full grow ${layout !== 'secondary' ? 'gap-12 justify-between' : 'gap-4 justify-center'}`}

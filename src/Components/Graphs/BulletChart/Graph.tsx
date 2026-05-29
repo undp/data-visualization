@@ -1,12 +1,19 @@
-import isEqual from 'fast-deep-equal';
-import { scaleLinear, scaleBand } from 'd3-scale';
-import { useMemo, useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
+import { scaleBand, scaleLinear } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import sum from 'lodash.sum';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import {
+import { useMemo, useRef, useState } from 'react';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
+import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
+import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
+import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   BulletChartDataType,
   ClassNameObject,
@@ -14,16 +21,8 @@ import {
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
-import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
-import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
-import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
-import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
-import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: BulletChartDataType[];
@@ -42,20 +41,20 @@ interface Props {
   topMargin?: number;
   bottomMargin?: number;
   refValues?: ReferenceDataType[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   maxValue?: number;
   minValue?: number;
   highlightedDataPoints?: (string | number)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   labelOrder?: string[];
   maxBarThickness?: number;
   minBarThickness?: number;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   barAxisTitle?: string;
   noOfTicks: number;
@@ -137,9 +136,9 @@ export function VerticalGraph(props: Props) {
     left: barAxisTitle ? leftMargin + 30 : leftMargin,
     right: rightMargin,
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -147,16 +146,24 @@ export function VerticalGraph(props: Props) {
   const graphHeight = height - margin.top - margin.bottom;
 
   const barMaxValue =
-    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) < 0
-      ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
-  const targetMaxValue =
-    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number)) <
+    Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number)) <
     0
       ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.target as number));
+      : Math.max(
+          ...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number),
+        );
+  const targetMaxValue =
+    Math.max(
+      ...data.filter((d) => !checkIfNullOrUndefined(d.target)).map((d) => d.target as number),
+    ) < 0
+      ? 0
+      : Math.max(
+          ...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.target as number),
+        );
   const qualitativeRangeMaxValue = Math.max(
-    ...data.map(d => sum((d.qualitativeRange || []).filter(l => !checkIfNullOrUndefined(l))) || 0),
+    ...data.map(
+      (d) => sum((d.qualitativeRange || []).filter((l) => !checkIfNullOrUndefined(l))) || 0,
+    ),
   );
   const xMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
@@ -167,16 +174,20 @@ export function VerticalGraph(props: Props) {
           ...[barMaxValue, targetMaxValue, qualitativeRangeMaxValue].filter(Number.isFinite),
         );
   const barMinValue =
-    Math.min(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) >= 0
-      ? 0
-      : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
-
-  const targetMinValue =
-    Math.min(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number)) >=
+    Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number)) >=
     0
       ? 0
       : Math.min(
-          ...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number),
+          ...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number),
+        );
+
+  const targetMinValue =
+    Math.min(
+      ...data.filter((d) => !checkIfNullOrUndefined(d.target)).map((d) => d.target as number),
+    ) >= 0
+      ? 0
+      : Math.min(
+          ...data.filter((d) => !checkIfNullOrUndefined(d.target)).map((d) => d.target as number),
         );
   const xMinValue = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
@@ -193,11 +204,11 @@ export function VerticalGraph(props: Props) {
       return { ...d, id };
     });
 
-    const missingIds = labelOrder ? labelOrder.filter(id => !idSet.has(id)) : [];
+    const missingIds = labelOrder ? labelOrder.filter((id) => !idSet.has(id)) : [];
 
     return [
       ...dataWithIdWithoutMissingIds,
-      ...missingIds.map(id => ({
+      ...missingIds.map((id) => ({
         id,
         label: id,
         size: null,
@@ -208,7 +219,7 @@ export function VerticalGraph(props: Props) {
   }, [data, labelOrder]);
 
   const barOrder = useMemo(() => {
-    return labelOrder ?? dataWithId.map(d => `${d.id}`);
+    return labelOrder ?? dataWithId.map((d) => `${d.id}`);
   }, [labelOrder, dataWithId]);
 
   const y = scaleLinear().domain([xMinValue, xMaxValue]).range([graphHeight, 0]).nice();
@@ -268,8 +279,8 @@ export function VerticalGraph(props: Props) {
           />
           {showTicks ? (
             <YTicksAndGridLines
-              values={yTicks.filter(d => d !== 0)}
-              y={yTicks.filter(d => d !== 0).map(d => y(d))}
+              values={yTicks.filter((d) => d !== 0)}
+              y={yTicks.filter((d) => d !== 0).map((d) => y(d))}
               x1={0 - leftMargin}
               x2={graphWidth + margin.right}
               styles={{
@@ -298,14 +309,14 @@ export function VerticalGraph(props: Props) {
             text={barAxisTitle}
             rotate90
           />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
-            {dataWithId.map(d =>
+            {dataWithId.map((d) =>
               !checkIfNullOrUndefined(x(d.id)) ? (
                 <motion.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -322,7 +333,7 @@ export function VerticalGraph(props: Props) {
                       }
                     }
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -361,6 +372,7 @@ export function VerticalGraph(props: Props) {
                   {d.qualitativeRange
                     ? d.qualitativeRange.map((_el, j) => (
                         <motion.rect
+                          // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                           key={j}
                           x={0}
                           exit={{
@@ -554,26 +566,22 @@ export function VerticalGraph(props: Props) {
                 </motion.g>
               ) : null,
             )}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineY
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    y={y(el.value as number)}
-                    x1={0 - leftMargin}
-                    x2={graphWidth + margin.right}
-                    classNames={el.classNames}
-                    styles={el.styles}
-                    animate={animate}
-                    isInView={isInView}
-                  />
-                ))}
-              </>
-            ) : null}
+            {refValues?.map((el) => (
+              <RefLineY
+                key={el.text}
+                text={el.text}
+                color={el.color}
+                y={y(el.value as number)}
+                x1={0 - leftMargin}
+                x2={graphWidth + margin.right}
+                classNames={el.classNames}
+                styles={el.styles}
+                animate={animate}
+                isInView={isInView}
+              />
+            ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (
@@ -652,9 +660,9 @@ export function HorizontalGraph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -668,18 +676,24 @@ export function HorizontalGraph(props: Props) {
   const graphHeight = height - margin.top - margin.bottom;
 
   const barMaxValue =
-    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) < 0
-      ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
-  const targetMaxValue =
-    Math.max(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number)) <
+    Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number)) <
     0
       ? 0
       : Math.max(
-          ...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number),
+          ...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number),
+        );
+  const targetMaxValue =
+    Math.max(
+      ...data.filter((d) => !checkIfNullOrUndefined(d.target)).map((d) => d.target as number),
+    ) < 0
+      ? 0
+      : Math.max(
+          ...data.filter((d) => !checkIfNullOrUndefined(d.target)).map((d) => d.target as number),
         );
   const qualitativeRangeMaxValue = Math.max(
-    ...data.map(d => sum((d.qualitativeRange || []).filter(l => !checkIfNullOrUndefined(l))) || 0),
+    ...data.map(
+      (d) => sum((d.qualitativeRange || []).filter((l) => !checkIfNullOrUndefined(l))) || 0,
+    ),
   );
   const xMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
@@ -690,16 +704,20 @@ export function HorizontalGraph(props: Props) {
           ...[barMaxValue, targetMaxValue, qualitativeRangeMaxValue].filter(Number.isFinite),
         );
   const barMinValue =
-    Math.min(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number)) >= 0
-      ? 0
-      : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.size)).map(d => d.size as number));
-
-  const targetMinValue =
-    Math.min(...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number)) >=
+    Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number)) >=
     0
       ? 0
       : Math.min(
-          ...data.filter(d => !checkIfNullOrUndefined(d.target)).map(d => d.target as number),
+          ...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number),
+        );
+
+  const targetMinValue =
+    Math.min(
+      ...data.filter((d) => !checkIfNullOrUndefined(d.target)).map((d) => d.target as number),
+    ) >= 0
+      ? 0
+      : Math.min(
+          ...data.filter((d) => !checkIfNullOrUndefined(d.target)).map((d) => d.target as number),
         );
   const xMinValue = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
@@ -716,11 +734,11 @@ export function HorizontalGraph(props: Props) {
       return { ...d, id };
     });
 
-    const missingIds = labelOrder ? labelOrder.filter(id => !idSet.has(id)) : [];
+    const missingIds = labelOrder ? labelOrder.filter((id) => !idSet.has(id)) : [];
 
     return [
       ...dataWithIdWithoutMissingIds,
-      ...missingIds.map(id => ({
+      ...missingIds.map((id) => ({
         id,
         label: id,
         size: null,
@@ -731,7 +749,7 @@ export function HorizontalGraph(props: Props) {
   }, [data, labelOrder]);
 
   const barOrder = useMemo(() => {
-    return labelOrder ?? dataWithId.map(d => `${d.id}`);
+    return labelOrder ?? dataWithId.map((d) => `${d.id}`);
   }, [labelOrder, dataWithId]);
 
   const x = scaleLinear().domain([xMinValue, xMaxValue]).range([0, graphWidth]).nice();
@@ -760,8 +778,8 @@ export function HorizontalGraph(props: Props) {
         <g transform={`translate(${margin.left},${margin.top})`}>
           {showTicks ? (
             <XTicksAndGridLines
-              values={xTicks.filter(d => d !== 0)}
-              x={xTicks.filter(d => d !== 0).map(d => x(d))}
+              values={xTicks.filter((d) => d !== 0)}
+              x={xTicks.filter((d) => d !== 0).map((d) => x(d))}
               y1={0 - topMargin}
               y2={graphHeight + margin.bottom}
               styles={{
@@ -797,14 +815,14 @@ export function HorizontalGraph(props: Props) {
             classNames={{ axis: classNames?.yAxis?.axis }}
             styles={{ axis: styles?.yAxis?.axis }}
           />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
-            {dataWithId.map(d =>
+            {dataWithId.map((d) =>
               !checkIfNullOrUndefined(y(d.id)) ? (
                 <motion.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -821,7 +839,7 @@ export function HorizontalGraph(props: Props) {
                       }
                     }
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -860,6 +878,7 @@ export function HorizontalGraph(props: Props) {
                   {d.qualitativeRange
                     ? d.qualitativeRange.map((el, j) => (
                         <motion.rect
+                          // biome-ignore lint/suspicious/noArrayIndexKey: index is the identifier
                           key={j}
                           exit={{
                             width: 0,
@@ -1042,27 +1061,23 @@ export function HorizontalGraph(props: Props) {
                 </motion.g>
               ) : null,
             )}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineX
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    x={x(el.value as number)}
-                    y1={0 - margin.top}
-                    y2={graphHeight + margin.bottom}
-                    textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-                    classNames={el.classNames}
-                    styles={el.styles}
-                    animate={animate}
-                    isInView={isInView}
-                  />
-                ))}
-              </>
-            ) : null}
+            {refValues?.map((el) => (
+              <RefLineX
+                key={el.text}
+                text={el.text}
+                color={el.color}
+                x={x(el.value as number)}
+                y1={0 - margin.top}
+                y2={graphHeight + margin.bottom}
+                textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                classNames={el.classNames}
+                styles={el.styles}
+                animate={animate}
+                isInView={isInView}
+              />
+            ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

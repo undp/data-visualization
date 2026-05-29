@@ -30,7 +30,6 @@ export function ColorLegendWithMouseOver(props: Props) {
     <div
       className={cn('flex leading-0 pb-3', isCenter && 'justify-center', className)}
       style={{ maxWidth: width ? `${width}px` : 'none' }}
-      aria-label='Color legend'
     >
       <div>
         {colorLegendTitle && colorLegendTitle !== '' ? (
@@ -40,10 +39,15 @@ export function ColorLegendWithMouseOver(props: Props) {
         ) : null}
         <div className='flex flex-wrap gap-3.5 mb-0'>
           {colorDomain.map((d, i) => (
+            //  biome-ignore lint/a11y/noStaticElementInteractions: interaction for color legend
             <div
               className='flex items-center gap-1 cursor-pointer'
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               key={i}
               onMouseEnter={() => {
+                setSelectedColor(colors[i % colors.length]);
+              }}
+              onFocus={() => {
                 setSelectedColor(colors[i % colors.length]);
               }}
               onMouseLeave={() => {
@@ -62,8 +66,12 @@ export function ColorLegendWithMouseOver(props: Props) {
             </div>
           ))}
           {showNAColor ? (
+            //  biome-ignore lint/a11y/noStaticElementInteractions: interaction for color legend
             <div
               onMouseEnter={() => {
+                setSelectedColor(Colors.gray);
+              }}
+              onFocus={() => {
                 setSelectedColor(Colors.gray);
               }}
               onMouseLeave={() => {

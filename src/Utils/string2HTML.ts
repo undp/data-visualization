@@ -1,11 +1,11 @@
-import xss from 'xss';
 import Handlebars from 'handlebars';
-import Mexp from 'math-expression-evaluator';
 import { marked } from 'marked';
+import Mexp from 'math-expression-evaluator';
+import xss from 'xss';
 
 import { numberFormattingFunction } from './numberFormattingFunction';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: undefined data type
 function getDescendantProp(data: any, desc: string) {
   const renderer = new marked.Renderer();
   const mexp = new Mexp();
@@ -14,17 +14,17 @@ function getDescendantProp(data: any, desc: string) {
     return `<a href="${href}" target="${target}" title="${title || ''}">${text}</a>`;
   };
 
-  Handlebars.registerHelper('formatNumber', value => {
+  Handlebars.registerHelper('formatNumber', (value) => {
     if (typeof value === 'string') return value;
     return numberFormattingFunction(value, '-');
   });
-  Handlebars.registerHelper('mathExpression', expression => {
+  Handlebars.registerHelper('mathExpression', (expression) => {
     const tempTemplate = Handlebars.compile(expression);
     const exp = tempTemplate(data);
     const result = mexp.eval(exp);
     return result;
   });
-  Handlebars.registerHelper('mathExpressionWithFormatting', expression => {
+  Handlebars.registerHelper('mathExpressionWithFormatting', (expression) => {
     const tempTemplate = Handlebars.compile(expression);
     const exp = tempTemplate(data);
     const result = mexp.eval(exp);
@@ -32,7 +32,7 @@ function getDescendantProp(data: any, desc: string) {
   });
 
   marked.setOptions({ renderer });
-  Handlebars.registerHelper('markdown', text => {
+  Handlebars.registerHelper('markdown', (text) => {
     return marked.parse(text || '');
   });
   const template = Handlebars.compile(desc);
@@ -48,7 +48,7 @@ function decodeHTMLEntities(input: string) {
     .replace(/&#39;/g, "'");
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: undefined data type
 export function string2HTML(htmlString: string, data?: any) {
   // Custom XSS filter configuration
   const options = {

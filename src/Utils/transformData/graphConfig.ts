@@ -1,4 +1,4 @@
-import { GraphType, ThreeDGraphType } from '@/Types';
+import type { GraphType, ThreeDGraphType } from '@/Types';
 
 export const ChartConfiguration: {
   chartID: GraphType | ThreeDGraphType;

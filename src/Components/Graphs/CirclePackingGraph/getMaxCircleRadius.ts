@@ -4,7 +4,7 @@ export function getMaxCircleRadius(
   height: number,
   circularBoundary?: boolean,
 ) {
-  const filteredValues = values.filter(d => d !== undefined && d !== null);
+  const filteredValues = values.filter((d) => d !== undefined && d !== null);
   const containerRadius =
     circularBoundary === false
       ? Math.sqrt((width * height) / Math.PI)

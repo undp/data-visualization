@@ -1,33 +1,31 @@
-import orderBy from 'lodash.orderby';
-import { format } from 'date-fns/format';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { parse } from 'date-fns/parse';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
-
-import { HorizontalGraph, VerticalGraph } from './Graph';
-
-import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import {
-  SourcesDataType,
-  Languages,
-  DumbbellChartDataType,
-  StyleObject,
-  ClassNameObject,
-  ReferenceDataType,
-  CustomLayerDataType,
-  AnimateDataType,
-  TimelineDataType,
-  NumberFormatOptions,
-} from '@/Types';
-import { ensureCompleteDataForDumbbellChart } from '@/Utils/ensureCompleteData';
-import { getSliderMarks } from '@/Utils/getSliderMarks';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { Pause, Play } from '@/Components/Icons';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
+import orderBy from 'lodash.orderby';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { EmptyState } from '@/Components/Elements/EmptyState';
-import { Colors } from '@/Components/ColorPalette';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { Pause, Play } from '@/Components/Icons';
+import type {
+  AnimateDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  DumbbellChartDataType,
+  Languages,
+  NumberFormatOptions,
+  ReferenceDataType,
+  SourcesDataType,
+  StyleObject,
+  TimelineDataType,
+} from '@/Types';
+import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { ensureCompleteDataForDumbbellChart } from '@/Utils/ensureCompleteData';
+import { getSliderMarks } from '@/Utils/getSliderMarks';
+import { HorizontalGraph, VerticalGraph } from './Graph';
 
 interface Props {
   // Data
@@ -153,16 +151,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -246,8 +244,8 @@ export function DumbbellChart(props: Props) {
     const dates = [
       ...new Set(
         data
-          .filter(d => d.date)
-          .map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+          .filter((d) => d.date)
+          .map((d) => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
       ),
     ];
     dates.sort((a, b) => a - b);
@@ -260,7 +258,7 @@ export function DumbbellChart(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -273,7 +271,7 @@ export function DumbbellChart(props: Props) {
   useEffect(() => {
     const interval = setInterval(
       () => {
-        setIndex(i => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
+        setIndex((i) => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
       },
       (timeline.speed || 2) * 1000,
     );
@@ -321,9 +319,9 @@ export function DumbbellChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
@@ -347,10 +345,10 @@ export function DumbbellChart(props: Props) {
             step={null}
             defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
             value={uniqDatesSorted[index]}
-            onChangeComplete={nextValue => {
+            onChangeComplete={(nextValue) => {
               setIndex(uniqDatesSorted.indexOf(nextValue as number));
             }}
-            onChange={nextValue => {
+            onChange={(nextValue) => {
               setIndex(uniqDatesSorted.indexOf(nextValue as number));
             }}
             aria-label='Time slider. Use arrow keys to adjust selected time period.'
@@ -378,7 +376,7 @@ export function DumbbellChart(props: Props) {
                 ? sortParameter === 'diff'
                   ? orderBy(
                       ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
-                        .filter(d =>
+                        .filter((d) =>
                           timeline.enabled
                             ? `${d.date}` ===
                               format(
@@ -387,8 +385,8 @@ export function DumbbellChart(props: Props) {
                               )
                             : d,
                         )
-                        .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
-                      d =>
+                        .filter((d) => (filterNA ? !d.x.every((item) => item == null) : d)),
+                      (d) =>
                         checkIfNullOrUndefined(d.x[d.x.length - 1]) ||
                         checkIfNullOrUndefined(d.x[0])
                           ? -Infinity
@@ -397,7 +395,7 @@ export function DumbbellChart(props: Props) {
                     ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                   : orderBy(
                       ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
-                        .filter(d =>
+                        .filter((d) =>
                           timeline.enabled
                             ? `${d.date}` ===
                               format(
@@ -406,13 +404,19 @@ export function DumbbellChart(props: Props) {
                               )
                             : d,
                         )
-                        .filter(d => (filterNA ? !d.x.every(item => item == null) : d)),
-                      d =>
+                        .filter((d) => (filterNA ? !d.x.every((item) => item == null) : d)),
+                      (d) =>
                         checkIfNullOrUndefined(d.x[sortParameter]) ? -Infinity : d.x[sortParameter],
                       [sortData || 'asc'],
                     ).filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
                 : ensureCompleteDataForDumbbellChart(data, timeline.dateFormat || 'yyyy')
-                    .filter(d => (filterNA ? !d.x.every(item => item == null) : d))
+                    .filter((d) =>
+                      timeline.enabled
+                        ? `${d.date}` ===
+                          format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
+                        : d,
+                    )
+                    .filter((d) => (filterNA ? !d.x.every((item) => item == null) : d))
                     .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))
             }
             dotColors={colors}
@@ -433,16 +437,16 @@ export function DumbbellChart(props: Props) {
             maxValue={
               !checkIfNullOrUndefined(maxValue)
                 ? (maxValue as number)
-                : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null)))) < 0
+                : Math.max(...data.map((d) => Math.max(...d.x.filter((el) => el !== null)))) < 0
                   ? 0
-                  : Math.max(...data.map(d => Math.max(...d.x.filter(el => el !== null))))
+                  : Math.max(...data.map((d) => Math.max(...d.x.filter((el) => el !== null))))
             }
             minValue={
               !checkIfNullOrUndefined(minValue)
                 ? (minValue as number)
-                : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null)))) > 0
+                : Math.min(...data.map((d) => Math.min(...d.x.filter((el) => el !== null)))) > 0
                   ? 0
-                  : Math.min(...data.map(d => Math.min(...d.x.filter(el => el !== null))))
+                  : Math.min(...data.map((d) => Math.min(...d.x.filter((el) => el !== null))))
             }
             onSeriesMouseClick={onSeriesMouseClick}
             selectedColor={selectedColor}

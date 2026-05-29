@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { MultiGraphDashboard } from './MultiGraphDashboard';
-
-import {
+import { useEffect, useState } from 'react';
+import type {
   ClassNameObject,
   DashboardLayoutDataType,
   DataFilterDataType,
@@ -12,6 +9,7 @@ import {
   StyleObject,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { MultiGraphDashboard } from './MultiGraphDashboard';
 
 interface ConfigObject {
   dashboardID?: string;

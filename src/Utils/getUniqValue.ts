@@ -16,22 +16,22 @@ import flattenDeep from 'lodash.flattendeep';
  * getUniqValue(csvData, 'name'); // Returns: ['Alice', 'Bob']
  */
 export function getUniqValue(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any,
   column: string,
 ) {
   if (!csvData) return [];
   if (csvData.length === 0) return [];
   if (typeof csvData[0][column] !== 'object') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const uniqValues = [...new Set(csvData.map((d: any) => d[column]))].sort((a: any, b: any) =>
       a < b ? -1 : a > b ? 1 : 0,
     );
     return uniqValues as (string | number)[];
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const values = [...new Set(flattenDeep(csvData.map((d: any) => d[column])))].sort(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     (a: any, b: any) => (a < b ? -1 : a > b ? 1 : 0),
   );
   return values as (string | number)[];

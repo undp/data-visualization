@@ -1,18 +1,15 @@
-/* eslint-disable no-console */
-import Papa from 'papaparse';
 import Handlebars from 'handlebars';
-
-import { transformColumnsToArray } from './transformData/transformColumnsToArray';
+import Papa from 'papaparse';
+import type { ColumnConfigurationDataType, FileSettingsDataType } from '@/Types';
 import { mergeMultipleData } from './transformData/mergeMultipleData';
+import { transformColumnsToArray } from './transformData/transformColumnsToArray';
 
-import { ColumnConfigurationDataType, FileSettingsDataType } from '@/Types';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: undefined data type
 function reFormatData(data: any, dataTransformation?: string) {
   if (!dataTransformation) return data;
   Handlebars.registerHelper(
     'json',
-    context => new Handlebars.SafeString(JSON.stringify(context, null, 2)),
+    (context) => new Handlebars.SafeString(JSON.stringify(context, null, 2)),
   );
   const template = Handlebars.compile(dataTransformation);
   return JSON.parse(template(data));
@@ -51,11 +48,13 @@ export async function fetchAndParseCSV(
       delimiter: delimiter || ',',
       complete(results) {
         if (debugMode) {
+          // biome-ignore lint/suspicious/noConsole: This is for debug mode
           console.log('Data from file:', results.data);
         }
         if (columnsToArray) {
           const transformedData = transformColumnsToArray(results.data, columnsToArray);
           if (debugMode) {
+            // biome-ignore lint/suspicious/noConsole: This is for debug mode
             console.log('Data after transformation of column to array:', transformedData);
           }
           resolve(reFormatData(transformedData, dataTransformation));
@@ -94,11 +93,13 @@ export async function fetchAndParseCSVFromTextBlob(
       delimiter: delimiter || ',',
       complete(results) {
         if (debugMode) {
+          // biome-ignore lint/suspicious/noConsole: This is for debug mode
           console.log('Data from file:', results.data);
         }
         if (columnsToArray) {
           const transformedData = transformColumnsToArray(results.data, columnsToArray);
           if (debugMode) {
+            // biome-ignore lint/suspicious/noConsole: This is for debug mode
             console.log('Data after transformation of column to array:', transformedData);
           }
           resolve(reFormatData(transformedData, dataTransformation));
@@ -135,11 +136,13 @@ export async function fetchAndParseJSON(
     const json = await response.json();
     const reFormatedJson = reFormatData(json, dataTransformation);
     if (debugMode) {
+      // biome-ignore lint/suspicious/noConsole: This is for debug mode
       console.log('Data from file:', json);
     }
     if (columnsToArray) {
       const transformedData = transformColumnsToArray(reFormatedJson, columnsToArray);
       if (debugMode) {
+        // biome-ignore lint/suspicious/noConsole: This is for debug mode
         console.log('Data after transformation of column to array:', transformedData);
       }
       return transformedData;
@@ -162,7 +165,7 @@ export async function fetchAndParseJSON(
  */
 export async function fetchAndTransformDataFromAPI(
   requestURL: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   headers?: any,
   columnsToArray?: ColumnConfigurationDataType[],
   dataTransformation?: string,
@@ -178,12 +181,15 @@ export async function fetchAndTransformDataFromAPI(
   const json = await response.json();
   const reFormatedJson = reFormatData(json, dataTransformation);
   if (debugMode) {
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Data from api:', json);
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Data from api after transformation:', reFormatedJson);
   }
   if (columnsToArray) {
     const transformedData = transformColumnsToArray(reFormatedJson, columnsToArray);
     if (debugMode) {
+      // biome-ignore lint/suspicious/noConsole: This is for debug mode
       console.log('Data after transformation of column to array:', transformedData);
     }
     return transformedData;
@@ -203,7 +209,7 @@ export async function fetchAndParseMultipleDataSources(
   idColumnTitle?: string,
 ) {
   const data = await Promise.all(
-    dataURL.map(d =>
+    dataURL.map((d) =>
       d.fileType === 'json'
         ? fetchAndParseJSON(d.dataURL as string, d.columnsToArray, d.dataTransformation, false)
         : d.fileType === 'api'
@@ -225,7 +231,7 @@ export async function fetchAndParseMultipleDataSources(
     ),
   );
   const mergedData = mergeMultipleData(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     data.map((d: any, i: number) => ({
       data: d,
       idColumn: dataURL[i].idColumnName,

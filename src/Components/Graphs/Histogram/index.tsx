@@ -1,22 +1,20 @@
-import { bin } from 'd3-array';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { CirclePackingGraph } from '../CirclePackingGraph';
-import { TreeMapGraph } from '../TreeMapGraph';
-import { DonutChart } from '../DonutChart';
-import { SimpleBarGraph } from '../BarGraph';
-
+import { bin } from 'd3-array';
 import { Colors } from '@/Components/ColorPalette';
-import {
-  ReferenceDataType,
-  HistogramDataType,
-  DonutChartDataType,
-  SourcesDataType,
-  Languages,
-  StyleObject,
+import type {
   ClassNameObject,
+  DonutChartDataType,
+  HistogramDataType,
+  Languages,
   NumberFormatOptions,
+  ReferenceDataType,
+  SourcesDataType,
+  StyleObject,
 } from '@/Types';
+import { SimpleBarGraph } from '../BarGraph';
+import { CirclePackingGraph } from '../CirclePackingGraph';
+import { DonutChart } from '../DonutChart';
+import { TreeMapGraph } from '../TreeMapGraph';
 
 interface Props {
   // Data
@@ -106,16 +104,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -176,9 +174,9 @@ export function Histogram(props: Props) {
 
   const bins = bin()
     .thresholds(numberOfBins || 10)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     .value((d: any) => d.value)(data as any);
-  const dataFormatted = bins.map(d => ({
+  const dataFormatted = bins.map((d) => ({
     label: `${d.x0}-${d.x1}`,
     size: d.length,
     data: {

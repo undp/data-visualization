@@ -1,18 +1,18 @@
-import sum from 'lodash.sum';
 import { cn } from '@undp/design-system-react/cn';
 import { H3 } from '@undp/design-system-react/Typography';
+import sum from 'lodash.sum';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import {
+import type {
+  ClassNameObject,
   Languages,
+  NumberFormatOptions,
   SourcesDataType,
   StatCardsFromDataSheetDataType,
   StyleObject,
-  ClassNameObject,
-  NumberFormatOptions,
 } from '@/Types';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   // Data
@@ -28,8 +28,6 @@ interface Props {
   footNote?: string | React.ReactNode;
   /** Source data for the graph */
   sources?: SourcesDataType[];
-  /** Accessibility label */
-  ariaLabel?: string;
 
   // Colors and Styling
   /** Background color of the graph */
@@ -89,7 +87,6 @@ export function StatCardFromData(props: Props) {
     language = 'en',
     countOnly,
     theme = 'light',
-    ariaLabel,
     textBackground = false,
     headingFontSize = '4.375rem',
     centerAlign = false,
@@ -121,12 +118,6 @@ export function StatCardFromData(props: Props) {
           ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
           padding: backgroundColor ? padding || '1rem' : padding || 0,
         }}
-        aria-label={
-          ariaLabel ||
-          `${graphTitle ? `The graph shows ${graphTitle}. ` : ''}This is a statistic card.${
-            graphDescription ? ` ${graphDescription}` : ''
-          }`
-        }
       >
         <div
           className={`flex flex-col w-full grow ${layout !== 'secondary' ? 'gap-12 justify-between' : 'gap-4 justify-center'}`}
@@ -170,14 +161,14 @@ export function StatCardFromData(props: Props) {
                     letterSpacing: '0.05rem',
                   }}
                 >
-                  {data.filter(d => typeof d.value === 'string').length > 0 ||
+                  {data.filter((d) => typeof d.value === 'string').length > 0 ||
                   aggregationMethod === 'count'
                     ? countOnly && countOnly?.length !== 0
-                      ? data.filter(d => countOnly.indexOf(d.value) !== -1).length
+                      ? data.filter((d) => countOnly.indexOf(d.value) !== -1).length
                       : data.length
                     : aggregationMethod === 'sum'
                       ? numberFormattingFunction(
-                          sum(data.map(d => d.value)),
+                          sum(data.map((d) => d.value)),
                           naLabel,
                           numberDisplayOptions?.precision ?? 2,
                           numberDisplayOptions?.prefix,
@@ -187,7 +178,7 @@ export function StatCardFromData(props: Props) {
                         )
                       : aggregationMethod === 'average'
                         ? numberFormattingFunction(
-                            parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
+                            parseFloat((sum(data.map((d) => d.value)) / data.length).toFixed(2)),
                             naLabel,
                             numberDisplayOptions?.precision ?? 2,
                             numberDisplayOptions?.prefix,
@@ -199,8 +190,8 @@ export function StatCardFromData(props: Props) {
                           ? numberFormattingFunction(
                               Math.max(
                                 ...data
-                                  .map(d => d.value as number | undefined)
-                                  .filter(d => d !== undefined),
+                                  .map((d) => d.value as number | undefined)
+                                  .filter((d) => d !== undefined),
                               ),
                               naLabel,
                               numberDisplayOptions?.precision ?? 2,
@@ -212,8 +203,8 @@ export function StatCardFromData(props: Props) {
                           : numberFormattingFunction(
                               Math.min(
                                 ...data
-                                  .map(d => d.value as number | undefined)
-                                  .filter(d => d !== undefined),
+                                  .map((d) => d.value as number | undefined)
+                                  .filter((d) => d !== undefined),
                               ),
                               naLabel,
                               numberDisplayOptions?.precision ?? 2,
@@ -265,14 +256,14 @@ export function StatCardFromData(props: Props) {
                   letterSpacing: '0.05rem',
                 }}
               >
-                {data.filter(d => typeof d.value === 'string').length > 0 ||
+                {data.filter((d) => typeof d.value === 'string').length > 0 ||
                 aggregationMethod === 'count'
                   ? countOnly && countOnly?.length !== 0
-                    ? data.filter(d => countOnly.indexOf(d.value) !== -1).length
+                    ? data.filter((d) => countOnly.indexOf(d.value) !== -1).length
                     : data.length
                   : aggregationMethod === 'sum'
                     ? numberFormattingFunction(
-                        sum(data.map(d => d.value)),
+                        sum(data.map((d) => d.value)),
                         naLabel,
                         numberDisplayOptions?.precision ?? 2,
                         numberDisplayOptions?.prefix,
@@ -282,7 +273,7 @@ export function StatCardFromData(props: Props) {
                       )
                     : aggregationMethod === 'average'
                       ? numberFormattingFunction(
-                          parseFloat((sum(data.map(d => d.value)) / data.length).toFixed(2)),
+                          parseFloat((sum(data.map((d) => d.value)) / data.length).toFixed(2)),
                           naLabel,
                           numberDisplayOptions?.precision ?? 2,
                           numberDisplayOptions?.prefix,
@@ -294,8 +285,8 @@ export function StatCardFromData(props: Props) {
                         ? numberFormattingFunction(
                             Math.max(
                               ...data
-                                .map(d => d.value as number | undefined)
-                                .filter(d => d !== undefined),
+                                .map((d) => d.value as number | undefined)
+                                .filter((d) => d !== undefined),
                             ),
                             naLabel,
                             numberDisplayOptions?.precision ?? 2,
@@ -307,8 +298,8 @@ export function StatCardFromData(props: Props) {
                         : numberFormattingFunction(
                             Math.min(
                               ...data
-                                .map(d => d.value as number | undefined)
-                                .filter(d => d !== undefined),
+                                .map((d) => d.value as number | undefined)
+                                .filter((d) => d !== undefined),
                             ),
                             naLabel,
                             numberDisplayOptions?.precision ?? 2,

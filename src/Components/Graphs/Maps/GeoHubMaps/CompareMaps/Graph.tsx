@@ -1,17 +1,17 @@
-import { useRef, useEffect, useState } from 'react';
 import * as maplibreGl from 'maplibre-gl';
 import * as pmtiles from 'pmtiles';
+import { useEffect, useRef, useState } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { select } from 'd3-selection';
 import {
   DndContext,
+  type DragMoveEvent,
+  PointerSensor,
   useDraggable,
   useSensor,
   useSensors,
-  PointerSensor,
-  DragMoveEvent,
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { select } from 'd3-selection';
 import React from 'react';
 
 import { ChevronLeftRight, ExpandIcon, X } from '@/Components/Icons';
@@ -148,11 +148,7 @@ export function Graph(props: Props) {
     }
   }, [width, mapStyles, center, zoomLevel]);
   return (
-    <div
-      className='flex flex-col grow justify-center leading-0'
-      ref={graphDiv}
-      aria-label='Map area'
-    >
+    <div className='flex flex-col grow justify-center leading-0' ref={graphDiv}>
       <div
         style={{
           width,
@@ -171,6 +167,8 @@ export function Graph(props: Props) {
             onDragMove={handleDragMove}
             onDragEnd={handleDragEnd}
           >
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: interaction for dragging handle */}
+            {/** biome-ignore lint/a11y/useKeyWithClickEvents: only applicable for dragging */}
             <div
               ref={containerRef}
               style={{
@@ -214,16 +212,19 @@ export function Graph(props: Props) {
         <div className='absolute left-[22px] bottom-13'>
           {showLegend ? (
             <>
-              <div
+              <button
+                type='button'
                 className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
                 onClick={() => {
                   setShowLegend(false);
                 }}
               >
                 <X />
-              </div>
+              </button>
               <div
                 className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
+                // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
                 dangerouslySetInnerHTML={
                   typeof mapLegend === 'string' ? { __html: string2HTML(mapLegend) } : undefined
                 }

@@ -1,36 +1,36 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import isEqual from 'fast-deep-equal';
-import { lineRadial, curveLinearClosed, curveCardinalClosed } from 'd3-shape';
-import { useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
 import { scaleLinear } from 'd3-scale';
+import { curveCardinalClosed, curveLinearClosed, lineRadial } from 'd3-shape';
+import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import {
+import { useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   RadarChartDataType,
   StyleObject,
 } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { Colors } from '@/Components/ColorPalette';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   radius: number;
   lineColors: string[];
   axisLabels: (string | number)[];
   data: RadarChartDataType[];
-
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   selectedColor?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   colorDomain: string[];
-
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   strokeWidth: number;
   styles?: StyleObject;
@@ -107,8 +107,9 @@ export function Graph(props: Props) {
     (2 * radius - leftMargin - rightMargin) / 2,
     (2 * radius - topMargin - bottomMargin) / 2,
   );
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -119,34 +120,34 @@ export function Graph(props: Props) {
   const maxVal = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
     : Math.max(
-          ...data.map(d =>
-            Math.max(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ...data.map((d) =>
+            Math.max(...(d.values.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
           ),
         ) < 0
       ? 0
       : Math.max(
-          ...data.map(d =>
-            Math.max(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ...data.map((d) =>
+            Math.max(...(d.values.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
           ),
         );
 
   const minVal = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
     : Math.min(
-          ...data.map(d =>
-            Math.min(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ...data.map((d) =>
+            Math.min(...(d.values.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
           ),
         ) >= 0
       ? 0
       : Math.min(
-          ...data.map(d =>
-            Math.min(...(d.values.filter(l => !checkIfNullOrUndefined(l)) as number[])),
+          ...data.map((d) =>
+            Math.min(...(d.values.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
           ),
         );
   const scale = scaleLinear().domain([minVal, maxVal]).range([0, radiusWithoutMargin]).nice();
   const ticksArray = scale.ticks(noOfTicks);
   const lineShape = lineRadial<number>()
-    .radius(d => scale(d))
+    .radius((d) => scale(d))
     .angle((_, i) => angleScale(i))
     .curve(curve);
   return (
@@ -160,16 +161,16 @@ export function Graph(props: Props) {
         className='mx-auto'
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g transform={`translate(${radiusWithoutMargin},${radiusWithoutMargin})`}>
             {axisLabels.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <g key={i}>
                 <line
                   x1={0}
                   y1={0}
                   x2={Math.cos(angleScale(i) - Math.PI / 2) * radiusWithoutMargin}
                   y2={Math.sin(angleScale(i) - Math.PI / 2) * radiusWithoutMargin}
-                  key={i}
                   className={cn(
                     'stroke-1 stroke-primary-gray-500 dark:stroke-primary-gray-550',
                     classNames?.xAxis?.axis,
@@ -205,6 +206,7 @@ export function Graph(props: Props) {
               </g>
             ))}
             {ticksArray.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <g key={i}>
                 <path
                   d={lineShape(Array(axisLabels.length).fill(d)) || ''}
@@ -297,13 +299,13 @@ export function Graph(props: Props) {
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
                     onSeriesMouseOver?.(d);
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -330,15 +332,15 @@ export function Graph(props: Props) {
                     d={lineShape(d.values) || ''}
                     variants={{
                       initial: {
-                        d: lineShape(d.values.map(_el => 0)) || '',
+                        d: lineShape(d.values.map((_el) => 0)) || '',
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? lineColors[0]
                             : !d.color
                               ? Colors.gray
                               : lineColors[colorDomain.indexOf(d.color)],
                         fill: fillShape
-                          ? data.filter(el => el.color).length === 0
+                          ? data.filter((el) => el.color).length === 0
                             ? lineColors[0]
                             : !d.color
                               ? Colors.gray
@@ -350,13 +352,13 @@ export function Graph(props: Props) {
                         d: lineShape(d.values) || '',
                         transition: { duration: animate.duration },
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? lineColors[0]
                             : !d.color
                               ? Colors.gray
                               : lineColors[colorDomain.indexOf(d.color)],
                         fill: fillShape
-                          ? data.filter(el => el.color).length === 0
+                          ? data.filter((el) => el.color).length === 0
                             ? lineColors[0]
                             : !d.color
                               ? Colors.gray
@@ -374,6 +376,7 @@ export function Graph(props: Props) {
                   />
                   <g>
                     {d.values.map((el, j) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                       <g key={j}>
                         {!checkIfNullOrUndefined(el) ? (
                           <>
@@ -386,7 +389,7 @@ export function Graph(props: Props) {
                                     cy: 0,
                                     opacity: 0,
                                     fill:
-                                      data.filter(el => el.color).length === 0
+                                      data.filter((el) => el.color).length === 0
                                         ? lineColors[0]
                                         : !d.color
                                           ? Colors.gray
@@ -398,7 +401,7 @@ export function Graph(props: Props) {
                                     opacity: 1,
                                     transition: { duration: animate.duration },
                                     fill:
-                                      data.filter(el => el.color).length === 0
+                                      data.filter((el) => el.color).length === 0
                                         ? lineColors[0]
                                         : !d.color
                                           ? Colors.gray
@@ -477,7 +480,7 @@ export function Graph(props: Props) {
               ))}
             </AnimatePresence>
           </g>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

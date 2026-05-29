@@ -1,4 +1,4 @@
-import { RefObject } from 'react';
+import type { RefObject } from 'react';
 
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
@@ -10,7 +10,7 @@ interface Props {
   graphDescription?: string | React.ReactNode;
   width?: number;
   graphDownload?: RefObject<HTMLDivElement | null>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   dataDownload?: any;
   isDashboard?: boolean;
   styles?: { title?: React.CSSProperties; description?: React.CSSProperties };
@@ -34,7 +34,6 @@ export function GraphHeader(props: Props) {
         graphDescription && graphTitle ? 'items-start' : 'items-center'
       }`}
       style={{ maxWidth: width ? `${width}px` : 'none' }}
-      aria-label='Graph header'
     >
       <div className='flex-col flex gap-1'>
         {graphTitle ? (
@@ -60,7 +59,7 @@ export function GraphHeader(props: Props) {
             <CsvDownloadButton
               csvData={dataDownload}
               buttonSmall
-              headers={Object.keys(dataDownload[0]).map(d => ({
+              headers={Object.keys(dataDownload[0]).map((d) => ({
                 label: d,
                 key: d,
               }))}

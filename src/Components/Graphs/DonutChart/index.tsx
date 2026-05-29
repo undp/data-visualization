@@ -1,26 +1,24 @@
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { cn } from '@undp/design-system-react/cn';
+import { Spacer } from '@undp/design-system-react/Spacer';
 import { P } from '@undp/design-system-react/Typography';
 import orderBy from 'lodash.orderby';
-import { Spacer } from '@undp/design-system-react/Spacer';
-import { cn } from '@undp/design-system-react/cn';
-
-import { Graph } from './Graph';
-
-import {
-  DonutChartDataType,
-  Languages,
-  SourcesDataType,
-  StyleObject,
-  ClassNameObject,
-  AnimateDataType,
-  NumberFormatOptions,
-} from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type {
+  AnimateDataType,
+  ClassNameObject,
+  DonutChartDataType,
+  Languages,
+  NumberFormatOptions,
+  SourcesDataType,
+  StyleObject,
+} from '@/Types';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
+import { Graph } from './Graph';
 
 interface Props {
   // Data
@@ -105,16 +103,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -173,7 +171,7 @@ export function DonutChart(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setGraphRadius(
         (Math.min(
           ...[entries[0].target.clientWidth || 620, entries[0].target.clientHeight || 480],
@@ -220,9 +218,9 @@ export function DonutChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
@@ -235,17 +233,16 @@ export function DonutChart(props: Props) {
               classNames?.colorLegend,
             )}
             style={{ maxWidth: colorScaleMaxWidth }}
-            aria-label='Color legend'
           >
-            {sortedData.map((d, i) => (
-              <div className='flex gap-2 items-center pb-3' key={i}>
+            {sortedData.map((d) => (
+              <div className='flex gap-2 items-center pb-3' key={d.label}>
                 <div
                   className='w-3 h-3 rounded-full'
                   style={{
                     backgroundColor:
-                      (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) !== -1
+                      (colorDomain || sortedData.map((el) => el.label)).indexOf(d.label) !== -1
                         ? (colors || Colors[theme].categoricalColors.colors)[
-                            (colorDomain || sortedData.map(el => el.label)).indexOf(d.label) %
+                            (colorDomain || sortedData.map((el) => el.label)).indexOf(d.label) %
                               (colors || Colors[theme].categoricalColors.colors).length
                           ]
                         : Colors.gray,
@@ -286,7 +283,7 @@ export function DonutChart(props: Props) {
             subNote={subNote}
             strokeWidth={strokeWidth}
             tooltip={tooltip}
-            colorDomain={colorDomain || sortedData.map(d => d.label)}
+            colorDomain={colorDomain || sortedData.map((d) => d.label)}
             onSeriesMouseOver={onSeriesMouseOver}
             onSeriesMouseClick={onSeriesMouseClick}
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}

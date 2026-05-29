@@ -1,9 +1,8 @@
 import { Button } from '@undp/design-system-react/Button';
-import { JSX } from 'react';
 import { cn } from '@undp/design-system-react/cn';
-
-import { excelDownload } from '@/Utils/excelDownload';
+import type { JSX } from 'react';
 import { FileDown } from '@/Components/Icons';
+import { excelDownload } from '@/Utils/excelDownload';
 
 interface WsColInterface {
   wch: number;
@@ -17,11 +16,11 @@ interface Props {
     | 'secondary'
     | 'secondary-without-icon'
     | 'tertiary';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any;
   fileName?: string;
   headers: string[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   xlsxHeader: any;
   wscols: WsColInterface[];
   buttonSmall?: boolean;

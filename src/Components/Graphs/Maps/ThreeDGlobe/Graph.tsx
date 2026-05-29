@@ -1,14 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import Globe, { GlobeMethods } from 'react-globe.gl';
-import isEqual from 'fast-deep-equal';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { scaleOrdinal, scaleThreshold } from 'd3-scale';
-import * as THREE from 'three';
-import { P } from '@undp/design-system-react/Typography';
 import { cn } from '@undp/design-system-react/cn';
+import { P } from '@undp/design-system-react/Typography';
+import { scaleOrdinal, scaleThreshold } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import hexToRgba from 'hex-to-rgba';
-
-import {
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Globe, { type GlobeMethods } from 'react-globe.gl';
+import * as THREE from 'three';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import { ExpandIcon, X } from '@/Components/Icons';
+import type {
   ChoroplethMapDataType,
   ClassNameObject,
   FogDataType,
@@ -16,11 +17,8 @@ import {
   NumberFormatOptions,
   StyleObject,
 } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { ExpandIcon, X } from '@/Components/Icons';
 import { getCentroidCoordinates } from '@/Utils/getCentroidCoordinates';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   width: number;
@@ -33,19 +31,24 @@ interface Props {
   height: number;
   globeMaterial?: THREE.Material;
   lights: LightConfig[];
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   polygonData: any;
   mapProperty: string;
   mapBorderColor: string;
   atmosphereColor: string;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   mapNoDataColor: string;
   colorLegendTitle?: string;
   showColorScale: boolean;
   hoverStrokeColor: string;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   resetSelectionOnDoubleClick: boolean;
   highlightedIds?: string[];
@@ -186,6 +189,7 @@ function Graph(props: Props) {
   } = props;
   const [globeReady, setGlobeReady] = useState(false);
   const globeEl = useRef<GlobeMethods | undefined>(undefined);
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
 
   const [showLegend, setShowLegend] = useState(
@@ -208,7 +212,7 @@ function Graph(props: Props) {
       if (mouseOverData || selectedId) {
         globeEl.current.controls().autoRotate = false;
       } else {
-        globeEl.current.controls().autoRotate = autoRotate === 0 ? false : true;
+        globeEl.current.controls().autoRotate = autoRotate !== 0;
         globeEl.current.controls().autoRotateSpeed = autoRotate;
       }
     }
@@ -216,6 +220,7 @@ function Graph(props: Props) {
   useEffect(() => {
     if (globeEl.current && selectedId) {
       const selectedPolygon = polygonData.find(
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         (d: any) => d.properties[mapProperty] === selectedId,
       );
       const [lng, lat] = getCentroidCoordinates(selectedPolygon);
@@ -252,15 +257,17 @@ function Graph(props: Props) {
     const camera = globeEl.current.camera();
 
     let lightsAndObjToRemove: THREE.Object3D[] = [];
-    scene.traverse(obj => {
+    scene.traverse((obj) => {
       if (obj instanceof THREE.Light) {
         lightsAndObjToRemove.push(obj);
       }
     });
     lightsAndObjToRemove = [...lightsAndObjToRemove, ...camera.children];
-    lightsAndObjToRemove.forEach(light => light.parent?.remove(light));
+    lightsAndObjToRemove.forEach((light) => {
+      light.parent?.remove(light);
+    });
 
-    const lightConfig = lights.map(config => createLightFromConfig(config));
+    const lightConfig = lights.map((config) => createLightFromConfig(config));
     lightConfig.forEach((light, i) => {
       if (lights[i].type !== 'ambient' && lights[i].position === 'camera') {
         camera.add(light);
@@ -295,6 +302,7 @@ function Graph(props: Props) {
         globeOffset={globeOffset}
         lineHoverPrecision={0}
         polygonsData={polygonData}
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         polygonAltitude={(polygon: any) =>
           highlightedIds?.includes(polygon?.properties?.[mapProperty]) ||
           polygon?.properties?.[mapProperty] === selectedId
@@ -304,6 +312,7 @@ function Graph(props: Props) {
               ? highlightedAltitude
               : polygonAltitude
         }
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         polygonCapColor={(polygon: any) => {
           const opacity = selectedId
             ? polygon?.properties?.[mapProperty] === selectedId
@@ -315,13 +324,15 @@ function Graph(props: Props) {
                 : dimmedOpacity
               : 1;
           const id = polygon?.properties?.[mapProperty];
-          const val = data.find(el => el.id === id)?.x;
+          const val = data.find((el) => el.id === id)?.x;
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           const color = val !== undefined && val !== null ? colorScale(val as any) : mapNoDataColor;
           return hexToRgba(color, `${opacity}`);
         }}
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         polygonSideColor={(polygon: any) => {
           const id = polygon?.properties?.[mapProperty];
-          const val = data.find(el => el.id === id)?.x;
+          const val = data.find((el) => el.id === id)?.x;
           const opacity = selectedId
             ? polygon?.properties?.[mapProperty] === selectedId
               ? 1
@@ -331,9 +342,11 @@ function Graph(props: Props) {
                 ? 1
                 : dimmedOpacity
               : 1;
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           const color = val !== undefined && val !== null ? colorScale(val as any) : mapNoDataColor;
           return hexToRgba(color, `${opacity}`);
         }}
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         polygonStrokeColor={(polygon: any) =>
           polygon?.properties?.[mapProperty] === mouseOverData?.id
             ? hoverStrokeColor
@@ -342,9 +355,10 @@ function Graph(props: Props) {
         onGlobeClick={() => {
           setMouseClickData(undefined);
         }}
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         onPolygonClick={(polygon: any) => {
           const clickedData = polygon?.properties?.[mapProperty]
-            ? data.find(el => el.id === polygon?.properties?.[mapProperty])
+            ? data.find((el) => el.id === polygon?.properties?.[mapProperty])
             : undefined;
           if (onSeriesMouseClick || detailsOnClick) {
             if (
@@ -360,9 +374,10 @@ function Graph(props: Props) {
             }
           }
         }}
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         onPolygonHover={(polygon: any) => {
           const hoverData = polygon?.properties?.[mapProperty]
-            ? data.find(el => el.id === polygon?.properties?.[mapProperty])
+            ? data.find((el) => el.id === polygon?.properties?.[mapProperty])
             : undefined;
           setMouseOverData(hoverData);
           onSeriesMouseOver?.(hoverData);
@@ -382,7 +397,7 @@ function Graph(props: Props) {
             const scene = globeEl.current.scene();
             setTimeout(() => {
               const polygons = scene.children[3]?.children[0]?.children[4]?.children || [];
-              polygons.forEach(d => {
+              polygons.forEach((d) => {
                 const line = d.children[1];
                 line.renderOrder = 2;
               });
@@ -397,14 +412,15 @@ function Graph(props: Props) {
         <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
           {showLegend ? (
             <>
-              <div
+              <button
+                type='button'
                 className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
                 onClick={() => {
                   setShowLegend(false);
                 }}
               >
                 <X />
-              </div>
+              </button>
               <div
                 className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
                 style={{
@@ -429,6 +445,7 @@ function Graph(props: Props) {
                   <svg width='100%' viewBox='0 0 320 30' direction='ltr'>
                     <g>
                       {colorDomain.map((d, i) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                         <g key={i} className='cursor-pointer'>
                           <rect
                             x={(i * 320) / colors.length + 1}
@@ -475,6 +492,7 @@ function Graph(props: Props) {
                 ) : (
                   <div className='flex flex-col gap-3'>
                     {colorDomain.map((d, i) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                       <div key={i} className='flex gap-2 items-center'>
                         <div
                           className='w-2 h-2 rounded-full'

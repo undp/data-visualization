@@ -1,8 +1,6 @@
+@import "tailwindcss";
 
-
-@import 'tailwindcss';
-
-@config '../../tailwind.config.js';
+@config "../../tailwind.config.js";
 
 .undp-viz-bivariate-legend-container {
   width: 20rem;
@@ -14,7 +12,12 @@
   align-items: flex-end;
 }
 
-@media (min-width: 961px) {    
+svg title.hidden {
+  display: none;
+  pointer-events: none;
+}
+
+@media (min-width: 961px) {
   .undp-viz-bivariate-legend-container {
     translate: 0 -100%;
     width: fit-content;
@@ -22,14 +25,14 @@
 }
 
 .undp-viz-bivariate-legend {
-  background-color: rgba(255,255,255,0.75);
+  background-color: rgba(255, 255, 255, 0.75);
   align-items: flex-start;
   margin-bottom: 0.75rem;
   display: flex;
 }
 
 .dark .undp-viz-bivariate-legend {
-  background-color: rgba(255,255,255,0.05);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .text-outline {
@@ -37,11 +40,11 @@
   text-shadow: none;
 }
 
-.dark .text-outline{
+.dark .text-outline {
   -webkit-text-stroke: 2px white;
 }
 
-.transparent{
+.transparent {
   color: transparent;
 }
 
@@ -63,19 +66,19 @@
 
 .maplibregl-ctrl-scale {
   font-size: 12px !important;
-  font-family: 'ProximaNova', 'proxima-nova', 'Helvetica Neue', 'Roboto', sans-serif !important;
+  font-family: "ProximaNova", "proxima-nova", "Helvetica Neue", "Roboto", sans-serif !important;
   font-weight: 700 !important;
 }
 
 .maplibregl-ctrl-attrib-inner {
   font-size: 12px !important;
-  font-family: 'ProximaNova', 'proxima-nova', 'Helvetica Neue', 'Roboto', sans-serif !important;
+  font-family: "ProximaNova", "proxima-nova", "Helvetica Neue", "Roboto", sans-serif !important;
   font-weight: 700 !important;
 }
 
-.maplibregl-ctrl-attrib-inner a{
+.maplibregl-ctrl-attrib-inner a {
   font-size: 12px !important;
-  font-family: 'ProximaNova', 'proxima-nova', 'Helvetica Neue', 'Roboto', sans-serif !important;
+  font-family: "ProximaNova", "proxima-nova", "Helvetica Neue", "Roboto", sans-serif !important;
   background-image: none !important;
   font-weight: 700 !important;
 }
@@ -84,7 +87,7 @@
   display: block !important;
 }
 
-.maplibregl-ctrl-attrib-button:before{
+.maplibregl-ctrl-attrib-button:before {
   content: none !important;
 }
 
@@ -96,10 +99,10 @@
 
 .undp-ref-line {
   stroke-width: 1.5;
-  stroke-dasharray: 4,4;
+  stroke-dasharray: 4, 4;
 }
 
 .undp-tick-line {
   stroke-width: 1;
-  stroke-dasharray: 4,8;
+  stroke-dasharray: 4, 8;
 }

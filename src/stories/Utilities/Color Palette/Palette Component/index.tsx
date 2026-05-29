@@ -170,9 +170,9 @@ function ColorRow({
         {title} <span className='text-xs text-gray-500 font-bold font-mono'>({colors.name})</span>
       </div>
       <div className='flex flex-wrap gap-1'>
-        {colors.colors.map((color, index) => (
+        {colors.colors.map((color) => (
           <div
-            key={index}
+            key={color}
             className='w-8 h-8 rounded shadow'
             style={{ backgroundColor: color }}
             title={color}
@@ -197,10 +197,11 @@ function ColorGrid({
       </div>
       <div className='flex flex-col gap-1'>
         {colors.colors.map((row, rowIndex) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
           <div key={rowIndex} className='flex gap-1'>
-            {row.map((color, colIndex) => (
+            {row.map((color) => (
               <div
-                key={colIndex}
+                key={color}
                 className='w-8 h-8 rounded shadow'
                 style={{ backgroundColor: color }}
                 title={color}

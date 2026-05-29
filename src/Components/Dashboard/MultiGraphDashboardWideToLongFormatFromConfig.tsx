@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { MultiGraphDashboardWideToLongFormat } from './MultiGraphDashboardWideToLongFormat';
-
-import {
+import { useEffect, useState } from 'react';
+import type {
   ClassNameObject,
   DashboardFromWideToLongFormatLayoutDataType,
   DataFilterDataType,
@@ -11,6 +8,7 @@ import {
   StyleObject,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { MultiGraphDashboardWideToLongFormat } from './MultiGraphDashboardWideToLongFormat';
 
 interface ConfigObject {
   validateDataAndSettings?: boolean;

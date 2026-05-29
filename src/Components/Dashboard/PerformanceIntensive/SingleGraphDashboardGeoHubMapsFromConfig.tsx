@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { SingleGraphDashboardGeoHubMaps } from './SingleGraphDashboardGeoHubMaps';
-
-import { GeoHubGraphType, GraphSettingsDataType } from '@/Types';
+import { useEffect, useState } from 'react';
+import type { GeoHubGraphType, GraphSettingsDataType } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { SingleGraphDashboardGeoHubMaps } from './SingleGraphDashboardGeoHubMaps';
 
 interface ConfigObject {
   graphSettings?: GraphSettingsDataType;

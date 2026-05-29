@@ -1,41 +1,5 @@
 import { P } from '@undp/design-system-react/Typography';
-
-import { ButterflyChart } from '../Graphs/ButterflyChart';
-import { CirclePackingGraph } from '../Graphs/CirclePackingGraph';
-import { DataTable } from '../Graphs/DataTable';
-import { DonutChart } from '../Graphs/DonutChart';
-import { HeatMap } from '../Graphs/HeatMap';
-import { Histogram } from '../Graphs/Histogram';
-import { DualAxisLineChart } from '../Graphs/LineCharts/DualAxisLineChart';
-import { SimpleLineChart } from '../Graphs/LineCharts/LineChart';
-import { MultiLineChart } from '../Graphs/LineCharts/MultiLineChart';
-import { MultiLineAltChart } from '../Graphs/LineCharts/MultiLineAltChart';
-import { SparkLine } from '../Graphs/LineCharts/SparkLine';
-import { BiVariateChoroplethMap } from '../Graphs/Maps/BiVariateMap';
-import { ChoroplethMap } from '../Graphs/Maps/ChoroplethMap';
-import { DotDensityMap } from '../Graphs/Maps/DotDensityMap';
-import { ParetoChart } from '../Graphs/ParetoChart';
-import { ScatterPlot } from '../Graphs/ScatterPlot';
-import { SlopeChart } from '../Graphs/SlopeChart';
-import { AreaChart } from '../Graphs/StackedAreaChart';
-import { StatCardFromData } from '../Graphs/StatCard/StatCardFromData';
-import { TreeMapGraph } from '../Graphs/TreeMapGraph';
-import { UnitChart } from '../Graphs/UnitChart';
-import { DifferenceLineChart } from '../Graphs/LineCharts/DifferenceLineChart';
-import { SankeyChart } from '../Graphs/SankeyChart';
-import { LineChartWithConfidenceInterval } from '../Graphs/LineCharts/LineChartWithConfidenceInterval';
-import { DataCards } from '../Graphs/DataCards';
-import { SimpleBarGraph, GroupedBarGraph, StackedBarGraph } from '../Graphs/BarGraph';
-import { DumbbellChart } from '../Graphs/DumbbellChart';
-import { StripChart } from '../Graphs/StripChart';
-import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
-import { RadarChart } from '../Graphs/RadarChart';
-import { BulletChart } from '../Graphs/BulletChart';
-import { HybridMap } from '../Graphs/Maps/HybridMap';
-import { WaterfallChart } from '../Graphs/WaterfallChart';
-
-import { getValues } from '@/Utils/getValues';
-import {
+import type {
   DataTableColumnDataType,
   GraphConfigurationDataType,
   GraphSettingsDataType,
@@ -43,10 +7,44 @@ import {
   HighlightAreaSettingsDataType,
   HighlightAreaSettingsForScatterPlotDataType,
 } from '@/Types';
+import { getValues } from '@/Utils/getValues';
+import { GroupedBarGraph, SimpleBarGraph, StackedBarGraph } from '../Graphs/BarGraph';
+import { BeeSwarmChart } from '../Graphs/BeeSwarmChart';
+import { BulletChart } from '../Graphs/BulletChart';
+import { ButterflyChart } from '../Graphs/ButterflyChart';
+import { CirclePackingGraph } from '../Graphs/CirclePackingGraph';
+import { DataCards } from '../Graphs/DataCards';
+import { DataTable } from '../Graphs/DataTable';
+import { DonutChart } from '../Graphs/DonutChart';
+import { DumbbellChart } from '../Graphs/DumbbellChart';
+import { HeatMap } from '../Graphs/HeatMap';
+import { Histogram } from '../Graphs/Histogram';
+import { DifferenceLineChart } from '../Graphs/LineCharts/DifferenceLineChart';
+import { DualAxisLineChart } from '../Graphs/LineCharts/DualAxisLineChart';
+import { SimpleLineChart } from '../Graphs/LineCharts/LineChart';
+import { LineChartWithConfidenceInterval } from '../Graphs/LineCharts/LineChartWithConfidenceInterval';
+import { MultiLineAltChart } from '../Graphs/LineCharts/MultiLineAltChart';
+import { MultiLineChart } from '../Graphs/LineCharts/MultiLineChart';
+import { SparkLine } from '../Graphs/LineCharts/SparkLine';
+import { BiVariateChoroplethMap } from '../Graphs/Maps/BiVariateMap';
+import { ChoroplethMap } from '../Graphs/Maps/ChoroplethMap';
+import { DotDensityMap } from '../Graphs/Maps/DotDensityMap';
+import { HybridMap } from '../Graphs/Maps/HybridMap';
+import { ParetoChart } from '../Graphs/ParetoChart';
+import { RadarChart } from '../Graphs/RadarChart';
+import { SankeyChart } from '../Graphs/SankeyChart';
+import { ScatterPlot } from '../Graphs/ScatterPlot';
+import { SlopeChart } from '../Graphs/SlopeChart';
+import { AreaChart } from '../Graphs/StackedAreaChart';
+import { StatCardFromData } from '../Graphs/StatCard/StatCardFromData';
+import { StripChart } from '../Graphs/StripChart';
+import { TreeMapGraph } from '../Graphs/TreeMapGraph';
+import { UnitChart } from '../Graphs/UnitChart';
+import { WaterfallChart } from '../Graphs/WaterfallChart';
 
 interface Props {
   graph: GraphType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   graphData: any;
   settings?: GraphSettingsDataType;
   debugMode?: boolean;
@@ -69,11 +67,11 @@ function GraphEl(props: Props) {
     updateFilters,
   } = props;
   if (debugMode) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log(`Graph: ${graph}`);
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Transformed data:', graphData);
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Settings:', settings);
   }
   if (typeof graphData === 'string')
@@ -184,7 +182,7 @@ function GraphEl(props: Props) {
           minBarThickness: settings?.minBarThickness,
           maxNumberOfBars: settings?.maxNumberOfBars,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.label);
           },
@@ -249,7 +247,7 @@ function GraphEl(props: Props) {
           minBarThickness: settings?.minBarThickness,
           maxNumberOfBars: settings?.maxNumberOfBars,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.label);
           },
@@ -428,7 +426,7 @@ function GraphEl(props: Props) {
           minBarThickness: settings?.minBarThickness,
           maxNumberOfBars: settings?.maxNumberOfBars,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.label);
           },
@@ -879,7 +877,7 @@ function GraphEl(props: Props) {
           language: settings?.language,
           minHeight: settings?.minHeight,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.id);
           },
@@ -944,7 +942,7 @@ function GraphEl(props: Props) {
           language: settings?.language,
           minHeight: settings?.minHeight,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.id);
           },
@@ -1061,7 +1059,7 @@ function GraphEl(props: Props) {
           language: settings?.language,
           minHeight: settings?.minHeight,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.id);
           },
@@ -1114,7 +1112,7 @@ function GraphEl(props: Props) {
           relativeHeight: settings?.relativeHeight,
           ariaLabel: settings?.ariaLabel,
           legendMaxWidth: settings?.legendMaxWidth,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.label);
           },
@@ -1344,7 +1342,7 @@ function GraphEl(props: Props) {
           minHeight: settings?.minHeight,
           showNAColor: settings?.showNAColor,
           ariaLabel: settings?.ariaLabel,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.label);
           },
@@ -1394,7 +1392,7 @@ function GraphEl(props: Props) {
           ariaLabel: settings?.ariaLabel,
           radius: settings?.radius,
           maxRadiusValue: settings?.maxRadiusValue,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onSeriesMouseClick: (el: any) => {
             updateFilters?.(el.label);
           },

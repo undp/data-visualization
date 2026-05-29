@@ -1,8 +1,8 @@
-import { NumberValue } from 'd3-scale';
+import type { NumberValue } from 'd3-scale';
 import { motion } from 'motion/react';
 
 import { Colors } from '@/Components/ColorPalette';
-import { AnimateDataType } from '@/Types';
+import type { AnimateDataType } from '@/Types';
 
 interface Props {
   areaSettings: {
@@ -24,6 +24,7 @@ export function HighlightArea(props: Props) {
   return (
     <>
       {areaSettings.map((d, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
         <motion.g key={i}>
           {d.coordinates[0] === null && d.coordinates[1] === null ? null : (
             <motion.g>
@@ -84,8 +85,9 @@ export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
   return (
     <>
       {areaSettings.map((d, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
         <motion.g key={`highlight_area_${i}`}>
-          {d.coordinates.filter(el => el === null).length === 4 ? null : (
+          {d.coordinates.filter((el) => el === null).length === 4 ? null : (
             <motion.g>
               <motion.rect
                 style={{

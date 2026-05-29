@@ -1,14 +1,12 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
+import type React from 'react';
+import { DataTable } from '@/index';
 import {
   CLASS_NAME_OBJECT,
   LANGUAGE_OPTIONS,
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../assets/constants';
-
-import { DataTable } from '@/index';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof DataTable>;
 

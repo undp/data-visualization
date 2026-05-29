@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { SingleGraphDashboardThreeDGraphs } from './SingleGraphDashboardThreeDGraphs';
-
-import {
+import { useEffect, useState } from 'react';
+import type {
   AdvancedDataSelectionDataType,
   AggregationSettingsDataType,
   DataFilterDataType,
@@ -16,6 +13,7 @@ import {
   ThreeDGraphType,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { SingleGraphDashboardThreeDGraphs } from './SingleGraphDashboardThreeDGraphs';
 
 interface ConfigObject {
   graphSettings?: GraphSettingsDataType;

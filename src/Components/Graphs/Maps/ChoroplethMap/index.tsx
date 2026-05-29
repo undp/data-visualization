@@ -1,36 +1,34 @@
-import { useState, useRef, useEffect, useEffectEvent, useMemo } from 'react';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
-import { FeatureCollection } from 'geojson';
-
-import { Graph } from './Graph';
-
-import {
-  ChoroplethMapDataType,
-  Languages,
-  SourcesDataType,
-  StyleObject,
-  ClassNameObject,
-  ScaleDataType,
-  MapProjectionTypes,
-  ZoomInteractionTypes,
-  CustomLayerDataType,
-  AnimateDataType,
-  TimelineDataType,
-  MapOverlayDataType,
-  NumberFormatOptions,
-} from '@/Types';
+import type { FeatureCollection } from 'geojson';
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { Colors } from '@/Components/ColorPalette';
-import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
-import { getUniqValue } from '@/Utils/getUniqValue';
-import { getJenks } from '@/Utils/getJenks';
 import { Pause, Play } from '@/Components/Icons';
+import type {
+  AnimateDataType,
+  ChoroplethMapDataType,
+  ClassNameObject,
+  CustomLayerDataType,
+  Languages,
+  MapOverlayDataType,
+  MapProjectionTypes,
+  NumberFormatOptions,
+  ScaleDataType,
+  SourcesDataType,
+  StyleObject,
+  TimelineDataType,
+  ZoomInteractionTypes,
+} from '@/Types';
+import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { getJenks } from '@/Utils/getJenks';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getUniqValue } from '@/Utils/getUniqValue';
+import { Graph } from './Graph';
 
 interface Props {
   // Data
@@ -137,16 +135,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -221,8 +219,8 @@ export function ChoroplethMap(props: Props) {
     const dates = [
       ...new Set(
         data
-          .filter(d => d.date)
-          .map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+          .filter((d) => d.date)
+          .map((d) => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
       ),
     ];
     dates.sort((a, b) => a - b);
@@ -236,7 +234,7 @@ export function ChoroplethMap(props: Props) {
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -256,7 +254,7 @@ export function ChoroplethMap(props: Props) {
   useEffect(() => {
     if (typeof mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapData);
-      fetchData.then(d => {
+      fetchData.then((d) => {
         onUpdateShape(d);
       });
     } else {
@@ -267,7 +265,7 @@ export function ChoroplethMap(props: Props) {
     if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
     if (typeof mapOverlay?.mapData === 'string') {
       const fetchData = fetchAndParseJSON(mapOverlay?.mapData);
-      fetchData.then(d => {
+      fetchData.then((d) => {
         onUpdateOverlayMapShape(d as FeatureCollection);
       });
     } else {
@@ -280,14 +278,14 @@ export function ChoroplethMap(props: Props) {
     (scaleType === 'categorical'
       ? getUniqValue(data, 'x')
       : getJenks(
-          data.map(d => d.x as number | null | undefined),
+          data.map((d) => d.x as number | null | undefined),
           colors?.length || 4,
         ));
 
   useEffect(() => {
     const interval = setInterval(
       () => {
-        setIndex(i => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
+        setIndex((i) => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
       },
       (timeline.speed || 2) * 1000,
     );
@@ -351,10 +349,10 @@ export function ChoroplethMap(props: Props) {
             step={null}
             defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
             value={uniqDatesSorted[index]}
-            onChangeComplete={nextValue => {
+            onChangeComplete={(nextValue) => {
               setIndex(uniqDatesSorted.indexOf(nextValue as number));
             }}
-            onChange={nextValue => {
+            onChange={(nextValue) => {
               setIndex(uniqDatesSorted.indexOf(nextValue as number));
             }}
             aria-label='Time slider. Use arrow keys to adjust selected time period.'
@@ -364,7 +362,7 @@ export function ChoroplethMap(props: Props) {
       <GraphArea ref={graphDiv}>
         {svgWidth && svgHeight && mapShape ? (
           <Graph
-            data={data.filter(d =>
+            data={data.filter((d) =>
               timeline.enabled
                 ? `${d.date}` ===
                   format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
@@ -375,7 +373,9 @@ export function ChoroplethMap(props: Props) {
                 ? mapShape
                 : {
                     ...mapShape,
-                    features: mapShape.features.filter(el => el.properties?.NAME !== 'Antarctica'),
+                    features: mapShape.features.filter(
+                      (el) => el.properties?.NAME !== 'Antarctica',
+                    ),
                   }
             }
             colorDomain={domain}
@@ -429,9 +429,9 @@ export function ChoroplethMap(props: Props) {
             graphDownload={graphDownload ? graphParentDiv : undefined}
             dataDownload={
               dataDownload
-                ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                  ? data.map(d => d.data).filter(d => d !== undefined)
-                  : data.filter(d => d !== undefined)
+                ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                  ? data.map((d) => d.data).filter((d) => d !== undefined)
+                  : data.filter((d) => d !== undefined)
                 : null
             }
           />

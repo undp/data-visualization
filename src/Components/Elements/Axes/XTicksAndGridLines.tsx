@@ -40,6 +40,7 @@ export function XTicksAndGridLines(props: Props) {
   return (
     <>
       {x.map((d, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
         <g key={i}>
           {showGridLines ? (
             <line

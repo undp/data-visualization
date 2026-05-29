@@ -1,10 +1,15 @@
-import isEqual from 'fast-deep-equal';
-import { useRef, useState } from 'react';
-import { scaleBand, scaleLinear } from 'd3-scale';
 import { cn } from '@undp/design-system-react/cn';
+import { scaleBand, scaleLinear } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import {
+import { useRef, useState } from 'react';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { RefLineX } from '@/Components/Elements/ReferenceLine';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ButterflyChartDataType,
   ClassNameObject,
@@ -13,12 +18,6 @@ import {
   StyleObject,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
-import { RefLineX } from '@/Components/Elements/ReferenceLine';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: ButterflyChartDataType[];
@@ -32,22 +31,22 @@ interface Props {
   leftMargin: number;
   topMargin: number;
   bottomMargin: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   maxValue: number;
   minValue: number;
   barPadding: number;
   truncateBy: number;
   showValues: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   showTicks: boolean;
   suffix: string;
   prefix: string;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -107,9 +106,9 @@ export function Graph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -124,7 +123,7 @@ export function Graph(props: Props) {
 
   const dataWithId = data.map((d, i) => ({ ...d, id: `${i}` }));
   const y = scaleBand()
-    .domain(dataWithId.map(d => `${d.id}`))
+    .domain(dataWithId.map((d) => `${d.id}`))
     .range([graphHeight, 0])
     .paddingInner(barPadding);
   const xRightBar = scaleLinear()
@@ -147,12 +146,12 @@ export function Graph(props: Props) {
         ref={svgRef}
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g transform={`translate(${0},${0})`}>
             {showTicks ? (
               <XTicksAndGridLines
-                values={xLeftTicks.filter(d => d !== 0)}
-                x={xLeftTicks.filter(d => d !== 0).map(d => xLeftBar(d))}
+                values={xLeftTicks.filter((d) => d !== 0)}
+                x={xLeftTicks.filter((d) => d !== 0).map((d) => xLeftBar(d))}
                 y1={0 - topMargin}
                 y2={graphHeight + margin.bottom}
                 styles={{
@@ -174,13 +173,13 @@ export function Graph(props: Props) {
               />
             ) : null}
             <AnimatePresence>
-              {dataWithId.map((d, i) => {
+              {dataWithId.map((d) => {
                 return (
                   <motion.g
                     className='undp-viz-g-with-hover'
                     key={d.label}
                     opacity={0.85}
-                    onMouseEnter={event => {
+                    onMouseEnter={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -197,7 +196,7 @@ export function Graph(props: Props) {
                         }
                       }
                     }}
-                    onMouseMove={event => {
+                    onMouseMove={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -211,7 +210,7 @@ export function Graph(props: Props) {
                   >
                     {d.leftBar ? (
                       <motion.rect
-                        y={y(`${i}`)}
+                        y={y(d.id)}
                         style={{ fill: barColors[0] }}
                         height={y.bandwidth()}
                         variants={{
@@ -239,7 +238,7 @@ export function Graph(props: Props) {
                     ) : null}
                     {showValues ? (
                       <motion.text
-                        y={(y(`${i}`) as number) + y.bandwidth() / 2}
+                        y={(y(d.id) as number) + y.bandwidth() / 2}
                         style={{
                           textAnchor: d.leftBar ? (d.leftBar > 0 ? 'end' : 'start') : 'start',
                           ...(styles?.graphObjectValues || {}),
@@ -292,32 +291,28 @@ export function Graph(props: Props) {
                 classNames={{ axis: classNames?.yAxis?.axis }}
                 styles={{ axis: styles?.yAxis?.axis }}
               />
-              {refValues ? (
-                <>
-                  {refValues.map((el, i) => (
-                    <RefLineX
-                      key={i}
-                      text={el.text}
-                      color={el.color}
-                      x={xLeftBar(el.value as number)}
-                      y1={0 - margin.top}
-                      y2={graphHeight + margin.bottom}
-                      textSide='left'
-                      classNames={el.classNames}
-                      styles={el.styles}
-                      animate={animate}
-                      isInView={isInView}
-                    />
-                  ))}
-                </>
-              ) : null}
+              {refValues?.map((el) => (
+                <RefLineX
+                  key={el.text}
+                  text={el.text}
+                  color={el.color}
+                  x={xLeftBar(el.value as number)}
+                  y1={0 - margin.top}
+                  y2={graphHeight + margin.bottom}
+                  textSide='left'
+                  classNames={el.classNames}
+                  styles={el.styles}
+                  animate={animate}
+                  isInView={isInView}
+                />
+              ))}
             </AnimatePresence>
           </g>
           <g transform={`translate(${(graphWidth + centerGap) / 2},${0})`}>
             {showTicks ? (
               <XTicksAndGridLines
-                values={xRightTicks.filter(d => d !== 0)}
-                x={xRightTicks.filter(d => d !== 0).map(d => xRightBar(d))}
+                values={xRightTicks.filter((d) => d !== 0)}
+                x={xRightTicks.filter((d) => d !== 0).map((d) => xRightBar(d))}
                 y1={0 - topMargin}
                 y2={graphHeight + margin.bottom}
                 styles={{
@@ -338,13 +333,13 @@ export function Graph(props: Props) {
               />
             ) : null}
             <AnimatePresence>
-              {dataWithId.map((d, i) => {
+              {dataWithId.map((d) => {
                 return (
                   <motion.g
                     className='undp-viz-g-with-hover'
-                    key={i}
+                    key={d.label}
                     opacity={0.85}
-                    onMouseEnter={event => {
+                    onMouseEnter={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -361,7 +356,7 @@ export function Graph(props: Props) {
                         }
                       }
                     }}
-                    onMouseMove={event => {
+                    onMouseMove={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -375,7 +370,7 @@ export function Graph(props: Props) {
                   >
                     {d.rightBar ? (
                       <motion.rect
-                        y={y(`${i}`)}
+                        y={y(d.id)}
                         style={{ fill: barColors[1] }}
                         height={y.bandwidth()}
                         exit={{
@@ -403,7 +398,7 @@ export function Graph(props: Props) {
                     ) : null}
                     {showValues ? (
                       <motion.text
-                        y={(y(`${i}`) as number) + y.bandwidth() / 2}
+                        y={(y(d.id) as number) + y.bandwidth() / 2}
                         style={{
                           textAnchor: d.rightBar ? (d.rightBar < 0 ? 'end' : 'start') : 'start',
                           ...(styles?.graphObjectValues || {}),
@@ -456,32 +451,28 @@ export function Graph(props: Props) {
                 classNames={{ axis: classNames?.yAxis?.axis }}
                 styles={{ axis: styles?.yAxis?.axis }}
               />
-              {refValues ? (
-                <>
-                  {refValues.map((el, i) => (
-                    <RefLineX
-                      key={i}
-                      text={el.text}
-                      color={el.color}
-                      x={xRightBar(el.value as number)}
-                      y1={0 - margin.top}
-                      y2={graphHeight + margin.bottom}
-                      textSide='right'
-                      classNames={el.classNames}
-                      styles={el.styles}
-                      animate={animate}
-                      isInView={isInView}
-                    />
-                  ))}
-                </>
-              ) : null}
+              {refValues?.map((el) => (
+                <RefLineX
+                  key={el.text}
+                  text={el.text}
+                  color={el.color}
+                  x={xRightBar(el.value as number)}
+                  y1={0 - margin.top}
+                  y2={graphHeight + margin.bottom}
+                  textSide='right'
+                  classNames={el.classNames}
+                  styles={el.styles}
+                  animate={animate}
+                  isInView={isInView}
+                />
+              ))}
             </AnimatePresence>
           </g>
           <AnimatePresence>
             <motion.g transform={`translate(${graphWidth / 2},${0})`}>
-              {dataWithId.map((d, i) => (
+              {dataWithId.map((d) => (
                 <YAxesLabels
-                  key={i}
+                  key={d.id}
                   value={
                     `${d.label}`.length < truncateBy
                       ? `${d.label}`
@@ -530,7 +521,7 @@ export function Graph(props: Props) {
               {axisTitles[1]}
             </text>
           </g>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

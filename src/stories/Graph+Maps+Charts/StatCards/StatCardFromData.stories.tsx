@@ -1,15 +1,13 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
+import type React from 'react';
+import { StatCardFromData } from '@/index';
+import { parseValue } from '@/stories/assets/parseValue';
 import {
   CLASS_NAME_OBJECT,
   LANGUAGE_OPTIONS,
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../../assets/constants';
-
-import { StatCardFromData } from '@/index';
-import { parseValue } from '@/stories/assets/parseValue';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof StatCardFromData>;
 

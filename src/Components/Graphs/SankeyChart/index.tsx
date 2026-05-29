@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect, useEffectEvent } from 'react';
-import sum from 'lodash.sum';
 import orderBy from 'lodash.orderby';
-
-import { Graph } from './Graph';
-
+import sum from 'lodash.sum';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import {
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -16,12 +17,9 @@ import {
   SourcesDataType,
   StyleObject,
 } from '@/Types';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import { Colors } from '@/Components/ColorPalette';
 import { generateRandomString } from '@/Utils/generateRandomString';
-import { EmptyState } from '@/Components/Elements/EmptyState';
 import { uniqBy } from '@/Utils/uniqBy';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { Graph } from './Graph';
 
 interface Props {
   // Data
@@ -118,16 +116,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content when user mouseover on the links. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -202,7 +200,7 @@ export function SankeyChart(props: Props) {
   });
 
   useEffect(() => {
-    const sourceNodes = uniqBy(data, 'source', true).map(d => ({
+    const sourceNodes = uniqBy(data, 'source', true).map((d) => ({
       name: `source_${d}`,
       type: 'source' as const,
       label: `${d}`,
@@ -211,20 +209,20 @@ export function SankeyChart(props: Props) {
           ? sourceColors || Colors.graphMainColor
           : sourceColors[
               (sourceColorDomain || uniqBy(data, 'source', true)).findIndex(
-                el => `${el}` === `${d}`,
+                (el) => `${el}` === `${d}`,
               ) > sourceColors.length
                 ? sourceColors.length - 1
                 : (sourceColorDomain || uniqBy(data, 'source', true)).findIndex(
-                    el => `${el}` === `${d}`,
+                    (el) => `${el}` === `${d}`,
                   )
             ],
-      totalValue: sum(data.filter(el => `${el.source}` === `${d}`).map(el => el.value)),
+      totalValue: sum(data.filter((el) => `${el.source}` === `${d}`).map((el) => el.value)),
     }));
     const sourceNodesSorted =
       sortNodes === 'asc' || sortNodes === 'desc'
         ? orderBy(sourceNodes, ['totalValue'], [sortNodes])
         : sourceNodes;
-    const targetNodes = uniqBy(data, 'target', true).map(d => ({
+    const targetNodes = uniqBy(data, 'target', true).map((d) => ({
       name: `target_${d}`,
       type: 'target' as const,
       label: `${d}`,
@@ -233,14 +231,14 @@ export function SankeyChart(props: Props) {
           ? targetColors || Colors.graphMainColor
           : targetColors[
               (targetColorDomain || uniqBy(data, 'target', true)).findIndex(
-                el => `${el}` === `${d}`,
+                (el) => `${el}` === `${d}`,
               ) > targetColors.length
                 ? targetColors.length - 1
                 : (targetColorDomain || uniqBy(data, 'target', true)).findIndex(
-                    el => `${el}` === `${d}`,
+                    (el) => `${el}` === `${d}`,
                   )
             ],
-      totalValue: sum(data.filter(el => `${el.target}` === `${d}`).map(el => el.value)),
+      totalValue: sum(data.filter((el) => `${el.target}` === `${d}`).map((el) => el.value)),
     }));
     const targetNodesSorted =
       sortNodes === 'asc' || sortNodes === 'desc'
@@ -250,9 +248,9 @@ export function SankeyChart(props: Props) {
     const nodes = [...sourceNodesSorted, ...targetNodesSorted];
     updateSankeyDataEvent({
       nodes,
-      links: data.map(d => ({
-        source: nodes.findIndex(el => el.name === `source_${d.source}`),
-        target: nodes.findIndex(el => el.name === `target_${d.target}`),
+      links: data.map((d) => ({
+        source: nodes.findIndex((el) => el.name === `source_${d.source}`),
+        target: nodes.findIndex((el) => el.name === `target_${d.target}`),
         value: d.value,
         data: { ...d },
       })),
@@ -260,7 +258,7 @@ export function SankeyChart(props: Props) {
   }, [data, sortNodes, sourceColorDomain, sourceColors, targetColorDomain, targetColors]);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -302,9 +300,9 @@ export function SankeyChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
@@ -329,8 +327,8 @@ export function SankeyChart(props: Props) {
             showValues={showValues}
             onSeriesMouseClick={onSeriesMouseClick}
             id={generateRandomString(8)}
-            highlightedSourceDataPoints={highlightedSourceDataPoints?.map(d => `${d}`)}
-            highlightedTargetDataPoints={highlightedTargetDataPoints?.map(d => `${d}`)}
+            highlightedSourceDataPoints={highlightedSourceDataPoints?.map((d) => `${d}`)}
+            highlightedTargetDataPoints={highlightedTargetDataPoints?.map((d) => `${d}`)}
             defaultLinkOpacity={defaultLinkOpacity}
             sourceTitle={sourceTitle}
             targetTitle={targetTitle}

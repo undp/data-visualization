@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
+import { useState } from 'react';
 
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -37,7 +37,6 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
     <div
       className={cn('flex flex-wrap gap-0 justify-center leading-0', className)}
       style={{ maxWidth: width ? `${width}px` : 'none' }}
-      aria-label='Color legend'
     >
       {colorLegendTitle && colorLegendTitle !== '' ? (
         <P size='sm' marginBottom='2xs' className='w-full text-center'>
@@ -45,11 +44,18 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
         </P>
       ) : null}
       <svg width='100%' viewBox='0 0 360 30' style={{ maxWidth: '360px' }} direction='ltr'>
+        <title>Color legend</title>
         <g>
           {colorDomain.map((d, i) => (
+            //  biome-ignore lint/a11y/noStaticElementInteractions: interaction for color legend
             <g
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               key={i}
               onMouseOver={() => {
+                setHoveredColor(colors[i]);
+                setSelectedColor(colors[i]);
+              }}
+              onFocus={() => {
                 setHoveredColor(colors[i]);
                 setSelectedColor(colors[i]);
               }}
@@ -85,8 +91,13 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
             </g>
           ))}
           <g>
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: interaction for color legend */}
             <rect
               onMouseOver={() => {
+                setHoveredColor(colors[colorDomain.length]);
+                setSelectedColor(colors[colorDomain.length]);
+              }}
+              onFocus={() => {
                 setHoveredColor(colors[colorDomain.length]);
                 setSelectedColor(colors[colorDomain.length]);
               }}
@@ -112,8 +123,13 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
             />
           </g>
           {showNAColor ? (
+            //  biome-ignore lint/a11y/noStaticElementInteractions: interaction for color legend
             <g
               onMouseOver={() => {
+                setHoveredColor(naColor || '#D4D6D8');
+                setSelectedColor(naColor || '#D4D6D8');
+              }}
+              onFocus={() => {
                 setHoveredColor(naColor || '#D4D6D8');
                 setSelectedColor(naColor || '#D4D6D8');
               }}

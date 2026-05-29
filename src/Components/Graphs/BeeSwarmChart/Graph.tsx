@@ -1,29 +1,28 @@
-import isEqual from 'fast-deep-equal';
-import { scaleLinear, scaleSqrt } from 'd3-scale';
-import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
-import { useEffect, useRef, useState } from 'react';
-import orderBy from 'lodash.orderby';
 import { cn } from '@undp/design-system-react/cn';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { P } from '@undp/design-system-react/Typography';
-
-import {
+import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
+import { scaleLinear, scaleSqrt } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
+import orderBy from 'lodash.orderby';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   BeeSwarmChartDataType,
   ClassNameObject,
   CustomLayerDataType,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
-import { Colors } from '@/Components/ColorPalette';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
-import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
-import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface BeeSwarmChartDataTypeForBubbleChart extends BeeSwarmChartDataType {
   x: number;
@@ -46,9 +45,9 @@ interface Props {
   height: number;
   suffix: string;
   prefix: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   refValues?: ReferenceDataType[];
   selectedColor?: string;
@@ -58,10 +57,10 @@ interface Props {
   maxValue?: number;
   minValue?: number;
   highlightedDataPoints?: (string | number)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -114,9 +113,9 @@ export function VerticalGraph(props: Props) {
     padZeros,
   } = props;
   const svgRef = useRef(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [finalData, setFinalData] = useState<BeeSwarmChartDataTypeForBubbleChart[] | null>(null);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -130,57 +129,68 @@ export function VerticalGraph(props: Props) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  const dataOrdered =
-    data.filter(d => !checkIfNullOrUndefined(d.radius)).length === 0
-      ? data
-      : orderBy(
-          data.filter(d => !checkIfNullOrUndefined(d.radius)),
-          'radius',
-          'desc',
-        );
+  const dataOrdered = useMemo(
+    () =>
+      data.filter((d) => !checkIfNullOrUndefined(d.radius)).length === 0
+        ? data
+        : orderBy(
+            data.filter((d) => !checkIfNullOrUndefined(d.radius)),
+            'radius',
+            'desc',
+          ),
+    [data],
+  );
   const yMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
-    : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) < 0 &&
-        !startFromZero
-      ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
-  const yMinValue = !checkIfNullOrUndefined(minValue)
-    ? (minValue as number)
-    : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) >=
+    : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) <
           0 && !startFromZero
       ? 0
-      : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+      : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
+  const yMinValue = !checkIfNullOrUndefined(minValue)
+    ? (minValue as number)
+    : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) >=
+          0 && !startFromZero
+      ? 0
+      : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
 
-  const radiusScale =
-    data.filter(d => d.radius === undefined || d.radius === null).length !== data.length
-      ? scaleSqrt()
-          .domain([
-            0,
-            checkIfNullOrUndefined(maxRadiusValue)
-              ? Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null))
-              : (maxRadiusValue as number),
-          ])
-          .range([0.25, radius])
-          .nice()
-      : undefined;
-  const y = scaleLinear().domain([yMinValue, yMaxValue]).range([graphHeight, 0]).nice();
+  const radiusScale = useMemo(
+    () =>
+      data.filter((d) => d.radius === undefined || d.radius === null).length !== data.length
+        ? scaleSqrt()
+            .domain([
+              0,
+              checkIfNullOrUndefined(maxRadiusValue)
+                ? Math.max(
+                    ...data.map((d) => d.radius).filter((d) => d !== undefined && d !== null),
+                  )
+                : (maxRadiusValue as number),
+            ])
+            .range([0.25, radius])
+            .nice()
+        : undefined,
+    [data, radius, maxRadiusValue],
+  );
+  const y = useMemo(
+    () => scaleLinear().domain([yMinValue, yMaxValue]).range([graphHeight, 0]).nice(),
+    [yMaxValue, yMaxValue, graphHeight],
+  );
   const yTicks = y.ticks(noOfTicks);
 
   useEffect(() => {
     const dataTemp = (
-      dataOrdered.map(d => ({
+      dataOrdered.map((d) => ({
         ...d,
         ...(d.data && { data: { ...d.data } }),
       })) as BeeSwarmChartDataType[]
-    ).filter(d => d.position);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ).filter((d) => d.position);
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     forceSimulation(dataTemp as any)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       .force('y', forceY((d: any) => y(d.position as number)).strength(5))
-      .force('x', forceX(_d => graphWidth / 2).strength(1))
+      .force('x', forceX((_d) => graphWidth / 2).strength(1))
       .force(
         'collide',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         forceCollide((d: any) => (radiusScale ? radiusScale(d.radius || 0) + 1 : radius + 1)),
       )
       .force('charge', forceManyBody().strength(-15))
@@ -192,7 +202,7 @@ export function VerticalGraph(props: Props) {
       .on('end', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
       });
-  }, [data, radius, graphHeight, graphWidth, yMinValue, yMaxValue, dataOrdered, y, radiusScale]);
+  }, [radius, graphWidth, dataOrdered, y, radiusScale]);
 
   return (
     <>
@@ -242,8 +252,8 @@ export function VerticalGraph(props: Props) {
                   }}
                 />
                 <YTicksAndGridLines
-                  values={yTicks.filter(d => d !== 0)}
-                  y={yTicks.filter(d => d !== 0).map(d => y(d))}
+                  values={yTicks.filter((d) => d !== 0)}
+                  y={yTicks.filter((d) => d !== 0).map((d) => y(d))}
                   x1={0 - margin.left}
                   x2={graphWidth + margin.right}
                   styles={{
@@ -265,8 +275,9 @@ export function VerticalGraph(props: Props) {
                 />
               </>
             ) : null}
-            {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-            {finalData.map(d => (
+            {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
+            {finalData.map((d) => (
+              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
               <g
                 className='undp-viz-g-with-hover'
                 key={d.label}
@@ -284,13 +295,13 @@ export function VerticalGraph(props: Props) {
                         : dimmedOpacity
                       : 0.85
                 }
-                onMouseEnter={event => {
+                onMouseEnter={(event) => {
                   setMouseOverData(d);
                   setEventY(event.clientY);
                   setEventX(event.clientX);
                   onSeriesMouseOver?.(d);
                 }}
-                onMouseMove={event => {
+                onMouseMove={(event) => {
                   setMouseOverData(d);
                   setEventY(event.clientY);
                   setEventX(event.clientX);
@@ -318,7 +329,7 @@ export function VerticalGraph(props: Props) {
                   cy={0}
                   r={radiusScale ? radiusScale(d.radius || 0) : radius}
                   fill={
-                    data.filter(el => el.color).length === 0
+                    data.filter((el) => el.color).length === 0
                       ? circleColors[0]
                       : !d.color
                         ? Colors.gray
@@ -359,7 +370,7 @@ export function VerticalGraph(props: Props) {
                               )}px`,
                               hyphens: 'auto',
                               color: getTextColorBasedOnBgColor(
-                                data.filter(el => el.color).length === 0
+                                data.filter((el) => el.color).length === 0
                                   ? circleColors[0]
                                   : !d.color
                                     ? Colors.gray
@@ -377,24 +388,20 @@ export function VerticalGraph(props: Props) {
                 ) : null}
               </g>
             ))}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineY
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    y={y(el.value as number)}
-                    x1={0 - margin.left}
-                    x2={graphWidth + margin.right}
-                    classNames={el.classNames}
-                    styles={el.styles}
-                    isInView={true}
-                  />
-                ))}
-              </>
-            ) : null}
-            {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+            {refValues?.map((el) => (
+              <RefLineY
+                key={el.text}
+                text={el.text}
+                color={el.color}
+                y={y(el.value as number)}
+                x1={0 - margin.left}
+                x2={graphWidth + margin.right}
+                classNames={el.classNames}
+                styles={el.styles}
+                isInView={true}
+              />
+            ))}
+            {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           </g>
         </svg>
       ) : (
@@ -466,9 +473,9 @@ export function HorizontalGraph(props: Props) {
     padZeros,
   } = props;
   const svgRef = useRef(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [finalData, setFinalData] = useState<BeeSwarmChartDataTypeForBubbleChart[] | null>(null);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -482,57 +489,68 @@ export function HorizontalGraph(props: Props) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  const dataOrdered =
-    data.filter(d => !checkIfNullOrUndefined(d.radius)).length === 0
-      ? data
-      : orderBy(
-          data.filter(d => !checkIfNullOrUndefined(d.radius)),
-          'radius',
-          'desc',
-        );
+  const dataOrdered = useMemo(
+    () =>
+      data.filter((d) => !checkIfNullOrUndefined(d.radius)).length === 0
+        ? data
+        : orderBy(
+            data.filter((d) => !checkIfNullOrUndefined(d.radius)),
+            'radius',
+            'desc',
+          ),
+    [data],
+  );
   const xMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
-    : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) < 0 &&
-        !startFromZero
-      ? 0
-      : Math.max(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
-  const xMinValue = !checkIfNullOrUndefined(minValue)
-    ? (minValue as number)
-    : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position)) >=
+    : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) <
           0 && !startFromZero
       ? 0
-      : Math.min(...data.filter(d => !checkIfNullOrUndefined(d.position)).map(d => d.position));
+      : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
+  const xMinValue = !checkIfNullOrUndefined(minValue)
+    ? (minValue as number)
+    : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) >=
+          0 && !startFromZero
+      ? 0
+      : Math.min(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position));
 
-  const radiusScale =
-    data.filter(d => d.radius === undefined || d.radius === null).length !== data.length
-      ? scaleSqrt()
-          .domain([
-            0,
-            checkIfNullOrUndefined(maxRadiusValue)
-              ? Math.max(...data.map(d => d.radius).filter(d => d !== undefined && d !== null))
-              : (maxRadiusValue as number),
-          ])
-          .range([0.25, radius])
-          .nice()
-      : undefined;
-  const x = scaleLinear().domain([xMinValue, xMaxValue]).range([0, graphWidth]).nice();
+  const radiusScale = useMemo(
+    () =>
+      data.filter((d) => d.radius === undefined || d.radius === null).length !== data.length
+        ? scaleSqrt()
+            .domain([
+              0,
+              checkIfNullOrUndefined(maxRadiusValue)
+                ? Math.max(
+                    ...data.map((d) => d.radius).filter((d) => d !== undefined && d !== null),
+                  )
+                : (maxRadiusValue as number),
+            ])
+            .range([0.25, radius])
+            .nice()
+        : undefined,
+    [data, radius, maxRadiusValue],
+  );
+  const x = useMemo(
+    () => scaleLinear().domain([xMinValue, xMaxValue]).range([0, graphWidth]).nice(),
+    [xMinValue, xMaxValue, graphWidth],
+  );
   const xTicks = x.ticks(noOfTicks);
 
   useEffect(() => {
     const dataTemp = (
-      dataOrdered.map(d => ({
+      dataOrdered.map((d) => ({
         ...d,
         ...(d.data && { data: { ...d.data } }),
       })) as BeeSwarmChartDataType[]
-    ).filter(d => d.position);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ).filter((d) => d.position);
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     forceSimulation(dataTemp as any)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       .force('x', forceX((d: any) => x(d.position as number)).strength(5))
-      .force('y', forceY(_d => graphHeight / 2).strength(1))
+      .force('y', forceY((_d) => graphHeight / 2).strength(1))
       .force(
         'collide',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         forceCollide((d: any) => (radiusScale ? radiusScale(d.radius || 0) + 1 : radius + 1)),
       )
       .force('charge', forceManyBody().strength(-15))
@@ -544,7 +562,7 @@ export function HorizontalGraph(props: Props) {
       .on('end', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
       });
-  }, [data, radius, graphHeight, graphWidth, xMinValue, xMaxValue, dataOrdered, x, radiusScale]);
+  }, [radius, graphHeight, dataOrdered, x, radiusScale]);
 
   return (
     <>
@@ -594,8 +612,8 @@ export function HorizontalGraph(props: Props) {
                   }}
                 />
                 <XTicksAndGridLines
-                  values={xTicks.filter(d => d !== 0)}
-                  x={xTicks.filter(d => d !== 0).map(d => x(d))}
+                  values={xTicks.filter((d) => d !== 0)}
+                  x={xTicks.filter((d) => d !== 0).map((d) => x(d))}
                   y1={0 - topMargin}
                   y2={graphHeight + margin.bottom}
                   styles={{
@@ -616,8 +634,9 @@ export function HorizontalGraph(props: Props) {
                 />
               </>
             ) : null}
-            {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
-            {finalData.map(d => (
+            {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
+            {finalData.map((d) => (
+              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
               <g
                 className='undp-viz-g-with-hover'
                 key={d.label}
@@ -635,13 +654,13 @@ export function HorizontalGraph(props: Props) {
                         : dimmedOpacity
                       : 0.85
                 }
-                onMouseEnter={event => {
+                onMouseEnter={(event) => {
                   setMouseOverData(d);
                   setEventY(event.clientY);
                   setEventX(event.clientX);
                   onSeriesMouseOver?.(d);
                 }}
-                onMouseMove={event => {
+                onMouseMove={(event) => {
                   setMouseOverData(d);
                   setEventY(event.clientY);
                   setEventX(event.clientX);
@@ -668,13 +687,13 @@ export function HorizontalGraph(props: Props) {
                   cx={0}
                   cy={0}
                   fill={
-                    data.filter(el => el.color).length === 0
+                    data.filter((el) => el.color).length === 0
                       ? circleColors[0]
                       : !d.color
                         ? Colors.gray
                         : circleColors[colorDomain.indexOf(d.color)]
                   }
-                  radius={radiusScale ? radiusScale(d.radius || 0) : radius}
+                  r={radiusScale ? radiusScale(d.radius || 0) : radius}
                 />
                 {(radiusScale ? radiusScale(d.radius || 0) : radius) > 10 && showLabels ? (
                   <g>
@@ -710,7 +729,7 @@ export function HorizontalGraph(props: Props) {
                                 20,
                               )}px`,
                               color: getTextColorBasedOnBgColor(
-                                data.filter(el => el.color).length === 0
+                                data.filter((el) => el.color).length === 0
                                   ? circleColors[0]
                                   : !d.color
                                     ? Colors.gray
@@ -729,25 +748,21 @@ export function HorizontalGraph(props: Props) {
                 ) : null}
               </g>
             ))}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineX
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    x={x(el.value as number)}
-                    y1={0 - margin.top}
-                    y2={graphHeight + margin.bottom}
-                    textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
-                    classNames={el.classNames}
-                    styles={el.styles}
-                    isInView={true}
-                  />
-                ))}
-              </>
-            ) : null}
-            {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+            {refValues?.map((el) => (
+              <RefLineX
+                key={el.text}
+                text={el.text}
+                color={el.color}
+                x={x(el.value as number)}
+                y1={0 - margin.top}
+                y2={graphHeight + margin.bottom}
+                textSide={x(el.value as number) > graphWidth * 0.75 || rtl ? 'left' : 'right'}
+                classNames={el.classNames}
+                styles={el.styles}
+                isInView={true}
+              />
+            ))}
+            {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           </g>
         </svg>
       ) : (

@@ -1,10 +1,8 @@
 import { useRef } from 'react';
-
-import GeoHubMapsEl from './GeoHubMapsEl';
-
-import { GeoHubGraphType, GraphSettingsDataType } from '@/Types';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
 import { GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type { GeoHubGraphType, GraphSettingsDataType } from '@/Types';
+import GeoHubMapsEl from './GeoHubMapsEl';
 
 interface Props {
   graphSettings?: GraphSettingsDataType;

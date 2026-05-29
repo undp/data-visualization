@@ -1,10 +1,8 @@
 import { P } from '@undp/design-system-react/Typography';
-
+import type { GeoHubGraphType, GraphSettingsDataType } from '@/Types';
 import { GeoHubCompareMaps } from '../../Graphs/Maps/GeoHubMaps/CompareMaps';
-import { GeoHubMap } from '../../Graphs/Maps/GeoHubMaps/SimpleMap';
 import { GeoHubMapWithLayerSelection } from '../../Graphs/Maps/GeoHubMaps/MapWithLayerSelection';
-
-import { GraphSettingsDataType, GeoHubGraphType } from '@/Types';
+import { GeoHubMap } from '../../Graphs/Maps/GeoHubMaps/SimpleMap';
 
 interface Props {
   graph: GeoHubGraphType;
@@ -15,9 +13,9 @@ interface Props {
 function GeoHubMapsEl(props: Props) {
   const { settings, graph, debugMode } = props;
   if (debugMode) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log(`Graph: ${graph}`);
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Settings:', settings);
   }
   const graphComponents: Record<GeoHubGraphType, React.ElementType | null> = {

@@ -1,11 +1,10 @@
-import { useEffect, useEffectEvent, useState } from 'react';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
 import { Label } from '@undp/design-system-react/Label';
 import { Spinner } from '@undp/design-system-react/Spinner';
+import { useEffect, useEffectEvent, useState } from 'react';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
 
-import { SingleGraphDashboard } from './SingleGraphDashboard';
-
-import {
+import type {
   ClassNameObject,
   DashboardFromWideToLongFormatColumnDataType,
   DashboardFromWideToLongFormatLayoutDataType,
@@ -19,10 +18,10 @@ import {
   fetchAndParseMultipleDataSources,
   fetchAndTransformDataFromAPI,
 } from '@/Utils/fetchAndParseData';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { wideToLongTransformation } from '@/Utils/wideToLongTranformation';
 import { filterData } from '@/Utils/transformData/filterData';
 import { transformColumnsToArray } from '@/Utils/transformData/transformColumnsToArray';
+import { wideToLongTransformation } from '@/Utils/wideToLongTranformation';
+import { SingleGraphDashboard } from './SingleGraphDashboard';
 
 interface Props {
   dashboardID?: string;
@@ -41,7 +40,7 @@ interface Props {
 }
 
 const TotalWidth = (columns: DashboardFromWideToLongFormatColumnDataType[]) => {
-  const columnWidth = columns.map(d => d.columnWidth || 1);
+  const columnWidth = columns.map((d) => d.columnWidth || 1);
   const sum = columnWidth.reduce((acc, cur) => acc + cur, 0);
   return sum;
 };
@@ -65,19 +64,19 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
     ignoreAccents: true,
     trim: true,
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [filteredData, setFilteredData] = useState<any>(undefined);
   const [filterValues, setFilterValues] = useState<string[]>([]);
   const [selectedFilterValues, setSelectedFilterValues] = useState<string | undefined>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [data, setData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [unformattedData, setUnformattedData] = useState<any>(undefined);
 
   const updateDataAndFilterValueEvent = useEffectEvent(() => {
     const filteredData = filterData(unformattedData, dataFilters || []);
     setFilterValues(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       filteredData.map((el: any) => el[dataSettings.keyColumn]),
     );
     setSelectedFilterValues(filteredData[0][dataSettings.keyColumn]);
@@ -93,7 +92,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
   const updateFilteredDataEvent = useEffectEvent(() => {
     if (data) {
       const filteredDataTemp = data.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         (item: any) => item[dataSettings.keyColumn] === selectedFilterValues,
       );
       setFilteredData(filteredDataTemp);
@@ -209,7 +208,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                       <Label className='mb-2'>{dashboardLayout.dropdownLabel}</Label>
                     ) : null}
                     <DropdownSelect
-                      options={filterValues.map(d => ({
+                      options={filterValues.map((d) => ({
                         value: d,
                         label: d,
                       }))}
@@ -219,7 +218,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                       isSearchable
                       controlShouldRenderValue
                       filterOption={createFilter(filterConfig)}
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                       onChange={(el: any) => {
                         setSelectedFilterValues(el?.value);
                       }}
@@ -232,6 +231,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                 </div>
                 {dashboardLayout.rows.map((d, i) => (
                   <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                     key={i}
                     style={{
                       display: 'flex',
@@ -245,6 +245,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
                   >
                     {d.columns.map((el, j) => (
                       <div
+                        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                         key={j}
                         className='flex bg-transparent grow min-w-60'
                         style={{

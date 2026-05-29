@@ -1,7 +1,7 @@
 import { cn } from '@undp/design-system-react/cn';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { AnimateDataType } from '@/Types';
+import type { AnimateDataType } from '@/Types';
 import { generateRandomString } from '@/Utils/generateRandomString';
 
 interface Props {

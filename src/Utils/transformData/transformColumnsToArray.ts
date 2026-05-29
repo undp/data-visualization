@@ -1,4 +1,4 @@
-import { ColumnConfigurationDataType } from '@/Types';
+import type { ColumnConfigurationDataType } from '@/Types';
 /**
  * Transforms specified columns of the CSV data into arrays, splitting the string values based on a delimiter.
  * This function is useful for handling columns that contain multiple values separated by a delimiter,
@@ -30,15 +30,15 @@ import { ColumnConfigurationDataType } from '@/Types';
  * // ]
  */
 export function transformColumnsToArray(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any,
   columnConfig?: ColumnConfigurationDataType[],
 ) {
   if (!columnConfig || columnConfig.length === 0) return csvData;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const dataFormatted = csvData.map((el: any) => {
     const temp = { ...el };
-    columnConfig.forEach(d => {
+    columnConfig.forEach((d) => {
       temp[d.column] = temp[d.column]
         ? temp[d.column].split(d.delimiter || ',').map((t: string) => t.trim())
         : [];

@@ -1,22 +1,21 @@
-import isEqual from 'fast-deep-equal';
-import { useRef, useState } from 'react';
-import { scaleLinear } from 'd3-scale';
 import { cn } from '@undp/design-system-react/cn';
+import { scaleLinear } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import {
+import { useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
   SlopeChartDataType,
   StyleObject,
 } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { Colors } from '@/Components/ColorPalette';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: SlopeChartDataType[];
@@ -32,17 +31,17 @@ interface Props {
   topMargin: number;
   bottomMargin: number;
   axisTitles: [string, string];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   highlightedDataPoints?: (string | number)[];
   maxValue?: number;
   minValue?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -85,9 +84,9 @@ export function Graph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -99,8 +98,8 @@ export function Graph(props: Props) {
   };
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
-  const minY = Math.min(Math.min(...data.map(d => d.y1)), Math.min(...data.map(d => d.y2)));
-  const maxY = Math.max(Math.max(...data.map(d => d.y1)), Math.max(...data.map(d => d.y2)));
+  const minY = Math.min(Math.min(...data.map((d) => d.y1)), Math.min(...data.map((d) => d.y2)));
+  const maxY = Math.max(Math.max(...data.map((d) => d.y1)), Math.max(...data.map((d) => d.y2)));
   const y = scaleLinear()
     .domain([
       checkIfNullOrUndefined(minValue) ? (minY > 0 ? 0 : minY) : (minValue as number),
@@ -167,12 +166,12 @@ export function Graph(props: Props) {
               text={axisTitles[1]}
             />
           </g>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
-            {data.map((d, i) => {
+            {data.map((d) => {
               return (
                 <motion.g
-                  key={i}
+                  key={d.label}
                   variants={{
                     initial: {
                       opacity: selectedColor
@@ -213,13 +212,13 @@ export function Graph(props: Props) {
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
                     onSeriesMouseOver?.(d);
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -248,13 +247,13 @@ export function Graph(props: Props) {
                         cx: radius,
                         cy: y(d.y1),
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
                               : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -265,13 +264,13 @@ export function Graph(props: Props) {
                         cx: radius,
                         cy: y(d.y1),
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
                               : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -294,7 +293,7 @@ export function Graph(props: Props) {
                         initial: {
                           y: y(d.y1),
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -304,7 +303,7 @@ export function Graph(props: Props) {
                         whileInView: {
                           y: y(d.y1),
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -335,7 +334,7 @@ export function Graph(props: Props) {
                           initial: {
                             y: y(d.y1),
                             fill:
-                              data.filter(el => el.color).length === 0
+                              data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -345,7 +344,7 @@ export function Graph(props: Props) {
                           whileInView: {
                             y: y(d.y1),
                             fill:
-                              data.filter(el => el.color).length === 0
+                              data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -376,13 +375,13 @@ export function Graph(props: Props) {
                         cx: graphWidth - radius,
                         cy: y(d.y2),
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
                               : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -393,13 +392,13 @@ export function Graph(props: Props) {
                         cx: graphWidth - radius,
                         cy: y(d.y2),
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
                               : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -422,7 +421,7 @@ export function Graph(props: Props) {
                         initial: {
                           y: y(d.y2),
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -432,7 +431,7 @@ export function Graph(props: Props) {
                         whileInView: {
                           y: y(d.y2),
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -462,7 +461,7 @@ export function Graph(props: Props) {
                           initial: {
                             y: y(d.y2),
                             fill:
-                              data.filter(el => el.color).length === 0
+                              data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -472,7 +471,7 @@ export function Graph(props: Props) {
                           whileInView: {
                             y: y(d.y2),
                             fill:
-                              data.filter(el => el.color).length === 0
+                              data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -505,7 +504,7 @@ export function Graph(props: Props) {
                         y1: y(d.y1),
                         y2: y(d.y1),
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -517,7 +516,7 @@ export function Graph(props: Props) {
                         y1: y(d.y1),
                         y2: y(d.y2),
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -539,7 +538,7 @@ export function Graph(props: Props) {
               );
             })}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

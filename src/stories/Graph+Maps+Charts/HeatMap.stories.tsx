@@ -1,15 +1,13 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { parseValue } from '../assets/parseValue';
+import type React from 'react';
+import { HeatMap } from '@/index';
 import {
   CLASS_NAME_OBJECT,
   LANGUAGE_OPTIONS,
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../assets/constants';
-
-import { HeatMap } from '@/index';
+import { parseValue } from '../assets/parseValue';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof HeatMap>;
 
@@ -191,10 +189,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     return (
       <HeatMap
         animate={
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           (animate as any) === 'false' || animate === false
             ? false
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
               (animate as any) === 'true' || animate === true
               ? true
               : animate

@@ -1,15 +1,13 @@
 // Scrollytelling.tsx
 import { motion, useInView } from 'motion/react';
 import { useRef, useState } from 'react';
-
-import { SingleGraphDashboard } from './SingleGraphDashboard';
-
-import {
+import type {
   ChaptersDataType,
   GraphTypeForGriddedGraph,
   InfoBoxDataType,
   SectionsArrDataType,
 } from '@/Types';
+import { SingleGraphDashboard } from './SingleGraphDashboard';
 
 interface Props {
   /** Defines if the information is shown as overlay or on the side */

@@ -1,11 +1,12 @@
-import isEqual from 'fast-deep-equal';
-import { useRef, useState } from 'react';
-import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
-import { AnimatePresence, motion, useInView } from 'motion/react';
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
-
-import {
+import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
+import isEqual from 'fast-deep-equal';
+import { AnimatePresence, motion, useInView } from 'motion/react';
+import { useRef, useState } from 'react';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -14,8 +15,6 @@ import {
   StyleObject,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: NodesLinkDataType;
@@ -33,11 +32,11 @@ interface Props {
   suffix: string;
   prefix: string;
   showValues?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   id: string;
   highlightedSourceDataPoints?: string[];
@@ -47,7 +46,7 @@ interface Props {
   animate: AnimateDataType;
   sortNodes: 'asc' | 'desc' | 'mostReadable' | 'none';
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -98,11 +97,11 @@ export function Graph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [selectedNode, setSelectedNode] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -139,7 +138,7 @@ export function Graph(props: Props) {
                 ? (a, b) => (b.value || 0) - (a.value || 0)
                 : (a, b) => (a.value || 0) - (b.value || 0),
             );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const { nodes, links } = sankeyGenerator(data as any);
   const linkPathGenerator = sankeyLinkHorizontal();
   return (
@@ -173,14 +172,19 @@ export function Graph(props: Props) {
           </text>
         ) : null}
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           {nodes
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
             .filter((d: any) => d.type === 'source')
             .map((d, i) => (
+              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
               <g
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={i}
                 onMouseEnter={() => {
+                  setSelectedNode(d);
+                }}
+                onFocus={() => {
                   setSelectedNode(d);
                 }}
                 onMouseLeave={() => {
@@ -262,12 +266,17 @@ export function Graph(props: Props) {
               </g>
             ))}
           {nodes
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
             .filter((d: any) => d.type === 'target')
             .map((d, i) => (
+              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
               <g
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={i}
                 onMouseEnter={() => {
+                  setSelectedNode(d);
+                }}
+                onFocus={() => {
                   setSelectedNode(d);
                 }}
                 onMouseLeave={() => {
@@ -355,6 +364,7 @@ export function Graph(props: Props) {
                 y1='0%'
                 x2='100%'
                 y2='0%'
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={i}
                 gradientUnits='userSpaceOnUse'
               >
@@ -381,16 +391,16 @@ export function Graph(props: Props) {
                 <motion.g
                   className='undp-viz-g-with-hover'
                   key={`${d.source}-${d.target}`}
-                  onMouseEnter={event => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  onMouseEnter={(event) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     setMouseOverData((d as any).data);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
 
                     onSeriesMouseOver?.(d);
                   }}
-                  onMouseMove={event => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  onMouseMove={(event) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     setMouseOverData((d as any).data);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -398,16 +408,16 @@ export function Graph(props: Props) {
                   onClick={() => {
                     if (onSeriesMouseClick || detailsOnClick) {
                       if (
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                         isEqual(mouseClickData, (d as any).data) &&
                         resetSelectionOnDoubleClick
                       ) {
                         setMouseClickData(undefined);
                         onSeriesMouseClick?.(undefined);
                       } else {
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                         setMouseClickData((d as any).data);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                         onSeriesMouseClick?.((d as any).data);
                       }
                     }
@@ -421,19 +431,19 @@ export function Graph(props: Props) {
                   variants={{
                     initial: {
                       opacity: selectedNode
-                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                           (d.source as any).name === selectedNode.name ||
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                           (d.target as any).name === selectedNode.name
                           ? 0.85
                           : defaultLinkOpacity
                         : highlightedSourceDataPoints || highlightedTargetDataPoints
                           ? highlightedSourceDataPoints?.indexOf(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                               (d.source as any).label,
                             ) !== -1 ||
                             highlightedTargetDataPoints?.indexOf(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                               (d.target as any).label,
                             ) !== -1
                             ? 0.85
@@ -442,19 +452,19 @@ export function Graph(props: Props) {
                     },
                     whileInView: {
                       opacity: selectedNode
-                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                           (d.source as any).name === selectedNode.name ||
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                           (d.target as any).name === selectedNode.name
                           ? 0.85
                           : defaultLinkOpacity
                         : highlightedSourceDataPoints || highlightedTargetDataPoints
                           ? highlightedSourceDataPoints?.indexOf(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                               (d.source as any).label,
                             ) !== -1 ||
                             highlightedTargetDataPoints?.indexOf(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                               (d.target as any).label,
                             ) !== -1
                             ? 0.85
@@ -494,7 +504,7 @@ export function Graph(props: Props) {
               ))}
             </AnimatePresence>
           </g>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

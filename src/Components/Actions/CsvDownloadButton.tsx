@@ -1,7 +1,7 @@
-import { CSVLink } from 'react-csv';
 import { Button } from '@undp/design-system-react/Button';
-import { JSX } from 'react';
 import { cn } from '@undp/design-system-react/cn';
+import type { JSX } from 'react';
+import { CSVLink } from 'react-csv';
 
 import { FileDown } from '@/Components/Icons';
 
@@ -18,7 +18,7 @@ interface Props {
     | 'secondary'
     | 'secondary-without-icon'
     | 'tertiary';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any;
   fileName?: string;
   headers: HeaderProps[];
@@ -27,10 +27,10 @@ interface Props {
   className?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: undefined data type
 const transformDataForCsv = (data: any) => {
   if (!data) return {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   return data.map((obj: any) => {
     const newObj = { ...obj };
 

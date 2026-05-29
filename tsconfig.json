@@ -17,7 +17,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "emitDeclarationOnly": true,
     "declarationDir": "./dist",
     "outDir": "./dist",
     "paths": {
@@ -25,9 +24,11 @@
     }
   },
   "files": [],
-  "include": [
-    "eslint.config.js",
-    "src",
+  "exclude": [
+    "node_modules",
+    "src/App.tsx",
+    "src/main.tsx"
   ],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,7 +1,6 @@
-import { FeatureCollection } from 'geojson';
-import { ReactElement } from 'react';
+import type { FeatureCollection } from 'geojson';
+import type { ReactElement } from 'react';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export type Languages =
   | 'en'
   | 'ar'
@@ -488,7 +487,8 @@ export interface DashboardColumnDataType extends DashboardColumnDataWithoutGraph
   graphType: GraphType;
 }
 
-export interface PerformanceIntensiveDashboardColumnDataType extends DashboardColumnDataWithoutGraphType {
+export interface PerformanceIntensiveDashboardColumnDataType
+  extends DashboardColumnDataWithoutGraphType {
   graphType: GraphType | ThreeDGraphType | GeoHubGraphType;
 }
 
@@ -530,7 +530,8 @@ export interface DashboardLayoutDataType extends DashboardLayoutDataWithoutRowsT
     height?: number;
   }[];
 }
-export interface PerformanceIntensiveDashboardLayoutDataType extends DashboardLayoutDataWithoutRowsType {
+export interface PerformanceIntensiveDashboardLayoutDataType
+  extends DashboardLayoutDataWithoutRowsType {
   rows: {
     columns: PerformanceIntensiveDashboardColumnDataType[];
     height?: number;
@@ -541,6 +542,7 @@ export type DashboardFromWideToLongFormatColumnDataType = {
   graphType: 'donutChart' | 'barChart' | 'unitChart' | 'treeMap' | 'circlePacking';
   columnWidth?: number;
   dataFilters?: DataFilterDataType[];
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   settings?: any;
   graphDataConfiguration?: GraphConfigurationDataType[];
 };
@@ -569,6 +571,7 @@ export interface FileSettingsDataType {
   fileType?: 'csv' | 'json' | 'api';
   delimiter?: string;
   columnsToArray?: ColumnConfigurationDataType[];
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any;
   dataTransformation?: string;
 }
@@ -578,9 +581,11 @@ export interface DataSettingsDataType {
   fileType?: 'csv' | 'json' | 'api';
   delimiter?: string;
   columnsToArray?: ColumnConfigurationDataType[];
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any;
   dataTransformation?: string;
   idColumnTitle?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data?: any;
 }
 
@@ -588,10 +593,12 @@ export interface DataSettingsWideToLongDataType {
   dataURL?: string | FileSettingsDataType[];
   fileType?: 'csv' | 'json' | 'api';
   delimiter?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data?: any;
   keyColumn: string;
   idColumnTitle?: string;
   dataTransformation?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any;
 }
 
@@ -812,6 +819,7 @@ export interface GraphSettingsDataType {
   showColorScale?: boolean;
   maxValue?: number;
   minValue?: number;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   refValues?: ReferenceDataType[];
   graphID?: string;
@@ -950,6 +958,7 @@ export interface GraphSettingsDataType {
   intervalLineStrokeWidth?: number;
   intervalLineColors?: [string, string];
   intervalAreaColor?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   cardTemplate?: string | ((_d: any) => React.ReactNode);
   cardBackgroundColor?: string;
   legendMaxWidth?: string;
@@ -977,6 +986,7 @@ export interface GraphSettingsDataType {
   verticalAlign?: 'center' | 'top' | 'bottom';
   resetSelectionOnDoubleClick?: boolean;
   intervalAreaOpacity?: number;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   valueColor?: string;
   labelColor?: string;
@@ -1012,6 +1022,7 @@ export interface GraphSettingsDataType {
   labelsToBeHidden?: (string | number)[];
   autoRotate?: boolean;
   enableZoom?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   globeMaterial?: any;
   atmosphereColor?: string;
   lineAxisTitle?: string;

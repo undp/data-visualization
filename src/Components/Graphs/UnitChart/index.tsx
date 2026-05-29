@@ -1,22 +1,21 @@
-import { useRef } from 'react';
-import sum from 'lodash.sum';
 import { H2, P } from '@undp/design-system-react/Typography';
+import sum from 'lodash.sum';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
+import { useRef } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { Colors } from '@/Components/ColorPalette';
-import {
-  UnitChartDataType,
-  SourcesDataType,
-  Languages,
-  StyleObject,
-  ClassNameObject,
+import type {
   AnimateDataType,
+  ClassNameObject,
+  Languages,
   NumberFormatOptions,
+  SourcesDataType,
+  StyleObject,
+  UnitChartDataType,
 } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 
 interface Props {
   // Data
@@ -134,7 +133,7 @@ export function UnitChart(props: Props) {
     once: animateValue.once,
     amount: animateValue.amount,
   });
-  const totalValue = sum(data.map(d => d.value));
+  const totalValue = sum(data.map((d) => d.value));
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const graphDiv = useRef<HTMLDivElement>(null);
   const gridDimension = size / gridSize;
@@ -185,9 +184,9 @@ export function UnitChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
@@ -202,14 +201,10 @@ export function UnitChart(props: Props) {
         </H2>
       ) : null}
       {showColorScale ? (
-        <div
-          className='mb-4 leading-0'
-          style={{ width: width ? `${width}px` : '100%' }}
-          aria-label='Color legend'
-        >
+        <div className='mb-4 leading-0' style={{ width: width ? `${width}px` : '100%' }}>
           <div className='flex mb-0 flex-wrap gap-x-4 gap-y-1'>
             {data.map((d, i) => (
-              <div className='flex gap-2 items-center' key={i}>
+              <div className='flex gap-2 items-center' key={d.label}>
                 <div className='w-3 h-3 rounded-full' style={{ backgroundColor: colors[i] }} />
                 <P
                   marginBottom='none'
@@ -274,6 +269,7 @@ export function UnitChart(props: Props) {
             <g>
               {cellsData.map((d, i) => (
                 <motion.circle
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                   key={i}
                   style={{
                     strokeWidth: 1,

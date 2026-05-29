@@ -1,26 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
-
-import { Graph } from './Graph';
-
+import { useEffect, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { EmptyState } from '@/Components/Elements/EmptyState';
-import { GraphContainer, GraphArea } from '@/Components/Elements/GraphContainer';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import {
-  ReferenceDataType,
-  SourcesDataType,
-  Languages,
-  StyleObject,
+import type {
+  AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
-  AnimateDataType,
-  WaterfallChartDataType,
+  Languages,
   NumberFormatOptions,
+  ReferenceDataType,
+  SourcesDataType,
+  StyleObject,
+  WaterfallChartDataType,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils';
 import { uniqBy } from '@/Utils/uniqBy';
+import { Graph } from './Graph';
 
 interface Props {
   // Data
@@ -131,16 +129,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -217,7 +215,7 @@ export function WaterfallChart(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -258,14 +256,14 @@ export function WaterfallChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
       ) : null}
-      {showColorScale && data.filter(el => el.color).length !== 0 && data.length > 0 ? (
+      {showColorScale && data.filter((el) => el.color).length !== 0 && data.length > 0 ? (
         <ColorLegendWithMouseOver
           width={width}
           colorLegendTitle={colorLegendTitle}
@@ -277,26 +275,26 @@ export function WaterfallChart(props: Props) {
         />
       ) : null}
       <GraphArea ref={graphDiv}>
-        {data.filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)).length === 0 && (
+        {data.filter((d) => (filterNA ? !checkIfNullOrUndefined(d.size) : d)).length === 0 && (
           <EmptyState />
         )}
         {svgWidth &&
         svgHeight &&
-        data.filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d)).length > 0 ? (
+        data.filter((d) => (filterNA ? !checkIfNullOrUndefined(d.size) : d)).length > 0 ? (
           <Graph
             hideAxisLine={hideAxisLine}
             data={data
-              .filter(d => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
+              .filter((d) => (filterNA ? !checkIfNullOrUndefined(d.size) : d))
               .filter((_d, i) => (maxNumberOfBars ? i < maxNumberOfBars : true))}
             barColor={
-              data.filter(el => el.color).length === 0
+              data.filter((el) => el.color).length === 0
                 ? colors
                   ? [colors as string]
                   : [Colors.primaryColors['blue-600']]
                 : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
             }
             colorDomain={
-              data.filter(el => el.color).length === 0
+              data.filter((el) => el.color).length === 0
                 ? []
                 : colorDomain || (uniqBy(data, 'color', true) as string[])
             }

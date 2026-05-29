@@ -1,15 +1,20 @@
-import { stratify, treemap } from 'd3-hierarchy';
-import { useRef, useState } from 'react';
-import { P } from '@undp/design-system-react/Typography';
-import { AnimatePresence, motion, useInView } from 'motion/react';
 import { cn } from '@undp/design-system-react/cn';
-
-import { AnimateDataType, ClassNameObject, Languages, StyleObject, TreeMapDataType } from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
+import { P } from '@undp/design-system-react/Typography';
+import { stratify, treemap } from 'd3-hierarchy';
+import { AnimatePresence, motion, useInView } from 'motion/react';
+import { useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
+  AnimateDataType,
+  ClassNameObject,
+  Languages,
+  StyleObject,
+  TreeMapDataType,
+} from '@/Types';
+import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: TreeMapDataType[];
@@ -26,15 +31,15 @@ interface Props {
   suffix: string;
   prefix: string;
   selectedColor?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   highlightedDataPoints?: (string | number)[];
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -82,9 +87,9 @@ export function Graph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -112,11 +117,11 @@ export function Graph(props: Props) {
     })),
   ];
   const treeData = stratify()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     .id((d: any) => d.id)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     .parentId((d: any) => d.parent)(treeMapData);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   treeData.sum((d: any) => d.value);
   const treeMapVizData = treemap().size([graphWidth, graphHeight]).padding(2)(treeData);
 
@@ -131,11 +136,11 @@ export function Graph(props: Props) {
       >
         <g transform={`translate(${margin.left},${margin.top})`}>
           <AnimatePresence>
-            {treeMapVizData.children?.map(d => {
+            {treeMapVizData.children?.map((d) => {
               return (
                 <motion.g
                   className='undp-viz-g-with-hover'
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   key={(d.data as any).id}
                   variants={{
                     initial: {
@@ -145,17 +150,17 @@ export function Graph(props: Props) {
                     },
                     whileInView: {
                       opacity: selectedColor
-                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                           (d.data as any).data.color
                           ? colors[
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                               colorDomain.indexOf((d.data as any).data.color)
                             ] === selectedColor
                             ? 1
                             : dimmedOpacity
                           : dimmedOpacity
                         : highlightedDataPoints
-                          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                             highlightedDataPoints.indexOf((d.data as any).id) !== -1
                             ? 0.85
                             : dimmedOpacity
@@ -168,33 +173,33 @@ export function Graph(props: Props) {
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  onMouseEnter={event => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  onMouseEnter={(event) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     setMouseOverData((d.data as any).data);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     onSeriesMouseOver?.((d.data as any).data);
                   }}
                   onClick={() => {
                     if (onSeriesMouseClick || detailsOnClick) {
                       if (
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                         mouseClickData === (d.data as any).id &&
                         resetSelectionOnDoubleClick
                       ) {
                         setMouseClickData(undefined);
                         onSeriesMouseClick?.(undefined);
                       } else {
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                         setMouseClickData((d.data as any).id);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                         onSeriesMouseClick?.((d.data as any).data);
                       }
                     }
                   }}
-                  onMouseMove={event => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  onMouseMove={(event) => {
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     setMouseOverData((d.data as any).data);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -220,13 +225,13 @@ export function Graph(props: Props) {
                         width: 0,
                         height: 0,
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
-                            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                               !(d.data as any).data.color
                               ? Colors.gray
                               : colors[
-                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                   colorDomain.indexOf((d.data as any).data.color)
                                 ],
                       },
@@ -234,13 +239,13 @@ export function Graph(props: Props) {
                         width: d.x1 - d.x0,
                         height: d.y1 - d.y0,
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
-                            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                               !(d.data as any).data.color
                               ? Colors.gray
                               : colors[
-                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                   colorDomain.indexOf((d.data as any).data.color)
                                 ],
                         transition: { duration: animate.duration },
@@ -267,13 +272,13 @@ export function Graph(props: Props) {
                           className='flex flex-col gap-0.5 p-2 w-full'
                           style={{
                             color: getTextColorBasedOnBgColor(
-                              data.filter(el => el.color).length === 0
+                              data.filter((el) => el.color).length === 0
                                 ? colors[0]
-                                : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                   !(d.data as any).data.color
                                   ? Colors.gray
                                   : colors[
-                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                       colorDomain.indexOf((d.data as any).data.color)
                                     ],
                             ),
@@ -302,14 +307,14 @@ export function Graph(props: Props) {
                                 WebkitBoxOrient: 'vertical',
                                 overflow: 'hidden',
                                 color: getTextColorBasedOnBgColor(
-                                  data.filter(el => el.color).length === 0
+                                  data.filter((el) => el.color).length === 0
                                     ? colors[0]
-                                    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                       !(d.data as any).data.color
                                       ? Colors.gray
                                       : colors[
                                           colorDomain.indexOf(
-                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                             (d.data as any).data.color,
                                           )
                                         ],
@@ -318,7 +323,7 @@ export function Graph(props: Props) {
                               }}
                             >
                               {
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                 (d.data as any).id
                               }
                             </P>
@@ -335,14 +340,14 @@ export function Graph(props: Props) {
                               )}
                               style={{
                                 color: getTextColorBasedOnBgColor(
-                                  data.filter(el => el.color).length === 0
+                                  data.filter((el) => el.color).length === 0
                                     ? colors[0]
-                                    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                       !(d.data as any).data.color
                                       ? Colors.gray
                                       : colors[
                                           colorDomain.indexOf(
-                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                             (d.data as any).data.color,
                                           )
                                         ],
@@ -351,7 +356,7 @@ export function Graph(props: Props) {
                               }}
                             >
                               {numberFormattingFunction(
-                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                                 (d.data as any).value,
                                 undefined,
                                 precision,

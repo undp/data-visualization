@@ -47,7 +47,7 @@ export function numberFormattingFunction(
       return formatWithLocale(n, resolvedPrecision);
     }
 
-    const scaled = n / Math.pow(10, tier * 3);
+    const scaled = n / 10 ** (tier * 3);
 
     const formatted = formatWithLocale(scaled, resolvedPrecision);
 

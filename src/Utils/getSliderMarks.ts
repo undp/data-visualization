@@ -6,7 +6,7 @@ export function getSliderMarks(
   showOnlyActiveDate: boolean,
   dateFormat: string,
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const markObj: any = {};
 
   dates.forEach((d, i) => {

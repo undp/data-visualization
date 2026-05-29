@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import { Spinner } from '@undp/design-system-react/Spinner';
-
-import { SingleGraphDashboard } from './SingleGraphDashboard';
-
-import {
+import { useEffect, useState } from 'react';
+import type {
   AdvancedDataSelectionDataType,
   AggregationSettingsDataType,
   DataFilterDataType,
@@ -16,6 +13,7 @@ import {
   HighlightDataPointSettingsDataType,
 } from '@/Types';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
+import { SingleGraphDashboard } from './SingleGraphDashboard';
 
 interface ConfigObject {
   graphSettings?: GraphSettingsDataType;

@@ -1,9 +1,7 @@
-import sum from 'lodash.sum';
 import flattenDeep from 'lodash.flattendeep';
-
+import sum from 'lodash.sum';
+import type { AggregationSettingsDataType } from '@/Types';
 import { uniqBy } from '../uniqBy';
-
-import { AggregationSettingsDataType } from '@/Types';
 /**
  * Transforms the data for aggregation based on a key column and specified aggregation settings.
  * It groups the data by unique values in the key column and applies the aggregation methods to each group.
@@ -35,69 +33,69 @@ import { AggregationSettingsDataType } from '@/Types';
  * // ]
  */
 export function transformDataForAggregation(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data: any,
   keyColumn: string,
   aggregationSettings?: AggregationSettingsDataType[],
 ) {
   if (data.length === 0) return [];
   if (typeof data[0][keyColumn] !== 'object') {
-    const uniqValues = uniqBy(data, keyColumn).map(d => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const uniqValues = uniqBy(data, keyColumn).map((d) => {
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       const dataObj: any = {};
       dataObj[keyColumn] = d;
       const filteredData = data.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         (j: any) => j[keyColumn] === d,
       );
       dataObj.count = filteredData.length;
       dataObj.rollUpData = filteredData;
-      aggregationSettings?.forEach(el => {
+      aggregationSettings?.forEach((el) => {
         dataObj[el.column] =
           el.aggregationMethod === 'average'
             ? parseFloat(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                 (sum(filteredData.map((j: any) => j[el.column])) / filteredData.length).toFixed(2),
               )
             : el.aggregationMethod === 'max'
-              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                 Math.max(...filteredData.map((j: any) => j[el.column]))
               : el.aggregationMethod === 'min'
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   Math.min(...filteredData.map((j: any) => j[el.column]))
-                : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   sum(filteredData.map((j: any) => j[el.column]));
       });
       return dataObj;
     });
     return uniqValues;
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const values = [...new Set(flattenDeep(data.map((d: any) => d[keyColumn])))];
-  const uniqValues = values.map(d => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const uniqValues = values.map((d) => {
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const dataObj: any = {};
     dataObj[keyColumn] = d;
     const filteredData = data.filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       (j: any) => j[keyColumn].indexOf(d) !== -1,
     );
     dataObj.rollUpData = filteredData;
     dataObj.count = filteredData.length;
-    aggregationSettings?.forEach(el => {
+    aggregationSettings?.forEach((el) => {
       dataObj[el.column] =
         el.aggregationMethod === 'average'
           ? parseFloat(
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
               (sum(filteredData.map((j: any) => j[el.column])) / filteredData.length).toFixed(2),
             )
           : el.aggregationMethod === 'max'
-            ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
               Math.max(...filteredData.map((j: any) => j[el.column]))
             : el.aggregationMethod === 'min'
-              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                 Math.min(...filteredData.map((j: any) => j[el.column]))
-              : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                 sum(filteredData.map((j: any) => j[el.column]));
     });
     return dataObj;

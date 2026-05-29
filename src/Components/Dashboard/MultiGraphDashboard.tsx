@@ -1,16 +1,12 @@
-import { useEffect, useEffectEvent, useState } from 'react';
-import intersection from 'lodash.intersection';
-import flattenDeep from 'lodash.flattendeep';
+import { CheckboxGroup, CheckboxGroupItem } from '@undp/design-system-react/CheckboxGroup';
 import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
 import { Label } from '@undp/design-system-react/Label';
-import { CheckboxGroup, CheckboxGroupItem } from '@undp/design-system-react/CheckboxGroup';
 import { RadioGroup, RadioGroupItem } from '@undp/design-system-react/RadioGroup';
-
-import { GraphContainer } from '../Elements/GraphContainer';
-
-import { SingleGraphDashboard } from './SingleGraphDashboard';
-
-import {
+import flattenDeep from 'lodash.flattendeep';
+import intersection from 'lodash.intersection';
+import { useEffect, useEffectEvent, useState } from 'react';
+import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import type {
   ClassNameObject,
   DashboardColumnDataType,
   DashboardLayoutDataType,
@@ -28,10 +24,11 @@ import {
   fetchAndTransformDataFromAPI,
 } from '@/Utils/fetchAndParseData';
 import { getUniqValue } from '@/Utils/getUniqValue';
-import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { transformColumnsToArray } from '@/Utils/transformData/transformColumnsToArray';
 import { filterData } from '@/Utils/transformData/filterData';
+import { transformColumnsToArray } from '@/Utils/transformData/transformColumnsToArray';
 import { transformDefaultValue } from '@/Utils/transformDataForSelect';
+import { GraphContainer } from '../Elements/GraphContainer';
+import { SingleGraphDashboard } from './SingleGraphDashboard';
 
 interface Props {
   dashboardID?: string;
@@ -53,7 +50,7 @@ interface Props {
 }
 
 const TotalWidth = (columns: DashboardColumnDataType[]) => {
-  const columnWidth = columns.map(d => d.columnWidth || 1);
+  const columnWidth = columns.map((d) => d.columnWidth || 1);
   const sum = columnWidth.reduce((acc, cur) => acc + cur, 0);
   return sum;
 };
@@ -82,9 +79,9 @@ export function MultiGraphDashboard(props: Props) {
     graphStyles,
     graphClassNames,
   } = props;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [filteredData, setFilteredData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [data, setData] = useState<any>(undefined);
   const [filterSettings, setFilterSettings] = useState<FilterSettingsDataType[]>([]);
 
@@ -95,7 +92,7 @@ export function MultiGraphDashboard(props: Props) {
   };
 
   const updateFiltersEvent = useEffectEvent(() => {
-    const filterSettingsTemp = (filters || []).map(el => ({
+    const filterSettingsTemp = (filters || []).map((el) => ({
       filter: el.column,
       label: el.label || `Filter by ${el.column}`,
       singleSelect: el.singleSelect,
@@ -104,8 +101,8 @@ export function MultiGraphDashboard(props: Props) {
       defaultValue: transformDefaultValue(el.defaultValue),
       value: transformDefaultValue(el.defaultValue),
       availableValues: getUniqValue(data, el.column)
-        .filter(v => !el.excludeValues?.includes(`${v}`))
-        .map(v => ({ value: v, label: v })),
+        .filter((v) => !el.excludeValues?.includes(`${v}`))
+        .map((v) => ({ value: v, label: v })),
       allowSelectAll: el.allowSelectAll,
       width: el.width,
     }));
@@ -115,13 +112,13 @@ export function MultiGraphDashboard(props: Props) {
   const filteredDataEvent = useEffectEvent(() => {
     if (!data || filterSettings.length === 0) setFilteredData(data);
     else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
       const result = data.filter((item: any) =>
-        filterSettings.every(filter =>
+        filterSettings.every((filter) =>
           filter.value && flattenDeep([filter.value]).length > 0
             ? intersection(
                 flattenDeep([item[filter.filter]]),
-                flattenDeep([filter.value]).map(el => el.value),
+                flattenDeep([filter.value]).map((el) => el.value),
               ).length > 0
             : true,
         ),
@@ -178,9 +175,11 @@ export function MultiGraphDashboard(props: Props) {
   useEffect(() => {
     updateFiltersEvent();
   }, [filters, data]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const handleFilterChange = (filter: string, values: any) => {
-    setFilterSettings(prev => prev.map(f => (f.filter === filter ? { ...f, value: values } : f)));
+    setFilterSettings((prev) =>
+      prev.map((f) => (f.filter === filter ? { ...f, value: values } : f)),
+    );
   };
   return (
     <GraphContainer
@@ -219,6 +218,7 @@ export function MultiGraphDashboard(props: Props) {
                     flexShrink: d.ui !== 'radio' || d.width ? 0 : 1,
                     minWidth: '240px',
                   }}
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                   key={i}
                 >
                   <Label className='mb-2'>{d.label}</Label>
@@ -231,7 +231,7 @@ export function MultiGraphDashboard(props: Props) {
                         isSearchable
                         controlShouldRenderValue
                         filterOption={createFilter(filterConfig)}
-                        onChange={el => {
+                        onChange={(el) => {
                           handleFilterChange(d.filter, el);
                         }}
                         value={d.value}
@@ -241,15 +241,19 @@ export function MultiGraphDashboard(props: Props) {
                       <RadioGroup
                         variant={uiMode}
                         defaultValue={(d.defaultValue as { value: string; label: string }).value}
-                        onValueChange={el => {
+                        onValueChange={(el) => {
                           handleFilterChange(
                             d.filter,
-                            d.availableValues.filter(v => v.value === el),
+                            d.availableValues.filter((v) => v.value === el),
                           );
                         }}
                       >
-                        {d.availableValues.map((el, j) => (
-                          <RadioGroupItem label={`${el.label}`} value={`${el.value}`} key={j} />
+                        {d.availableValues.map((el) => (
+                          <RadioGroupItem
+                            label={`${el.label}`}
+                            value={`${el.value}`}
+                            key={el.value}
+                          />
                         ))}
                       </RadioGroup>
                     )
@@ -265,7 +269,7 @@ export function MultiGraphDashboard(props: Props) {
                           isSearchable
                           controlShouldRenderValue
                           filterOption={createFilter(filterConfig)}
-                          onChange={el => {
+                          onChange={(el) => {
                             handleFilterChange(d.filter, el);
                           }}
                           value={d.value}
@@ -281,7 +285,7 @@ export function MultiGraphDashboard(props: Props) {
                                     value: string | number;
                                     label: string | number;
                                   }[]
-                                ).map(el => `${el.value}`)
+                                ).map((el) => `${el.value}`)
                               : []
                           }
                           value={
@@ -291,21 +295,21 @@ export function MultiGraphDashboard(props: Props) {
                                     value: string | number;
                                     label: string | number;
                                   }[]
-                                ).map(el => `${el.value}`)
+                                ).map((el) => `${el.value}`)
                               : undefined
                           }
-                          onValueChange={el => {
+                          onValueChange={(el) => {
                             handleFilterChange(
                               d.filter,
-                              d.availableValues.filter(v => el.indexOf(`${v.value}`) !== -1),
+                              d.availableValues.filter((v) => el.indexOf(`${v.value}`) !== -1),
                             );
                           }}
                         >
-                          {d.availableValues.map((el, j) => (
+                          {d.availableValues.map((el) => (
                             <CheckboxGroupItem
                               label={`${el.label}`}
                               value={`${el.value}`}
-                              key={j}
+                              key={el.value}
                             />
                           ))}
                         </CheckboxGroup>
@@ -336,6 +340,7 @@ export function MultiGraphDashboard(props: Props) {
         >
           {dashboardLayout.rows.map((d, i) => (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               key={i}
               className='flex flex-wrap items-stretch gap-4 w-full h-auto'
               style={{
@@ -344,6 +349,7 @@ export function MultiGraphDashboard(props: Props) {
             >
               {d.columns.map((el, j) => (
                 <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                   key={j}
                   className='flex bg-transparent grow min-w-60'
                   style={{
@@ -379,10 +385,10 @@ export function MultiGraphDashboard(props: Props) {
                     updateFilters={
                       el.attachedFilter &&
                       GraphWithAttachedFilter.indexOf(el.graphType) !== -1 &&
-                      filterSettings.findIndex(f => f.filter === el.attachedFilter) !== -1
-                        ? dClicked => {
+                      filterSettings.findIndex((f) => f.filter === el.attachedFilter) !== -1
+                        ? (dClicked) => {
                             const indx = filterSettings.findIndex(
-                              f => f.filter === el.attachedFilter,
+                              (f) => f.filter === el.attachedFilter,
                             );
                             const value = dClicked
                               ? filterSettings[indx].singleSelect

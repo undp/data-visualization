@@ -1,6 +1,6 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
+import type React from 'react';
+import { SparkLine } from '@/index';
 import {
   CLASS_NAME_OBJECT,
   CUSTOM_LAYERS_OBJECT,
@@ -8,8 +8,6 @@ import {
   SOURCE_OBJECT,
   STYLE_OBJECT,
 } from '../../assets/constants';
-
-import { SparkLine } from '@/index';
 
 type PagePropsAndCustomArgs = React.ComponentProps<typeof SparkLine>;
 

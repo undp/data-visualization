@@ -1,39 +1,38 @@
-import isEqual from 'fast-deep-equal';
-import { useRef, useState } from 'react';
-import orderBy from 'lodash.orderby';
+import { cn } from '@undp/design-system-react/cn';
 import { Delaunay } from 'd3-delaunay';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
-import { linearRegression, linearRegressionLine } from 'simple-statistics';
-import { cn } from '@undp/design-system-react/cn';
+import isEqual from 'fast-deep-equal';
+import orderBy from 'lodash.orderby';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import {
-  ScatterPlotDataType,
-  ReferenceDataType,
-  AnnotationSettingsDataType,
-  StyleObject,
-  ClassNameObject,
-  CustomHighlightAreaSettingsForScatterPlotDataType,
-  HighlightAreaSettingsForScatterPlotDataType,
-  CustomLayerDataType,
-  AnimateDataType,
-  NumberFormatOptions,
-} from '@/Types';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { useRef, useState } from 'react';
+import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import { Colors } from '@/Components/ColorPalette';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { getLineEndPoint } from '@/Utils/getLineEndPoint';
+import { Annotation } from '@/Components/Elements/Annotations';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
 import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { HighlightAreaForScatterPlot } from '@/Components/Elements/HighlightArea';
+import { CustomArea } from '@/Components/Elements/HighlightArea/customArea';
 import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
 import { RegressionLine } from '@/Components/Elements/RegressionLine';
-import { Annotation } from '@/Components/Elements/Annotations';
-import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
-import { CustomArea } from '@/Components/Elements/HighlightArea/customArea';
-import { HighlightAreaForScatterPlot } from '@/Components/Elements/HighlightArea';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
+  AnimateDataType,
+  AnnotationSettingsDataType,
+  ClassNameObject,
+  CustomHighlightAreaSettingsForScatterPlotDataType,
+  CustomLayerDataType,
+  HighlightAreaSettingsForScatterPlotDataType,
+  NumberFormatOptions,
+  ReferenceDataType,
+  ScatterPlotDataType,
+  StyleObject,
+} from '@/Types';
+import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getLineEndPoint } from '@/Utils/getLineEndPoint';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: ScatterPlotDataType[];
@@ -49,9 +48,9 @@ interface Props {
   rightMargin: number;
   topMargin: number;
   bottomMargin: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   refXValues: ReferenceDataType[];
   refYValues: ReferenceDataType[];
@@ -63,14 +62,14 @@ interface Props {
   minXValue: number;
   maxYValue: number;
   minYValue: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   rtl: boolean;
   annotations: AnnotationSettingsDataType[];
   customHighlightAreaSettings: CustomHighlightAreaSettingsForScatterPlotDataType[];
   regressionLine: boolean | string;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   noOfXTicks: number;
   noOfYTicks: number;
@@ -142,9 +141,9 @@ export function Graph(props: Props) {
     once: animate.once,
     amount: animate.amount,
   });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -158,15 +157,15 @@ export function Graph(props: Props) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
   const radiusScale =
-    data.filter(d => d.radius === undefined || d.radius === null).length !== data.length
+    data.filter((d) => d.radius === undefined || d.radius === null).length !== data.length
       ? scaleSqrt().domain([0, maxRadiusValue]).range([0.25, radius]).nice()
       : undefined;
   const dataOrdered =
-    dataWithId.filter(d => !checkIfNullOrUndefined(d.radius)).length === 0
-      ? dataWithId.filter(d => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
+    dataWithId.filter((d) => !checkIfNullOrUndefined(d.radius)).length === 0
+      ? dataWithId.filter((d) => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
       : orderBy(
           dataWithId.filter(
-            d =>
+            (d) =>
               !checkIfNullOrUndefined(d.radius) &&
               !checkIfNullOrUndefined(d.x) &&
               !checkIfNullOrUndefined(d.y),
@@ -180,13 +179,13 @@ export function Graph(props: Props) {
   const yTicks = y.ticks(noOfYTicks);
   const voronoiDiagram = Delaunay.from(
     dataOrdered,
-    d => x(d.x as number),
-    d => y(d.y as number),
+    (d) => x(d.x as number),
+    (d) => y(d.y as number),
   ).voronoi([0, 0, graphWidth < 0 ? 0 : graphWidth, graphHeight < 0 ? 0 : graphHeight]);
   const regressionLineParam = linearRegression(
     data
-      .filter(d => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
-      .map(d => [x(d.x as number), y(d.y as number)]),
+      .filter((d) => !checkIfNullOrUndefined(d.x) && !checkIfNullOrUndefined(d.y))
+      .map((d) => [x(d.x as number), y(d.y as number)]),
   );
   const predict = linearRegressionLine(regressionLineParam);
   return (
@@ -221,8 +220,8 @@ export function Graph(props: Props) {
           </AnimatePresence>
           <g>
             <YTicksAndGridLines
-              values={yTicks.filter(d => d !== 0)}
-              y={yTicks.filter(d => d !== 0).map(d => y(d))}
+              values={yTicks.filter((d) => d !== 0)}
+              y={yTicks.filter((d) => d !== 0).map((d) => y(d))}
               x1={0}
               x2={graphWidth + margin.right}
               styles={{
@@ -282,8 +281,8 @@ export function Graph(props: Props) {
           </g>
           <g>
             <XTicksAndGridLines
-              values={xTicks.filter(d => d !== 0)}
-              x={xTicks.filter(d => d !== 0).map(d => x(d))}
+              values={xTicks.filter((d) => d !== 0)}
+              x={xTicks.filter((d) => d !== 0).map((d) => x(d))}
               y1={0}
               y2={graphHeight}
               styles={{
@@ -342,24 +341,25 @@ export function Graph(props: Props) {
               text={xAxisTitle}
             />
           </g>
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
             {useVoronoiInteraction &&
               dataOrdered.map((d, i) => {
                 return (
+                  // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
                   <path
                     key={`tesselation_${d.label || i}`}
-                    d={voronoiDiagram.renderCell(dataOrdered.findIndex(el => el.id === d.id))}
+                    d={voronoiDiagram.renderCell(dataOrdered.findIndex((el) => el.id === d.id))}
                     opacity={showVoronoiTesselation ? 1 : 0}
                     className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
                     style={{ fillOpacity: 0, strokeWidth: 1 }}
-                    onMouseEnter={event => {
+                    onMouseEnter={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
                       onSeriesMouseOver?.(d);
                     }}
-                    onMouseMove={event => {
+                    onMouseMove={(event) => {
                       setMouseOverData(d);
                       setEventY(event.clientY);
                       setEventX(event.clientX);
@@ -432,13 +432,13 @@ export function Graph(props: Props) {
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
                     onSeriesMouseOver?.(d);
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -469,7 +469,7 @@ export function Graph(props: Props) {
                       initial: {
                         r: 0,
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -478,7 +478,7 @@ export function Graph(props: Props) {
                                 ? fallbackColor
                                 : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -490,7 +490,7 @@ export function Graph(props: Props) {
                       whileInView: {
                         r: !radiusScale ? radius : radiusScale(d.radius || 0),
                         fill:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -499,7 +499,7 @@ export function Graph(props: Props) {
                                 ? fallbackColor
                                 : colors[colorDomain.indexOf(`${d.color}`)],
                         stroke:
-                          data.filter(el => el.color).length === 0
+                          data.filter((el) => el.color).length === 0
                             ? colors[0]
                             : !d.color
                               ? Colors.gray
@@ -530,7 +530,7 @@ export function Graph(props: Props) {
                           opacity: 0,
                           fill:
                             labelColor ||
-                            (data.filter(el => el.color).length === 0
+                            (data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -544,7 +544,7 @@ export function Graph(props: Props) {
                           opacity: 1,
                           fill:
                             labelColor ||
-                            (data.filter(el => el.color).length === 0
+                            (data.filter((el) => el.color).length === 0
                               ? colors[0]
                               : !d.color
                                 ? Colors.gray
@@ -579,7 +579,7 @@ export function Graph(props: Props) {
                             opacity: 0,
                             fill:
                               labelColor ||
-                              (data.filter(el => el.color).length === 0
+                              (data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -593,7 +593,7 @@ export function Graph(props: Props) {
                             opacity: 1,
                             fill:
                               labelColor ||
-                              (data.filter(el => el.color).length === 0
+                              (data.filter((el) => el.color).length === 0
                                 ? colors[0]
                                 : !d.color
                                   ? Colors.gray
@@ -616,9 +616,9 @@ export function Graph(props: Props) {
                 </motion.g>
               );
             })}
-            {refXValues.map((el, i) => (
+            {refXValues?.map((el) => (
               <RefLineX
-                key={i}
+                key={el.text}
                 text={el.text}
                 color={el.color}
                 x={x(el.value as number)}
@@ -631,9 +631,9 @@ export function Graph(props: Props) {
                 isInView={isInView}
               />
             ))}
-            {refYValues.map((el, i) => (
+            {refYValues?.map((el) => (
               <RefLineY
-                key={i}
+                key={el.text}
                 text={el.text}
                 color={el.color}
                 y={y(el.value as number)}
@@ -646,7 +646,7 @@ export function Graph(props: Props) {
               />
             ))}
             <g>
-              {annotations.map((d, i) => {
+              {annotations.map((d) => {
                 const endPoints = getLineEndPoint(
                   {
                     x: d.xCoordinate
@@ -704,7 +704,7 @@ export function Graph(props: Props) {
                 };
                 return (
                   <Annotation
-                    key={i}
+                    key={d.text}
                     color={d.color}
                     connectorsSettings={connectorSettings}
                     labelSettings={labelSettings}
@@ -733,7 +733,7 @@ export function Graph(props: Props) {
               />
             ) : null}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

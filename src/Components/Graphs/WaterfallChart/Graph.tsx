@@ -1,10 +1,17 @@
-import isEqual from 'fast-deep-equal';
-import { scaleLinear, scaleBand } from 'd3-scale';
-import { useMemo, useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
+import { scaleBand, scaleLinear } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-
-import {
+import { useMemo, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
+import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
+import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { RefLineY } from '@/Components/Elements/ReferenceLine';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
@@ -12,17 +19,9 @@ import {
   StyleObject,
   WaterfallChartDataType,
 } from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { Colors } from '@/Components/ColorPalette';
-import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { RefLineY } from '@/Components/Elements/ReferenceLine';
-import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
-import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: WaterfallChartDataType[];
@@ -41,22 +40,22 @@ interface Props {
   truncateBy: number;
   width: number;
   height: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   refValues?: ReferenceDataType[];
   selectedColor?: string;
   maxValue?: number;
   minValue?: number;
   highlightedDataPoints?: (string | number)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   labelOrder?: string[];
   rtl: boolean;
   maxBarThickness?: number;
   minBarThickness?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   barAxisTitle?: string;
   noOfTicks: number;
@@ -143,14 +142,14 @@ export function Graph(props: Props) {
     right: rightMargin,
   };
 
-  const { max, min } = getWaterfallExtent(data.map(d => d.size));
+  const { max, min } = getWaterfallExtent(data.map((d) => d.size));
 
   const maxVal = !checkIfNullOrUndefined(maxValue) ? (maxValue as number) : max;
   const minVal = !checkIfNullOrUndefined(minValue) ? (minValue as number) : min;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -166,11 +165,11 @@ export function Graph(props: Props) {
       return { ...d, id };
     });
 
-    const missingIds = labelOrder ? labelOrder.filter(id => !idSet.has(id)) : [];
+    const missingIds = labelOrder ? labelOrder.filter((id) => !idSet.has(id)) : [];
 
     return [
       ...dataWithIdWithoutMissingIds,
-      ...missingIds.map(id => ({
+      ...missingIds.map((id) => ({
         id,
         label: id,
         color: null,
@@ -180,7 +179,7 @@ export function Graph(props: Props) {
   }, [data, labelOrder]);
 
   const barOrder = useMemo(() => {
-    return labelOrder ?? dataWithId.map(d => `${d.id}`);
+    return labelOrder ?? dataWithId.map((d) => `${d.id}`);
   }, [labelOrder, dataWithId]);
 
   const y = scaleLinear().domain([minVal, maxVal]).range([graphHeight, 0]).nice();
@@ -199,7 +198,7 @@ export function Graph(props: Props) {
   const yTicks = y.ticks(noOfTicks);
   let running = 0;
 
-  const waterfallData = dataWithId.map(d => {
+  const waterfallData = dataWithId.map((d) => {
     const start = running;
     running += d.size || 0;
     return {
@@ -251,8 +250,8 @@ export function Graph(props: Props) {
           />
           {showTicks ? (
             <YTicksAndGridLines
-              values={yTicks.filter(d => d !== 0)}
-              y={yTicks.filter(d => d !== 0).map(d => y(d))}
+              values={yTicks.filter((d) => d !== 0)}
+              y={yTicks.filter((d) => d !== 0).map((d) => y(d))}
               x1={0 - leftMargin}
               x2={graphWidth + margin.right}
               styles={{
@@ -281,7 +280,7 @@ export function Graph(props: Props) {
             text={barAxisTitle}
             rotate90
           />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
             {waterfallData.map((d, _i) =>
               !checkIfNullOrUndefined(x(d.id)) ? (
@@ -320,7 +319,7 @@ export function Graph(props: Props) {
                     },
                   }}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -337,7 +336,7 @@ export function Graph(props: Props) {
                       }
                     }
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -360,7 +359,7 @@ export function Graph(props: Props) {
                           x: x(`${d.id}`),
                           y: y(d.start),
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? barColor[0]
                               : !d.color
                                 ? Colors.gray
@@ -371,7 +370,7 @@ export function Graph(props: Props) {
                           y: y(Math.max(d.start, d.end)),
                           x: x(`${d.id}`),
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? barColor[0]
                               : !d.color
                                 ? Colors.gray
@@ -418,7 +417,7 @@ export function Graph(props: Props) {
                           y: (y(d.start) + y(d.end)) / 2,
                           opacity: 0,
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? getTextColorBasedOnBgColor(barColor[0])
                               : !d.color
                                 ? getTextColorBasedOnBgColor(Colors.gray)
@@ -430,7 +429,7 @@ export function Graph(props: Props) {
                           x: (x(`${d.id}`) as number) + x.bandwidth() / 2,
                           y: (y(d.start) + y(d.end)) / 2,
                           fill:
-                            data.filter(el => el.color).length === 0
+                            data.filter((el) => el.color).length === 0
                               ? getTextColorBasedOnBgColor(barColor[0])
                               : !d.color
                                 ? getTextColorBasedOnBgColor(Colors.gray)
@@ -462,26 +461,22 @@ export function Graph(props: Props) {
                 </motion.g>
               ) : null,
             )}
-            {refValues ? (
-              <>
-                {refValues.map((el, i) => (
-                  <RefLineY
-                    key={i}
-                    text={el.text}
-                    color={el.color}
-                    y={y(el.value as number)}
-                    x1={0 - leftMargin}
-                    x2={graphWidth + margin.right}
-                    classNames={el.classNames}
-                    styles={el.styles}
-                    animate={animate}
-                    isInView={isInView}
-                  />
-                ))}
-              </>
-            ) : null}
+            {refValues?.map((el) => (
+              <RefLineY
+                key={el.text}
+                text={el.text}
+                color={el.color}
+                y={y(el.value as number)}
+                x1={0 - leftMargin}
+                x2={graphWidth + margin.right}
+                classNames={el.classNames}
+                styles={el.styles}
+                animate={animate}
+                isInView={isInView}
+              />
+            ))}
           </AnimatePresence>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>
       {mouseOverData && tooltip && eventX && eventY ? (

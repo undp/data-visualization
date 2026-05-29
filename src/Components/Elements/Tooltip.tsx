@@ -4,11 +4,11 @@ import { createPortal } from 'react-dom';
 import { string2HTML } from '@/Utils/string2HTML';
 
 interface Props {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   body: string | ((_d: any) => React.ReactNode);
   xPos: number;
   yPos: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data: any;
   backgroundStyle?: React.CSSProperties;
   className?: string;
@@ -50,6 +50,8 @@ export function Tooltip(props: Props) {
       >
         <div
           className='text-sm leading-normal text-primary-black dark:text-primary-gray-100 m-0'
+          // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
           dangerouslySetInnerHTML={
             typeof body === 'string' ? { __html: string2HTML(body, data) } : undefined
           }

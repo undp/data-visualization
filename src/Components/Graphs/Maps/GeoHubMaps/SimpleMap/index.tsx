@@ -1,19 +1,19 @@
-import React, { useRef, useState } from 'react';
-import { DropdownSelect, createFilter } from '@undp/design-system-react/DropdownSelect';
-
-import { GeoHubMultipleMap } from './GeoHubMultipleMap';
-import { GeoHubSingleMap } from './GeoHubSingleMap';
+import { createFilter, DropdownSelect } from '@undp/design-system-react/DropdownSelect';
+import type React from 'react';
+import { useRef, useState } from 'react';
+import { GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GraphFooter } from '@/Components/Elements/GraphFooter';
 
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { GraphFooter } from '@/Components/Elements/GraphFooter';
-import {
+import type {
   ClassNameObject,
   Languages,
   MapLegendDataType,
   SourcesDataType,
   StyleObject,
 } from '@/Types';
-import { GraphContainer } from '@/Components/Elements/GraphContainer';
+import { GeoHubMultipleMap } from './GeoHubMultipleMap';
+import { GeoHubSingleMap } from './GeoHubSingleMap';
 
 interface Props {
   // Titles, Labels, and Sources
@@ -144,16 +144,16 @@ export function GeoHubMap(props: Props) {
       ) : null}
       {typeof mapStyle === 'string' ? null : (
         <DropdownSelect
-          options={mapStyle.map(d => ({ label: d.name, value: d.style }))}
+          options={mapStyle.map((d) => ({ label: d.name, value: d.style }))}
           isClearable={false}
           size='sm'
           variant={uiMode}
           isRtl={language === 'he' || language === 'ar'}
           isSearchable
           filterOption={createFilter(filterConfig)}
-          defaultValue={mapStyle.find(d => d.style === defaultMapStyleValue)}
+          defaultValue={mapStyle.find((d) => d.style === defaultMapStyleValue)}
           controlShouldRenderValue
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           onChange={(el: any) => {
             if (el) setSelectedMapStyle(el.value);
           }}
@@ -177,9 +177,10 @@ export function GeoHubMap(props: Props) {
           excludeLayers={excludeLayers}
           mapLegend={
             ((mapLegend || []) as MapLegendDataType[]).find(
-              d =>
+              (d) =>
                 d.mapStyleName ===
-                mapStyle.find(el => el.style === (selectedMapStyle || defaultMapStyleValue))?.name,
+                mapStyle.find((el) => el.style === (selectedMapStyle || defaultMapStyleValue))
+                  ?.name,
             )?.legend
           }
         />

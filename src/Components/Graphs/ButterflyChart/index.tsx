@@ -1,32 +1,30 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
 import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
-
-import { Graph } from './Graph';
-
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
+import { ColorLegend } from '@/Components/Elements/ColorLegend';
+import { EmptyState } from '@/Components/Elements/EmptyState';
+import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { ColorLegend } from '@/Components/Elements/ColorLegend';
-import {
+import { Pause, Play } from '@/Components/Icons';
+import type {
+  AnimateDataType,
   ButterflyChartDataType,
+  ClassNameObject,
+  CustomLayerDataType,
   Languages,
+  NumberFormatOptions,
   ReferenceDataType,
   SourcesDataType,
   StyleObject,
-  ClassNameObject,
-  CustomLayerDataType,
-  AnimateDataType,
   TimelineDataType,
-  NumberFormatOptions,
 } from '@/Types';
-import { Colors } from '@/Components/ColorPalette';
-import { EmptyState } from '@/Components/Elements/EmptyState';
-import { Pause, Play } from '@/Components/Icons';
-import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { ensureCompleteDataForButterFlyChart } from '@/Utils/ensureCompleteData';
-import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
+import { getSliderMarks } from '@/Utils/getSliderMarks';
+import { Graph } from './Graph';
 
 function getMinMax(
   data: ButterflyChartDataType[],
@@ -34,7 +32,7 @@ function getMinMax(
   minValue?: number | null,
   maxValue?: number | null,
 ) {
-  const values = data.map(d => d[key]).filter(v => !checkIfNullOrUndefined(v)) as number[];
+  const values = data.map((d) => d[key]).filter((v) => !checkIfNullOrUndefined(v)) as number[];
 
   const min = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
@@ -148,16 +146,16 @@ interface Props {
 
   // Interactions and Callbacks
   /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   /** Callback for mouse over event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   /** Callback for mouse click event */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
 
   // Configuration and Options
@@ -230,8 +228,8 @@ export function ButterflyChart(props: Props) {
     const dates = [
       ...new Set(
         data
-          .filter(d => d.date)
-          .map(d => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
+          .filter((d) => d.date)
+          .map((d) => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
       ),
     ];
     dates.sort((a, b) => a - b);
@@ -243,7 +241,7 @@ export function ButterflyChart(props: Props) {
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       setSvgWidth(entries[0].target.clientWidth || 620);
       setSvgHeight(entries[0].target.clientHeight || 480);
     });
@@ -256,7 +254,7 @@ export function ButterflyChart(props: Props) {
   useEffect(() => {
     const interval = setInterval(
       () => {
-        setIndex(i => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
+        setIndex((i) => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
       },
       (timeline.speed || 2) * 1000,
     );
@@ -303,9 +301,9 @@ export function ButterflyChart(props: Props) {
           graphDownload={graphDownload ? graphParentDiv : undefined}
           dataDownload={
             dataDownload
-              ? data.map(d => d.data).filter(d => d !== undefined).length > 0
-                ? data.map(d => d.data).filter(d => d !== undefined)
-                : data.filter(d => d !== undefined)
+              ? data.map((d) => d.data).filter((d) => d !== undefined).length > 0
+                ? data.map((d) => d.data).filter((d) => d !== undefined)
+                : data.filter((d) => d !== undefined)
               : null
           }
         />
@@ -329,10 +327,10 @@ export function ButterflyChart(props: Props) {
             step={null}
             defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
             value={uniqDatesSorted[index]}
-            onChangeComplete={nextValue => {
+            onChangeComplete={(nextValue) => {
               setIndex(uniqDatesSorted.indexOf(nextValue as number));
             }}
-            onChange={nextValue => {
+            onChange={(nextValue) => {
               setIndex(uniqDatesSorted.indexOf(nextValue as number));
             }}
             aria-label='Time slider. Use arrow keys to adjust selected time period.'
@@ -354,7 +352,7 @@ export function ButterflyChart(props: Props) {
           <Graph
             hideAxisLine={hideAxisLine}
             data={ensureCompleteDataForButterFlyChart(data, timeline.dateFormat || 'yyyy').filter(
-              d =>
+              (d) =>
                 timeline.enabled
                   ? `${d.date}` ===
                     format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')

@@ -7,7 +7,7 @@ export function transformDefaultValue(
   if (defaultValue === undefined) return undefined;
 
   if (Array.isArray(defaultValue)) {
-    return defaultValue.map(el => ({
+    return defaultValue.map((el) => ({
       value: el,
       label: el,
     }));

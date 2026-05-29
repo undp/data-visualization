@@ -1,9 +1,9 @@
+import { cn } from '@undp/design-system-react/cn';
 import { Modal } from '@undp/design-system-react/Modal';
 import { useState } from 'react';
-
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { FileDown } from '@/Components/Icons';
-import { StyleObject, ClassNameObject } from '@/Types';
+import type { ClassNameObject, StyleObject } from '@/Types';
 import { string2HTML } from '@/Utils/string2HTML';
 
 export type FilterDataType = {
@@ -21,19 +21,19 @@ interface Props {
   classNames?: ClassNameObject;
   width?: number;
   height?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   cardTemplate: string | ((_d: any) => React.ReactNode);
   cardMinWidth: number;
   noOfItemsInAPage?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   allowDataDownloadOnDetail: boolean | string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   page: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: undefined data type
 const csvData = (data: any) => {
   if (!data) return {};
   const dataForCsv = Object.entries(data).map(([key, value]) => {
@@ -67,7 +67,7 @@ export function Graph(props: Props) {
     page,
     allowDataDownloadOnDetail,
   } = props;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [selectedData, setSelectedData] = useState<any>(undefined);
   return (
     <>
@@ -80,29 +80,40 @@ export function Graph(props: Props) {
         }}
       >
         {data
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           .filter((_d: any, i: number) =>
             noOfItemsInAPage
               ? i < page * noOfItemsInAPage && i >= (page - 1) * noOfItemsInAPage
               : true,
           )
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
           .map((d: any, i: number) => (
+            // biome-ignore lint/a11y/noStaticElementInteractions: div is intentionally interactive as a clickable card container; keyboard and accessibility behavior is handled separately
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               key={i}
               style={{
                 ...(styles?.dataCards || {}),
                 ...(cardBackgroundColor && { backgroundColor: cardBackgroundColor }),
               }}
-              className={`w-full flex flex-col ${
-                onSeriesMouseClick || detailsOnClick ? 'cursor-pointer' : 'cursor-auto'
-              }${
-                !cardBackgroundColor ? 'bg-primary-gray-200 dark:bg-primary-gray-600' : ''
-              } ${classNames?.dataCards || ''}`}
+              className={cn(
+                'w-full flex flex-col',
+                onSeriesMouseClick || detailsOnClick ? 'cursor-pointer' : 'cursor-auto',
+                !cardBackgroundColor ? 'bg-primary-gray-200 dark:bg-primary-gray-600' : '',
+                classNames?.dataCards,
+              )}
               onClick={() => {
                 onSeriesMouseClick?.(d);
                 setSelectedData(d);
               }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  onSeriesMouseClick?.(d);
+                  setSelectedData(d);
+                }
+              }}
+              // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
               dangerouslySetInnerHTML={
                 typeof cardTemplate === 'string'
                   ? { __html: string2HTML(cardTemplate, d) }
@@ -122,6 +133,8 @@ export function Graph(props: Props) {
         >
           <div
             className='graph-modal-content m-0'
+            // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
             dangerouslySetInnerHTML={
               typeof detailsOnClick === 'string'
                 ? { __html: string2HTML(detailsOnClick, selectedData) }

@@ -1,23 +1,32 @@
-import { useEffect, useRef, useState } from 'react';
+import { cn } from '@undp/design-system-react/cn';
+import { bisectCenter } from 'd3-array';
+import { scaleLinear, scaleTime } from 'd3-scale';
+import { pointer, select } from 'd3-selection';
 import {
-  line,
-  curveMonotoneX,
   curveLinear,
+  curveMonotoneX,
   curveStep,
   curveStepAfter,
   curveStepBefore,
+  line,
 } from 'd3-shape';
-import { scaleLinear, scaleTime } from 'd3-scale';
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
-import { bisectCenter } from 'd3-array';
-import { pointer, select } from 'd3-selection';
-import { linearRegression, linearRegressionLine } from 'simple-statistics';
-import { cn } from '@undp/design-system-react/cn';
-import { motion, useInView } from 'motion/react';
 import orderBy from 'lodash.orderby';
-
-import {
+import { motion, useInView } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { linearRegression, linearRegressionLine } from 'simple-statistics';
+import { Annotation } from '@/Components/Elements/Annotations';
+import { Axis } from '@/Components/Elements/Axes/Axis';
+import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
+import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
+import { HighlightArea } from '@/Components/Elements/HighlightArea';
+import { CustomArea } from '@/Components/Elements/HighlightArea/customArea';
+import { RefLineY } from '@/Components/Elements/ReferenceLine';
+import { RegressionLine } from '@/Components/Elements/RegressionLine';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   AnnotationSettingsDataType,
   ClassNameObject,
@@ -29,19 +38,9 @@ import {
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { getLineEndPoint } from '@/Utils/getLineEndPoint';
-import { Axis } from '@/Components/Elements/Axes/Axis';
-import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
-import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
-import { RefLineY } from '@/Components/Elements/ReferenceLine';
-import { RegressionLine } from '@/Components/Elements/RegressionLine';
-import { Annotation } from '@/Components/Elements/Annotations';
-import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
-import { HighlightArea } from '@/Components/Elements/HighlightArea';
-import { CustomArea } from '@/Components/Elements/HighlightArea/customArea';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: LineChartDataType[];
@@ -57,9 +56,9 @@ interface Props {
   leftMargin: number;
   topMargin: number;
   bottomMargin: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   refValues: ReferenceDataType[];
   highlightAreaSettings: HighlightAreaSettingsDataType[];
@@ -158,7 +157,7 @@ export function Graph(props: Props) {
           : curveType === 'stepBefore'
             ? curveStepBefore
             : curveMonotoneX;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
@@ -170,21 +169,21 @@ export function Graph(props: Props) {
   };
   const MouseoverRectRef = useRef(null);
   const dataFormatted = orderBy(
-    data.map(d => ({
+    data.map((d) => ({
       ...d,
       date: parse(`${d.date}`, dateFormat, new Date()),
     })),
     ['date'],
     ['asc'],
   );
-  const highlightAreaSettingsFormatted = highlightAreaSettings.map(d => ({
+  const highlightAreaSettingsFormatted = highlightAreaSettings.map((d) => ({
     ...d,
     coordinates: [
       d.coordinates[0] === null ? null : parse(`${d.coordinates[0]}`, dateFormat, new Date()),
       d.coordinates[1] === null ? null : parse(`${d.coordinates[1]}`, dateFormat, new Date()),
     ],
   }));
-  const customHighlightAreaSettingsFormatted = customHighlightAreaSettings.map(d => ({
+  const customHighlightAreaSettingsFormatted = customHighlightAreaSettings.map((d) => ({
     ...d,
     coordinates: d.coordinates.map((el, j) =>
       j % 2 === 0 ? parse(`${el}`, dateFormat, new Date()) : (el as number),
@@ -198,15 +197,16 @@ export function Graph(props: Props) {
     : dataFormatted[dataFormatted.length - 1].date;
   const minParam: number = !checkIfNullOrUndefined(minValue)
     ? (minValue as number)
-    : Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) !==
+    : Math.min(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null)) !==
         Infinity
-      ? Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) > 0
+      ? Math.min(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null)) > 0
         ? 0
-        : Math.min(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null))
+        : Math.min(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null))
       : 0;
   const maxParam: number =
-    Math.max(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null)) !== Infinity
-      ? Math.max(...dataFormatted.map(d => d.y).filter(d => d !== undefined && d !== null))
+    Math.max(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null)) !==
+    Infinity
+      ? Math.max(...dataFormatted.map((d) => d.y).filter((d) => d !== undefined && d !== null))
       : 0;
   const x = scaleTime().domain([minYear, maxYear]).range([0, graphWidth]);
   const y = scaleLinear()
@@ -218,18 +218,18 @@ export function Graph(props: Props) {
     .nice();
 
   const lineShape = line<FormattedDataType>()
-    .x(d => x(d.date))
-    .y(d => y(d.y))
+    .x((d) => x(d.date))
+    .y((d) => y(d.y))
     .curve(curve);
   const yTicks = y.ticks(noOfYTicks);
   const xTicks = x.ticks(noOfXTicks);
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const mousemove = (event: any) => {
       const selectedData =
         dataFormatted[
           bisectCenter(
-            dataFormatted.map(d => d.date),
+            dataFormatted.map((d) => d.date),
             x.invert(pointer(event)[0]),
             0,
           )
@@ -249,8 +249,8 @@ export function Graph(props: Props) {
   }, [x, dataFormatted, onSeriesMouseOver]);
   const regressionLineParam = linearRegression(
     dataFormatted
-      .filter(d => !checkIfNullOrUndefined(d.date) && !checkIfNullOrUndefined(d.y))
-      .map(d => [x(d.date), y(d.y as number)]),
+      .filter((d) => !checkIfNullOrUndefined(d.date) && !checkIfNullOrUndefined(d.y))
+      .map((d) => [x(d.date), y(d.y as number)]),
   );
   const predict = linearRegressionLine(regressionLineParam);
   return (
@@ -280,8 +280,8 @@ export function Graph(props: Props) {
           />
           <g>
             <YTicksAndGridLines
-              values={yTicks.filter(d => d !== 0)}
-              y={yTicks.filter(d => d !== 0).map(d => y(d))}
+              values={yTicks.filter((d) => d !== 0)}
+              y={yTicks.filter((d) => d !== 0).map((d) => y(d))}
               x1={0 - leftMargin}
               x2={graphWidth + margin.right}
               styles={{
@@ -340,8 +340,8 @@ export function Graph(props: Props) {
             />
           </g>
           <XTicksAndGridLines
-            values={xTicks.map(d => format(d, dateFormat))}
-            x={xTicks.map(d => x(d))}
+            values={xTicks.map((d) => format(d, dateFormat))}
+            x={xTicks.map((d) => x(d))}
             y1={0}
             y2={graphHeight}
             styles={{
@@ -363,7 +363,7 @@ export function Graph(props: Props) {
             locale={locale}
             padZeros={padZeros}
           />
-          {customLayers.filter(d => d.position === 'before').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
             <motion.path
               style={{
@@ -404,6 +404,7 @@ export function Graph(props: Props) {
           </g>
           <g>
             {dataFormatted.map((d, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
               <motion.g key={i}>
                 {!checkIfNullOrUndefined(d.y) ? (
                   <>
@@ -482,26 +483,22 @@ export function Graph(props: Props) {
               </motion.g>
             ))}
           </g>
-          {refValues ? (
-            <>
-              {refValues.map((el, i) => (
-                <RefLineY
-                  key={i}
-                  text={el.text}
-                  color={el.color}
-                  y={y(el.value as number)}
-                  x1={0 - leftMargin}
-                  x2={graphWidth + margin.right}
-                  classNames={el.classNames}
-                  styles={el.styles}
-                  animate={animate}
-                  isInView={isInView}
-                />
-              ))}
-            </>
-          ) : null}
+          {refValues?.map((el) => (
+            <RefLineY
+              key={el.text}
+              text={el.text}
+              color={el.color}
+              y={y(el.value as number)}
+              x1={0 - leftMargin}
+              x2={graphWidth + margin.right}
+              classNames={el.classNames}
+              styles={el.styles}
+              animate={animate}
+              isInView={isInView}
+            />
+          ))}
           <g>
-            {annotations.map((d, i) => {
+            {annotations.map((d) => {
               const endPoints = getLineEndPoint(
                 {
                   x: d.xCoordinate
@@ -559,7 +556,7 @@ export function Graph(props: Props) {
               };
               return (
                 <Annotation
-                  key={i}
+                  key={d.text}
                   color={d.color}
                   connectorsSettings={connectorSettings}
                   labelSettings={labelSettings}
@@ -589,7 +586,7 @@ export function Graph(props: Props) {
               />
             ) : null}
           </g>
-          {customLayers.filter(d => d.position === 'after').map(d => d.layer)}
+          {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           <rect
             ref={MouseoverRectRef}
             style={{

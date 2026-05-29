@@ -1,24 +1,23 @@
-import isEqual from 'fast-deep-equal';
-import { scaleLinear, scaleBand, scaleOrdinal, scaleThreshold } from 'd3-scale';
-import { useRef, useState } from 'react';
 import { cn } from '@undp/design-system-react/cn';
+import { scaleBand, scaleLinear, scaleOrdinal, scaleThreshold } from 'd3-scale';
+import isEqual from 'fast-deep-equal';
 import { motion, useInView } from 'motion/react';
-
-import {
+import { useRef, useState } from 'react';
+import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
+import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
+import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import { Tooltip } from '@/Components/Elements/Tooltip';
+import type {
   AnimateDataType,
   ClassNameObject,
   HeatMapDataType,
   ScaleDataType,
   StyleObject,
 } from '@/Types';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { Tooltip } from '@/Components/Elements/Tooltip';
-import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
-import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
+import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { uniqBy } from '@/Utils/uniqBy';
-import { DetailsModal } from '@/Components/Elements/DetailsModal';
 
 interface Props {
   data: HeatMapDataType[];
@@ -38,15 +37,15 @@ interface Props {
   suffix: string;
   prefix: string;
   showValues?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   selectedColor?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   detailsOnClick?: string | ((_d: any) => React.ReactNode);
   styles?: StyleObject;
   classNames?: ClassNameObject;
@@ -99,7 +98,7 @@ export function Graph(props: Props) {
     left: leftMargin,
     right: rightMargin,
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [mouseOverData, setMouseOverData] = useState<HeatMapDataType | undefined>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
@@ -134,9 +133,9 @@ export function Graph(props: Props) {
       >
         <g transform={`translate(${margin.left},${0})`}>
           {showColumnLabels
-            ? columns.map((d, i) => (
+            ? columns.map((d) => (
                 <XAxesLabels
-                  key={i}
+                  key={d}
                   y={0}
                   x={x(d) as number}
                   width={barWidth}
@@ -155,12 +154,12 @@ export function Graph(props: Props) {
         </g>
         <g transform={`translate(${0},${margin.top})`}>
           {showRowLabels
-            ? rows.map((d, i) => (
+            ? rows.map((d) => (
                 <YAxesLabels
                   value={
                     `${d}`.length < truncateBy ? `${d}` : `${`${d}`.substring(0, truncateBy)}...`
                   }
-                  key={i}
+                  key={d}
                   y={y(d) as number}
                   x={0}
                   width={margin.left}
@@ -175,9 +174,9 @@ export function Graph(props: Props) {
             : null}
         </g>
         <g transform={`translate(${margin.left},${margin.top})`}>
-          {rows.map((d, i) => (
-            <g key={i} transform={`translate(0,${y(d)})`}>
-              {columns.map(el => (
+          {rows.map((d) => (
+            <g key={d} transform={`translate(0,${y(d)})`}>
+              {columns.map((el) => (
                 <rect
                   key={`${d}-${el}`}
                   x={x(el)}
@@ -191,17 +190,18 @@ export function Graph(props: Props) {
             </g>
           ))}
           {data
-            .filter(d => !checkIfNullOrUndefined(d.value))
-            .map((d, i) => {
+            .filter((d) => !checkIfNullOrUndefined(d.value))
+            .map((d) => {
               const color = !checkIfNullOrUndefined(d.value)
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   colorScale(d.value as any)
                 : noDataColor;
               return (
+                // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
                 <g
                   key={`${d.column}-${d.row}`}
                   transform={`translate(${x(d.column)},${y(d.row)})`}
-                  onMouseEnter={event => {
+                  onMouseEnter={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -218,7 +218,7 @@ export function Graph(props: Props) {
                       }
                     }
                   }}
-                  onMouseMove={event => {
+                  onMouseMove={(event) => {
                     setMouseOverData(d);
                     setEventY(event.clientY);
                     setEventX(event.clientX);
@@ -259,7 +259,7 @@ export function Graph(props: Props) {
                       animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     >
-                      <foreignObject key={i} y={0} x={0} width={barWidth} height={barHeight}>
+                      <foreignObject y={0} x={0} width={barWidth} height={barHeight}>
                         <div className='flex flex-col justify-center items-center h-inherit p-1'>
                           <p
                             className={cn(
