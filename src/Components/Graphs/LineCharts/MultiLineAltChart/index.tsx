@@ -88,8 +88,8 @@ interface Props {
   maxDate?: string | number;
   /** Minimum value of the date for the chart */
   minDate?: string | number;
-  /** No. of ticks on the x-axis  */
-  noOfXTicks?: number;
+  /** No. of ticks on the x-axis or use the value `showAvailableOnly` to show only year which are present in data  */
+  noOfXTicks?: number | 'showAvailableOnly';
   /** No. of ticks on the y-axis  */
   noOfYTicks?: number;
 

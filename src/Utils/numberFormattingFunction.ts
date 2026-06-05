@@ -54,7 +54,7 @@ export function numberFormattingFunction(
     return formatted + suffixes[tier];
   };
   // Small numbers (no compacting)
-  if (num < 10000 && num > -10000 && Number.isInteger(num)) {
+  if (num < 1000 && num > -1000 && Number.isInteger(num)) {
     return `${prefix || ''}${formatWithLocale(num, 0)}${suffix || ''}`;
   }
 

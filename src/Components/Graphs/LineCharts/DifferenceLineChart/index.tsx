@@ -88,8 +88,8 @@ interface Props {
   minDate?: string | number;
   /** Reference values for comparison */
   refValues?: ReferenceDataType[];
-  /** No. of ticks on the x-axis  */
-  noOfXTicks?: number;
+  /** No. of ticks on the x-axis or use the value `showAvailableOnly` to show only year which are present in data  */
+  noOfXTicks?: number | 'showAvailableOnly';
   /** No. of ticks on the y-axis  */
   noOfYTicks?: number;
 

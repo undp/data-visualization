@@ -859,7 +859,7 @@ export interface GraphSettingsDataType {
   graphType?: 'circlePacking' | 'treeMap' | 'barGraph' | 'donutChart';
   donutColorDomain?: string[];
   lineTitles?: [string, string];
-  noOfXTicks?: number;
+  noOfXTicks?: number | 'showAvailableOnly';
   dateFormat?: string;
   lineColors?: string[];
   sameAxes?: boolean;

@@ -51,7 +51,7 @@ interface Props {
   width: number;
   height: number;
   dateFormat: string;
-  noOfXTicks: number;
+  noOfXTicks: number | 'showAvailableOnly';
   topMargin: number;
   bottomMargin: number;
   leftMargin: number;
@@ -263,7 +263,10 @@ export function Graph(props: Props) {
     .y((d) => y(d.y))
     .curve(curve);
   const yTicks = y.ticks(noOfYTicks);
-  const xTicks = x.ticks(noOfXTicks);
+  const xTicks =
+    noOfXTicks === 'showAvailableOnly'
+      ? [...new Set(dataFormatted.map((d) => d.date))]
+      : x.ticks(noOfXTicks);
   useEffect(() => {
     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const mousemove = (event: any) => {
