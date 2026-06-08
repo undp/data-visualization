@@ -1,9 +1,8 @@
 {
   "name": "@undp/data-viz",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "browser": "./dist/index.umd.js",
   "types": "./dist/index.d.ts",
   "description": "The open source graphing library built by UNDP",
   "type": "module",
@@ -413,13 +412,13 @@
   "homepage": "https://dataviz.design.undp.org",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "clean": "rimraf node_modules && rimraf dist && rimraf package-lock.json",
-    "install:build": "npm install && tsc && vite build",
-    "install:build:publish": "npm install && tsc && vite build && npm publish",
+    "install:build": "npm install && cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
+    "install:build:publish": "npm install && cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build && npm publish",
     "lint": "biome check . --write"
   },
   "keywords": [
@@ -468,7 +467,7 @@
   "peerDependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
-    "@undp/design-system-react": "^2.2.3",
+    "@undp/design-system-react": "^2.2.4",
     "dom-to-svg": "^0.12.2",
     "file-saver": "^2.0.5",
     "handlebars": "^4.7.8",
@@ -546,6 +545,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/rollup": "^3.1.1",
+    "@microsoft/api-extractor": "^7.58.8",
     "@storybook/addon-docs": "^10.4.0",
     "@storybook/mdx2-csf": "^1.1.0",
     "@storybook/react": "^10.4.0",
@@ -578,6 +578,7 @@
     "@types/three": "^0.180.0",
     "@vitejs/plugin-react": "^6.0.2",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^10.1.0",
     "dom-to-svg": "^0.12.2",
     "file-saver": "^2.0.5",
     "handlebars": "^4.7.8",

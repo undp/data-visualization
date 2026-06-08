@@ -193,10 +193,9 @@ export default defineConfig({
       tsconfigPath: './tsconfig.json',
       staticImport: true,
       insertTypesEntry: true,
-      bundleTypes: false,
+      bundleTypes: true,
       exclude: ['**/*.mdx', '**/*.test.tsx', 'stories'],
     }),
-    visualizer({ filename: 'stats.html', open: true }),
   ],
   build: {
     cssCodeSplit: false,
@@ -215,6 +214,7 @@ export default defineConfig({
       external: [
         'react',
         'react-dom',
+        'react/jsx-runtime',
         'maplibre-gl',
         'xlsx',
         'react-globe.gl',
@@ -234,6 +234,8 @@ export default defineConfig({
       ],
       output: {
         manualChunks: undefined,
+        externalLiveBindings: false,
+        exports: 'named',
         assetFileNames: (assetInfo) => {
           if (assetInfo.names.includes('data-viz.css')) {
             return 'style.css';
