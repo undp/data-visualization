@@ -112,7 +112,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     // Values and Ticks
     minDate: { control: 'text' },
     maxDate: { control: 'text' },
-    noOfXTicks: { control: 'text', table: { defaultValue: { summary: '5' } } },
+    noOfXTicks: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'number | showAvailableOnly',
+        },
+        defaultValue: { summary: '5' },
+      },
+    },
     noOfYTicks: { table: { defaultValue: { summary: '5' } } },
 
     // Graph parameters

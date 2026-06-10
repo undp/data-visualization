@@ -257,7 +257,7 @@ export function Graph(props: Props) {
 
   const xTicks =
     noOfXTicks === 'showAvailableOnly'
-      ? [...new Set(dataFormatted.map((d) => d.date))]
+      ? [...new Set(dataFormatted.map((d) => d.date.getTime()))].map((t) => new Date(t))
       : x.ticks(noOfXTicks);
 
   useEffect(() => {

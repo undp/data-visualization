@@ -109,7 +109,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
 
     // Values and Ticks
     refValues: { table: { type: { detail: REF_VALUE_OBJECT } } },
-    noOfXTicks: { control: 'text', table: { defaultValue: { summary: '5' } } },
+    noOfXTicks: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'number | showAvailableOnly',
+        },
+        defaultValue: { summary: '5' },
+      },
+    },
     noOfYTicks: { table: { defaultValue: { summary: '5' } } },
     minDate: { control: 'text' },
     maxDate: { control: 'text' },

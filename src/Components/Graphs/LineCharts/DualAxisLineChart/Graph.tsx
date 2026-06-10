@@ -226,7 +226,7 @@ export function Graph(props: Props) {
   const y2Ticks = y2.ticks(noOfYTicks);
   const xTicks =
     noOfXTicks === 'showAvailableOnly'
-      ? [...new Set(dataFormatted.map((d) => d.date))]
+      ? [...new Set(dataFormatted.map((d) => d.date.getTime()))].map((t) => new Date(t))
       : x.ticks(noOfXTicks);
   useEffect(() => {
     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
