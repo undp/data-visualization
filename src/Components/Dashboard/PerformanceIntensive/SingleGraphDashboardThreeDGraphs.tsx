@@ -444,13 +444,13 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
                                       )
                                     ].columnId as string),
                                 )
-                              ].label
+                              ].value
                             : ''
                         }
                         onValueChange={(el) => {
                           const selectedOption =
                             d.allowedColumnIds[
-                              d.allowedColumnIds.findIndex((opt) => opt.label === el)
+                              d.allowedColumnIds.findIndex((opt) => opt.value === el)
                             ];
                           const newGraphConfig = {
                             columnId: selectedOption.value,
