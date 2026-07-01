@@ -41,6 +41,7 @@ interface Props {
   suffix: string;
   prefix: string;
   showValues: boolean;
+  showTotalValue: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -114,6 +115,7 @@ export function HorizontalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    showTotalValue,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -379,7 +381,7 @@ export function HorizontalGraph(props: Props) {
                       isInView={isInView}
                     />
                   ) : null}
-                  {showValues ? (
+                  {showTotalValue ? (
                     <motion.text
                       className={cn(
                         'graph-value graph-value-total text-sm',
@@ -519,6 +521,7 @@ export function VerticalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    showTotalValue,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -797,7 +800,7 @@ export function VerticalGraph(props: Props) {
                       isInView={isInView}
                     />
                   ) : null}
-                  {showValues ? (
+                  {showTotalValue ? (
                     <motion.text
                       style={{
                         textAnchor: 'middle',

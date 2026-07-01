@@ -92,6 +92,7 @@ interface Props {
   orientation?: 'horizontal' | 'vertical';
   hideAxisLine?: boolean;
   padZeros?: boolean;
+  showTotalValue?: boolean;
 }
 
 export function StackedBarGraphEl(props: Props) {
@@ -122,6 +123,7 @@ export function StackedBarGraphEl(props: Props) {
     showLabels = true,
     relativeHeight,
     showValues = true,
+    showTotalValue,
     refValues,
     graphID,
     maxValue,
@@ -293,6 +295,7 @@ export function StackedBarGraphEl(props: Props) {
           {svgWidth && svgHeight && data.length > 0 ? (
             <Comp
               hideAxisLine={hideAxisLine}
+              showTotalValue={showTotalValue ?? showValues}
               data={
                 sortParameter !== undefined
                   ? sortParameter === 'total'

@@ -627,6 +627,8 @@ interface StackedBarChartProps {
   showLabels?: boolean;
   /** Toggle visibility of values */
   showValues?: boolean;
+  /** Toggle visibility of the total value. If not defined it takes the value or `showValues` */
+  showTotalValue?: boolean;
   /** Custom order for labels */
   labelOrder?: string[];
   /** Toggle visibility of axis ticks */
@@ -741,6 +743,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     naLabel,
     hideAxisLine = false,
     numberDisplayOptions,
+    showTotalValue,
   } = props;
 
   return (
@@ -805,6 +808,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       hideAxisLine={hideAxisLine}
       locale={numberDisplayOptions?.locale}
       padZeros={numberDisplayOptions?.padZeros}
+      showTotalValue={showTotalValue}
     />
   );
 }

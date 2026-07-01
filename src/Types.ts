@@ -1063,6 +1063,7 @@ export interface GraphSettingsDataType {
   defaultColor?: string;
   strictValuePosition?: boolean;
   gridIcon?: string[];
+  showTotalValue?: boolean;
 }
 
 export interface InfoBoxDataType {

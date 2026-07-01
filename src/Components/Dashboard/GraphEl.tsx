@@ -349,6 +349,7 @@ function GraphEl(props: Props) {
           bottomMargin: settings?.bottomMargin,
           labelOrder: settings?.labelOrder,
           showValues: settings?.showValues,
+          showTotalValue: settings?.showTotalValue,
           showLabels: settings?.showLabels,
           relativeHeight: settings?.relativeHeight,
           tooltip: settings?.tooltip,
