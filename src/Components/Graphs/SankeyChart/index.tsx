@@ -17,7 +17,6 @@ import type {
   SourcesDataType,
   StyleObject,
 } from '@/Types';
-import { generateRandomString } from '@/Utils/generateRandomString';
 import { uniqBy } from '@/Utils/uniqBy';
 import { Graph } from './Graph';
 
@@ -326,7 +325,6 @@ export function SankeyChart(props: Props) {
             onSeriesMouseOver={onSeriesMouseOver}
             showValues={showValues}
             onSeriesMouseClick={onSeriesMouseClick}
-            id={generateRandomString(8)}
             highlightedSourceDataPoints={highlightedSourceDataPoints?.map((d) => `${d}`)}
             highlightedTargetDataPoints={highlightedTargetDataPoints?.map((d) => `${d}`)}
             defaultLinkOpacity={defaultLinkOpacity}

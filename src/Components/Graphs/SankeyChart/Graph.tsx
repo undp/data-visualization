@@ -3,7 +3,7 @@ import { P } from '@undp/design-system-react/Typography';
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
 import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import type {
@@ -14,6 +14,7 @@ import type {
   NodesLinkDataType,
   StyleObject,
 } from '@/Types';
+import { generateRandomString } from '@/Utils/generateRandomString';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -38,7 +39,6 @@ interface Props {
   onSeriesMouseOver?: (_d: any) => void;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
-  id: string;
   highlightedSourceDataPoints?: string[];
   highlightedTargetDataPoints?: string[];
   sourceTitle?: string;
@@ -75,7 +75,6 @@ export function Graph(props: Props) {
     onSeriesMouseClick,
     nodePadding,
     nodeWidth,
-    id,
     highlightedSourceDataPoints,
     highlightedTargetDataPoints,
     defaultLinkOpacity,
@@ -93,6 +92,7 @@ export function Graph(props: Props) {
     padZeros,
   } = props;
   const svgRef = useRef(null);
+  const id = useMemo(() => generateRandomString(8), []);
   const isInView = useInView(svgRef, {
     once: animate.once,
     amount: animate.amount,
@@ -138,8 +138,13 @@ export function Graph(props: Props) {
                 ? (a, b) => (b.value || 0) - (a.value || 0)
                 : (a, b) => (a.value || 0) - (b.value || 0),
             );
+  const sankeyData = {
+    nodes: data.nodes.map((node) => ({ ...node })),
+    links: data.links.map((link) => ({ ...link })),
+  };
+
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  const { nodes, links } = sankeyGenerator(data as any);
+  const { nodes, links } = sankeyGenerator(sankeyData as any);
   const linkPathGenerator = sankeyLinkHorizontal();
   return (
     <>
@@ -205,6 +210,7 @@ export function Graph(props: Props) {
                       x={0 - leftMargin}
                       width={leftMargin}
                       height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
+                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
                     >
                       <div
                         className='flex flex-col gap-0.5 justify-center py-0 px-1.5'
@@ -297,6 +303,7 @@ export function Graph(props: Props) {
                       x={nodeWidth}
                       width={rightMargin - nodeWidth}
                       height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
+                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
                     >
                       <div
                         className='flex flex-col gap-0.5 justify-center py-0 px-1.5'
@@ -387,121 +394,100 @@ export function Graph(props: Props) {
           </defs>
           <g>
             <AnimatePresence>
-              {links.map((d, i) => (
-                <motion.g
-                  className='undp-viz-g-with-hover'
-                  key={`${d.source}-${d.target}`}
-                  onMouseEnter={(event) => {
+              {links.map((d, i) => {
+                const isLinkHighlighted =
+                  highlightedSourceDataPoints?.some(
                     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                    setMouseOverData((d as any).data);
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
+                    (el) => `source_${el}` === (d.source as any).name,
+                  ) ||
+                  highlightedTargetDataPoints?.some(
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                    (el) => `target_${el}` === (d.target as any).name,
+                  );
+                return (
+                  <motion.g
+                    className='undp-viz-g-with-hover'
+                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                    key={`${(d.source as any).name}-${(d.target as any).name}`}
+                    onMouseEnter={(event) => {
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      setMouseOverData((d as any).data);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
 
-                    onSeriesMouseOver?.(d);
-                  }}
-                  onMouseMove={(event) => {
-                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                    setMouseOverData((d as any).data);
-                    setEventY(event.clientY);
-                    setEventX(event.clientX);
-                  }}
-                  onClick={() => {
-                    if (onSeriesMouseClick || detailsOnClick) {
-                      if (
-                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                        isEqual(mouseClickData, (d as any).data) &&
-                        resetSelectionOnDoubleClick
-                      ) {
-                        setMouseClickData(undefined);
-                        onSeriesMouseClick?.(undefined);
-                      } else {
-                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                        setMouseClickData((d as any).data);
-                        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                        onSeriesMouseClick?.((d as any).data);
+                      onSeriesMouseOver?.(d);
+                    }}
+                    onMouseMove={(event) => {
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      setMouseOverData((d as any).data);
+                      setEventY(event.clientY);
+                      setEventX(event.clientX);
+                    }}
+                    onClick={() => {
+                      if (onSeriesMouseClick || detailsOnClick) {
+                        if (
+                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                          isEqual(mouseClickData, (d as any).data) &&
+                          resetSelectionOnDoubleClick
+                        ) {
+                          setMouseClickData(undefined);
+                          onSeriesMouseClick?.(undefined);
+                        } else {
+                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                          setMouseClickData((d as any).data);
+                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                          onSeriesMouseClick?.((d as any).data);
+                        }
                       }
+                    }}
+                    onMouseLeave={() => {
+                      setMouseOverData(undefined);
+                      setEventX(undefined);
+                      setEventY(undefined);
+                      onSeriesMouseOver?.(undefined);
+                    }}
+                    opacity={
+                      selectedNode
+                        ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                          (d.source as any).name === selectedNode.name ||
+                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                          (d.target as any).name === selectedNode.name
+                          ? 0.85
+                          : defaultLinkOpacity
+                        : highlightedSourceDataPoints || highlightedTargetDataPoints
+                          ? isLinkHighlighted
+                            ? 0.85
+                            : defaultLinkOpacity
+                          : defaultLinkOpacity
                     }
-                  }}
-                  onMouseLeave={() => {
-                    setMouseOverData(undefined);
-                    setEventX(undefined);
-                    setEventY(undefined);
-                    onSeriesMouseOver?.(undefined);
-                  }}
-                  variants={{
-                    initial: {
-                      opacity: selectedNode
-                        ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                          (d.source as any).name === selectedNode.name ||
-                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                          (d.target as any).name === selectedNode.name
-                          ? 0.85
-                          : defaultLinkOpacity
-                        : highlightedSourceDataPoints || highlightedTargetDataPoints
-                          ? highlightedSourceDataPoints?.indexOf(
-                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                              (d.source as any).label,
-                            ) !== -1 ||
-                            highlightedTargetDataPoints?.indexOf(
-                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                              (d.target as any).label,
-                            ) !== -1
-                            ? 0.85
-                            : defaultLinkOpacity
-                          : defaultLinkOpacity,
-                    },
-                    whileInView: {
-                      opacity: selectedNode
-                        ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                          (d.source as any).name === selectedNode.name ||
-                          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                          (d.target as any).name === selectedNode.name
-                          ? 0.85
-                          : defaultLinkOpacity
-                        : highlightedSourceDataPoints || highlightedTargetDataPoints
-                          ? highlightedSourceDataPoints?.indexOf(
-                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                              (d.source as any).label,
-                            ) !== -1 ||
-                            highlightedTargetDataPoints?.indexOf(
-                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                              (d.target as any).label,
-                            ) !== -1
-                            ? 0.85
-                            : defaultLinkOpacity
-                          : defaultLinkOpacity,
-                      transition: { duration: animate.duration },
-                    },
-                  }}
-                  initial='initial'
-                  animate={isInView ? 'whileInView' : 'initial'}
-                  exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                >
-                  <motion.path
-                    key={`${d.source}-${d.target}`}
-                    d={linkPathGenerator(d) || ''}
-                    style={{
-                      stroke: `url(#${id}-gradient-${i})`,
-                      strokeWidth: d.width,
-                      fill: 'none',
-                    }}
-                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    variants={{
-                      initial: {
-                        pathLength: 0,
-                        opacity: 1,
-                      },
-                      whileInView: {
-                        pathLength: 1,
-                        opacity: 1,
-                        transition: { duration: animate.duration },
-                      },
-                    }}
-                    initial='initial'
-                    animate={isInView ? 'whileInView' : 'initial'}
-                  />
-                </motion.g>
-              ))}
+                  >
+                    <motion.path
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      key={`${(d.source as any).name}-${(d.target as any).name}`}
+                      d={linkPathGenerator(d) || ''}
+                      style={{
+                        stroke: `url(#${id}-gradient-${i})`,
+                        strokeWidth: d.width,
+                        fill: 'none',
+                      }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      variants={{
+                        initial: {
+                          pathLength: 0,
+                          opacity: 1,
+                        },
+                        whileInView: {
+                          pathLength: 1,
+                          opacity: 1,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                    />
+                  </motion.g>
+                );
+              })}
             </AnimatePresence>
           </g>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}

@@ -20,7 +20,6 @@ import type {
   SourcesDataType,
   StyleObject,
 } from '@/Types';
-import { generateRandomString } from '@/Utils/generateRandomString';
 import { getNoOfTicks } from '@/Utils/getNoOfTicks';
 import { Graph } from './Graph';
 
@@ -324,7 +323,6 @@ export function MultiLineChart(props: Props) {
             labelsToBeHidden={labelsToBeHidden}
             dashedLines={dashedLines}
             dashSettings={dashSettings}
-            revealClipId={generateRandomString(8)}
             naLabel={naLabel}
             locale={numberDisplayOptions?.locale || 'en'}
             padZeros={numberDisplayOptions?.padZeros || false}

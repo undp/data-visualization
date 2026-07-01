@@ -14,7 +14,7 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
 import { motion, useInView } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@/Components/Elements/Annotations';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
@@ -37,6 +37,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { generateRandomString } from '@/Utils/generateRandomString';
 import { getLineEndPoint } from '@/Utils/getLineEndPoint';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -86,7 +87,6 @@ interface Props {
   dashedLines: (string | number)[];
   dashSettings: string[];
   labelsToBeHidden: (string | number)[];
-  revealClipId: string;
   locale: string;
   naLabel: string;
   padZeros: boolean;
@@ -140,12 +140,13 @@ export function Graph(props: Props) {
     dashedLines,
     dashSettings,
     labelsToBeHidden,
-    revealClipId,
     locale,
     naLabel,
     padZeros,
   } = props;
   const svgRef = useRef(null);
+
+  const revealClipId = useMemo(() => generateRandomString(8), []);
   const isInView = useInView(svgRef, {
     once: animate.once,
     amount: animate.amount,
