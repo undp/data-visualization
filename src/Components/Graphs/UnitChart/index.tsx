@@ -61,13 +61,15 @@ interface Props {
   // Graph Parameters
   /** Size of the visualization */
   size?: number;
-  /** No. of dots in a single row */
+  /** No. of grid icons in a single row */
   gridSize?: number;
-  /** Spacing between 2 dots */
+  /** Defines the `d` attribute values for the SVG paths used as grid icons. Each path should be designed for a 24px × 24px viewBox. The order of paths determines the rendering order. If no paths are provided, a circle icon is used as the default. */
+  gridIcon?: string[];
+  /** Spacing between 2 grid icons */
   unitPadding?: number;
-  /** Total no. of dot that are rendered in the chart */
+  /** Total no. of grid icon that are rendered in the chart */
   totalNoOfDots?: number;
-  /** Toggle visibility of stroke for the unfilled dots */
+  /** Toggle visibility of stroke for the unfilled grid icons. */
   showStrokeForWhiteDots?: boolean;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
@@ -123,6 +125,7 @@ export function UnitChart(props: Props) {
     animate = false,
     naLabel = 'NA',
     numberDisplayOptions,
+    gridIcon,
   } = props;
   const svgRef = useRef(null);
   const animateValue =
@@ -141,15 +144,19 @@ export function UnitChart(props: Props) {
   if (radius <= 0) {
     console.error(
       'The size of single unit is less than or equal to zero. Check values for ((dimension / gridSize) - (padding * 2)) / 2 is not less than or equal to 0.',
+      `size: ${size}`,
+      `gridSize: ${gridSize}`,
+      `gridDimension: ${gridDimension}`,
+      `unitPadding: ${unitPadding}`,
     );
     return null;
   }
 
-  const cellsData: { color: string }[] = [];
+  const cellsData: { color: string; index: number }[] = [];
   data.forEach((item, index) => {
     const count = Math.round((item.value / totalValue) * totalNoOfDots);
     for (let i = 0; i < count; i += 1) {
-      cellsData.push({ color: colors[index] });
+      cellsData.push({ color: colors[index], index });
     }
   });
   return (
@@ -267,46 +274,91 @@ export function UnitChart(props: Props) {
         >
           <AnimatePresence>
             <g>
-              {cellsData.map((d, i) => (
-                <motion.circle
-                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                  key={i}
-                  style={{
-                    strokeWidth: 1,
-                  }}
-                  variants={{
-                    initial: {
-                      fill: '#fff',
-                      opacity: 0,
-                      ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
-                      strokeWidth: 1,
-                    },
-                    whileInView: {
-                      fill: d.color,
-                      opacity: 1,
-                      ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
-                      strokeWidth: 1,
-                      cx: (i % gridSize) * gridDimension + gridDimension / 2,
-                      cy: Math.floor(i / gridSize) * gridDimension + gridDimension / 2,
-                      transition: {
-                        duration: 0,
-                        delay: (animateValue.duration / cellsData.length) * i,
-                      },
-                    },
-                  }}
-                  initial='initial'
-                  animate={isInView ? 'whileInView' : 'initial'}
-                  className={
-                    (d.color.toLowerCase() === '#fff' ||
-                      d.color.toLowerCase() === '#ffffff' ||
-                      d.color.toLowerCase() === 'white') &&
-                    showStrokeForWhiteDots
-                      ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                      : ''
-                  }
-                  r={radius}
-                />
-              ))}
+              {gridIcon
+                ? cellsData.map((d, i) => (
+                    <motion.svg
+                      key={d.index}
+                      style={{
+                        strokeWidth: 1,
+                      }}
+                      viewBox='0 0 24 24'
+                      width={radius * 2}
+                      height={radius * 2}
+                      variants={{
+                        initial: {
+                          fill: '#fff',
+                          opacity: 0,
+                          ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                          strokeWidth: 1,
+                        },
+                        whileInView: {
+                          fill: d.color,
+                          opacity: 1,
+                          ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                          strokeWidth: 1,
+                          x: (i % gridSize) * gridDimension,
+                          y: Math.floor(i / gridSize) * gridDimension,
+                          transition: {
+                            duration: 0,
+                            delay: (animateValue.duration / cellsData.length) * i,
+                          },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      className={
+                        (d.color.toLowerCase() === '#fff' ||
+                          d.color.toLowerCase() === '#ffffff' ||
+                          d.color.toLowerCase() === 'white') &&
+                        showStrokeForWhiteDots
+                          ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                          : ''
+                      }
+                    >
+                      {gridIcon.map((el) => (
+                        <path d={el} key={el} />
+                      ))}
+                    </motion.svg>
+                  ))
+                : cellsData.map((d, i) => (
+                    <motion.circle
+                      key={d.index}
+                      style={{
+                        strokeWidth: 1,
+                      }}
+                      variants={{
+                        initial: {
+                          fill: '#fff',
+                          opacity: 0,
+                          ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                          strokeWidth: 1,
+                        },
+                        whileInView: {
+                          fill: d.color,
+                          opacity: 1,
+                          ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
+                          strokeWidth: 1,
+                          cx: (i % gridSize) * gridDimension + gridDimension / 2,
+                          cy: Math.floor(i / gridSize) * gridDimension + gridDimension / 2,
+                          transition: {
+                            duration: 0,
+                            delay: (animateValue.duration / cellsData.length) * i,
+                          },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      className={
+                        (d.color.toLowerCase() === '#fff' ||
+                          d.color.toLowerCase() === '#ffffff' ||
+                          d.color.toLowerCase() === 'white') &&
+                        showStrokeForWhiteDots
+                          ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                          : ''
+                      }
+                      r={radius}
+                    />
+                  ))}
             </g>
           </AnimatePresence>
         </svg>

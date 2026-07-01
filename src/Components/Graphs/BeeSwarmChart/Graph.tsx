@@ -72,6 +72,7 @@ interface Props {
   hideAxisLine: boolean;
   locale: string;
   padZeros: boolean;
+  strictValuePosition: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -111,6 +112,7 @@ export function VerticalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    strictValuePosition,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -183,10 +185,16 @@ export function VerticalGraph(props: Props) {
         ...(d.data && { data: { ...d.data } }),
       })) as BeeSwarmChartDataType[]
     ).filter((d) => d.position);
+    if (strictValuePosition) {
+      dataTemp.forEach((d) => {
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        (d as any).fy = y(d.position as number);
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        (d as any).x = graphWidth / 2;
+      });
+    }
     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-    forceSimulation(dataTemp as any)
-      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-      .force('y', forceY((d: any) => y(d.position as number)).strength(5))
+    const simulation = forceSimulation(dataTemp as any)
       .force('x', forceX((_d) => graphWidth / 2).strength(1))
       .force(
         'collide',
@@ -194,7 +202,17 @@ export function VerticalGraph(props: Props) {
         forceCollide((d: any) => (radiusScale ? radiusScale(d.radius || 0) + 1 : radius + 1)),
       )
       .force('charge', forceManyBody().strength(-15))
-      .alphaDecay(0.05)
+      .alphaDecay(0.05);
+
+    if (!strictValuePosition) {
+      simulation.force(
+        'y',
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        forceY((d: any) => y(d.position as number)).strength(5),
+      );
+    }
+
+    simulation
       .tick(10000)
       .on('tick', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
@@ -202,7 +220,7 @@ export function VerticalGraph(props: Props) {
       .on('end', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
       });
-  }, [radius, graphWidth, dataOrdered, y, radiusScale]);
+  }, [radius, graphWidth, dataOrdered, y, radiusScale, strictValuePosition]);
 
   return (
     <>
@@ -471,6 +489,7 @@ export function HorizontalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    strictValuePosition,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -543,10 +562,18 @@ export function HorizontalGraph(props: Props) {
         ...(d.data && { data: { ...d.data } }),
       })) as BeeSwarmChartDataType[]
     ).filter((d) => d.position);
+
+    if (strictValuePosition) {
+      dataTemp.forEach((d) => {
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        (d as any).fx = x(d.position as number);
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        (d as any).y = graphHeight / 2;
+      });
+    }
+
     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-    forceSimulation(dataTemp as any)
-      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-      .force('x', forceX((d: any) => x(d.position as number)).strength(5))
+    const simulation = forceSimulation(dataTemp as any)
       .force('y', forceY((_d) => graphHeight / 2).strength(1))
       .force(
         'collide',
@@ -554,7 +581,17 @@ export function HorizontalGraph(props: Props) {
         forceCollide((d: any) => (radiusScale ? radiusScale(d.radius || 0) + 1 : radius + 1)),
       )
       .force('charge', forceManyBody().strength(-15))
-      .alphaDecay(0.05)
+      .alphaDecay(0.05);
+
+    if (!strictValuePosition) {
+      simulation.force(
+        'x',
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        forceX((d: any) => x(d.position as number)).strength(5),
+      );
+    }
+
+    simulation
       .tick(10000)
       .on('tick', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
@@ -562,7 +599,7 @@ export function HorizontalGraph(props: Props) {
       .on('end', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
       });
-  }, [radius, graphHeight, dataOrdered, x, radiusScale]);
+  }, [radius, graphHeight, dataOrdered, x, radiusScale, strictValuePosition]);
 
   return (
     <>

@@ -1503,6 +1503,7 @@ function GraphEl(props: Props) {
       case 'beeSwarmChart':
         return {
           customLayers: settings?.customLayers,
+          strictValuePosition: settings?.strictValuePosition,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
@@ -1789,6 +1790,7 @@ function GraphEl(props: Props) {
       case 'unitChart':
         return {
           naLabel: settings?.naLabel,
+          gridIcon: settings?.gridIcon,
           numberDisplayOptions: settings?.numberDisplayOptions,
           theme: settings?.theme,
           totalNoOfDots: settings?.totalNoOfDots,

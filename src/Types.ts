@@ -1061,6 +1061,8 @@ export interface GraphSettingsDataType {
   xNumberDisplayOptions?: NumberFormatOptions;
   yNumberDisplayOptions?: NumberFormatOptions;
   defaultColor?: string;
+  strictValuePosition?: boolean;
+  gridIcon?: string[];
 }
 
 export interface InfoBoxDataType {

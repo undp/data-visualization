@@ -95,6 +95,8 @@ interface Props {
   showNAColor?: boolean;
   /** Toggle visibility of axis line for the  main axis */
   hideAxisLine?: boolean;
+  /** Defines if teh data point are locked exactly to their data value on the axis; if false, nodes are pulled toward their value but may drift when crowded */
+  strictValuePosition?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
@@ -184,6 +186,7 @@ export function BeeSwarmChart(props: Props) {
     dimmedOpacity = 0.3,
     customLayers = [],
     hideAxisLine = false,
+    strictValuePosition = false,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -302,6 +305,7 @@ export function BeeSwarmChart(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            strictValuePosition={strictValuePosition}
           />
         ) : null}
       </GraphArea>
