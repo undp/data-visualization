@@ -56,6 +56,8 @@ interface Props {
   locale: string;
   padZeros: boolean;
   labelPosition: 'inside' | 'outside' | 'overlap';
+  labelWidth: number;
+  dimmedNodeOpacity: number;
 }
 
 export function Graph(props: Props) {
@@ -93,6 +95,8 @@ export function Graph(props: Props) {
     locale,
     padZeros,
     labelPosition,
+    labelWidth,
+    dimmedNodeOpacity,
   } = props;
   const svgRef = useRef(null);
   const id = useMemo(() => generateRandomString(8), []);
@@ -327,6 +331,19 @@ export function Graph(props: Props) {
                 onMouseLeave={() => {
                   setSelectedNode(undefined);
                 }}
+                opacity={
+                  selectedNode && selectedNode.type === 'source'
+                    ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      selectedNode.name === (d as any).name
+                      ? 1
+                      : dimmedNodeOpacity
+                    : highlightedSourceDataPoints
+                      ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                        highlightedSourceDataPoints.includes((d as any).label)
+                        ? 1
+                        : dimmedNodeOpacity
+                      : 1
+                }
               >
                 <g transform={`translate(${d.x0},${d.y0})`}>
                   <rect
@@ -350,7 +367,7 @@ export function Graph(props: Props) {
                         labelPosition === 'outside'
                           ? leftMargin
                           : labelPosition === 'inside'
-                            ? 75
+                            ? labelWidth
                             : nodeWidth
                       }
                       height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
@@ -444,6 +461,19 @@ export function Graph(props: Props) {
                 onMouseLeave={() => {
                   setSelectedNode(undefined);
                 }}
+                opacity={
+                  selectedNode && selectedNode.type === 'target'
+                    ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      selectedNode.name === (d as any).name
+                      ? 1
+                      : dimmedNodeOpacity
+                    : highlightedTargetDataPoints
+                      ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                        highlightedTargetDataPoints.includes((d as any).label)
+                        ? 1
+                        : dimmedNodeOpacity
+                      : 1
+                }
               >
                 <g transform={`translate(${d.x0},${d.y0})`}>
                   <rect
@@ -460,14 +490,14 @@ export function Graph(props: Props) {
                         labelPosition === 'outside'
                           ? nodeWidth
                           : labelPosition === 'inside'
-                            ? 0 - rightMargin
+                            ? 0 - labelWidth
                             : 0
                       }
                       width={
                         labelPosition === 'outside'
-                          ? rightMargin - nodeWidth
+                          ? rightMargin
                           : labelPosition === 'inside'
-                            ? 75
+                            ? labelWidth
                             : nodeWidth
                       }
                       height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}

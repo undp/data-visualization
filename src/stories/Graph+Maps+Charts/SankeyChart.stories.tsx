@@ -132,6 +132,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
 
     // Size and Spacing
     minHeight: { table: { defaultValue: { summary: '0' } } },
+    labelWidth: { table: { defaultValue: { summary: '75' } } },
 
     // Graph parameters
     showLabels: { table: { defaultValue: { summary: 'true' } } },

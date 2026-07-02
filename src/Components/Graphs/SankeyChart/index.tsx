@@ -92,6 +92,8 @@ interface Props {
   showLabels?: boolean;
   /** Option to position the labels */
   labelPosition?: 'inside' | 'outside' | 'overlap';
+  /** Defines the width of the labels if the `labelPosition` is set to `inside`*/
+  labelWidth?: number;
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Source to highlight. Use the label value from data to highlight the data point */
@@ -100,6 +102,8 @@ interface Props {
   highlightedTargetDataPoints?: (string | number)[];
   /** Opacity of the links */
   defaultLinkOpacity?: number;
+  /** Opacity of the nodes when other nodes are highlighted or hovered. If no value is provided then it take the value of `defaultLinkOpacity` */
+  dimmedNodeOpacity?: number;
   /** Sorting order of the nodes */
   sortNodes?: 'asc' | 'desc' | 'mostReadable' | 'none';
   /** Toggles if the graph animates in when loaded.  */
@@ -188,6 +192,8 @@ export function SankeyChart(props: Props) {
     customLayers = [],
     numberDisplayOptions,
     labelPosition = 'outside',
+    labelWidth = 75,
+    dimmedNodeOpacity,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -350,6 +356,8 @@ export function SankeyChart(props: Props) {
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
             labelPosition={labelPosition}
+            labelWidth={labelWidth}
+            dimmedNodeOpacity={dimmedNodeOpacity ?? defaultLinkOpacity}
           />
         ) : null}
       </GraphArea>
