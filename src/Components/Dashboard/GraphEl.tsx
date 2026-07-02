@@ -1826,6 +1826,7 @@ function GraphEl(props: Props) {
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
+          labelPosition: settings?.labelPosition,
           theme: settings?.theme,
           resetSelectionOnDoubleClick: settings?.resetSelectionOnDoubleClick,
           data: graphData,

@@ -55,6 +55,16 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    labelPosition: {
+      control: 'radio',
+      options: ['inside', 'outside', 'overlap'],
+      table: {
+        defaultValue: { summary: 'outside' },
+        type: {
+          summary: 'inside | outside | overlap',
+        },
+      },
+    },
     customLayers: {
       table: {
         type: {

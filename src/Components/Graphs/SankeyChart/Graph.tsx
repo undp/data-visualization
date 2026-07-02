@@ -15,6 +15,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { generateRandomString } from '@/Utils/generateRandomString';
+import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -54,6 +55,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   locale: string;
   padZeros: boolean;
+  labelPosition: 'inside' | 'outside' | 'overlap';
 }
 
 export function Graph(props: Props) {
@@ -90,6 +92,7 @@ export function Graph(props: Props) {
     customLayers,
     locale,
     padZeros,
+    labelPosition,
   } = props;
   const svgRef = useRef(null);
   const id = useMemo(() => generateRandomString(8), []);
@@ -178,191 +181,6 @@ export function Graph(props: Props) {
         ) : null}
         <g transform={`translate(${margin.left},${margin.top})`}>
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
-          {nodes
-            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-            .filter((d: any) => d.type === 'source')
-            .map((d, i) => (
-              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
-              <g
-                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                key={i}
-                onMouseEnter={() => {
-                  setSelectedNode(d);
-                }}
-                onFocus={() => {
-                  setSelectedNode(d);
-                }}
-                onMouseLeave={() => {
-                  setSelectedNode(undefined);
-                }}
-              >
-                <g transform={`translate(${d.x0},${d.y0})`}>
-                  <rect
-                    x={0}
-                    y={0}
-                    width={(d.x1 || 0) - (d.x0 || 0)}
-                    height={(d.y1 || 0) - (d.y0 || 0)}
-                    style={{ fill: (d as NodeDataType).color }}
-                  />
-                  {showLabels || showValues ? (
-                    <foreignObject
-                      y={0 - nodePadding / 2}
-                      x={0 - leftMargin}
-                      width={leftMargin}
-                      height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
-                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
-                    >
-                      <div
-                        className='flex flex-col gap-0.5 justify-center py-0 px-1.5'
-                        style={{
-                          height: `${(d.y1 || 0) - (d.y0 || 0) + nodePadding}px`,
-                          overflow: 'visible',
-                        }}
-                      >
-                        {showLabels ? (
-                          <P
-                            marginBottom={showValues ? '3xs' : 'none'}
-                            size='sm'
-                            leading='none'
-                            className={cn(
-                              'sankey-right-label text-right',
-                              classNames?.graphObjectValues,
-                            )}
-                            style={{
-                              hyphens: 'auto',
-                              color: (d as NodeDataType).color,
-                              ...styles?.graphObjectValues,
-                            }}
-                          >
-                            {`${(d as NodeDataType).label}`.length < truncateBy
-                              ? `${(d as NodeDataType).label}`
-                              : `${`${(d as NodeDataType).label}`.substring(0, truncateBy)}...`}
-                          </P>
-                        ) : null}
-                        {showValues ? (
-                          <P
-                            marginBottom='none'
-                            size='sm'
-                            leading='none'
-                            className={cn(
-                              'sankey-right-value text-right font-bold',
-                              classNames?.graphObjectValues,
-                            )}
-                            style={{
-                              hyphens: 'auto',
-                              color: (d as NodeDataType).color,
-                              ...styles?.graphObjectValues,
-                            }}
-                          >
-                            {numberFormattingFunction(
-                              d.value,
-                              undefined,
-                              precision,
-                              prefix,
-                              suffix,
-                              locale,
-                              padZeros,
-                            )}
-                          </P>
-                        ) : null}
-                      </div>
-                    </foreignObject>
-                  ) : null}
-                </g>
-              </g>
-            ))}
-          {nodes
-            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-            .filter((d: any) => d.type === 'target')
-            .map((d, i) => (
-              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
-              <g
-                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                key={i}
-                onMouseEnter={() => {
-                  setSelectedNode(d);
-                }}
-                onFocus={() => {
-                  setSelectedNode(d);
-                }}
-                onMouseLeave={() => {
-                  setSelectedNode(undefined);
-                }}
-              >
-                <g transform={`translate(${d.x0},${d.y0})`}>
-                  <rect
-                    x={0}
-                    y={0}
-                    width={(d.x1 || 0) - (d.x0 || 0)}
-                    height={(d.y1 || 0) - (d.y0 || 0)}
-                    style={{ fill: (d as NodeDataType).color }}
-                  />
-                  {showLabels || showValues ? (
-                    <foreignObject
-                      y={0 - nodePadding / 2}
-                      x={nodeWidth}
-                      width={rightMargin - nodeWidth}
-                      height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
-                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
-                    >
-                      <div
-                        className='flex flex-col gap-0.5 justify-center py-0 px-1.5'
-                        style={{
-                          height: `${(d.y1 || 0) - (d.y0 || 0) + nodePadding}px`,
-                        }}
-                      >
-                        {showLabels ? (
-                          <P
-                            marginBottom={showValues ? '3xs' : 'none'}
-                            size='sm'
-                            leading='none'
-                            className={cn(
-                              'sankey-left-label text-left',
-                              classNames?.graphObjectValues,
-                            )}
-                            style={{
-                              hyphens: 'auto',
-                              color: (d as NodeDataType).color,
-                              ...styles?.graphObjectValues,
-                            }}
-                          >
-                            {`${(d as NodeDataType).label}`.length < truncateBy
-                              ? `${(d as NodeDataType).label}`
-                              : `${`${(d as NodeDataType).label}`.substring(0, truncateBy)}...`}
-                          </P>
-                        ) : null}
-                        {showValues ? (
-                          <P
-                            size='sm'
-                            leading='none'
-                            marginBottom='none'
-                            className={cn(
-                              'sankey-left-value text-left font-bold',
-                              classNames?.graphObjectValues,
-                            )}
-                            style={{
-                              hyphens: 'auto',
-                              color: (d as NodeDataType).color,
-                              ...styles?.graphObjectValues,
-                            }}
-                          >
-                            {numberFormattingFunction(
-                              d.value,
-                              undefined,
-                              precision,
-                              prefix,
-                              suffix,
-                              locale,
-                              padZeros,
-                            )}
-                          </P>
-                        ) : null}
-                      </div>
-                    </foreignObject>
-                  ) : null}
-                </g>
-              </g>
-            ))}
           <defs>
             {links.map((d, i) => (
               <linearGradient
@@ -466,8 +284,6 @@ export function Graph(props: Props) {
                       key={`${(d.source as any).name}-${(d.target as any).name}`}
                       d={linkPathGenerator(d) || ''}
                       style={{
-                        stroke: `url(#${id}-gradient-${i})`,
-                        strokeWidth: d.width,
                         fill: 'none',
                       }}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
@@ -475,10 +291,14 @@ export function Graph(props: Props) {
                         initial: {
                           pathLength: 0,
                           opacity: 1,
+                          strokeWidth: d.width,
+                          stroke: `url(#${id}-gradient-${i})`,
                         },
                         whileInView: {
                           pathLength: 1,
                           opacity: 1,
+                          strokeWidth: d.width,
+                          stroke: `url(#${id}-gradient-${i})`,
                           transition: { duration: animate.duration },
                         },
                       }}
@@ -490,6 +310,239 @@ export function Graph(props: Props) {
               })}
             </AnimatePresence>
           </g>
+          {nodes
+            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+            .filter((d: any) => d.type === 'source')
+            .map((d, i) => (
+              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
+              <g
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                key={i}
+                onMouseEnter={() => {
+                  setSelectedNode(d);
+                }}
+                onFocus={() => {
+                  setSelectedNode(d);
+                }}
+                onMouseLeave={() => {
+                  setSelectedNode(undefined);
+                }}
+              >
+                <g transform={`translate(${d.x0},${d.y0})`}>
+                  <rect
+                    x={0}
+                    y={0}
+                    width={(d.x1 || 0) - (d.x0 || 0)}
+                    height={(d.y1 || 0) - (d.y0 || 0)}
+                    style={{ fill: (d as NodeDataType).color }}
+                  />
+                  {showLabels || showValues ? (
+                    <foreignObject
+                      y={0 - nodePadding / 2}
+                      x={
+                        labelPosition === 'outside'
+                          ? 0 - leftMargin
+                          : labelPosition === 'inside'
+                            ? nodeWidth
+                            : 0
+                      }
+                      width={
+                        labelPosition === 'outside'
+                          ? leftMargin
+                          : labelPosition === 'inside'
+                            ? 75
+                            : nodeWidth
+                      }
+                      height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
+                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
+                    >
+                      <div
+                        className='flex flex-col gap-0.5 justify-center py-0 px-1.5'
+                        style={{
+                          height: `${(d.y1 || 0) - (d.y0 || 0) + nodePadding}px`,
+                          overflow: 'visible',
+                        }}
+                      >
+                        {showLabels ? (
+                          <P
+                            marginBottom={showValues ? '3xs' : 'none'}
+                            size='sm'
+                            leading='none'
+                            className={cn(
+                              'sankey-source-label',
+                              labelPosition === 'outside' ? 'text-right' : 'text-left',
+                              classNames?.graphObjectValues,
+                            )}
+                            style={{
+                              hyphens: 'auto',
+                              color:
+                                labelPosition === 'outside'
+                                  ? (d as NodeDataType).color
+                                  : labelPosition === 'inside'
+                                    ? 'var(--gray-700)'
+                                    : getTextColorBasedOnBgColor((d as NodeDataType).color),
+                              ...styles?.graphObjectValues,
+                            }}
+                          >
+                            {`${(d as NodeDataType).label}`.length < truncateBy
+                              ? `${(d as NodeDataType).label}`
+                              : `${`${(d as NodeDataType).label}`.substring(0, truncateBy)}...`}
+                          </P>
+                        ) : null}
+                        {showValues ? (
+                          <P
+                            marginBottom='none'
+                            size='sm'
+                            leading='none'
+                            className={cn(
+                              'sankey-source-value font-bold',
+                              labelPosition === 'outside' ? 'text-right' : 'text-left',
+                              classNames?.graphObjectValues,
+                            )}
+                            style={{
+                              hyphens: 'auto',
+                              color:
+                                labelPosition === 'outside'
+                                  ? (d as NodeDataType).color
+                                  : labelPosition === 'inside'
+                                    ? 'var(--gray-700)'
+                                    : getTextColorBasedOnBgColor((d as NodeDataType).color),
+                              ...styles?.graphObjectValues,
+                            }}
+                          >
+                            {numberFormattingFunction(
+                              d.value,
+                              undefined,
+                              precision,
+                              prefix,
+                              suffix,
+                              locale,
+                              padZeros,
+                            )}
+                          </P>
+                        ) : null}
+                      </div>
+                    </foreignObject>
+                  ) : null}
+                </g>
+              </g>
+            ))}
+          {nodes
+            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+            .filter((d: any) => d.type === 'target')
+            .map((d, i) => (
+              // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
+              <g
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                key={i}
+                onMouseEnter={() => {
+                  setSelectedNode(d);
+                }}
+                onFocus={() => {
+                  setSelectedNode(d);
+                }}
+                onMouseLeave={() => {
+                  setSelectedNode(undefined);
+                }}
+              >
+                <g transform={`translate(${d.x0},${d.y0})`}>
+                  <rect
+                    x={0}
+                    y={0}
+                    width={(d.x1 || 0) - (d.x0 || 0)}
+                    height={(d.y1 || 0) - (d.y0 || 0)}
+                    style={{ fill: (d as NodeDataType).color }}
+                  />
+                  {showLabels || showValues ? (
+                    <foreignObject
+                      y={0 - nodePadding / 2}
+                      x={
+                        labelPosition === 'outside'
+                          ? nodeWidth
+                          : labelPosition === 'inside'
+                            ? 0 - rightMargin
+                            : 0
+                      }
+                      width={
+                        labelPosition === 'outside'
+                          ? rightMargin - nodeWidth
+                          : labelPosition === 'inside'
+                            ? 75
+                            : nodeWidth
+                      }
+                      height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
+                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
+                    >
+                      <div
+                        className='flex flex-col gap-0.5 justify-center py-0 px-1.5'
+                        style={{
+                          height: `${(d.y1 || 0) - (d.y0 || 0) + nodePadding}px`,
+                        }}
+                      >
+                        {showLabels ? (
+                          <P
+                            marginBottom={showValues ? '3xs' : 'none'}
+                            size='sm'
+                            leading='none'
+                            className={cn(
+                              'sankey-target-label',
+                              labelPosition === 'outside' ? 'text-left' : 'text-right',
+                              classNames?.graphObjectValues,
+                            )}
+                            style={{
+                              hyphens: 'auto',
+                              color:
+                                labelPosition === 'outside'
+                                  ? (d as NodeDataType).color
+                                  : labelPosition === 'inside'
+                                    ? 'var(--gray-700)'
+                                    : getTextColorBasedOnBgColor((d as NodeDataType).color),
+                              ...styles?.graphObjectValues,
+                            }}
+                          >
+                            {`${(d as NodeDataType).label}`.length < truncateBy
+                              ? `${(d as NodeDataType).label}`
+                              : `${`${(d as NodeDataType).label}`.substring(0, truncateBy)}...`}
+                          </P>
+                        ) : null}
+                        {showValues ? (
+                          <P
+                            size='sm'
+                            leading='none'
+                            marginBottom='none'
+                            className={cn(
+                              'sankey-target-value font-bold',
+                              labelPosition === 'outside' ? 'text-left' : 'text-right',
+                              classNames?.graphObjectValues,
+                            )}
+                            style={{
+                              hyphens: 'auto',
+                              color:
+                                labelPosition === 'outside'
+                                  ? (d as NodeDataType).color
+                                  : labelPosition === 'inside'
+                                    ? 'var(--gray-700)'
+                                    : getTextColorBasedOnBgColor((d as NodeDataType).color),
+                              ...styles?.graphObjectValues,
+                            }}
+                          >
+                            {numberFormattingFunction(
+                              d.value,
+                              undefined,
+                              precision,
+                              prefix,
+                              suffix,
+                              locale,
+                              padZeros,
+                            )}
+                          </P>
+                        ) : null}
+                      </div>
+                    </foreignObject>
+                  ) : null}
+                </g>
+              </g>
+            ))}
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
       </motion.svg>

@@ -90,6 +90,8 @@ interface Props {
   targetTitle?: string;
   /** Toggle visibility of labels */
   showLabels?: boolean;
+  /** Option to position the labels */
+  labelPosition?: 'inside' | 'outside' | 'overlap';
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Source to highlight. Use the label value from data to highlight the data point */
@@ -185,6 +187,7 @@ export function SankeyChart(props: Props) {
     animate = false,
     customLayers = [],
     numberDisplayOptions,
+    labelPosition = 'outside',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -346,6 +349,7 @@ export function SankeyChart(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            labelPosition={labelPosition}
           />
         ) : null}
       </GraphArea>

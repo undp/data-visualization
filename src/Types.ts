@@ -1064,6 +1064,7 @@ export interface GraphSettingsDataType {
   strictValuePosition?: boolean;
   gridIcon?: string[];
   showTotalValue?: boolean;
+  labelPosition?: 'inside' | 'outside' | 'overlap';
 }
 
 export interface InfoBoxDataType {
