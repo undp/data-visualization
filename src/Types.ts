@@ -1067,6 +1067,7 @@ export interface GraphSettingsDataType {
   labelPosition?: 'inside' | 'outside' | 'overlap';
   dimmedNodeOpacity?: number;
   labelWidth?: number;
+  highlightedLinks?: { source: string; target: string }[];
 }
 
 export interface InfoBoxDataType {

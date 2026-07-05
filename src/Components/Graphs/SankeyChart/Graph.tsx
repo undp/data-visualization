@@ -58,6 +58,7 @@ interface Props {
   labelPosition: 'inside' | 'outside' | 'overlap';
   labelWidth: number;
   dimmedNodeOpacity: number;
+  highlightedLinks?: { source: string | number; target: string | number }[];
 }
 
 export function Graph(props: Props) {
@@ -97,6 +98,7 @@ export function Graph(props: Props) {
     labelPosition,
     labelWidth,
     dimmedNodeOpacity,
+    highlightedLinks,
   } = props;
   const svgRef = useRef(null);
   const id = useMemo(() => generateRandomString(8), []);
@@ -225,6 +227,13 @@ export function Graph(props: Props) {
                   highlightedTargetDataPoints?.some(
                     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     (el) => `target_${el}` === (d.target as any).name,
+                  ) ||
+                  highlightedLinks?.some(
+                    (el) =>
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      `source_${el.source}` === (d.source as any).name &&
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      `target_${el.target}` === (d.target as any).name,
                   );
                 return (
                   <motion.g
@@ -280,7 +289,11 @@ export function Graph(props: Props) {
                           ? isLinkHighlighted
                             ? 0.85
                             : defaultLinkOpacity
-                          : defaultLinkOpacity
+                          : highlightedLinks && !mouseOverData
+                            ? isLinkHighlighted
+                              ? 0.85
+                              : defaultLinkOpacity
+                            : defaultLinkOpacity
                     }
                   >
                     <motion.path
@@ -322,14 +335,47 @@ export function Graph(props: Props) {
               <g
                 // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={i}
-                onMouseEnter={() => {
-                  setSelectedNode(d);
-                }}
                 onFocus={() => {
                   setSelectedNode(d);
                 }}
+                onMouseEnter={(event) => {
+                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                  setMouseOverData((d as any).data);
+                  setSelectedNode(d);
+                  setEventY(event.clientY);
+                  setEventX(event.clientX);
+
+                  onSeriesMouseOver?.(d);
+                }}
+                onMouseMove={(event) => {
+                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                  setMouseOverData((d as any).data);
+                  setEventY(event.clientY);
+                  setEventX(event.clientX);
+                }}
+                onClick={() => {
+                  if (onSeriesMouseClick || detailsOnClick) {
+                    if (
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      isEqual(mouseClickData, (d as any).data) &&
+                      resetSelectionOnDoubleClick
+                    ) {
+                      setMouseClickData(undefined);
+                      onSeriesMouseClick?.(undefined);
+                    } else {
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      setMouseClickData((d as any).data);
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      onSeriesMouseClick?.((d as any).data);
+                    }
+                  }
+                }}
                 onMouseLeave={() => {
+                  setMouseOverData(undefined);
                   setSelectedNode(undefined);
+                  setEventX(undefined);
+                  setEventY(undefined);
+                  onSeriesMouseOver?.(undefined);
                 }}
                 opacity={
                   selectedNode && selectedNode.type === 'source'
@@ -452,14 +498,47 @@ export function Graph(props: Props) {
               <g
                 // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={i}
-                onMouseEnter={() => {
-                  setSelectedNode(d);
-                }}
                 onFocus={() => {
                   setSelectedNode(d);
                 }}
+                onMouseEnter={(event) => {
+                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                  setMouseOverData((d as any).data);
+                  setSelectedNode(d);
+                  setEventY(event.clientY);
+                  setEventX(event.clientX);
+
+                  onSeriesMouseOver?.(d);
+                }}
+                onMouseMove={(event) => {
+                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                  setMouseOverData((d as any).data);
+                  setEventY(event.clientY);
+                  setEventX(event.clientX);
+                }}
+                onClick={() => {
+                  if (onSeriesMouseClick || detailsOnClick) {
+                    if (
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      isEqual(mouseClickData, (d as any).data) &&
+                      resetSelectionOnDoubleClick
+                    ) {
+                      setMouseClickData(undefined);
+                      onSeriesMouseClick?.(undefined);
+                    } else {
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      setMouseClickData((d as any).data);
+                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      onSeriesMouseClick?.((d as any).data);
+                    }
+                  }
+                }}
                 onMouseLeave={() => {
+                  setMouseOverData(undefined);
                   setSelectedNode(undefined);
+                  setEventX(undefined);
+                  setEventY(undefined);
+                  onSeriesMouseOver?.(undefined);
                 }}
                 opacity={
                   selectedNode && selectedNode.type === 'target'

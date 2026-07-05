@@ -1825,6 +1825,7 @@ function GraphEl(props: Props) {
       case 'sankeyChart':
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
+          highlightedLinks: settings?.highlightedLinks,
           customLayers: settings?.customLayers,
           labelPosition: settings?.labelPosition,
           dimmedNodeOpacity: settings?.dimmedNodeOpacity,

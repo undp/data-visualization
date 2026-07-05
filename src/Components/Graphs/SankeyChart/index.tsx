@@ -100,6 +100,8 @@ interface Props {
   highlightedSourceDataPoints?: (string | number)[];
   /** Targets to highlight. Use the label value from data to highlight the data point */
   highlightedTargetDataPoints?: (string | number)[];
+  /** Links to highlight. Use the label value from data to highlight the data point */
+  highlightedLinks?: { source: string | number; target: string | number }[];
   /** Opacity of the links */
   defaultLinkOpacity?: number;
   /** Opacity of the nodes when other nodes are highlighted or hovered. If no value is provided then it take the value of `defaultLinkOpacity` */
@@ -180,6 +182,7 @@ export function SankeyChart(props: Props) {
     nodeWidth = 5,
     highlightedSourceDataPoints,
     highlightedTargetDataPoints,
+    highlightedLinks,
     defaultLinkOpacity = 0.3,
     sourceTitle,
     targetTitle,
@@ -255,7 +258,10 @@ export function SankeyChart(props: Props) {
 
     const nodes = [...sourceNodesSorted, ...targetNodesSorted];
     updateSankeyDataEvent({
-      nodes,
+      nodes: nodes.map((d) => ({
+        ...d,
+        data: { node: d.label, value: d.totalValue, type: d.type },
+      })),
       links: data.map((d) => ({
         source: nodes.findIndex((el) => el.name === `source_${d.source}`),
         target: nodes.findIndex((el) => el.name === `target_${d.target}`),
@@ -358,6 +364,7 @@ export function SankeyChart(props: Props) {
             labelPosition={labelPosition}
             labelWidth={labelWidth}
             dimmedNodeOpacity={dimmedNodeOpacity ?? defaultLinkOpacity}
+            highlightedLinks={highlightedLinks}
           />
         ) : null}
       </GraphArea>

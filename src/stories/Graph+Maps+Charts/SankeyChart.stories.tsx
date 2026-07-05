@@ -160,6 +160,18 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '(string | number)[]' } },
     },
+    highlightedLinks: {
+      control: 'object',
+      table: {
+        type: {
+          summary: 'LinkDataType[]',
+          detail: `{
+  source: string | number;
+  target: string | number;
+}`,
+        },
+      },
+    },
     graphDownload: { table: { defaultValue: { summary: 'false' } } },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
     resetSelectionOnDoubleClick: { table: { defaultValue: { summary: 'true' } } },
