@@ -92,8 +92,8 @@ interface Props {
   noOfTicks?: number;
 
   // Graph Parameters
-  /** Toggle visibility of labels */
-  showLabels?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Custom order for labels */
@@ -372,8 +372,8 @@ interface GroupedBarChartProps {
   noOfTicks?: number;
 
   // Graph Parameters
-  /** Toggle visibility of labels */
-  showLabels?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Custom order for labels */
@@ -623,10 +623,13 @@ interface StackedBarChartProps {
   noOfTicks?: number;
 
   // Graph Parameters
-  /** Toggle visibility of labels */
-  showLabels?: boolean;
+  /** Toggle visibility of labels or defines what i shown in the label */
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
   /** Toggle visibility of values */
   showValues?: boolean;
+  /** Minimum size of the value to be visible. Default value depends on the orientation of the graph */
+  minLabelSize?: number;
   /** Toggle visibility of the total value. If not defined it takes the value or `showValues` */
   showTotalValue?: boolean;
   /** Custom order for labels */
@@ -744,6 +747,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     hideAxisLine = false,
     numberDisplayOptions,
     showTotalValue,
+    minLabelSize,
   } = props;
 
   return (
@@ -809,6 +813,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       locale={numberDisplayOptions?.locale}
       padZeros={numberDisplayOptions?.padZeros}
       showTotalValue={showTotalValue}
+      minLabelSize={minLabelSize}
     />
   );
 }

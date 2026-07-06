@@ -171,12 +171,12 @@ export function Graph(props: Props) {
         viewBox={`0 0 ${width} ${height}`}
         direction='ltr'
       >
-        {areaId ? (
+        {areaId && (
           <linearGradient id={areaId} x1='0' x2='0' y1='0' y2='1'>
             <stop style={{ stopColor: lineColor }} stopOpacity='0.1' offset='0%' />
             <stop style={{ stopColor: lineColor }} stopOpacity='0' offset='100%' />
           </linearGradient>
-        ) : null}
+        )}
         <g transform={`translate(${margin.left},${margin.top})`}>
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
@@ -212,13 +212,17 @@ export function Graph(props: Props) {
             </text>
           </g>
           <g>
-            <path
-              d={mainGraphArea(dataFormatted) || ''}
-              style={{
-                fill: `url(#${areaId})`,
-                clipPath: 'url(#clip)',
-              }}
-            />
+            {areaId && (
+              <path
+                d={mainGraphArea(dataFormatted) || ''}
+                style={{
+                  fill: `url(#${areaId})`,
+                  clipPath: 'url(#clip)',
+                  ...styles?.area,
+                }}
+                className={classNames?.area}
+              />
+            )}
             <path
               d={lineShape(dataFormatted) || ''}
               style={{

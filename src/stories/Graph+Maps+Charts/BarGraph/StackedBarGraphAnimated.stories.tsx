@@ -136,7 +136,13 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
-    showLabels: { table: { defaultValue: { summary: 'true' } } },
+    showLabels: {
+      control: 'boolean',
+      table: {
+        type: { summary: 'boolean | (_d: any) => React.ReactNode' },
+        defaultValue: { summary: 'true' },
+      },
+    },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     labelOrder: {
       control: 'text',

@@ -37,7 +37,8 @@ interface Props {
   rightMargin?: number;
   topMargin?: number;
   bottomMargin?: number;
-  showLabels: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels: boolean | ((_d: any) => React.ReactNode);
   truncateBy: number;
   width: number;
   height: number;
@@ -352,9 +353,11 @@ export function HorizontalGraph(props: Props) {
                   {showLabels ? (
                     <YAxesLabels
                       value={
-                        `${d.label}`.length < truncateBy
-                          ? `${d.label}`
-                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                        typeof showLabels === 'function'
+                          ? showLabels(d)
+                          : `${d.label}`.length < truncateBy
+                            ? `${d.label}`
+                            : `${`${d.label}`.substring(0, truncateBy)}...`
                       }
                       y={y(d.id) || 0}
                       x={(d.size || 0) < 0 ? x(0) : 0 - margin.left}
@@ -793,9 +796,11 @@ export function VerticalGraph(props: Props) {
                   {showLabels ? (
                     <XAxesLabels
                       value={
-                        `${d.label}`.length < truncateBy
-                          ? `${d.label}`
-                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                        typeof showLabels === 'function'
+                          ? showLabels(d)
+                          : `${d.label}`.length < truncateBy
+                            ? `${d.label}`
+                            : `${`${d.label}`.substring(0, truncateBy)}...`
                       }
                       y={(d.size || 0) < 0 ? 0 : y(0) + 5}
                       x={x(`${d.id}`) as number}

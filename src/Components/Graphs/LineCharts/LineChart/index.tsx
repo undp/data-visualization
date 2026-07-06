@@ -88,6 +88,8 @@ interface Props {
   // Graph Parameters
   /** Toggle visibility of values */
   showValues?: boolean;
+  /** Toggle visibility of area under the line */
+  area?: boolean;
   /** Toggle visibility of dots on the line */
   showDots?: boolean;
   /** Stroke width of the line */
@@ -182,6 +184,7 @@ export function SimpleLineChart(props: Props) {
     classNames,
     customLayers = [],
     numberDisplayOptions,
+    area = false,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -242,6 +245,7 @@ export function SimpleLineChart(props: Props) {
         {svgWidth && svgHeight && data.length > 0 ? (
           <Graph
             data={data}
+            showArea={area}
             lineColor={lineColor || Colors.primaryColors['blue-600']}
             width={svgWidth}
             height={svgHeight}

@@ -139,6 +139,7 @@ export interface StyleObject {
   regLine?: React.CSSProperties;
   dataCards?: React.CSSProperties;
   modal?: React.CSSProperties;
+  area?: React.CSSProperties;
 }
 
 export interface AxesClassNameObject {
@@ -164,6 +165,7 @@ export interface ClassNameObject {
   dataCards?: string;
   colorLegend?: string;
   modal?: string;
+  area?: string;
 }
 
 export interface BarGraphDataType {
@@ -849,8 +851,8 @@ export interface GraphSettingsDataType {
   strokeWidth?: number;
   showValues?: boolean;
   scaleType?: ScaleDataType;
-  showColumnLabels?: boolean;
-  showRowLabels?: boolean;
+  showColumnLabels?: boolean | ((_d: string) => React.ReactNode);
+  showRowLabels?: boolean | ((_d: string) => React.ReactNode);
   noDataColor?: string;
   fillContainer?: boolean;
   numberOfBins?: number;
@@ -894,7 +896,8 @@ export interface GraphSettingsDataType {
   lineTitle?: string;
   barColor?: string;
   lineColor?: string;
-  showLabels?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((d: any) => React.ReactNode);
   xAxisTitle?: string;
   yAxisTitle?: string;
   refXValues?: ReferenceDataType[];
@@ -1068,6 +1071,10 @@ export interface GraphSettingsDataType {
   dimmedNodeOpacity?: number;
   labelWidth?: number;
   highlightedLinks?: { source: string; target: string }[];
+  minLabelSize?: number;
+  minLabelHeight?: number;
+  minLabelWidth?: number;
+  minLabelRadius?: number;
 }
 
 export interface InfoBoxDataType {

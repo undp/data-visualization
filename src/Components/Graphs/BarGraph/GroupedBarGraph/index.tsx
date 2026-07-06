@@ -49,7 +49,8 @@ interface Props {
   leftMargin?: number;
   rightMargin?: number;
   topMargin?: number;
-  showLabels?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
   bottomMargin?: number;
   relativeHeight?: number;
   sortParameter?: number | 'total';

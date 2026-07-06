@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import type { AnimateDataType } from '@/Types';
 
 interface Props {
-  value: number | string;
+  value: number | string | React.ReactNode;
   y: number;
   x: number;
   width: number;
@@ -49,18 +49,22 @@ export function YAxesLabels(props: Props) {
     >
       <foreignObject y={0} x={0} width={width} height={height}>
         <div className='flex flex-col justify-center h-full'>
-          <p
-            className={cn(
-              'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 leading-none',
-              `text-${alignment}`,
-              className,
-            )}
-            style={{
-              ...style,
-            }}
-          >
-            {value}
-          </p>
+          {typeof value === 'string' || typeof value === 'number' ? (
+            <p
+              className={cn(
+                'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs m-0 py-0 px-1.5 leading-none',
+                `text-${alignment}`,
+                className,
+              )}
+              style={{
+                ...style,
+              }}
+            >
+              {value}
+            </p>
+          ) : (
+            value
+          )}
         </div>
       </foreignObject>
     </motion.g>

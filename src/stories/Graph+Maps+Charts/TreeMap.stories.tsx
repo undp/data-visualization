@@ -110,7 +110,21 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
-    showLabels: { table: { defaultValue: { summary: 'true' } } },
+    showLabels: {
+      control: 'boolean',
+      table: {
+        type: { summary: 'boolean | (_d: any) => React.ReactNode' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    minLabelHeight: {
+      control: 'number',
+      table: { defaultValue: { summary: '25' } },
+    },
+    minLabelWidth: {
+      control: 'number',
+      table: { defaultValue: { summary: '50' } },
+    },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'false' } } },
     showNAColor: { table: { defaultValue: { summary: 'true' } } },

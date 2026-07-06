@@ -100,7 +100,17 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     minHeight: { table: { defaultValue: { summary: '0' } } },
 
     // Graph parameters
-    showLabels: { table: { defaultValue: { summary: 'true' } } },
+    showLabels: {
+      control: 'boolean',
+      table: {
+        type: { summary: 'boolean | (_d: any) => React.ReactNode' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    minLabelRadius: {
+      control: 'number',
+      table: { defaultValue: { summary: '7.5' } },
+    },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     circularBoundary: { table: { defaultValue: { summary: 'true' } } },
     showColorScale: { table: { defaultValue: { summary: 'false' } } },

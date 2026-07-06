@@ -320,6 +320,7 @@ function GraphEl(props: Props) {
       case 'stackedBarChart':
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
+          minLabelSize: settings?.minLabelSize,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -452,6 +453,7 @@ function GraphEl(props: Props) {
           numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
+          area: settings?.area,
           curveType: settings?.curveType,
           data: graphData,
           graphID: settings?.graphID,
@@ -1825,6 +1827,7 @@ function GraphEl(props: Props) {
       case 'sankeyChart':
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
+          minLabelHeight: settings?.minLabelHeight,
           highlightedLinks: settings?.highlightedLinks,
           customLayers: settings?.customLayers,
           labelPosition: settings?.labelPosition,

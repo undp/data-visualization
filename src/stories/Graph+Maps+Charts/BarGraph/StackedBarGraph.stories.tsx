@@ -131,7 +131,13 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
-    showLabels: { table: { defaultValue: { summary: 'true' } } },
+    showLabels: {
+      control: 'boolean',
+      table: {
+        type: { summary: 'boolean | (_d: any) => React.ReactNode' },
+        defaultValue: { summary: 'true' },
+      },
+    },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     labelOrder: {
       control: 'text',
@@ -160,6 +166,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     sortParameter: {
       control: 'number',
       table: { type: { summary: "number | 'total'" } },
+    },
+    minLabelSize: {
+      control: 'number',
+      table: { defaultValue: { summary: '25 | 15' } },
     },
     language: {
       control: 'select',

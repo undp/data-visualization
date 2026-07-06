@@ -23,7 +23,8 @@ interface Props {
   rightMargin: number;
   topMargin: number;
   bottomMargin: number;
-  showLabels: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels: boolean | ((_d: any) => React.ReactNode);
   showValues: boolean;
   width: number;
   height: number;
@@ -49,6 +50,7 @@ interface Props {
   precision: number;
   locale: string;
   padZeros: boolean;
+  minLabelRadius: number;
 }
 
 interface TreeMapDataTypeForBubbleChart extends TreeMapDataType {
@@ -88,6 +90,7 @@ export const Graph = (props: Props) => {
     precision,
     locale,
     padZeros,
+    minLabelRadius,
   } = props;
   const svgRef = useRef(null);
 
@@ -282,7 +285,7 @@ export const Graph = (props: Props) => {
               const circleColor = getCircleColor(d);
               const opacity = getOpacity(d);
               const bubbleRadius = radiusScale ? radiusScale(d.size || 0) : radius;
-              const showLabel = bubbleRadius > 20 && (showLabels || showValues);
+              const showLabel = bubbleRadius >= 20 && (showLabels || showValues);
               return (
                 // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
                 <g
@@ -299,7 +302,7 @@ export const Graph = (props: Props) => {
                   {(showLabel || showValues) &&
                     d.size !== undefined &&
                     d.size !== null &&
-                    bubbleRadius >= 15 && (
+                    bubbleRadius >= minLabelRadius && (
                       <g>
                         <foreignObject
                           y={0 - bubbleRadius}
@@ -318,40 +321,43 @@ export const Graph = (props: Props) => {
                               padding: '0 0.75rem',
                             }}
                           >
-                            {showLabels && (
-                              <P
-                                className={cn(
-                                  'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
-                                  classNames?.graphObjectValues,
-                                )}
-                                marginBottom='none'
-                                style={{
-                                  fontSize: `${Math.min(
-                                    Math.max(Math.round(bubbleRadius / 4), 12),
-                                    Math.max(
-                                      Math.round((bubbleRadius * 12) / `${d.label}`.length),
-                                      12,
-                                    ),
-                                    14,
-                                  )}px`,
-                                  WebkitLineClamp:
-                                    bubbleRadius * 2 < 60
-                                      ? 1
-                                      : bubbleRadius * 2 < 75
-                                        ? 2
-                                        : bubbleRadius * 2 < 100
-                                          ? 3
-                                          : undefined,
-                                  display: '-webkit-box',
-                                  WebkitBoxOrient: 'vertical',
-                                  color: getTextColorBasedOnBgColor(circleColor),
-                                  hyphens: 'auto',
-                                  ...(styles?.graphObjectValues || {}),
-                                }}
-                              >
-                                {d.label}
-                              </P>
-                            )}
+                            {showLabels &&
+                              (showLabels instanceof Function ? (
+                                showLabels(d)
+                              ) : (
+                                <P
+                                  className={cn(
+                                    'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
+                                    classNames?.graphObjectValues,
+                                  )}
+                                  marginBottom='none'
+                                  style={{
+                                    fontSize: `${Math.min(
+                                      Math.max(Math.round(bubbleRadius / 4), 12),
+                                      Math.max(
+                                        Math.round((bubbleRadius * 12) / `${d.label}`.length),
+                                        12,
+                                      ),
+                                      14,
+                                    )}px`,
+                                    WebkitLineClamp:
+                                      bubbleRadius * 2 < 60
+                                        ? 1
+                                        : bubbleRadius * 2 < 75
+                                          ? 2
+                                          : bubbleRadius * 2 < 100
+                                            ? 3
+                                            : undefined,
+                                    display: '-webkit-box',
+                                    WebkitBoxOrient: 'vertical',
+                                    color: getTextColorBasedOnBgColor(circleColor),
+                                    hyphens: 'auto',
+                                    ...(styles?.graphObjectValues || {}),
+                                  }}
+                                >
+                                  {d.label}
+                                </P>
+                              ))}
                             {showValues && (
                               <P
                                 className='text-center font-bold leading-[1.25] w-full m-0 circle-packing-value'

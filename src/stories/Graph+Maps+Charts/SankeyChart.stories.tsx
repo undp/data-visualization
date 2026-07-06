@@ -135,12 +135,29 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     labelWidth: { table: { defaultValue: { summary: '75' } } },
 
     // Graph parameters
-    showLabels: { table: { defaultValue: { summary: 'true' } } },
+    showLabels: {
+      control: 'boolean',
+      table: {
+        type: { summary: 'boolean | (_d: any) => React.ReactNode' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    minLabelHeight: {
+      control: 'number',
+      table: { defaultValue: { summary: '25' } },
+    },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     sortNodes: {
       control: 'inline-radio',
       options: ['asc', 'desc', 'mostReadable', 'none'],
       table: { type: { summary: "'asc' | 'desc' | 'mostReadable' | 'none'" } },
+    },
+    linkColor: {
+      control: 'text',
+      table: {
+        type: { summary: "'source' | 'target' | 'source-target' | 'string'" },
+        defaultValue: { summary: 'source-target' },
+      },
     },
     animate: {
       control: 'text',

@@ -79,9 +79,9 @@ interface Props {
 
   // Graph Parameters
   /** Toggle visibility of labels in the column */
-  showColumnLabels?: boolean;
+  showColumnLabels?: boolean | ((_d: string) => React.ReactNode);
   /** Toggle visibility of labels in the row */
-  showRowLabels?: boolean;
+  showRowLabels?: boolean | ((_d: string) => React.ReactNode);
   /** Scale for the colors in the cell */
   scaleType?: ScaleDataType;
   /** Toggle visibility of values */

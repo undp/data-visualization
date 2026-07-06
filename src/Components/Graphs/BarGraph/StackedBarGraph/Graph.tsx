@@ -36,7 +36,8 @@ interface Props {
   height: number;
   rightMargin?: number;
   topMargin?: number;
-  showLabels: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels: boolean | ((_d: any) => React.ReactNode);
   bottomMargin?: number;
   suffix: string;
   prefix: string;
@@ -71,6 +72,7 @@ interface Props {
   hideAxisLine: boolean;
   locale: string;
   padZeros: boolean;
+  minLabelSize: number;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -116,6 +118,7 @@ export function HorizontalGraph(props: Props) {
     locale,
     padZeros,
     showTotalValue,
+    minLabelSize,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -302,7 +305,7 @@ export function HorizontalGraph(props: Props) {
                           animate={isInView ? 'whileInView' : 'initial'}
                         />
                       ) : null}
-                      {showValues ? (
+                      {showValues && minLabelSize <= x(el || 0) ? (
                         <motion.text
                           y={y.bandwidth() / 2}
                           style={{
@@ -367,9 +370,11 @@ export function HorizontalGraph(props: Props) {
                   {showLabels ? (
                     <YAxesLabels
                       value={
-                        `${d.label}`.length < truncateBy
-                          ? `${d.label}`
-                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                        typeof showLabels === 'function'
+                          ? showLabels(d)
+                          : `${d.label}`.length < truncateBy
+                            ? `${d.label}`
+                            : `${`${d.label}`.substring(0, truncateBy)}...`
                       }
                       y={0}
                       x={0 - margin.left}
@@ -522,6 +527,7 @@ export function VerticalGraph(props: Props) {
     locale,
     padZeros,
     showTotalValue,
+    minLabelSize,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -730,7 +736,12 @@ export function VerticalGraph(props: Props) {
                           transition: { duration: animate.duration },
                         }}
                       />
-                      {showValues ? (
+                      {showValues &&
+                      minLabelSize <=
+                        Math.abs(
+                          y(sum(d.size.filter((element, k) => k <= j && element))) -
+                            y(sum(d.size.filter((element, k) => k < j && element))),
+                        ) ? (
                         <motion.text
                           x={x.bandwidth() / 2}
                           style={{
@@ -785,9 +796,11 @@ export function VerticalGraph(props: Props) {
                   {showLabels ? (
                     <XAxesLabels
                       value={
-                        `${d.label}`.length < truncateBy
-                          ? `${d.label}`
-                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                        typeof showLabels === 'function'
+                          ? showLabels(d)
+                          : `${d.label}`.length < truncateBy
+                            ? `${d.label}`
+                            : `${`${d.label}`.substring(0, truncateBy)}...`
                       }
                       y={y(0) + 5}
                       x={0}

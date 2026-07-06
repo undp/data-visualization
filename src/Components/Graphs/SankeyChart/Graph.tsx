@@ -20,7 +20,8 @@ import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: NodesLinkDataType;
-  showLabels: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels: boolean | ((_d: any) => React.ReactNode);
   leftMargin: number;
   truncateBy: number;
   defaultLinkOpacity: number;
@@ -58,7 +59,9 @@ interface Props {
   labelPosition: 'inside' | 'outside' | 'overlap';
   labelWidth: number;
   dimmedNodeOpacity: number;
+  minLabelHeight: number;
   highlightedLinks?: { source: string | number; target: string | number }[];
+  linkColor?: string | 'source' | 'target' | 'source-target';
 }
 
 export function Graph(props: Props) {
@@ -99,6 +102,8 @@ export function Graph(props: Props) {
     labelWidth,
     dimmedNodeOpacity,
     highlightedLinks,
+    minLabelHeight,
+    linkColor,
   } = props;
   const svgRef = useRef(null);
   const id = useMemo(() => generateRandomString(8), []);
@@ -297,8 +302,7 @@ export function Graph(props: Props) {
                     }
                   >
                     <motion.path
-                      // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                      key={`${(d.source as any).name}-${(d.target as any).name}`}
+                      key={`${(d.source as NodeDataType).name}-${(d.target as NodeDataType).name}`}
                       d={linkPathGenerator(d) || ''}
                       style={{
                         fill: 'none',
@@ -309,13 +313,27 @@ export function Graph(props: Props) {
                           pathLength: 0,
                           opacity: 1,
                           strokeWidth: d.width,
-                          stroke: `url(#${id}-gradient-${i})`,
+                          stroke:
+                            linkColor === 'source'
+                              ? (d.source as NodeDataType).color
+                              : linkColor === 'target'
+                                ? (d.target as NodeDataType).color
+                                : linkColor === 'source-target'
+                                  ? `url(#${id}-gradient-${i})`
+                                  : linkColor,
                         },
                         whileInView: {
                           pathLength: 1,
                           opacity: 1,
                           strokeWidth: d.width,
-                          stroke: `url(#${id}-gradient-${i})`,
+                          stroke:
+                            linkColor === 'source'
+                              ? (d.source as NodeDataType).color
+                              : linkColor === 'target'
+                                ? (d.target as NodeDataType).color
+                                : linkColor === 'source-target'
+                                  ? `url(#${id}-gradient-${i})`
+                                  : linkColor,
                           transition: { duration: animate.duration },
                         },
                       }}
@@ -417,7 +435,7 @@ export function Graph(props: Props) {
                             : nodeWidth
                       }
                       height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
-                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
+                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < minLabelHeight ? 0 : 1}
                     >
                       <div
                         className='flex flex-col gap-0.5 justify-center py-0 px-1.5'
@@ -426,33 +444,36 @@ export function Graph(props: Props) {
                           overflow: 'visible',
                         }}
                       >
-                        {showLabels ? (
-                          <P
-                            marginBottom={showValues ? '3xs' : 'none'}
-                            size='sm'
-                            leading='none'
-                            className={cn(
-                              'sankey-source-label',
-                              labelPosition === 'outside' ? 'text-right' : 'text-left',
-                              classNames?.graphObjectValues,
-                            )}
-                            style={{
-                              hyphens: 'auto',
-                              color:
-                                labelPosition === 'outside'
-                                  ? (d as NodeDataType).color
-                                  : labelPosition === 'inside'
-                                    ? 'var(--gray-700)'
-                                    : getTextColorBasedOnBgColor((d as NodeDataType).color),
-                              ...styles?.graphObjectValues,
-                            }}
-                          >
-                            {`${(d as NodeDataType).label}`.length < truncateBy
-                              ? `${(d as NodeDataType).label}`
-                              : `${`${(d as NodeDataType).label}`.substring(0, truncateBy)}...`}
-                          </P>
-                        ) : null}
-                        {showValues ? (
+                        {showLabels &&
+                          (showLabels instanceof Function ? (
+                            showLabels(d)
+                          ) : (
+                            <P
+                              marginBottom={showValues ? '3xs' : 'none'}
+                              size='sm'
+                              leading='none'
+                              className={cn(
+                                'sankey-source-label',
+                                labelPosition === 'outside' ? 'text-right' : 'text-left',
+                                classNames?.graphObjectValues,
+                              )}
+                              style={{
+                                hyphens: 'auto',
+                                color:
+                                  labelPosition === 'outside'
+                                    ? (d as NodeDataType).color
+                                    : labelPosition === 'inside'
+                                      ? 'var(--gray-700)'
+                                      : getTextColorBasedOnBgColor((d as NodeDataType).color),
+                                ...styles?.graphObjectValues,
+                              }}
+                            >
+                              {`${(d as NodeDataType).label}`.length < truncateBy
+                                ? `${(d as NodeDataType).label}`
+                                : `${`${(d as NodeDataType).label}`.substring(0, truncateBy)}...`}
+                            </P>
+                          ))}
+                        {showValues && (
                           <P
                             marginBottom='none'
                             size='sm'
@@ -483,7 +504,7 @@ export function Graph(props: Props) {
                               padZeros,
                             )}
                           </P>
-                        ) : null}
+                        )}
                       </div>
                     </foreignObject>
                   ) : null}
@@ -580,7 +601,7 @@ export function Graph(props: Props) {
                             : nodeWidth
                       }
                       height={(d.y1 || 0) - (d.y0 || 0) + nodePadding}
-                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < 25 ? 0 : 1}
+                      opacity={(d.y1 || 0) - (d.y0 || 0) + nodePadding < minLabelHeight ? 0 : 1}
                     >
                       <div
                         className='flex flex-col gap-0.5 justify-center py-0 px-1.5'

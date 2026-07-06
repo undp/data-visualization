@@ -33,7 +33,8 @@ interface Props {
   topMargin?: number;
   bottomMargin?: number;
   truncateBy: number;
-  showLabels: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels: boolean | ((_d: any) => React.ReactNode);
   width: number;
   suffix: string;
   prefix: string;
@@ -341,9 +342,11 @@ export function HorizontalGraph(props: Props) {
                   {showLabels ? (
                     <YAxesLabels
                       value={
-                        `${d.label}`.length < truncateBy
-                          ? `${d.label}`
-                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                        typeof showLabels === 'function'
+                          ? showLabels(d)
+                          : `${d.label}`.length < truncateBy
+                            ? `${d.label}`
+                            : `${`${d.label}`.substring(0, truncateBy)}...`
                       }
                       y={0}
                       x={0 - margin.left}
@@ -711,9 +714,11 @@ export function VerticalGraph(props: Props) {
                   {showLabels ? (
                     <XAxesLabels
                       value={
-                        `${d.label}`.length < truncateBy
-                          ? `${d.label}`
-                          : `${`${d.label}`.substring(0, truncateBy)}...`
+                        typeof showLabels === 'function'
+                          ? showLabels(d)
+                          : `${d.label}`.length < truncateBy
+                            ? `${d.label}`
+                            : `${`${d.label}`.substring(0, truncateBy)}...`
                       }
                       y={y(0) + 5}
                       x={0}

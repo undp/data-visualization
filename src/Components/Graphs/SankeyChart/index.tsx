@@ -88,8 +88,11 @@ interface Props {
   sourceTitle?: string;
   /** Title of the targets */
   targetTitle?: string;
-  /** Toggle visibility of labels */
-  showLabels?: boolean;
+  /** Minimum height of the nodes for which labels and values are visible */
+  minLabelHeight?: number;
+  /** Toggle visibility of labels or defines what i shown in the label */
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
   /** Option to position the labels */
   labelPosition?: 'inside' | 'outside' | 'overlap';
   /** Defines the width of the labels if the `labelPosition` is set to `inside`*/
@@ -104,6 +107,8 @@ interface Props {
   highlightedLinks?: { source: string | number; target: string | number }[];
   /** Opacity of the links */
   defaultLinkOpacity?: number;
+  /** Color of the links. If the value is 'source' then the links will be colored based on the source color, if the value is 'target' then the links will be colored based on the target color, if the value is 'source-target' then the links will be colored based on the source and target color. A color can also be defined as hex code. */
+  linkColor?: string | 'source' | 'target' | 'source-target';
   /** Opacity of the nodes when other nodes are highlighted or hovered. If no value is provided then it take the value of `defaultLinkOpacity` */
   dimmedNodeOpacity?: number;
   /** Sorting order of the nodes */
@@ -197,6 +202,8 @@ export function SankeyChart(props: Props) {
     labelPosition = 'outside',
     labelWidth = 75,
     dimmedNodeOpacity,
+    minLabelHeight = 25,
+    linkColor = 'source-target',
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -365,6 +372,8 @@ export function SankeyChart(props: Props) {
             labelWidth={labelWidth}
             dimmedNodeOpacity={dimmedNodeOpacity ?? defaultLinkOpacity}
             highlightedLinks={highlightedLinks}
+            minLabelHeight={minLabelHeight}
+            linkColor={linkColor}
           />
         ) : null}
       </GraphArea>

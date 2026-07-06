@@ -22,6 +22,7 @@ export const STYLE_OBJECT = `{
   mouseOverLine?: React.CSSProperties;
   regLine?: React.CSSProperties;
   dataCard?: React.CSSProperties;
+  area?: React.CSSProperties;
 }`;
 
 export const CLASS_NAME_OBJECT = `{
@@ -49,6 +50,7 @@ export const CLASS_NAME_OBJECT = `{
   mouseOverLine?: string;
   regLine?: string;
   dataCard?: string;
+  area?: string;
 }`;
 
 export const REF_VALUE_OBJECT = `{

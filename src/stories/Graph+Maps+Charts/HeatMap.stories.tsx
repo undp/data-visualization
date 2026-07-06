@@ -106,8 +106,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
-    showColumnLabels: { table: { defaultValue: { summary: 'true' } } },
-    showRowLabels: { table: { defaultValue: { summary: 'true' } } },
+    showColumnLabels: {
+      control: 'boolean',
+      table: {
+        type: { summary: 'boolean | (_d: any) => React.ReactNode' },
+        defaultValue: { summary: 'true' },
+      },
+    },
+    showRowLabels: {
+      control: 'boolean',
+      table: {
+        type: { summary: 'boolean | (_d: any) => React.ReactNode' },
+        defaultValue: { summary: 'true' },
+      },
+    },
     showValues: { table: { defaultValue: { summary: 'true' } } },
     scaleType: {
       control: 'inline-radio',

@@ -53,7 +53,8 @@ interface Props {
   topMargin?: number;
   bottomMargin?: number;
   relativeHeight?: number;
-  showLabels?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
   showColorScale?: boolean;
   maxValue?: number;
   minValue?: number;

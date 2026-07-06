@@ -71,8 +71,13 @@ interface Props {
   /** Maximum radius of the circle */
 
   // Graph Parameters
-  /** Toggle visibility of labels */
-  showLabels?: boolean;
+  /** Toggle visibility of labels or defines what i shown in the label */
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
+  /** Minimum width of the label */
+  minLabelWidth?: number;
+  /** Minimum height of the label */
+  minLabelHeight?: number;
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
@@ -158,6 +163,8 @@ export function TreeMapGraph(props: Props) {
     animate = false,
     dimmedOpacity = 0.3,
     numberDisplayOptions,
+    minLabelHeight = 25,
+    minLabelWidth = 50,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -271,6 +278,8 @@ export function TreeMapGraph(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            minLabelHeight={minLabelHeight}
+            minLabelWidth={minLabelWidth}
           />
         ) : null}
       </GraphArea>

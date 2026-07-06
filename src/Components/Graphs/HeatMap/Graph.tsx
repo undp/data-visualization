@@ -25,14 +25,14 @@ interface Props {
   colors: string[];
   noDataColor: string;
   scaleType: ScaleDataType;
-  showColumnLabels: boolean;
+  showColumnLabels: boolean | ((_d: string) => React.ReactNode);
   leftMargin: number;
   truncateBy: number;
   width: number;
   height: number;
   rightMargin: number;
   topMargin: number;
-  showRowLabels: boolean;
+  showRowLabels: boolean | ((_d: string) => React.ReactNode);
   bottomMargin: number;
   suffix: string;
   prefix: string;
@@ -141,7 +141,11 @@ export function Graph(props: Props) {
                   width={barWidth}
                   height={margin.top - 5}
                   value={
-                    `${d}`.length < truncateBy ? `${d}` : `${`${d}`.substring(0, truncateBy)}...`
+                    typeof showColumnLabels === 'function'
+                      ? showColumnLabels(d)
+                      : `${d}`.length < truncateBy
+                        ? `${d}`
+                        : `${`${d}`.substring(0, truncateBy)}...`
                   }
                   style={styles?.xAxis?.labels}
                   className={classNames?.xAxis?.labels}
@@ -157,7 +161,11 @@ export function Graph(props: Props) {
             ? rows.map((d) => (
                 <YAxesLabels
                   value={
-                    `${d}`.length < truncateBy ? `${d}` : `${`${d}`.substring(0, truncateBy)}...`
+                    typeof showRowLabels === 'function'
+                      ? showRowLabels(d)
+                      : `${d}`.length < truncateBy
+                        ? `${d}`
+                        : `${`${d}`.substring(0, truncateBy)}...`
                   }
                   key={d}
                   y={y(d) as number}

@@ -77,8 +77,11 @@ interface Props {
   circularBoundary?: boolean;
   /** Maximum radius of the circle */
   radius?: number;
-  /** Toggle visibility of labels */
-  showLabels?: boolean;
+  /** Toggle visibility of labels or defines what i shown in the label */
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
+  /** Minimum radius of the circle for the label to be visible */
+  minLabelRadius?: number;
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
@@ -164,6 +167,7 @@ export function CirclePackingGraph(props: Props) {
     dimmedOpacity = 0.3,
     circularBoundary = true,
     numberDisplayOptions,
+    minLabelRadius = 7.5,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -287,6 +291,7 @@ export function CirclePackingGraph(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            minLabelRadius={minLabelRadius}
           />
         ) : null}
       </GraphArea>

@@ -3,6 +3,7 @@ import { bisectCenter } from 'd3-array';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { pointer, select } from 'd3-selection';
 import {
+  area,
   curveLinear,
   curveMonotoneX,
   curveStep,
@@ -82,6 +83,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   locale: string;
   padZeros: boolean;
+  showArea: boolean;
 }
 
 interface FormattedDataType {
@@ -128,6 +130,7 @@ export function Graph(props: Props) {
     customLayers,
     locale,
     padZeros,
+    showArea,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -220,6 +223,11 @@ export function Graph(props: Props) {
   const lineShape = line<FormattedDataType>()
     .x((d) => x(d.date))
     .y((d) => y(d.y))
+    .curve(curve);
+  const areaShape = area<FormattedDataType>()
+    .x((d) => x(d.date))
+    .y0(() => y(minParam > 0 ? minParam : 0))
+    .y1((d) => y(d.y))
     .curve(curve);
   const yTicks = y.ticks(noOfYTicks);
   const xTicks =
@@ -368,6 +376,30 @@ export function Graph(props: Props) {
           />
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
+            {showArea && (
+              <motion.path
+                style={{
+                  stroke: 'none',
+                  fill: lineColor,
+                  fillOpacity: 0.3,
+                  ...styles?.area,
+                }}
+                className={cn('line-chart-area', classNames?.area)}
+                d={areaShape(dataFormatted) || ''}
+                exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                variants={{
+                  initial: {
+                    opacity: 0,
+                  },
+                  whileInView: {
+                    opacity: 1,
+                    transition: { duration: animate.duration },
+                  },
+                }}
+                initial='initial'
+                animate={isInView ? 'whileInView' : 'initial'}
+              />
+            )}
             <motion.path
               style={{
                 stroke: lineColor,

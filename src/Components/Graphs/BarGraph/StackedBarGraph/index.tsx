@@ -51,7 +51,8 @@ interface Props {
   suffix?: string;
   prefix?: string;
   showValues?: boolean;
-  showLabels?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels?: boolean | ((_d: any) => React.ReactNode);
   relativeHeight?: number;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
@@ -93,6 +94,7 @@ interface Props {
   hideAxisLine?: boolean;
   padZeros?: boolean;
   showTotalValue?: boolean;
+  minLabelSize?: number;
 }
 
 export function StackedBarGraphEl(props: Props) {
@@ -158,6 +160,7 @@ export function StackedBarGraphEl(props: Props) {
     orientation = 'vertical',
     hideAxisLine = false,
     padZeros = false,
+    minLabelSize,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -392,6 +395,7 @@ export function StackedBarGraphEl(props: Props) {
               naLabel={naLabel}
               locale={locale}
               padZeros={padZeros}
+              minLabelSize={minLabelSize ?? (orientation === 'horizontal' ? 25 : 15)}
             />
           ) : null}
         </GraphArea>

@@ -24,7 +24,8 @@ interface Props {
   rightMargin: number;
   topMargin: number;
   bottomMargin: number;
-  showLabels: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showLabels: boolean | ((_d: any) => React.ReactNode);
   showValues: boolean;
   width: number;
   height: number;
@@ -49,6 +50,8 @@ interface Props {
   precision: number;
   locale: string;
   padZeros: boolean;
+  minLabelWidth: number;
+  minLabelHeight: number;
 }
 
 export function Graph(props: Props) {
@@ -81,6 +84,8 @@ export function Graph(props: Props) {
     precision,
     locale,
     padZeros,
+    minLabelWidth,
+    minLabelHeight,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -254,7 +259,9 @@ export function Graph(props: Props) {
                     initial='initial'
                     animate={isInView ? 'whileInView' : 'initial'}
                   />
-                  {d.x1 - d.x0 > 50 && d.y1 - d.y0 > 25 && (showLabels || showValues) ? (
+                  {d.x1 - d.x0 >= minLabelWidth &&
+                  d.y1 - d.y0 >= minLabelHeight &&
+                  (showLabels || showValues) ? (
                     <motion.g
                       variants={{
                         initial: { opacity: 0 },
@@ -284,51 +291,56 @@ export function Graph(props: Props) {
                             ),
                           }}
                         >
-                          {showLabels ? (
-                            <P
-                              marginBottom='none'
-                              size='sm'
-                              leading='none'
-                              className={cn(
-                                'w-full treemap-label',
-                                language === 'ar' || language === 'he' ? 'text-right' : 'text-left',
-                                classNames?.graphObjectValues,
-                              )}
-                              style={{
-                                WebkitLineClamp:
-                                  d.y1 - d.y0 > 50
-                                    ? d.y1 - d.y0 > 100
-                                      ? d.y1 - d.y0 > 150
-                                        ? undefined
-                                        : 3
-                                      : 2
-                                    : 1,
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden',
-                                color: getTextColorBasedOnBgColor(
-                                  data.filter((el) => el.color).length === 0
-                                    ? colors[0]
-                                    : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                                      !(d.data as any).data.color
-                                      ? Colors.gray
-                                      : colors[
-                                          colorDomain.indexOf(
-                                            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                                            (d.data as any).data.color,
-                                          )
-                                        ],
-                                ),
-                                ...(styles?.graphObjectValues || {}),
-                              }}
-                            >
-                              {
-                                // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                                (d.data as any).id
-                              }
-                            </P>
-                          ) : null}
-                          {showValues ? (
+                          {showLabels &&
+                            (showLabels instanceof Function ? (
+                              showLabels(d)
+                            ) : (
+                              <P
+                                marginBottom='none'
+                                size='sm'
+                                leading='none'
+                                className={cn(
+                                  'w-full treemap-label',
+                                  language === 'ar' || language === 'he'
+                                    ? 'text-right'
+                                    : 'text-left',
+                                  classNames?.graphObjectValues,
+                                )}
+                                style={{
+                                  WebkitLineClamp:
+                                    d.y1 - d.y0 > 50
+                                      ? d.y1 - d.y0 > 100
+                                        ? d.y1 - d.y0 > 150
+                                          ? undefined
+                                          : 3
+                                        : 2
+                                      : 1,
+                                  display: '-webkit-box',
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden',
+                                  color: getTextColorBasedOnBgColor(
+                                    data.filter((el) => el.color).length === 0
+                                      ? colors[0]
+                                      : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                                        !(d.data as any).data.color
+                                        ? Colors.gray
+                                        : colors[
+                                            colorDomain.indexOf(
+                                              // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                                              (d.data as any).data.color,
+                                            )
+                                          ],
+                                  ),
+                                  ...(styles?.graphObjectValues || {}),
+                                }}
+                              >
+                                {
+                                  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                                  (d.data as any).id
+                                }
+                              </P>
+                            ))}
+                          {showValues && (
                             <P
                               marginBottom='none'
                               size='sm'
@@ -366,7 +378,7 @@ export function Graph(props: Props) {
                                 padZeros,
                               )}
                             </P>
-                          ) : null}
+                          )}
                         </div>
                       </foreignObject>
                     </motion.g>
