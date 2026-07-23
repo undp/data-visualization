@@ -199,10 +199,7 @@ export function VerticalGraph(props: Props) {
               markerHeight='6'
               orient='auto-start-reverse'
             >
-              <path
-                d='M 0 0 L 10 5 L 0 10 z'
-                className='fill-primary-gray-600 dark:fill-primary-gray-300'
-              />
+              <path d='M 0 0 L 10 5 L 0 10 z' className='fill-surface-3xl' />
             </marker>
           </defs>
         ) : null}
@@ -327,10 +324,7 @@ export function VerticalGraph(props: Props) {
                     ...(styles?.dataConnectors || {}),
                     opacity: selectedColor ? 0.3 : 1,
                   }}
-                  className={cn(
-                    'stroke-primary-gray-600 dark:stroke-primary-gray-300',
-                    classNames?.dataConnectors,
-                  )}
+                  className={cn('stroke-surface-3xl', classNames?.dataConnectors)}
                   markerEnd={
                     arrowConnector &&
                     d.x.indexOf(Math.min(...d.x.filter((el) => el !== null))) === 0
@@ -638,10 +632,7 @@ export function HorizontalGraph(props: Props) {
               markerHeight='6'
               orient='auto-start-reverse'
             >
-              <path
-                d='M 0 0 L 10 5 L 0 10 z'
-                className='fill-primary-gray-600 dark:fill-primary-gray-300'
-              />
+              <path d='M 0 0 L 10 5 L 0 10 z' className='fill-surface-3xl' />
             </marker>
           </defs>
         ) : null}
@@ -746,10 +737,7 @@ export function HorizontalGraph(props: Props) {
                     ...(styles?.dataConnectors || {}),
                     opacity: selectedColor ? 0.3 : 1,
                   }}
-                  className={cn(
-                    'stroke-primary-gray-600 dark:stroke-primary-gray-300',
-                    classNames?.dataConnectors,
-                  )}
+                  className={cn('stroke-surface-3xl', classNames?.dataConnectors)}
                   markerEnd={
                     arrowConnector &&
                     d.x.indexOf(Math.min(...d.x.filter((el) => el !== null)) as number) === 0

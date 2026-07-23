@@ -5,7 +5,10 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { select } from 'd3-selection';
 import React from 'react';
 import { GraphArea } from '@/Components/Elements/GraphContainer';
-import { ExpandIcon, X } from '@/Components/Icons';
+import {
+  LegendCollapseButton,
+  LegendExpandButton,
+} from '@/Components/Elements/LegendExpandControls';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { string2HTML } from '@/Utils/string2HTML';
 import { filterData } from '@/Utils/transformData/filterData';
@@ -138,22 +141,9 @@ export function MapEl(props: Props) {
             <div className='absolute left-[22px] bottom-13'>
               {showLegend ? (
                 <>
-                  <button
-                    type='button'
-                    className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
-                    onClick={() => {
-                      setShowLegend(false);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        setShowLegend(false);
-                      }
-                    }}
-                  >
-                    <X />
-                  </button>
+                  <LegendCollapseButton setExpanded={setShowLegend} />
                   <div
-                    className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
+                    className='color-legend-box p-2 bg-surface-sm/70'
                     // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
                     // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
                     dangerouslySetInnerHTML={
@@ -164,15 +154,7 @@ export function MapEl(props: Props) {
                   </div>
                 </>
               ) : (
-                <button
-                  type='button'
-                  className='p-1 border-0 rounded-[2px] text-primary-gray-700 bg-primary-gray-300 dark:bg-primary-gray-500 map-legend-button'
-                  onClick={() => {
-                    setShowLegend(true);
-                  }}
-                >
-                  <ExpandIcon />
-                </button>
+                <LegendExpandButton setExpanded={setShowLegend} />
               )}
             </div>
           ) : null}

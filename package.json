@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "2.6.14",
+  "version": "3.0.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -462,12 +462,14 @@
     "papaparse": "^5.5.3",
     "react-csv": "^2.2.2",
     "simple-statistics": "^7.8.8",
+    "tailwind-merge": "^3.3.1",
+    "tw-animate-css": "^1.4.0",
     "xss": "^1.0.15"
   },
   "peerDependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
-    "@undp/design-system-react": "^2.2.7",
+    "@undp/design-system-react": "^3.0.2",
     "dom-to-svg": "^0.12.2",
     "file-saver": "^2.0.5",
     "handlebars": "^4.7.8",
@@ -478,9 +480,6 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-globe.gl": "^2.36.0",
-    "tailwind-animate": "^0.2.10",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss-animate": "^1.0.7",
     "three": "^0.180.0"
   },
   "peerDependenciesMeta": {
@@ -512,15 +511,6 @@
       "optional": true
     },
     "dom-to-svg": {
-      "optional": true
-    },
-    "tailwind-merge": {
-      "optional": true
-    },
-    "tailwind-animate": {
-      "optional": true
-    },
-    "tailwindcss-animate": {
       "optional": true
     },
     "file-saver": {
@@ -572,7 +562,7 @@
     "@types/lodash.uniq": "^4.5.9",
     "@types/node": "^24.3.0",
     "@types/papaparse": "^5.3.16",
-    "@types/react": "^19.1.12",
+    "@types/react": "^19.2.17",
     "@types/react-csv": "^1.1.10",
     "@types/react-dom": "^19.1.9",
     "@types/three": "^0.180.0",
@@ -594,10 +584,8 @@
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^6.0.3",
     "storybook": "^10.4.0",
-    "tailwind-animate": "^0.2.10",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.12",
-    "tailwindcss-animate": "^1.0.7",
     "three": "^0.182.0",
     "typescript": "^5.9.2",
     "vite": "^8.0.13",

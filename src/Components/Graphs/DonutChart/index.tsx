@@ -248,11 +248,7 @@ export function DonutChart(props: Props) {
                         : Colors.gray,
                   }}
                 />
-                <P
-                  marginBottom='none'
-                  size='sm'
-                  className='text-primary-gray-700 dark:text-primary-gray-100'
-                >
+                <P marginBottom='none' size='sm' className='text-content-primary'>
                   {d.label}:{' '}
                   <span className='font-bold' style={{ fontSize: 'inherit' }}>
                     {numberFormattingFunction(

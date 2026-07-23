@@ -42,11 +42,7 @@ export const GraphContainer = React.forwardRef<HTMLDivElement, Props>(
         className={cn(
           `${theme || 'light'} ${language || 'en'} mx-auto box-border flex ${width ? 'grow-0' : 'grow w-full'}${relativeHeight ? '' : ' h-full'} flex-col`,
           // Merge background color logic here
-          !backgroundColor
-            ? 'bg-transparent'
-            : backgroundColor === true
-              ? 'bg-primary-gray-200 dark:bg-primary-gray-650'
-              : '',
+          !backgroundColor ? 'bg-transparent' : backgroundColor === true ? 'bg-surface' : '',
           className,
         )}
         dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}

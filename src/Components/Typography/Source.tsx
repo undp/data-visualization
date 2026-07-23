@@ -18,19 +18,19 @@ export function Source(props: SourceProps) {
         size='sm'
         marginBottom='none'
         aria-label='Data sources'
-        className={cn('text-primary-gray-550 dark:text-primary-gray-400', className)}
+        className={cn('text-content-secondary', className)}
         style={style}
       >
         Source:{' '}
         {sources.map((d) => (
           <span
             key={d.source}
-            className={cn('text-primary-gray-550 dark:text-primary-gray-400', className)}
+            className={cn('text-content-secondary', className)}
             style={{ fontFamily: 'inherit' }}
           >
             {d.link ? (
               <A
-                className={cn('text-primary-gray-550 dark:text-primary-gray-400', className)}
+                className={cn('text-content-secondary', className)}
                 href={d.link}
                 target='_blank'
                 rel='noreferrer'

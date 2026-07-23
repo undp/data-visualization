@@ -13,8 +13,11 @@ import {
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 import { select } from 'd3-selection';
 import React from 'react';
-
-import { ChevronLeftRight, ExpandIcon, X } from '@/Components/Icons';
+import {
+  LegendCollapseButton,
+  LegendExpandButton,
+} from '@/Components/Elements/LegendExpandControls';
+import { ChevronLeftRight } from '@/Components/Icons';
 import { string2HTML } from '@/Utils/string2HTML';
 
 interface Props {
@@ -212,17 +215,9 @@ export function Graph(props: Props) {
         <div className='absolute left-[22px] bottom-13'>
           {showLegend ? (
             <>
-              <button
-                type='button'
-                className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
-                onClick={() => {
-                  setShowLegend(false);
-                }}
-              >
-                <X />
-              </button>
+              <LegendCollapseButton setExpanded={setShowLegend} />
               <div
-                className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
+                className='color-legend-box p-2 bg-surface-sm/70'
                 // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
                 dangerouslySetInnerHTML={
@@ -233,15 +228,7 @@ export function Graph(props: Props) {
               </div>
             </>
           ) : (
-            <button
-              type='button'
-              className='p-1 border-0 rounded-[2px] text-primary-gray-700 bg-primary-gray-300 dark:bg-primary-gray-500 map-legend-button'
-              onClick={() => {
-                setShowLegend(true);
-              }}
-            >
-              <ExpandIcon />
-            </button>
+            <LegendExpandButton setExpanded={setShowLegend} />
           )}
         </div>
       ) : null}
@@ -277,12 +264,9 @@ function SliderHandle(props: HandleProps) {
       {...listeners}
       {...attributes}
     >
+      <div className='h-full bg-primary' style={{ width: '2px' }} />
       <div
-        className='h-full bg-primary-blue-600 dark:bg-primary-blue-400'
-        style={{ width: '2px' }}
-      />
-      <div
-        className='flex bg-primary-blue-600 dark:bg-primary-blue-400 rounded-full absolute items-center justify-center text-primary-white font-primary-white'
+        className='flex bg-primary rounded-full absolute items-center justify-center text-content-reverse'
         style={{
           boxShadow: 'inset 0 0 0 1px #fff',
           width: '42px',

@@ -35,10 +35,7 @@ export function Tooltip(props: Props) {
   return createPortal(
     <div className='undp-container'>
       <div
-        className={cn(
-          'graph-tooltip block p-2 fixed z-[1000] bg-primary-gray-200 dark:bg-primary-gray-600 border border-primary-gray-300 dark:border-primary-gray-500',
-          className,
-        )}
+        className={cn('graph-tooltip block p-2 fixed z-[1000] bg-surface', className)}
         style={{
           ...backgroundStyle,
           top: `${yPos < window.innerHeight / 2 ? yPos - 10 : yPos + 10}px`,
@@ -49,7 +46,7 @@ export function Tooltip(props: Props) {
         }}
       >
         <div
-          className='text-sm leading-normal text-primary-black dark:text-primary-gray-100 m-0'
+          className='text-sm leading-normal text-content-primary m-0'
           // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
           // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
           dangerouslySetInnerHTML={

@@ -390,7 +390,7 @@ export function HorizontalGraph(props: Props) {
                     <motion.text
                       className={cn(
                         'graph-value graph-value-total text-sm',
-                        !valueColor ? ' fill-primary-gray-700 dark:fill-primary-gray-300' : '',
+                        !valueColor ? ' fill-content-primary' : '',
                         classNames?.graphObjectValues,
                       )}
                       style={{
@@ -822,10 +822,8 @@ export function VerticalGraph(props: Props) {
                       x={x.bandwidth() / 2}
                       dy={-10}
                       className={cn(
-                        'graph-value graph-value-total',
-                        !valueColor
-                          ? 'fill-primary-gray-700 dark:fill-primary-gray-300 text-sm'
-                          : 'text-sm',
+                        'graph-value graph-value-total text-sm',
+                        !valueColor ? 'fill-content-primary' : '',
                         classNames?.graphObjectValues,
                       )}
                       variants={{

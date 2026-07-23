@@ -44,11 +44,7 @@ function ThreeDGraphEl(props: Props) {
         }`}
         style={{ height: 'inherit' }}
       >
-        <P
-          size='sm'
-          marginBottom='none'
-          className='p-2 text-center text-accent-dark-red dark:text-accent-red'
-        >
+        <P size='sm' marginBottom='none' className='p-2 text-center text-error'>
           {graphData}
         </P>
       </div>
@@ -129,11 +125,7 @@ function ThreeDGraphEl(props: Props) {
       {GraphComponent ? (
         <GraphComponent {...graphProps} />
       ) : (
-        <P
-          size='sm'
-          marginBottom='none'
-          className='p-2 text-center text-accent-dark-red dark:text-accent-red'
-        >
+        <P size='sm' marginBottom='none' className='p-2 text-center text-error'>
           {`Invalid chart type: ${graph}`}
         </P>
       )}

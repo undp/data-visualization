@@ -51,12 +51,7 @@ export function CustomArea(props: Props) {
                 ...(d.color && { stroke: d.color }),
                 ...(d.style || {}),
               }}
-              className={cn(
-                !d.color
-                  ? 'stroke-primary-gray-300 dark:stroke-primary-gray-550 fill-primary-gray-300 dark:fill-primary-gray-550'
-                  : '',
-                d.className,
-              )}
+              className={cn(!d.color ? 'stroke-stroke-sm fill-surface-sm' : '', d.className)}
             />
           ) : (
             <line
@@ -70,10 +65,7 @@ export function CustomArea(props: Props) {
                 strokeWidth: d.strokeWidth || 1,
                 ...(d.style || {}),
               }}
-              className={cn(
-                !d.color ? 'stroke-primary-gray-300 dark:stroke-primary-gray-550' : '',
-                d.className,
-              )}
+              className={cn(!d.color ? 'stroke-stroke-sm' : '', d.className)}
             />
           )}
         </motion.g>

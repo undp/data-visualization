@@ -171,10 +171,7 @@ export function Graph(props: Props) {
                   y1={0}
                   x2={Math.cos(angleScale(i) - Math.PI / 2) * radiusWithoutMargin}
                   y2={Math.sin(angleScale(i) - Math.PI / 2) * radiusWithoutMargin}
-                  className={cn(
-                    'stroke-1 stroke-primary-gray-500 dark:stroke-primary-gray-550',
-                    classNames?.xAxis?.axis,
-                  )}
+                  className={cn('stroke-1 stroke-stroke-lg', classNames?.xAxis?.axis)}
                   style={styles?.xAxis?.axis}
                 />
                 <text
@@ -196,10 +193,7 @@ export function Graph(props: Props) {
                         ? 5
                         : 10
                   }
-                  className={cn(
-                    'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs',
-                    classNames?.xAxis?.labels,
-                  )}
+                  className={cn('fill-content-primary text-xs', classNames?.xAxis?.labels)}
                 >
                   {d}
                 </text>
@@ -210,10 +204,7 @@ export function Graph(props: Props) {
               <g key={i}>
                 <path
                   d={lineShape(Array(axisLabels.length).fill(d)) || ''}
-                  className={cn(
-                    'stroke-primary-gray-500 dark:stroke-primary-gray-550',
-                    classNames?.xAxis?.gridLines,
-                  )}
+                  className={cn('stroke-stroke-lg', classNames?.xAxis?.gridLines)}
                   style={{
                     ...styles?.xAxis?.gridLines,
                     fill: 'none',
@@ -232,7 +223,7 @@ export function Graph(props: Props) {
                   <div className='flex justify-center'>
                     <p
                       className={cn(
-                        'fill-primary-gray-500 dark:fill-primary-gray-550 text-xs m-0 py-0 px-1.5 text-center leading-none bg-primary-white dark:bg-primary-gray-700',
+                        'fill-content-secondary text-xs m-0 py-0 px-1.5 text-center leading-xs bg-background',
                         classNames?.xAxis?.labels,
                       )}
                       style={styles?.xAxis?.labels}

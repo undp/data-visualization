@@ -25,10 +25,7 @@ export function Axis(props: Props) {
           x1={x1}
           x2={x2}
           style={styles?.axis}
-          className={cn(
-            'stroke-1 stroke-primary-gray-700 dark:stroke-primary-gray-300',
-            classNames?.axis,
-          )}
+          className={cn('stroke-1 stroke-foreground-soft', classNames?.axis)}
         />
       )}
       {!checkIfNullOrUndefined(label) ? (
@@ -39,10 +36,7 @@ export function Axis(props: Props) {
             textAnchor: 'start',
             ...(styles?.label || ''),
           }}
-          className={cn(
-            'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs',
-            classNames?.label,
-          )}
+          className={cn('fill-foreground text-xs', classNames?.label)}
           dy={labelPos?.dy}
           dx={labelPos?.dx}
         >

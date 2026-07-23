@@ -7,11 +7,23 @@ import { svgDownload } from '@/Utils/svgDownload';
 interface Props {
   buttonContent?: string | JSX.Element;
   buttonType?:
+    | 'link'
     | 'primary'
-    | 'primary-without-icon'
     | 'secondary'
-    | 'secondary-without-icon'
-    | 'tertiary';
+    | 'background'
+    | 'error'
+    | 'tertiary'
+    | 'warning'
+    | 'success'
+    | 'info'
+    | 'quaternary'
+    | 'surface'
+    | 'outline'
+    | 'icon'
+    | 'surface-hard'
+    | 'background-soft'
+    | 'foreground'
+    | 'foreground-soft';
   nodeID: string | HTMLElement;
   filename?: string;
   buttonSmall?: boolean;
@@ -23,14 +35,18 @@ export function SVGDownloadButton(props: Props) {
     nodeID,
     filename = 'image',
     buttonContent,
-    buttonType = 'tertiary',
+    buttonType = 'surface',
     buttonSmall,
     className = '',
   } = props;
   return (
     <Button
       variant={buttonType}
-      className={cn('undp-viz-download-button', buttonSmall ? 'p-2' : 'py-4 px-6', className)}
+      className={cn(
+        'undp-viz-download-button border border-stroke',
+        buttonSmall ? 'p-2' : 'py-4 px-6',
+        className,
+      )}
       onClick={() => {
         if (typeof nodeID === 'string') {
           if (document.getElementById(nodeID)) {

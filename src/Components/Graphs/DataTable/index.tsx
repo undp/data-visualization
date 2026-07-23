@@ -198,11 +198,11 @@ export function DataTable(props: Props) {
           <div style={minWidth ? { minWidth } : undefined}>
             {data ? (
               <table className='w-full' style={{ borderCollapse: 'collapse' }}>
-                <thead className='text-left bg-primary-gray-300 dark:bg-primary-gray-550'>
+                <thead className='text-left bg-surface border-b border-stroke'>
                   <tr>
                     {columnData?.map((d) => (
                       <th
-                        className='text-primary-gray-700 dark:text-primary-gray-100 text-sm'
+                        className='text-content-primary text-sm'
                         style={{
                           width: `calc(${
                             (100 * (d.columnWidth || 1)) /
@@ -290,10 +290,8 @@ export function DataTable(props: Props) {
                       key={i}
                       className={`cursor-${
                         onSeriesMouseClick ? 'pointer' : 'auto'
-                      } border-b border-b-primary-gray-400 dark:border-b-primary-gray-500 ${
-                        isEqual(mouseClickData, d)
-                          ? 'bg-primary-gray-200 dark:bg-primary-gray-600'
-                          : 'bg-transparent'
+                      } border-b border-stroke ${
+                        isEqual(mouseClickData, d) ? 'bg-surface' : 'bg-transparent'
                       }`}
                       style={d.rowStyle}
                       onClick={() => {
@@ -311,9 +309,7 @@ export function DataTable(props: Props) {
                       {columnData.map((el) => (
                         <td
                           key={el.columnId}
-                          className={`text-primary-gray-700 dark:text-primary-gray-100 text-sm text-${
-                            el.align || 'left'
-                          }`}
+                          className={`text-content-primary text-sm text-${el.align || 'left'}`}
                           style={{
                             width: `calc(${
                               (100 * (d.columnWidth || 1)) /
@@ -322,7 +318,7 @@ export function DataTable(props: Props) {
                           }}
                         >
                           <div
-                            className={`text-primary-gray-700 dark:text-primary-gray-100 flex p-4 ${
+                            className={`text-content-primary flex p-4 ${
                               el.align === 'right'
                                 ? 'justify-end'
                                 : el.align === 'center'
@@ -334,12 +330,12 @@ export function DataTable(props: Props) {
                               <P
                                 marginBottom='none'
                                 size='sm'
-                                className={`text-primary-gray-700 dark:text-primary-gray-100 w-fit ${
+                                className={`text-content-primary w-fit ${
                                   el.chip ? 'grow-0 rounded-sm p-2' : 'grow rounded-none p-0'
                                 } text-${el.align || 'left'} ${
                                   el.chip
                                     ? !el.chipColors
-                                      ? 'bg-primary-gray-300 dark:bg-primary-gray-500'
+                                      ? 'bg-surface-sm'
                                       : ''
                                     : 'bg-transparent'
                                 }`}
@@ -375,18 +371,18 @@ export function DataTable(props: Props) {
                               </P>
                             ) : typeof d[el.columnId] === 'string' ? (
                               el.separator ? (
-                                <div className='text-primary-gray-700 dark:text-primary-gray-100 flex flex-wrap gap-2'>
+                                <div className='text-content-primary flex flex-wrap gap-2'>
                                   {d[el.columnId].split(el.separator).map((element: string) => (
                                     <P
                                       key={element}
                                       marginBottom='none'
                                       size='sm'
-                                      className={`text-primary-gray-700 dark:text-primary-gray-100 w-fit ${
+                                      className={`text-content-primary w-fit ${
                                         el.chip ? 'grow-0 rounded-sm p-2' : 'grow rounded-none p-0'
                                       } text-${el.align || 'left'} ${
                                         el.chip
                                           ? !el.chipColors
-                                            ? 'bg-primary-gray-300 dark:bg-primary-gray-500'
+                                            ? 'bg-surface-sm'
                                             : ''
                                           : 'bg-transparent'
                                       }`}
@@ -434,12 +430,12 @@ export function DataTable(props: Props) {
                                 <P
                                   marginBottom='none'
                                   size='sm'
-                                  className={`text-primary-gray-700 dark:text-primary-gray-100 w-fit ${
+                                  className={`text-content-primary w-fit ${
                                     el.chip ? 'grow-0 rounded-sm p-2' : 'grow rounded-none p-0'
                                   } text-${el.align || 'left'} ${
                                     el.chip
                                       ? !el.chipColors
-                                        ? 'bg-primary-gray-300 dark:bg-primary-gray-500'
+                                        ? 'bg-surface-sm'
                                         : ''
                                       : 'bg-transparent'
                                   }`}
@@ -515,7 +511,7 @@ export function DataTable(props: Props) {
       {popupVisible && (
         <div
           style={popupStyle}
-          className='absolute p-3 border z-[1000] rounded-sm bg-primary-white dark:bg-primary-gray-700 border-primary-gray-300 dark:border-primary-gray-550'
+          className='absolute p-3 border z-[1000] rounded-sm bg-background border-stroke'
         >
           <div className='max-w-60'>
             <P size='sm' marginBottom='2xs' className='font-bold'>

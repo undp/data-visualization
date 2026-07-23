@@ -374,6 +374,7 @@ export function SankeyChart(props: Props) {
             highlightedLinks={highlightedLinks}
             minLabelHeight={minLabelHeight}
             linkColor={linkColor}
+            theme={theme}
           />
         ) : null}
       </GraphArea>

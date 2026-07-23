@@ -435,7 +435,7 @@ export function VerticalGraph(props: Props) {
                         ...(styles?.graphObjectValues || {}),
                       }}
                       className={cn(
-                        'graph-min-max-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
+                        'graph-min-max-value text-sm text-content-secondary',
                         classNames?.graphObjectValues,
                       )}
                     >
@@ -462,10 +462,7 @@ export function VerticalGraph(props: Props) {
                   textAnchor: 'start',
                   ...(styles?.yAxis?.labels || {}),
                 }}
-                className={cn(
-                  'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
-                  classNames?.yAxis?.labels,
-                )}
+                className={cn('fill-content-secondary text-xs', classNames?.yAxis?.labels)}
               >
                 {numberFormattingFunction(
                   y.invert(tick),
@@ -877,7 +874,7 @@ export function HorizontalGraph(props: Props) {
                         ...(styles?.graphObjectValues || {}),
                       }}
                       className={cn(
-                        'graph-min-max-value text-sm text-primary-gray-550 dark:text-primary-gray-200',
+                        'graph-min-max-value text-sm text-content-secondary',
                         classNames?.graphObjectValues,
                       )}
                     >
@@ -904,10 +901,7 @@ export function HorizontalGraph(props: Props) {
                   textAnchor: i === 0 ? 'start' : i === ticks.length - 1 ? 'end' : 'middle',
                   ...(styles?.xAxis?.labels || {}),
                 }}
-                className={cn(
-                  'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
-                  classNames?.xAxis?.labels,
-                )}
+                className={cn('fill-content-secondary text-xs', classNames?.xAxis?.labels)}
                 dy='1em'
               >
                 {numberFormattingFunction(

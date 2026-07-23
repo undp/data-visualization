@@ -351,7 +351,7 @@ export function Graph(props: Props) {
                     key={`tesselation_${d.label || i}`}
                     d={voronoiDiagram.renderCell(dataOrdered.findIndex((el) => el.id === d.id))}
                     opacity={showVoronoiTesselation ? 1 : 0}
-                    className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+                    className='stroke-foreground'
                     style={{ fillOpacity: 0, strokeWidth: 1 }}
                     onMouseEnter={(event) => {
                       setMouseOverData(d);

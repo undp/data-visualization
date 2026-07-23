@@ -70,11 +70,7 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
                 y={1}
                 width={mainColorWidth / colors.length - 2}
                 height={8}
-                className={`stroke-1 ${
-                  hoveredColor === colors[i]
-                    ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300'
-                    : ''
-                }`}
+                className={`stroke-1 ${hoveredColor === colors[i] ? 'stroke-foreground-soft' : ''}`}
                 style={{
                   fill: colors[i],
                   ...(hoveredColor !== colors[i] ? { stroke: colors[i] } : {}),
@@ -83,7 +79,7 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
               <text
                 x={((i + 1) * mainColorWidth) / colors.length}
                 y={25}
-                className='fill-primary-gray-700 dark:fill-primary-gray-300 text-sm'
+                className='fill-content-primary text-sm'
                 style={{ textAnchor: 'middle' }}
               >
                 {numberFormattingFunction(d as number, undefined, 2, '', '', locale)}
@@ -110,9 +106,7 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
               width={mainColorWidth / colors.length - 2}
               height={8}
               className={`cursor-pointer stroke-1 ${
-                hoveredColor === colors[colorDomain.length]
-                  ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300'
-                  : ''
+                hoveredColor === colors[colorDomain.length] ? 'stroke-foreground' : ''
               }`}
               style={{
                 fill: colors[colorDomain.length],
@@ -144,11 +138,7 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
                 y={1}
                 width={24}
                 height={8}
-                className={`stroke-1 ${
-                  hoveredColor === naColor
-                    ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300'
-                    : ''
-                }`}
+                className={`stroke-1 ${hoveredColor === naColor ? 'stroke-foreground' : ''}`}
                 style={{
                   fill: naColor || '#D4D6D8',
                   ...(hoveredColor !== naColor ? { stroke: naColor } : {}),
@@ -158,7 +148,7 @@ export function ThresholdColorLegendWithMouseOver(props: Props) {
               <text
                 x={337.5}
                 y={25}
-                className='fill-primary-gray-700 dark:fill-primary-gray-300 text-sm'
+                className='fill-content-primary text-sm'
                 style={{ textAnchor: 'start' }}
               >
                 {naLabel}

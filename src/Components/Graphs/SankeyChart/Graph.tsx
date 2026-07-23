@@ -4,6 +4,7 @@ import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
 import isEqual from 'fast-deep-equal';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 import { useMemo, useRef, useState } from 'react';
+import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { Tooltip } from '@/Components/Elements/Tooltip';
 import type {
@@ -62,6 +63,7 @@ interface Props {
   minLabelHeight: number;
   highlightedLinks?: { source: string | number; target: string | number }[];
   linkColor?: string | 'source' | 'target' | 'source-target';
+  theme: 'dark' | 'light';
 }
 
 export function Graph(props: Props) {
@@ -104,6 +106,7 @@ export function Graph(props: Props) {
     highlightedLinks,
     minLabelHeight,
     linkColor,
+    theme,
   } = props;
   const svgRef = useRef(null);
   const id = useMemo(() => generateRandomString(8), []);
@@ -174,7 +177,7 @@ export function Graph(props: Props) {
           <text
             x={margin.left}
             y={margin.top - 10}
-            className='text-base font-bold fill-primary-gray-700 dark:fill-primary-gray-100'
+            className='text-base font-bold fill-content-primary'
             style={{ textAnchor: 'start' }}
           >
             {sourceTitle}
@@ -184,7 +187,7 @@ export function Graph(props: Props) {
           <text
             x={width - margin.right}
             y={margin.top - 10}
-            className='text-base font-bold fill-primary-gray-700 dark:fill-primary-gray-100'
+            className='text-base font-bold fill-content-primary'
             style={{ textAnchor: 'end' }}
           >
             {targetTitle}
@@ -463,7 +466,7 @@ export function Graph(props: Props) {
                                   labelPosition === 'outside'
                                     ? (d as NodeDataType).color
                                     : labelPosition === 'inside'
-                                      ? 'var(--gray-700)'
+                                      ? Colors[theme].grays['gray-700']
                                       : getTextColorBasedOnBgColor((d as NodeDataType).color),
                                 ...styles?.graphObjectValues,
                               }}
@@ -489,7 +492,7 @@ export function Graph(props: Props) {
                                 labelPosition === 'outside'
                                   ? (d as NodeDataType).color
                                   : labelPosition === 'inside'
-                                    ? 'var(--gray-700)'
+                                    ? Colors[theme].grays['gray-700']
                                     : getTextColorBasedOnBgColor((d as NodeDataType).color),
                               ...styles?.graphObjectValues,
                             }}
@@ -625,7 +628,7 @@ export function Graph(props: Props) {
                                 labelPosition === 'outside'
                                   ? (d as NodeDataType).color
                                   : labelPosition === 'inside'
-                                    ? 'var(--gray-700)'
+                                    ? Colors[theme].grays['gray-700']
                                     : getTextColorBasedOnBgColor((d as NodeDataType).color),
                               ...styles?.graphObjectValues,
                             }}
@@ -651,7 +654,7 @@ export function Graph(props: Props) {
                                 labelPosition === 'outside'
                                   ? (d as NodeDataType).color
                                   : labelPosition === 'inside'
-                                    ? 'var(--gray-700)'
+                                    ? Colors[theme].grays['gray-700']
                                     : getTextColorBasedOnBgColor((d as NodeDataType).color),
                               ...styles?.graphObjectValues,
                             }}

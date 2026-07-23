@@ -32,11 +32,7 @@ export function RegressionLine(props: Props) {
       <AnimatePresence>
         <motion.line
           clipPath={`url(#${id})`}
-          className={cn(
-            'undp-ref-line',
-            !color ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300' : undefined,
-            className,
-          )}
+          className={cn('undp-ref-line', !color ? 'stroke-foreground-soft' : undefined, className)}
           style={{
             fill: 'none',
             ...(style || {}),

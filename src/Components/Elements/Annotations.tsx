@@ -60,10 +60,7 @@ export function Annotation(props: Props) {
             cy={connectorsSettings.cy}
             cx={connectorsSettings.cx}
             r={connectorsSettings.circleRadius}
-            className={cn(
-              !color ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300' : '',
-              classNames?.connector,
-            )}
+            className={cn(!color ? 'stroke-foreground-soft' : '', classNames?.connector)}
             style={{
               fill: 'none',
               strokeWidth: connectorsSettings.strokeWidth,
@@ -76,10 +73,7 @@ export function Annotation(props: Props) {
             x1={connectorsSettings.x1}
             y2={connectorsSettings.y2}
             x2={connectorsSettings.x2}
-            className={cn(
-              !color ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300' : '',
-              classNames?.connector,
-            )}
+            className={cn(!color ? 'stroke-foreground-soft' : '', classNames?.connector)}
             style={{
               fill: 'none',
               strokeWidth: connectorsSettings.strokeWidth,
@@ -98,7 +92,7 @@ export function Annotation(props: Props) {
       >
         <p
           className={cn(
-            'text-sm leading-[1.25] m-0 whitespace-normal',
+            'text-sm leading-sm m-0 whitespace-normal',
             labelSettings.fontWeight === 'bold'
               ? 'font-bold'
               : labelSettings.fontWeight === 'medium'
@@ -109,7 +103,7 @@ export function Annotation(props: Props) {
               : labelSettings.align === 'center'
                 ? 'text-center'
                 : 'text-left',
-            !color ? 'text-primary-gray-700 dark:text-primary-gray-300' : undefined,
+            !color ? 'text-content-primary' : undefined,
             classNames?.text,
           )}
           style={{

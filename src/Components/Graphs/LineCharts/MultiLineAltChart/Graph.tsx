@@ -391,7 +391,7 @@ export function Graph(props: Props) {
               classNames={{
                 gridLines: cn('opacity-0', classNames?.xAxis?.gridLines),
                 labels: cn(
-                  'fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[9px] md:text-[10px] lg:text-xs',
+                  'fill-content-primary xs:max-[360px]:hidden text-[9px] md:text-2xs lg:text-xs',
                   classNames?.xAxis?.labels,
                 ),
               }}
@@ -621,7 +621,7 @@ export function Graph(props: Props) {
                     y={y(mouseOverData.y) + 20}
                     x={x(mouseOverData.date)}
                     className={cn(
-                      'graph-value text-sm fill-primary-gray-500 dark:fill-primary-gray-400',
+                      'graph-value text-sm fill-content-secondary',
                       classNames?.graphObjectValues,
                     )}
                     style={{

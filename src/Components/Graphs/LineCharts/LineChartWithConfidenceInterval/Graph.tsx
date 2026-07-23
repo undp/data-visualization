@@ -384,7 +384,7 @@ export function Graph(props: Props) {
                   y={graphHeight}
                   x={x(d)}
                   style={{ textAnchor: 'middle' }}
-                  className='fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[9px] md:text-[10px] lg:text-xs'
+                  className='fill-content-primary xs:max-[360px]:hidden text-[9px] md:text-2xs lg:text-xs'
                   dy={15}
                 >
                   {format(d, dateFormat)}
@@ -488,10 +488,7 @@ export function Graph(props: Props) {
               y2={graphHeight}
               x1={x(mouseOverData.date)}
               x2={x(mouseOverData.date)}
-              className={cn(
-                'undp-tick-line stroke-primary-gray-700 dark:stroke-primary-gray-100',
-                classNames?.mouseOverLine,
-              )}
+              className={cn('undp-tick-line stroke-foreground', classNames?.mouseOverLine)}
               style={styles?.mouseOverLine}
             />
           ) : null}

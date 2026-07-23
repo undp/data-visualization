@@ -92,11 +92,7 @@ export function BasicStatCard(props: Props) {
         dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
         className={cn(
           `${theme || 'light'} flex flex-col w-full box-border h-full ${
-            !backgroundColor
-              ? 'bg-transparent'
-              : backgroundColor === true
-                ? 'bg-primary-gray-200 dark:bg-primary-gray-650'
-                : ''
+            !backgroundColor ? 'bg-transparent' : backgroundColor === true ? 'bg-surface' : ''
           } ${language || 'en'}`,
           classNames?.graphContainer,
         )}
@@ -136,13 +132,13 @@ export function BasicStatCard(props: Props) {
               >
                 <H3
                   marginBottom='base'
-                  className={`leading-none text-outline font-heading ${
+                  className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] [text-shadow:none] font-heading ${
                     centerAlign
                       ? 'text-center'
                       : language === 'he' || language === 'ar'
                         ? 'text-right'
                         : 'text-left'
-                  } ${textBackground ? 'text-primary-black dark:text-primary-white' : 'transparent'}`}
+                  } ${textBackground ? 'text-content-primary' : 'text-transparent'}`}
                   style={{
                     fontSize: headingFontSize,
                     letterSpacing: '0.05rem',
@@ -159,7 +155,7 @@ export function BasicStatCard(props: Props) {
                   )}{' '}
                   {year ? (
                     <span
-                      className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'
+                      className='text-lg font-normal mt-0 mb-4 text-content-secondary'
                       style={{
                         marginLeft: '-8px',
                         lineHeight: '1.09',
@@ -188,13 +184,13 @@ export function BasicStatCard(props: Props) {
             <>
               <H3
                 marginBottom={layout === 'secondary' ? 'none' : 'base'}
-                className={`leading-none text-outline font-heading ${
+                className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] [text-shadow:none] font-heading ${
                   centerAlign
                     ? 'text-center'
                     : language === 'he' || language === 'ar'
                       ? 'text-right'
                       : 'text-left'
-                } ${textBackground ? 'text-primary-black dark:text-primary-white' : 'transparent'}`}
+                } ${textBackground ? 'text-content-primary' : 'text-transparent'}`}
                 style={{
                   fontSize: headingFontSize,
                   letterSpacing: '0.05rem',
@@ -211,7 +207,7 @@ export function BasicStatCard(props: Props) {
                 )}{' '}
                 {year ? (
                   <span
-                    className='text-lg font-normal mt-0 mb-4 text-primary-gray-550 dark:text-primary-gray-400'
+                    className='text-lg font-normal mt-0 mb-4 text-content-secondary'
                     style={{
                       marginLeft: '-8px',
                       lineHeight: '1.09',

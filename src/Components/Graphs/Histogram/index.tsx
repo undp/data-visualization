@@ -187,7 +187,7 @@ export function Histogram(props: Props) {
   if (dataFormatted.length === 0)
     return (
       <div style={{ width: `${width}px`, height: `${height}px`, margin: 'auto' }}>
-        <div className='flex m-auto items-center justify-center p-0 leading-none text-base h-40'>
+        <div className='flex m-auto items-center justify-center p-0 leading-xs text-base h-40'>
           <Spinner />
         </div>
       </div>

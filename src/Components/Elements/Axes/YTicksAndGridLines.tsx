@@ -48,10 +48,7 @@ export function YTicksAndGridLines(props: Props) {
               x2={x2}
               y1={d}
               y2={d}
-              className={cn(
-                'undp-tick-line stroke-primary-gray-500 dark:stroke-primary-gray-550',
-                classNames?.gridLines,
-              )}
+              className={cn('undp-tick-line stroke-stroke-lg', classNames?.gridLines)}
               style={styles?.gridLines}
             />
           ) : null}
@@ -66,9 +63,8 @@ export function YTicksAndGridLines(props: Props) {
                 ...(styles?.labels || {}),
               }}
               className={cn(
-                labelType === 'primary'
-                  ? 'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs'
-                  : 'fill-primary-gray-550 dark:fill-primary-gray-500 text-xs',
+                'text-xs',
+                labelType === 'primary' ? 'fill-content-primary' : 'fill-content-tertiary',
                 classNames?.labels,
               )}
             >

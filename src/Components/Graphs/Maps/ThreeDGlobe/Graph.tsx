@@ -7,8 +7,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Globe, { type GlobeMethods } from 'react-globe.gl';
 import * as THREE from 'three';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import {
+  LegendCollapseButton,
+  LegendExpandButton,
+} from '@/Components/Elements/LegendExpandControls';
 import { Tooltip } from '@/Components/Elements/Tooltip';
-import { ExpandIcon, X } from '@/Components/Icons';
 import type {
   ChoroplethMapDataType,
   ClassNameObject,
@@ -412,17 +415,9 @@ function Graph(props: Props) {
         <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
           {showLegend ? (
             <>
-              <button
-                type='button'
-                className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
-                onClick={() => {
-                  setShowLegend(false);
-                }}
-              >
-                <X />
-              </button>
+              <LegendCollapseButton setExpanded={setShowLegend} />
               <div
-                className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
+                className='color-legend-box p-2 bg-surface-sm/70'
                 style={{
                   width: categorical ? undefined : '340px',
                 }}
@@ -431,7 +426,7 @@ function Graph(props: Props) {
                   <P
                     size='xs'
                     marginBottom='xs'
-                    className='p-0 leading-normal overflow-hidden text-primary-gray-700 dark:text-primary-gray-300'
+                    className='p-0 leading-normal overflow-hidden text-content-primary'
                     style={{
                       display: '-webkit-box',
                       WebkitLineClamp: '1',
@@ -460,7 +455,7 @@ function Graph(props: Props) {
                           <text
                             x={((i + 1) * 320) / colors.length}
                             y={25}
-                            className='fill-primary-gray-700 dark:fill-primary-gray-300 text-xs'
+                            className='fill-content-primary text-xs'
                             style={{ textAnchor: 'middle' }}
                           >
                             {numberFormattingFunction(
@@ -508,15 +503,7 @@ function Graph(props: Props) {
               </div>
             </>
           ) : (
-            <button
-              type='button'
-              className='p-1 border-0 rounded-[2px] text-primary-gray-700 bg-primary-gray-300 dark:bg-primary-gray-500 map-legend-button'
-              onClick={() => {
-                setShowLegend(true);
-              }}
-            >
-              <ExpandIcon />
-            </button>
+            <LegendExpandButton setExpanded={setShowLegend} />
           )}
         </div>
       )}

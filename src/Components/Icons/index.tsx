@@ -5,7 +5,7 @@ export function FileDown() {
       width='20'
       height='20'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeLinecap='round'
       strokeLinejoin='round'
@@ -25,7 +25,7 @@ export function ImageDown() {
       width='20'
       height='20'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='1.2'
       strokeLinecap='round'
@@ -46,7 +46,7 @@ export function Copy() {
       width='20'
       height='20'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='1.2'
       strokeLinecap='round'
@@ -65,7 +65,7 @@ export function X() {
       width='16'
       height='16'
       viewBox='0 0 24 24'
-      className='stroke-primary-gray-600 dark:stroke-primary-white'
+      className='stroke-surface-3xl'
       fill='none'
       strokeWidth='2'
       strokeLinecap='round'
@@ -84,7 +84,7 @@ export function CircleCheckBig() {
       width='20'
       height='20'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='2'
       strokeLinecap='round'
@@ -103,7 +103,7 @@ export function SortingIcon() {
       width='14'
       height='14'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='1.25'
       strokeLinecap='round'
@@ -123,7 +123,7 @@ export function SortingIconDescending() {
       width='14'
       height='14'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='1.25'
       strokeLinecap='round'
@@ -145,7 +145,7 @@ export function SortingIconAscending() {
       width='14'
       height='14'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='1.25'
       strokeLinecap='round'
@@ -167,7 +167,7 @@ export function FilterIcon() {
       width='14'
       height='14'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='1.25'
       strokeLinecap='round'
@@ -183,7 +183,7 @@ export function FilterIconApplied() {
     <svg width='14' height='14' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M16.926 9L14 12.46V21L10 19V12.46L2 3H14.5'
-        className='stroke-primary-black dark:stroke-primary-white'
+        className='stroke-foreground'
         fill='none'
         strokeWidth='1.25'
         strokeLinecap='round'
@@ -193,7 +193,7 @@ export function FilterIconApplied() {
         cx='20'
         cy='4'
         r='3'
-        className='stroke-primary-black dark:stroke-primary-white fill-primary-black dark:fill-primary-white'
+        className='stroke-foreground fill-foreground'
         strokeWidth='1.25'
         strokeLinecap='round'
         strokeLinejoin='round'
@@ -209,7 +209,7 @@ export function ChevronLeftRight() {
       width='24'
       height='24'
       viewBox='0 0 24 24'
-      className='stroke-primary-white dark:stroke-primary-white'
+      className='stroke-background'
       fill='none'
       strokeWidth='2'
       strokeLinecap='round'
@@ -228,7 +228,7 @@ export function ChevronLeft() {
       width='24'
       height='24'
       viewBox='0 0 24 24'
-      className='stroke-primary-white dark:stroke-primary-white'
+      className='stroke-background'
       fill='none'
       strokeWidth='2'
       strokeLinecap='round'
@@ -246,7 +246,7 @@ export function ChevronRight() {
       width='24'
       height='24'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='2'
       strokeLinecap='round'
@@ -264,7 +264,7 @@ export function MoreHorizontal() {
       width='24'
       height='24'
       viewBox='0 0 24 24'
-      className='stroke-primary-black dark:stroke-primary-white'
+      className='stroke-foreground'
       fill='none'
       strokeWidth='2'
       strokeLinecap='round'
@@ -280,10 +280,10 @@ export function MoreHorizontal() {
 export function Play() {
   return (
     <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'>
-      <circle cx={24} cy={24} r={24} className='fill-primary-gray-300 dark:fill-primary-gray-600' />
+      <circle cx={24} cy={24} r={24} className='fill-surface-sm' />
       <polygon
         points='6 3 20 12 6 21 6 3'
-        className='fill-accent-dark-red dark:fill-accent-red'
+        className='fill-primary'
         transform='translate(10,10) scale(1.25)'
       />
     </svg>
@@ -293,14 +293,14 @@ export function Play() {
 export function Pause() {
   return (
     <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'>
-      <circle cx={24} cy={24} r={24} className='fill-primary-gray-300 dark:fill-primary-gray-600' />
+      <circle cx={24} cy={24} r={24} className='fill-surface-sm' />
       <rect
         x='14'
         y='4'
         width='4'
         height='16'
         rx='1'
-        className='fill-accent-dark-red dark:fill-accent-red'
+        className='fill-primary'
         transform='translate(10,10) scale(1.25)'
       />
       <rect
@@ -309,7 +309,7 @@ export function Pause() {
         width='4'
         height='16'
         rx='1'
-        className='fill-accent-dark-red dark:fill-accent-red'
+        className='fill-primary'
         transform='translate(10,10) scale(1.25)'
       />
     </svg>
@@ -328,7 +328,7 @@ export function Alert() {
       strokeWidth='1.5'
       strokeLinecap='round'
       strokeLinejoin='round'
-      className='stroke-primary-gray-500 dark:stroke-primary-gray-550'
+      className='stroke-stroke'
     >
       <path d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3' />
       <path d='M12 9v4' />
@@ -349,7 +349,7 @@ export function ExpandIcon() {
       strokeWidth='1.5'
       strokeLinecap='round'
       strokeLinejoin='round'
-      className='stroke-primary-gray-600 dark:stroke-primary-white'
+      className='stroke-surface-3xl'
     >
       <circle cx='12' cy='12' r='10' />
       <path d='M12 16v-4' />

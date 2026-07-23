@@ -7,11 +7,23 @@ import { imageDownload } from '@/Utils/imageDownload';
 interface Props {
   buttonContent?: string | JSX.Element;
   buttonType?:
+    | 'link'
     | 'primary'
-    | 'primary-without-icon'
     | 'secondary'
-    | 'secondary-without-icon'
-    | 'tertiary';
+    | 'background'
+    | 'error'
+    | 'tertiary'
+    | 'warning'
+    | 'success'
+    | 'info'
+    | 'quaternary'
+    | 'surface'
+    | 'outline'
+    | 'icon'
+    | 'surface-hard'
+    | 'background-soft'
+    | 'foreground'
+    | 'foreground-soft';
   nodeID: string | RefObject<HTMLDivElement | null>;
   filename?: string;
   buttonSmall?: boolean;
@@ -23,7 +35,7 @@ export function ImageDownloadButton(props: Props) {
     nodeID,
     filename = 'image',
     buttonContent,
-    buttonType = 'tertiary',
+    buttonType = 'surface',
     buttonSmall,
     className = '',
   } = props;
@@ -31,7 +43,7 @@ export function ImageDownloadButton(props: Props) {
     <Button
       variant={buttonType}
       className={cn(
-        'undp-viz-download-button no-underline border border-primary-gray-400 dark:border-primary-gray-550',
+        'undp-viz-download-button no-underline border border-stroke',
         buttonSmall ? 'p-2' : 'py-4 px-6',
         className,
       )}

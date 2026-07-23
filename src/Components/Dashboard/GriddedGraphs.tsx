@@ -609,7 +609,7 @@ export function GriddedGraphs(props: Props) {
                       {d.allowSelectAll ? (
                         <button
                           type='button'
-                          className='bg-transparent border-0 p-0 mt-2 cursor-pointer text-primary-blue-600 dark:text-primary-blue-400'
+                          className='bg-transparent border-0 p-0 mt-2 cursor-pointer text-info'
                           onClick={() => {
                             handleFilterChange(d.filter, d.availableValues);
                           }}

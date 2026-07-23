@@ -99,7 +99,7 @@ export function Graph(props: Props) {
               className={cn(
                 'w-full flex flex-col',
                 onSeriesMouseClick || detailsOnClick ? 'cursor-pointer' : 'cursor-auto',
-                !cardBackgroundColor ? 'bg-primary-gray-200 dark:bg-primary-gray-600' : '',
+                !cardBackgroundColor ? 'bg-surface' : '',
                 classNames?.dataCards,
               )}
               onClick={() => {

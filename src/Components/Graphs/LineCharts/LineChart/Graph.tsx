@@ -362,7 +362,7 @@ export function Graph(props: Props) {
             classNames={{
               gridLines: cn('opacity-0', classNames?.xAxis?.gridLines),
               labels: cn(
-                'fill-primary-gray-700 dark:fill-primary-gray-300 xs:max-[360px]:hidden text-[9px] md:text-[10px] lg:text-xs',
+                'fill-content-primary xs:max-[360px]:hidden text-[9px] md:text-2xs lg:text-xs',
                 classNames?.xAxis?.labels,
               ),
             }}
@@ -429,10 +429,7 @@ export function Graph(props: Props) {
                 y2={graphHeight}
                 x1={x(mouseOverData.date)}
                 x2={x(mouseOverData.date)}
-                className={cn(
-                  'undp-tick-line stroke-primary-gray-700 dark:stroke-primary-gray-100',
-                  classNames?.mouseOverLine,
-                )}
+                className={cn('undp-tick-line stroke-foreground0', classNames?.mouseOverLine)}
                 style={styles?.mouseOverLine}
               />
             ) : null}

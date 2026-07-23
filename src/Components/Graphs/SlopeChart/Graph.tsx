@@ -125,20 +125,14 @@ export function Graph(props: Props) {
               x1={radius}
               x2={radius}
               classNames={{
-                axis: cn(
-                  'stroke-1 stroke-primary-gray-500 dark:stroke-primary-gray-550',
-                  classNames?.yAxis?.axis,
-                ),
+                axis: cn('stroke-1 stroke-stroke-lg', classNames?.yAxis?.axis),
               }}
             />
             <AxisTitle
               x={radius}
               y={graphHeight + 15}
               style={styles?.yAxis?.title}
-              className={cn(
-                'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs',
-                classNames?.yAxis?.title,
-              )}
+              className={cn('fill-content-primary text-xs', classNames?.yAxis?.title)}
               text={axisTitles[0]}
             />
           </g>
@@ -149,20 +143,14 @@ export function Graph(props: Props) {
               x1={graphWidth - radius}
               x2={graphWidth - radius}
               classNames={{
-                axis: cn(
-                  'stroke-1 stroke-primary-gray-500 dark:stroke-primary-gray-550',
-                  classNames?.yAxis?.axis,
-                ),
+                axis: cn('stroke-1 stroke-stroke-lg', classNames?.yAxis?.axis),
               }}
             />
             <AxisTitle
               x={graphWidth - radius}
               y={graphHeight + 15}
               style={styles?.yAxis?.title}
-              className={cn(
-                'fill-primary-gray-700 dark:fill-primary-gray-300 text-xs',
-                classNames?.yAxis?.title,
-              )}
+              className={cn('fill-content-primary text-xs', classNames?.yAxis?.title)}
               text={axisTitles[1]}
             />
           </g>

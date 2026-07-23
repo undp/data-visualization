@@ -43,7 +43,7 @@ export function RefLineY(props: RefLineYProps) {
       <line
         className={cn(
           'undp-ref-line',
-          !color ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300' : undefined,
+          !color ? 'stroke-foreground-soft' : undefined,
           classNames?.line,
         )}
         style={{
@@ -65,7 +65,7 @@ export function RefLineY(props: RefLineYProps) {
         }}
         className={cn(
           'text-xs font-bold',
-          !color ? ' fill-primary-gray-700 dark:fill-primary-gray-300' : undefined,
+          !color ? ' fill-content-primary' : undefined,
           classNames?.text,
         )}
         dy={-5}
@@ -117,7 +117,7 @@ export function RefLineX(props: RefLineXProps) {
       <line
         className={cn(
           'undp-ref-line',
-          !color ? 'stroke-primary-gray-700 dark:stroke-primary-gray-300' : undefined,
+          !color ? 'stroke-foreground-soft' : undefined,
           classNames?.line,
         )}
         style={{
@@ -139,7 +139,7 @@ export function RefLineX(props: RefLineXProps) {
         }}
         className={cn(
           'text-xs font-bold',
-          !color ? 'fill-primary-gray-700 dark:fill-primary-gray-300' : undefined,
+          !color ? 'fill-content-primary' : undefined,
           classNames?.text,
         )}
         dy={12.5}

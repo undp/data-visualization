@@ -198,9 +198,13 @@ const ColorsList = {
       color: Colors.light.grays['gray-500'],
       name: "Colors.light.grays['gray-500']",
     },
-    'gray-550': {
-      color: Colors.light.grays['gray-550'],
-      name: "Colors.light.grays['gray-550']",
+    'gray-530': {
+      color: Colors.light.grays['gray-530'],
+      name: "Colors.light.grays['gray-530']",
+    },
+    'gray-560': {
+      color: Colors.light.grays['gray-560'],
+      name: "Colors.light.grays['gray-560']",
     },
     'gray-600': {
       color: Colors.light.grays['gray-600'],
@@ -240,9 +244,13 @@ const ColorsList = {
       color: Colors.dark.grays['gray-500'],
       name: "Colors.dark.grays['gray-500']",
     },
-    'gray-550': {
-      color: Colors.dark.grays['gray-550'],
-      name: "Colors.dark.grays['gray-550']",
+    'gray-530': {
+      color: Colors.dark.grays['gray-530'],
+      name: "Colors.dark.grays['gray-530']",
+    },
+    'gray-560': {
+      color: Colors.dark.grays['gray-560'],
+      name: "Colors.dark.grays['gray-560']",
     },
     'gray-600': {
       color: Colors.dark.grays['gray-600'],
@@ -269,7 +277,7 @@ function ColorGrid({ colors }: { colors: Record<string, { color: string; name: s
             <div>
               {name} ({value.color})
             </div>
-            <div className='text-xs text-gray-500 font-bold font-mono'>{value.name}</div>
+            <div className='text-xs text-content-tertiary font-bold font-mono'>{value.name}</div>
           </div>
         </div>
       ))}

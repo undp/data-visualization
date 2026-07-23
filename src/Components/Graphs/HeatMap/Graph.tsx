@@ -192,7 +192,7 @@ export function Graph(props: Props) {
                   width={barWidth}
                   height={barHeight}
                   style={{ fill: noDataColor }}
-                  className='stroke-1 stroke-primary-white dark:stroke-primary-gray-700'
+                  className='stroke-1 stroke-background'
                 />
               ))}
             </g>
@@ -244,7 +244,7 @@ export function Graph(props: Props) {
                     y={0}
                     width={barWidth}
                     height={barHeight}
-                    className='stroke-1 stroke-primary-white dark:stroke-primary-gray-700'
+                    className='stroke-1 stroke-background'
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     variants={{
                       initial: { fill: color, opacity: 0 },
@@ -271,7 +271,7 @@ export function Graph(props: Props) {
                         <div className='flex flex-col justify-center items-center h-inherit p-1'>
                           <p
                             className={cn(
-                              'text-xs text-center m-0 leading-[1.25] graph-value',
+                              'text-xs text-center m-0 leading-sm graph-value',
                               classNames?.graphObjectValues,
                             )}
                             style={{
@@ -307,7 +307,7 @@ export function Graph(props: Props) {
                 fillOpacity: 0,
                 strokeWidth: 1.5,
               }}
-              className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+              className='stroke-foreground'
             />
           ) : null}
         </g>

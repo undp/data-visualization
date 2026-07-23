@@ -159,7 +159,7 @@ export function MultiGraphDashboardWideToLongFormat(props: Props) {
           !dashboardLayout?.backgroundColor
             ? 'bg-transparent '
             : dashboardLayout?.backgroundColor === true
-              ? 'bg-primary-gray-200 dark:bg-primary-gray-650 '
+              ? 'bg-surface '
               : ''
         }flex flex-col w-full ml-auto mr-auto grow gap-4 ${dashboardLayout?.language || 'en'}`}
         style={{

@@ -260,7 +260,7 @@ export const Graph = (props: Props) => {
   if (!finalData) {
     return (
       <div style={{ width: `${width}px`, height: `${height}px` }}>
-        <div className='flex m-auto items-center justify-center p-0 leading-none text-base h-40'>
+        <div className='flex m-auto items-center justify-center p-0 leading-xs text-base h-40'>
           <Spinner />
         </div>
       </div>
@@ -327,7 +327,7 @@ export const Graph = (props: Props) => {
                               ) : (
                                 <P
                                   className={cn(
-                                    'text-center leading-[1.25] overflow-hidden m-0 circle-packing-label',
+                                    'text-center leading-sm overflow-hidden m-0 circle-packing-label',
                                     classNames?.graphObjectValues,
                                   )}
                                   marginBottom='none'
@@ -360,7 +360,7 @@ export const Graph = (props: Props) => {
                               ))}
                             {showValues && (
                               <P
-                                className='text-center font-bold leading-[1.25] w-full m-0 circle-packing-value'
+                                className='text-center font-bold leading-sm w-full m-0 circle-packing-value'
                                 marginBottom='none'
                                 style={{
                                   fontSize: `${Math.min(

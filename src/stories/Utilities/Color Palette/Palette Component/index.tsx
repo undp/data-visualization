@@ -167,7 +167,8 @@ function ColorRow({
   return (
     <div className='mb-6'>
       <div className='text-sm mb-1'>
-        {title} <span className='text-xs text-gray-500 font-bold font-mono'>({colors.name})</span>
+        {title}{' '}
+        <span className='text-xs text-content-tertiary font-bold font-mono'>({colors.name})</span>
       </div>
       <div className='flex flex-wrap gap-1'>
         {colors.colors.map((color) => (
@@ -193,7 +194,8 @@ function ColorGrid({
   return (
     <div className='mb-6'>
       <div className='text-sm mb-1'>
-        {title} <span className='text-xs text-gray-500 font-bold font-mono'>({colors.name})</span>
+        {title}{' '}
+        <span className='text-xs text-content-tertiary font-bold font-mono'>({colors.name})</span>
       </div>
       <div className='flex flex-col gap-1'>
         {colors.colors.map((row, rowIndex) => (

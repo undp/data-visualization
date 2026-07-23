@@ -19,7 +19,7 @@ export function AxisTitle(props: Props) {
         textAnchor: 'middle',
         ...(style || {}),
       }}
-      className={cn('fill-primary-gray-700 dark:fill-primary-gray-300 text-xs', className)}
+      className={cn('fill-content-primary text-xs', className)}
     >
       {text}
     </text>

@@ -201,7 +201,7 @@ export function UnitChart(props: Props) {
       {note ? (
         <H2
           marginBottom='2xs'
-          className='text-primary-gray-700 dark:text-primary-gray-100 font-bold'
+          className='text-content-primary font-bold'
           style={{ width: width ? `${width}px` : '100%' }}
         >
           {note}
@@ -213,11 +213,7 @@ export function UnitChart(props: Props) {
             {data.map((d, i) => (
               <div className='flex gap-2 items-center' key={d.label}>
                 <div className='w-3 h-3 rounded-full' style={{ backgroundColor: colors[i] }} />
-                <P
-                  marginBottom='none'
-                  size='sm'
-                  className='text-primary-gray-700 dark:text-primary-gray-100'
-                >
+                <P marginBottom='none' size='sm' className='text-content-primary'>
                   {d.label}:{' '}
                   <span className='font-bold'>
                     {numberFormattingFunction(
@@ -311,7 +307,7 @@ export function UnitChart(props: Props) {
                           d.color.toLowerCase() === '#ffffff' ||
                           d.color.toLowerCase() === 'white') &&
                         showStrokeForWhiteDots
-                          ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                          ? 'stroke-stroke'
                           : ''
                       }
                     >
@@ -353,7 +349,7 @@ export function UnitChart(props: Props) {
                           d.color.toLowerCase() === '#ffffff' ||
                           d.color.toLowerCase() === 'white') &&
                         showStrokeForWhiteDots
-                          ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
+                          ? 'stroke-stroke'
                           : ''
                       }
                       r={radius}

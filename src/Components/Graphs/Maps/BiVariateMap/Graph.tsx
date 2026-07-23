@@ -21,8 +21,12 @@ import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
+import {
+  LegendCollapseButton,
+  LegendExpandButton,
+} from '@/Components/Elements/LegendExpandControls';
+import { MapZoomButton } from '@/Components/Elements/MapZoomButton';
 import { Tooltip } from '@/Components/Elements/Tooltip';
-import { ExpandIcon, X } from '@/Components/Icons';
 import type {
   AnimateDataType,
   BivariateMapDataType,
@@ -401,9 +405,7 @@ export function Graph(props: Props) {
                       animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       className={`${
-                        color === mapNoDataColor
-                          ? 'stroke-primary-gray-400 dark:stroke-primary-gray-500'
-                          : 'stroke-primary-white dark:stroke-primary-gray-650'
+                        color === mapNoDataColor ? 'stroke-stroke' : 'stroke-background'
                       }`}
                       style={{
                         stroke: mapBorderColor,
@@ -426,7 +428,7 @@ export function Graph(props: Props) {
                       // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                       key={i}
                       d={pathGenerator(d) || ''}
-                      className='stroke-primary-gray-700 dark:stroke-primary-gray-300'
+                      className='stroke-foreground'
                       style={{
                         fill: 'none',
                         fillOpacity: 0,
@@ -462,19 +464,8 @@ export function Graph(props: Props) {
           <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
             {showLegend ? (
               <>
-                <button
-                  type='button'
-                  className='color-legend-close-button bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)] border border-[var(--gray-400)] rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem]'
-                  onClick={() => {
-                    setShowLegend(false);
-                  }}
-                >
-                  <X />
-                </button>
-                <div
-                  className='color-legend-box p-2 bg-[rgba(240,240,240,0.7)] dark:bg-[rgba(30,30,30,0.7)]'
-                  style={{ width: '175px' }}
-                >
+                <LegendCollapseButton setExpanded={setShowLegend} />
+                <div className='color-legend-box p-2 bg-surface-sm/70' style={{ width: '175px' }}>
                   <div className='flex gap-1 items-center'>
                     <svg width='136px' viewBox='0 0 136 136' className='shrink-0'>
                       <g>
@@ -589,36 +580,11 @@ export function Graph(props: Props) {
                 </div>
               </>
             ) : (
-              <button
-                type='button'
-                className='p-1 border-0 rounded-[2px] text-primary-gray-700 bg-primary-gray-300 dark:bg-primary-gray-500 map-legend-button'
-                onClick={() => {
-                  setShowLegend(true);
-                }}
-              >
-                <ExpandIcon />
-              </button>
+              <LegendExpandButton setExpanded={setShowLegend} />
             )}
           </div>
         )}
-        {zoomInteraction === 'button' && (
-          <div className='absolute left-4 top-4 flex flex-col undp-viz-zoom-buttons'>
-            <button
-              type='button'
-              onClick={() => handleZoom('in')}
-              className='leading-0 px-2 py-3.5 border text-primary-gray-700 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'
-            >
-              +
-            </button>
-            <button
-              type='button'
-              onClick={() => handleZoom('out')}
-              className='leading-0 px-2 py-3.5 border text-primary-gray-700 border-t-0 border-primary-gray-400 bg-primary-gray-200 dark:border-primary-gray-550 dark:bg-primary-gray-600 dark:text-primary-gray-100'
-            >
-              –
-            </button>
-          </div>
-        )}
+        {zoomInteraction === 'button' && <MapZoomButton handleZoom={handleZoom} />}
         {(graphDownload || dataDownload) && (
           <div className='absolute right-4 top-4 flex flex-col image-download-button gap-2'>
             {graphDownload && (

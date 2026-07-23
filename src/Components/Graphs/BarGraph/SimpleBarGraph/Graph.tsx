@@ -376,13 +376,7 @@ export function HorizontalGraph(props: Props) {
                         textAnchor: d.size ? (d.size < 0 ? 'end' : 'start') : 'start',
                         ...(styles?.graphObjectValues || {}),
                       }}
-                      className={cn(
-                        'graph-value text-sm',
-                        !valueColor && barColor.length > 1
-                          ? ' fill-primary-gray-600 dark:fill-primary-gray-300'
-                          : '',
-                        classNames?.graphObjectValues,
-                      )}
+                      className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                       dx={d.size ? (d.size < 0 ? -5 : 5) : 5}
                       dy='0.33em'
                       variants={{
@@ -819,13 +813,7 @@ export function VerticalGraph(props: Props) {
                         textAnchor: 'middle',
                         ...(styles?.graphObjectValues || {}),
                       }}
-                      className={cn(
-                        'graph-value text-sm',
-                        !valueColor && barColor.length > 1
-                          ? 'fill-primary-gray-600 dark:fill-primary-gray-300'
-                          : '',
-                        classNames?.graphObjectValues,
-                      )}
+                      className={cn('graph-value text-sm', classNames?.graphObjectValues)}
                       dy={d.size ? (d.size >= 0 ? '-5px' : '1em') : '-5px'}
                       variants={{
                         initial: {

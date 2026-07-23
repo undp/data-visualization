@@ -13,11 +13,23 @@ interface HeaderProps {
 interface Props {
   buttonContent?: string | JSX.Element;
   buttonType?:
+    | 'link'
     | 'primary'
-    | 'primary-without-icon'
     | 'secondary'
-    | 'secondary-without-icon'
-    | 'tertiary';
+    | 'background'
+    | 'error'
+    | 'tertiary'
+    | 'warning'
+    | 'success'
+    | 'info'
+    | 'quaternary'
+    | 'surface'
+    | 'outline'
+    | 'icon'
+    | 'surface-hard'
+    | 'background-soft'
+    | 'foreground'
+    | 'foreground-soft';
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any;
   fileName?: string;
@@ -49,7 +61,7 @@ const transformDataForCsv = (data: any) => {
 export function CsvDownloadButton(props: Props) {
   const {
     buttonContent,
-    buttonType = 'tertiary',
+    buttonType = 'surface',
     csvData,
     fileName = 'data',
     headers,
@@ -72,10 +84,11 @@ export function CsvDownloadButton(props: Props) {
       <Button
         variant={buttonType}
         className={cn(
-          'undp-viz-download-button no-underline border border-primary-gray-400 dark:border-primary-gray-550',
+          'undp-viz-download-button no-underline border border-stroke',
           buttonSmall ? 'p-2' : 'py-4 px-6',
           className,
         )}
+        arrow={false}
       >
         {buttonContent || <FileDown />}
       </Button>

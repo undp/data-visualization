@@ -274,11 +274,7 @@ export function DataCards(props: Props) {
               className='grow shrink-0 min-w-[240px]'
               style={{ width: cardSortingOptions.width || 'calc(25% - 0.75rem)' }}
             >
-              <P
-                marginBottom='xs'
-                size='sm'
-                className='text-primary-gray-700 dark:text-primary-gray-100'
-              >
+              <P marginBottom='xs' size='sm' className='text-content-primary'>
                 Sort by
               </P>
               <DropdownSelect
@@ -313,11 +309,7 @@ export function DataCards(props: Props) {
               style={{ width: d.width || 'calc(25% - 0.75rem)' }}
               key={d.label}
             >
-              <P
-                marginBottom='xs'
-                size='sm'
-                className='text-primary-gray-700 dark:text-primary-gray-100'
-              >
+              <P marginBottom='xs' size='sm' className='text-content-primary'>
                 {d.label}
               </P>
               <DropdownSelect

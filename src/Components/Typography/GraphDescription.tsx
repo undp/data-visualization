@@ -16,7 +16,7 @@ export function GraphDescription(props: Props) {
       <P
         size='sm'
         marginBottom='none'
-        className={cn('text-primary-gray-550 dark:text-primary-gray-400', className)}
+        className={cn('text-content-secondary', className)}
         aria-label='Graph description'
         style={style}
       >

@@ -105,7 +105,7 @@ export function Graph(props: Props) {
                   ) : (
                     <H2
                       marginBottom='none'
-                      className='donut-main-text text-primary-gray-700 dark:text-primary-gray-100 leading-none text-center'
+                      className='donut-main-text text-content-primary leading-xs text-center'
                     >
                       {typeof mainText === 'string'
                         ? mainText
@@ -128,7 +128,7 @@ export function Graph(props: Props) {
                     marginBottom='none'
                     size='base'
                     leading='none'
-                    className='donut-sub-note text-primary-gray-700 dark:text-primary-gray-100 text-center font-bold'
+                    className='donut-sub-note text-content-primary text-center font-bold'
                   >
                     {subNote}
                   </P>
@@ -137,7 +137,7 @@ export function Graph(props: Props) {
                     size='base'
                     marginBottom='none'
                     leading='none'
-                    className='donut-label text-primary-gray-700 dark:text-primary-gray-100 text-center font-bold'
+                    className='donut-label text-content-primary text-center font-bold'
                   >
                     {mainText.label}
                   </P>

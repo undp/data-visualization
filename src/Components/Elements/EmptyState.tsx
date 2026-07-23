@@ -6,12 +6,7 @@ export function EmptyState() {
   return (
     <div className='flex w-full flex-col justify-center grow items-center gap-2 p-6 h-full'>
       <Alert />
-      <P
-        marginBottom='none'
-        leading='none'
-        size='lg'
-        className='text-primary-gray-550 dark:text-primary-gray-550'
-      >
+      <P marginBottom='none' leading='none' size='lg' className='text-content-secondary'>
         No data available
       </P>
     </div>

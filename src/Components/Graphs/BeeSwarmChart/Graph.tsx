@@ -366,7 +366,7 @@ export function VerticalGraph(props: Props) {
                         {showLabels ? (
                           <p
                             className={cn(
-                              'text-center leading-none m-0',
+                              'text-center leading-xs m-0',
                               classNames?.graphObjectValues,
                             )}
                             style={{
@@ -424,7 +424,7 @@ export function VerticalGraph(props: Props) {
         </svg>
       ) : (
         <div style={{ width: `${width}px`, height: `${height}px` }}>
-          <div className='flex m-auto items-center justify-center p-0 leading-none text-base h-40'>
+          <div className='flex m-auto items-center justify-center p-0 leading-xs text-base h-40'>
             <Spinner />
           </div>
         </div>
@@ -744,7 +744,7 @@ export function HorizontalGraph(props: Props) {
                         {showLabels ? (
                           <P
                             className={cn(
-                              'text-center leading-none m-0',
+                              'text-center leading-xs m-0',
                               classNames?.graphObjectValues,
                             )}
                             marginBottom='none'
@@ -804,7 +804,7 @@ export function HorizontalGraph(props: Props) {
         </svg>
       ) : (
         <div style={{ width: `${width}px`, height: `${height}px` }}>
-          <div className='flex m-auto items-center justify-center p-0 leading-none text-base h-40'>
+          <div className='flex m-auto items-center justify-center p-0 leading-xs text-base h-40'>
             <Spinner />
           </div>
         </div>
