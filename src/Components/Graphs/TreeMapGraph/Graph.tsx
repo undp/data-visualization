@@ -298,7 +298,7 @@ export function Graph(props: Props) {
                               <P
                                 marginBottom='none'
                                 size='sm'
-                                leading='none'
+                                leading='xs'
                                 className={cn(
                                   'w-full treemap-label',
                                   language === 'ar' || language === 'he'
@@ -344,7 +344,7 @@ export function Graph(props: Props) {
                             <P
                               marginBottom='none'
                               size='sm'
-                              leading='none'
+                              leading='xs'
                               className={cn(
                                 'w-full font-bold treemap-value',
                                 language === 'ar' || language === 'he' ? 'text-right' : 'text-left',

@@ -132,7 +132,7 @@ export function BasicStatCard(props: Props) {
               >
                 <H3
                   marginBottom='base'
-                  className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] [text-shadow:none] font-heading ${
+                  className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] text-shadow-none font-heading ${
                     centerAlign
                       ? 'text-center'
                       : language === 'he' || language === 'ar'
@@ -184,7 +184,7 @@ export function BasicStatCard(props: Props) {
             <>
               <H3
                 marginBottom={layout === 'secondary' ? 'none' : 'base'}
-                className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] [text-shadow:none] font-heading ${
+                className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] text-shadow-none font-heading ${
                   centerAlign
                     ? 'text-center'
                     : language === 'he' || language === 'ar'

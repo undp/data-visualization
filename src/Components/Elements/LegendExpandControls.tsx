@@ -24,7 +24,7 @@ export function LegendCollapseButton(props: Props) {
   return (
     <button
       type='button'
-      className='bg-surface-sm/70 border border-stroke rounded-full w-6 h-6 p-[3px] cursor-pointer z-10 absolute right-[-0.75rem] top-[-0.75rem] hover:bg-surface-sm'
+      className='bg-surface-sm/70 border border-stroke rounded-full w-6 h-6 p-0.75 cursor-pointer z-10 absolute -right-3 -top-3 hover:bg-surface-sm'
       onClick={() => {
         setExpanded(false);
       }}

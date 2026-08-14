@@ -212,7 +212,7 @@ export function Graph(props: Props) {
         </div>
       </div>
       {mapLegend ? (
-        <div className='absolute left-[22px] bottom-13'>
+        <div className='absolute left-5.5 bottom-13'>
           {showLegend ? (
             <>
               <LegendCollapseButton setExpanded={setShowLegend} />

@@ -454,7 +454,7 @@ export function Graph(props: Props) {
                             <P
                               marginBottom={showValues ? '3xs' : 'none'}
                               size='sm'
-                              leading='none'
+                              leading='xs'
                               className={cn(
                                 'sankey-source-label',
                                 labelPosition === 'outside' ? 'text-right' : 'text-left',
@@ -480,7 +480,7 @@ export function Graph(props: Props) {
                           <P
                             marginBottom='none'
                             size='sm'
-                            leading='none'
+                            leading='xs'
                             className={cn(
                               'sankey-source-value font-bold',
                               labelPosition === 'outside' ? 'text-right' : 'text-left',
@@ -616,7 +616,7 @@ export function Graph(props: Props) {
                           <P
                             marginBottom={showValues ? '3xs' : 'none'}
                             size='sm'
-                            leading='none'
+                            leading='xs'
                             className={cn(
                               'sankey-target-label',
                               labelPosition === 'outside' ? 'text-left' : 'text-right',
@@ -641,7 +641,7 @@ export function Graph(props: Props) {
                         {showValues ? (
                           <P
                             size='sm'
-                            leading='none'
+                            leading='xs'
                             marginBottom='none'
                             className={cn(
                               'sankey-target-value font-bold',

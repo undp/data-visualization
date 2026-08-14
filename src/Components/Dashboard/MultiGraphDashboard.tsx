@@ -200,7 +200,7 @@ export function MultiGraphDashboard(props: Props) {
       <div className='flex gap-4 flex-wrap'>
         {filterSettings.length !== 0 ? (
           <div
-            className='flex-grow flex-shrink-0'
+            className='grow shrink-0'
             style={{
               width: filterPosition === 'side' ? '280px' : '100%',
             }}
@@ -333,7 +333,7 @@ export function MultiGraphDashboard(props: Props) {
           </div>
         ) : null}
         <div
-          className='flex flex-wrap gap-4 flex-grow flex-shrink-0 min-w-[280px]'
+          className='flex flex-wrap gap-4 grow shrink-0 min-w-70'
           style={{
             width: filterPosition === 'side' ? 'calc(100% - 280px - 1rem)' : '100%',
           }}

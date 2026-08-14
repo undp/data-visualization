@@ -138,7 +138,7 @@ export function MapEl(props: Props) {
         >
           <div ref={mapContainer} className='map maplibre-show-control w-full h-full' />
           {mapLegend ? (
-            <div className='absolute left-[22px] bottom-13'>
+            <div className='absolute left-5.5 bottom-13'>
               {showLegend ? (
                 <>
                   <LegendCollapseButton setExpanded={setShowLegend} />

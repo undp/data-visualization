@@ -127,7 +127,7 @@ export function Graph(props: Props) {
                   <P
                     marginBottom='none'
                     size='base'
-                    leading='none'
+                    leading='xs'
                     className='donut-sub-note text-content-primary text-center font-bold'
                   >
                     {subNote}
@@ -136,7 +136,7 @@ export function Graph(props: Props) {
                   <P
                     size='base'
                     marginBottom='none'
-                    leading='none'
+                    leading='xs'
                     className='donut-label text-content-primary text-center font-bold'
                   >
                     {mainText.label}

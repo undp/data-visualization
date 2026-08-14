@@ -51,7 +51,6 @@ export function ScrollStory(props: Props) {
   });
   return (
     <div className='relative w-full h-full'>
-      {/* Background Layer */}
       <motion.div
         key={sectionsArr[activeIndex].chapter}
         className='fixed top-0 h-full -z-10'

@@ -35,7 +35,7 @@ export function Tooltip(props: Props) {
   return createPortal(
     <div className='undp-container'>
       <div
-        className={cn('graph-tooltip block p-2 fixed z-[1000] bg-surface', className)}
+        className={cn('graph-tooltip block p-2 fixed z-1000 bg-surface', className)}
         style={{
           ...backgroundStyle,
           top: `${yPos < window.innerHeight / 2 ? yPos - 10 : yPos + 10}px`,
