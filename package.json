@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

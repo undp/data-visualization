@@ -69,7 +69,7 @@ interface Props {
   onSeriesMouseClick?: (_d: any) => void;
   graphDownload?: boolean;
   dataDownload?: boolean;
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   language?: Languages;
   theme?: 'light' | 'dark';
   maxBarThickness?: number;

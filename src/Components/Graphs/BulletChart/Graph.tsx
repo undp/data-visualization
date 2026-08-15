@@ -50,7 +50,7 @@ interface Props {
   highlightedDataPoints?: (string | number)[];
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   maxBarThickness?: number;
   minBarThickness?: number;
   resetSelectionOnDoubleClick: boolean;
@@ -196,10 +196,10 @@ export function VerticalGraph(props: Props) {
       : Math.min(...[barMinValue, targetMinValue].filter(Number.isFinite));
 
   const dataWithId = useMemo(() => {
-    const idSet = new Set<string>();
+    const idSet = new Set<string | number>();
 
     const dataWithIdWithoutMissingIds = data.map((d, i) => {
-      const id = labelOrder ? `${d.label}` : `${i}`;
+      const id = labelOrder ? d.label : `${i}`;
       idSet.add(id);
       return { ...d, id };
     });
@@ -224,7 +224,7 @@ export function VerticalGraph(props: Props) {
 
   const y = scaleLinear().domain([xMinValue, xMaxValue]).range([graphHeight, 0]).nice();
 
-  const x = scaleBand()
+  const x = scaleBand<string | number>()
     .domain(barOrder)
     .range([
       0,
@@ -720,10 +720,10 @@ export function HorizontalGraph(props: Props) {
       : Math.min(...[barMinValue, targetMinValue].filter(Number.isFinite));
 
   const dataWithId = useMemo(() => {
-    const idSet = new Set<string>();
+    const idSet = new Set<string | number>();
 
     const dataWithIdWithoutMissingIds = data.map((d, i) => {
-      const id = labelOrder ? `${d.label}` : `${i}`;
+      const id = labelOrder ? d.label : `${i}`;
       idSet.add(id);
       return { ...d, id };
     });
@@ -747,7 +747,7 @@ export function HorizontalGraph(props: Props) {
   }, [labelOrder, dataWithId]);
 
   const x = scaleLinear().domain([xMinValue, xMaxValue]).range([0, graphWidth]).nice();
-  const y = scaleBand()
+  const y = scaleBand<string | number>()
     .domain(barOrder)
     .range([
       0,

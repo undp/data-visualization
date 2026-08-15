@@ -73,7 +73,7 @@ interface Props {
   fillContainer?: boolean;
 
   // Values and Ticks
-  /** Maximum value for the chart */
+  /** Value by which the label are truncated. Only applicable if showLabel is true */
   truncateBy?: number;
   /** Reference values for comparison */
 

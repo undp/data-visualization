@@ -84,7 +84,7 @@ interface Props {
   maxValue?: number;
   /** Minimum value for the chart */
   minValue?: number;
-  /** Truncate labels by specified length */
+  /** Value by which the label are truncated. Only applicable if showLabel is true */
   truncateBy?: number;
   /** Reference values for comparison */
   refValues?: ReferenceDataType[];
@@ -97,7 +97,7 @@ interface Props {
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Custom order for labels */
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Toggle visibility of axis ticks */
@@ -356,7 +356,7 @@ interface GroupedBarChartProps {
   maxValue?: number;
   /** Minimum value for the chart */
   minValue?: number;
-  /** Truncate labels by specified length */
+  /** Value by which the label are truncated. Only applicable if showLabel is true */
   truncateBy?: number;
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
@@ -377,7 +377,7 @@ interface GroupedBarChartProps {
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Custom order for labels */
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
   /** Toggle visibility of axis line for the  main axis */
@@ -615,7 +615,7 @@ interface StackedBarChartProps {
   // Values and Ticks
   /** Maximum value for the chart */
   maxValue?: number;
-  /** Minimum value for the chart */
+  /** Value by which the label are truncated. Only applicable if showLabels is true */
   truncateBy?: number;
   /** Reference values for comparison */
   refValues?: ReferenceDataType[];
@@ -623,7 +623,7 @@ interface StackedBarChartProps {
   noOfTicks?: number;
 
   // Graph Parameters
-  /** Toggle visibility of labels or defines what i shown in the label */
+  /** Toggle visibility of labels or defines what is shown in the label */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   showLabels?: boolean | ((_d: any) => React.ReactNode);
   /** Toggle visibility of values */
@@ -633,7 +633,7 @@ interface StackedBarChartProps {
   /** Toggle visibility of the total value. If not defined it takes the value or `showValues` */
   showTotalValue?: boolean;
   /** Custom order for labels */
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
   /** Toggle visibility of axis line for the  main axis */

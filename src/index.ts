@@ -123,6 +123,14 @@ export { graphList } from './Utils/getGraphList';
 export { getJenks } from './Utils/getJenks';
 export { getPercentileValue } from './Utils/getPercentileValue';
 export { getQueryParamsFromLink } from './Utils/getQueryParamsFromLink';
+export {
+  getMean,
+  getMedian,
+  getMode,
+  getPercentile,
+  getStandardDeviation,
+  getVariance,
+} from './Utils/getSimpleStatistics';
 export { getTextColorBasedOnBgColor } from './Utils/getTextColorBasedOnBgColor';
 export { getUniqValue } from './Utils/getUniqValue';
 export { imageDownload } from './Utils/imageDownload';

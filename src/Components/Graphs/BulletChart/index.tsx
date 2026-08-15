@@ -123,7 +123,7 @@ interface Props {
   /** Defines the width of the measure bar in relation with available width */
   measureBarWidthFactor?: number;
   /** Custom order for labels */
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
   /** Toggle visibility of axis line for the  main axis */

@@ -6,6 +6,14 @@ export { graphList } from './getGraphList';
 export { getJenks } from './getJenks';
 export { getPercentileValue } from './getPercentileValue';
 export { getQueryParamsFromLink } from './getQueryParamsFromLink';
+export {
+  getMean,
+  getMedian,
+  getMode,
+  getPercentile,
+  getStandardDeviation,
+  getVariance,
+} from './getSimpleStatistics';
 export { getTextColorBasedOnBgColor } from './getTextColorBasedOnBgColor';
 export { getUniqValue } from './getUniqValue';
 export { imageDownload } from './imageDownload';

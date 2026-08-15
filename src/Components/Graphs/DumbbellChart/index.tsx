@@ -111,7 +111,7 @@ interface Props {
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Custom order for labels */
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
   /** Toggle visibility of axis line for the  main axis. Only applicable to vertical charts. */

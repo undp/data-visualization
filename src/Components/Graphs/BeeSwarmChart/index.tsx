@@ -9,6 +9,7 @@ import type {
   BeeSwarmChartDataType,
   ClassNameObject,
   CustomLayerDataType,
+  DistributionMarkerDataType,
   Languages,
   NumberFormatOptions,
   ReferenceDataType,
@@ -71,6 +72,8 @@ interface Props {
   topMargin?: number;
   /** Bottom margin of the graph */
   bottomMargin?: number;
+  /** Custom order for . Only applicable of group is present in the data props */
+  groupOrder?: (string | number)[];
 
   // Values and Ticks
   /** Maximum value for the radius of the circle */
@@ -87,10 +90,15 @@ interface Props {
   // Graph Parameters
   /** Toggle visibility of labels */
   showLabels?: boolean;
+  /** Toggle visibility of groups or defines what is shown in the group label */
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showGroups?: boolean | ((_d: any) => React.ReactNode);
   /** Toggle visibility of values */
   showTicks?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
+  /** Value by which the label are truncated. Only applicable if showGroups is true */
+  truncateBy?: number;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
   /** Toggle visibility of axis line for the  main axis */
@@ -103,6 +111,8 @@ interface Props {
   dimmedOpacity?: number;
   /** Maximum radius of the circles  */
   radius?: number;
+  /** Defines distribution markers  shown as a line for data points. */
+  distributionMarkers?: DistributionMarkerDataType[];
   /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
   numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -187,6 +197,10 @@ export function BeeSwarmChart(props: Props) {
     customLayers = [],
     hideAxisLine = false,
     strictValuePosition = false,
+    truncateBy = 999,
+    showGroups = true,
+    groupOrder,
+    distributionMarkers = [],
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -296,6 +310,7 @@ export function BeeSwarmChart(props: Props) {
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             detailsOnClick={detailsOnClick}
             styles={styles}
+            groupOrder={groupOrder}
             classNames={classNames}
             noOfTicks={noOfTicks || 5}
             dimmedOpacity={dimmedOpacity}
@@ -306,6 +321,10 @@ export function BeeSwarmChart(props: Props) {
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
             strictValuePosition={strictValuePosition}
+            hasGroups={data.every((d) => d.group !== undefined)}
+            truncateBy={truncateBy}
+            showGroups={showGroups}
+            distributionMarkers={distributionMarkers}
           />
         ) : null}
       </GraphArea>

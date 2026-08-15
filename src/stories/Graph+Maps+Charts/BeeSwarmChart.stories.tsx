@@ -24,6 +24,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         type: {
           detail: `{
   label: string | number;
+  group?: string | number; // Groups data points into distinct visual sections. Grouping is applied only when all data points have a group defined. If any data point is missing a group, all group values are ignored.
   position: number;
   radius?: number;
   color?: string;
@@ -41,6 +42,18 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   prefix?: string;
   suffix?: string;
   padZeros?: boolean;
+}`,
+        },
+      },
+    },
+    distributionMarkers: {
+      table: {
+        type: {
+          detail: `{
+  type: 'median' | 'mean' | 'q1' | 'q3';
+  style?: React.CSSProperties;
+  color?: string;
+  strokeWidth?: number;
 }`,
         },
       },

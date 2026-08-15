@@ -53,7 +53,7 @@ interface Props {
   onSeriesMouseClick?: (_d: any) => void;
   selectedColor?: string;
   rtl: boolean;
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   maxBarThickness?: number;
   minBarThickness?: number;
   resetSelectionOnDoubleClick: boolean;
@@ -141,10 +141,10 @@ export function HorizontalGraph(props: Props) {
   const graphHeight = height - margin.top - margin.bottom;
 
   const dataWithId = useMemo(() => {
-    const idSet = new Set<string>();
+    const idSet = new Set<string | number>();
 
     const dataWithIdWithoutMissingIds = data.map((d, i) => {
-      const id = labelOrder ? `${d.label}` : `${i}`;
+      const id = labelOrder ? d.label : `${i}`;
       idSet.add(id);
       return { ...d, id };
     });
@@ -166,7 +166,7 @@ export function HorizontalGraph(props: Props) {
   }, [labelOrder, dataWithId]);
 
   const x = scaleLinear().domain([0, maxValue]).range([0, graphWidth]).nice();
-  const y = scaleBand()
+  const y = scaleBand<string | number>()
     .domain(barOrder)
     .range([
       0,
@@ -550,10 +550,10 @@ export function VerticalGraph(props: Props) {
   const graphHeight = height - margin.top - margin.bottom;
 
   const dataWithId = useMemo(() => {
-    const idSet = new Set<string>();
+    const idSet = new Set<string | number>();
 
     const dataWithIdWithoutMissingIds = data.map((d, i) => {
-      const id = labelOrder ? `${d.label}` : `${i}`;
+      const id = labelOrder ? d.label : `${i}`;
       idSet.add(id);
       return { ...d, id };
     });
@@ -576,7 +576,7 @@ export function VerticalGraph(props: Props) {
 
   const y = scaleLinear().domain([0, maxValue]).range([graphHeight, 0]).nice();
 
-  const x = scaleBand()
+  const x = scaleBand<string | number>()
     .domain(barOrder)
     .range([
       0,

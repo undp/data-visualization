@@ -90,7 +90,7 @@ interface Props {
   targetTitle?: string;
   /** Minimum height of the nodes for which labels and values are visible */
   minLabelHeight?: number;
-  /** Toggle visibility of labels or defines what i shown in the label */
+  /** Toggle visibility of labels or defines what is shown in the label */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   showLabels?: boolean | ((_d: any) => React.ReactNode);
   /** Option to position the labels */

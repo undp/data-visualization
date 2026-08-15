@@ -2,13 +2,15 @@ import { cn } from '@undp/design-system-react/cn';
 import { Spinner } from '@undp/design-system-react/Spinner';
 import { P } from '@undp/design-system-react/Typography';
 import { forceCollide, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force';
-import { scaleLinear, scaleSqrt } from 'd3-scale';
+import { scaleBand, scaleLinear, scaleSqrt } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
 import orderBy from 'lodash.orderby';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { Axis } from '@/Components/Elements/Axes/Axis';
+import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
 import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
+import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
 import { YTicksAndGridLines } from '@/Components/Elements/Axes/YTicksAndGridLines';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { RefLineX, RefLineY } from '@/Components/Elements/ReferenceLine';
@@ -17,10 +19,12 @@ import type {
   BeeSwarmChartDataType,
   ClassNameObject,
   CustomLayerDataType,
+  DistributionMarkerDataType,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getMean, getMedian, getPercentile } from '@/Utils/getSimpleStatistics';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -73,6 +77,12 @@ interface Props {
   locale: string;
   padZeros: boolean;
   strictValuePosition: boolean;
+  hasGroups: boolean;
+  groupOrder?: (string | number)[];
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showGroups: boolean | ((_d: any) => React.ReactNode);
+  truncateBy: number;
+  distributionMarkers: DistributionMarkerDataType[];
 }
 
 export function VerticalGraph(props: Props) {
@@ -84,9 +94,9 @@ export function VerticalGraph(props: Props) {
     height,
     colorDomain,
     topMargin = 25,
-    bottomMargin = 10,
-    leftMargin = 100,
-    rightMargin = 40,
+    bottomMargin,
+    leftMargin = 20,
+    rightMargin = 20,
     suffix,
     prefix,
     showLabels,
@@ -113,6 +123,11 @@ export function VerticalGraph(props: Props) {
     locale,
     padZeros,
     strictValuePosition,
+    hasGroups,
+    groupOrder,
+    showGroups,
+    truncateBy,
+    distributionMarkers,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -124,24 +139,43 @@ export function VerticalGraph(props: Props) {
   const [eventY, setEventY] = useState<number | undefined>(undefined);
   const margin = {
     top: topMargin,
-    bottom: bottomMargin,
+    bottom: hasGroups && showGroups ? (bottomMargin ?? 25) : (bottomMargin ?? 10),
     left: leftMargin,
     right: rightMargin,
   };
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  const dataOrdered = useMemo(
+  const dataOrderedWithGroup = useMemo(
     () =>
       data.filter((d) => !checkIfNullOrUndefined(d.radius)).length === 0
-        ? data
+        ? data.map((d) => (hasGroups ? d : { ...d, group: 'undefined' }))
         : orderBy(
-            data.filter((d) => !checkIfNullOrUndefined(d.radius)),
+            data
+              .map((d) => (hasGroups ? d : { ...d, group: 'undefined' }))
+              .filter((d) => !checkIfNullOrUndefined(d.radius)),
             'radius',
             'desc',
           ),
-    [data],
+    [data, hasGroups],
   );
+  const clusterOrder = useMemo(() => {
+    return (
+      groupOrder ?? [
+        ...new Set(
+          data
+            .map((d) => (hasGroups ? d : { ...d, group: 'undefined' }))
+            .map((d) => d.group as string | number),
+        ),
+      ]
+    );
+  }, [groupOrder, data, hasGroups]);
+  const x = useMemo(() => {
+    return scaleBand<string | number>()
+      .domain(clusterOrder)
+      .range([0, graphWidth])
+      .paddingInner(0.1);
+  }, [clusterOrder, graphWidth]);
   const yMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
     : Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.position)).map((d) => d.position)) <
@@ -172,15 +206,15 @@ export function VerticalGraph(props: Props) {
         : undefined,
     [data, radius, maxRadiusValue],
   );
+
   const y = useMemo(
     () => scaleLinear().domain([yMinValue, yMaxValue]).range([graphHeight, 0]).nice(),
     [yMaxValue, yMaxValue, graphHeight],
   );
   const yTicks = y.ticks(noOfTicks);
-
   useEffect(() => {
     const dataTemp = (
-      dataOrdered.map((d) => ({
+      dataOrderedWithGroup.map((d) => ({
         ...d,
         ...(d.data && { data: { ...d.data } }),
       })) as BeeSwarmChartDataType[]
@@ -190,12 +224,16 @@ export function VerticalGraph(props: Props) {
         // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         (d as any).fy = y(d.position as number);
         // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-        (d as any).x = graphWidth / 2;
+        (d as any).x = (x(d.group as string | number) ?? 0) + x.bandwidth() / 2;
       });
     }
     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const simulation = forceSimulation(dataTemp as any)
-      .force('x', forceX((_d) => graphWidth / 2).strength(1))
+      .force(
+        'x',
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        forceX((d: any) => (x(d.group as string | number) ?? 0) + x.bandwidth() / 2).strength(1),
+      )
       .force(
         'collide',
         // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -220,8 +258,7 @@ export function VerticalGraph(props: Props) {
       .on('end', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
       });
-  }, [radius, graphWidth, dataOrdered, y, radiusScale, strictValuePosition]);
-
+  }, [radius, graphWidth, dataOrderedWithGroup, y, x, radiusScale, strictValuePosition]);
   return (
     <>
       {finalData ? (
@@ -406,6 +443,74 @@ export function VerticalGraph(props: Props) {
                 ) : null}
               </g>
             ))}
+            {showGroups && hasGroups && clusterOrder.length > 1
+              ? clusterOrder.map((c) => (
+                  <XAxesLabels
+                    key={c}
+                    value={
+                      typeof showGroups === 'function'
+                        ? showGroups(c)
+                        : `${c}`.length < truncateBy
+                          ? `${c}`
+                          : `${`${c}`.substring(0, truncateBy)}...`
+                    }
+                    y={y(0) + 5}
+                    x={x(`${c}`) as number}
+                    width={x.bandwidth()}
+                    height={margin.bottom}
+                    style={styles?.xAxis?.labels}
+                    className={classNames?.xAxis?.labels}
+                    alignment='top'
+                    animate={{ duration: 0, once: true, amount: 0 }}
+                    isInView={true}
+                  />
+                ))
+              : null}
+            {clusterOrder.map((c) => (
+              <g key={`${c}`}>
+                {distributionMarkers.map((marker) => (
+                  <line
+                    key={`${c}-${marker.type}`}
+                    y1={y(
+                      marker.type === 'mean'
+                        ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
+                        : marker.type === 'median'
+                          ? getMedian(finalData.filter((d) => d.group === c).map((d) => d.position))
+                          : marker.type === 'q1'
+                            ? getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.25,
+                              )
+                            : getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.75,
+                              ),
+                    )}
+                    x1={x(c) ?? 0}
+                    y2={y(
+                      marker.type === 'mean'
+                        ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
+                        : marker.type === 'median'
+                          ? getMedian(finalData.filter((d) => d.group === c).map((d) => d.position))
+                          : marker.type === 'q1'
+                            ? getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.25,
+                              )
+                            : getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.75,
+                              ),
+                    )}
+                    x2={(x(c) ?? 0) + x.bandwidth()}
+                    className={`${marker.type}-marker`}
+                    style={marker.style}
+                    stroke={marker.color || '#000000'}
+                    strokeWidth={marker.strokeWidth ?? 2}
+                  />
+                ))}
+              </g>
+            ))}
             {refValues?.map((el) => (
               <RefLineY
                 key={el.text}
@@ -461,8 +566,8 @@ export function HorizontalGraph(props: Props) {
     colorDomain,
     topMargin = 25,
     bottomMargin = 10,
-    leftMargin = 10,
-    rightMargin = 10,
+    leftMargin,
+    rightMargin = 20,
     showLabels,
     tooltip,
     onSeriesMouseOver,
@@ -490,6 +595,11 @@ export function HorizontalGraph(props: Props) {
     locale,
     padZeros,
     strictValuePosition,
+    hasGroups,
+    groupOrder,
+    showGroups,
+    truncateBy,
+    distributionMarkers,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -502,22 +612,24 @@ export function HorizontalGraph(props: Props) {
   const margin = {
     top: topMargin,
     bottom: bottomMargin,
-    left: leftMargin,
+    left: hasGroups && showGroups ? (leftMargin ?? 100) : (leftMargin ?? 10),
     right: rightMargin,
   };
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  const dataOrdered = useMemo(
+  const dataOrderedWithGroup = useMemo(
     () =>
       data.filter((d) => !checkIfNullOrUndefined(d.radius)).length === 0
-        ? data
+        ? data.map((d) => (hasGroups ? d : { ...d, group: 'undefined' }))
         : orderBy(
-            data.filter((d) => !checkIfNullOrUndefined(d.radius)),
+            data
+              .map((d) => (hasGroups ? d : { ...d, group: 'undefined' }))
+              .filter((d) => !checkIfNullOrUndefined(d.radius)),
             'radius',
             'desc',
           ),
-    [data],
+    [data, hasGroups],
   );
   const xMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
@@ -555,9 +667,26 @@ export function HorizontalGraph(props: Props) {
   );
   const xTicks = x.ticks(noOfTicks);
 
+  const clusterOrder = useMemo(() => {
+    return (
+      groupOrder ?? [
+        ...new Set(
+          data
+            .map((d) => (hasGroups ? d : { ...d, group: 'undefined' }))
+            .map((d) => d.group as string | number),
+        ),
+      ]
+    );
+  }, [groupOrder, data, hasGroups]);
+  const y = useMemo(() => {
+    return scaleBand<string | number>()
+      .domain(clusterOrder)
+      .range([0, graphHeight])
+      .paddingInner(0.1);
+  }, [clusterOrder, graphHeight]);
   useEffect(() => {
     const dataTemp = (
-      dataOrdered.map((d) => ({
+      dataOrderedWithGroup.map((d) => ({
         ...d,
         ...(d.data && { data: { ...d.data } }),
       })) as BeeSwarmChartDataType[]
@@ -568,13 +697,17 @@ export function HorizontalGraph(props: Props) {
         // biome-ignore lint/suspicious/noExplicitAny: undefined data type
         (d as any).fx = x(d.position as number);
         // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-        (d as any).y = graphHeight / 2;
+        (d as any).y = (y(d.group as string | number) ?? 0) + y.bandwidth() / 2;
       });
     }
 
     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
     const simulation = forceSimulation(dataTemp as any)
-      .force('y', forceY((_d) => graphHeight / 2).strength(1))
+      .force(
+        'y',
+        // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+        forceY((d: any) => (y(d.group as string | number) ?? 0) + y.bandwidth() / 2).strength(1),
+      )
       .force(
         'collide',
         // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -599,7 +732,7 @@ export function HorizontalGraph(props: Props) {
       .on('end', () => {
         setFinalData(dataTemp as BeeSwarmChartDataTypeForBubbleChart[]);
       });
-  }, [radius, graphHeight, dataOrdered, x, radiusScale, strictValuePosition]);
+  }, [radius, graphHeight, dataOrderedWithGroup, x, radiusScale, strictValuePosition]);
 
   return (
     <>
@@ -783,6 +916,74 @@ export function HorizontalGraph(props: Props) {
                     </foreignObject>
                   </g>
                 ) : null}
+              </g>
+            ))}
+            {showGroups && hasGroups && clusterOrder.length > 1
+              ? clusterOrder.map((c) => (
+                  <YAxesLabels
+                    key={c}
+                    value={
+                      typeof showGroups === 'function'
+                        ? showGroups(c)
+                        : `${c}`.length < truncateBy
+                          ? `${c}`
+                          : `${`${c}`.substring(0, truncateBy)}...`
+                    }
+                    y={y(c) || 0}
+                    x={0 - margin.left}
+                    width={margin.left}
+                    height={y.bandwidth()}
+                    alignment='right'
+                    style={styles?.yAxis?.labels}
+                    className={classNames?.yAxis?.labels}
+                    animate={{ duration: 0, once: true, amount: 0 }}
+                    isInView={true}
+                  />
+                ))
+              : null}
+            {clusterOrder.map((c) => (
+              <g key={c}>
+                {distributionMarkers.map((marker) => (
+                  <line
+                    key={`${c}-${marker.type}`}
+                    x1={x(
+                      marker.type === 'mean'
+                        ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
+                        : marker.type === 'median'
+                          ? getMedian(finalData.filter((d) => d.group === c).map((d) => d.position))
+                          : marker.type === 'q1'
+                            ? getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.25,
+                              )
+                            : getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.75,
+                              ),
+                    )}
+                    y1={y(c) ?? 0}
+                    x2={x(
+                      marker.type === 'mean'
+                        ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
+                        : marker.type === 'median'
+                          ? getMedian(finalData.filter((d) => d.group === c).map((d) => d.position))
+                          : marker.type === 'q1'
+                            ? getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.25,
+                              )
+                            : getPercentile(
+                                finalData.filter((d) => d.group === c).map((d) => d.position),
+                                0.75,
+                              ),
+                    )}
+                    y2={(y(c) ?? 0) + y.bandwidth()}
+                    className={`${marker.type}-marker`}
+                    style={marker.style}
+                    stroke={marker.color || '#000000'}
+                    strokeWidth={marker.strokeWidth ?? 2}
+                  />
+                ))}
               </g>
             ))}
             {refValues?.map((el) => (

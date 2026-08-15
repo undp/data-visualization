@@ -356,6 +356,7 @@ export interface SankeyDataType {
 export interface BeeSwarmChartDataType {
   label: string | number;
   position: number;
+  group?: string | number;
   radius?: number;
   color?: string;
   data?: object;
@@ -795,12 +796,19 @@ export interface MapOverlayDataType {
   mapBorderColor?: string;
 }
 
+export interface DistributionMarkerDataType {
+  type: 'median' | 'mean' | 'q1' | 'q3';
+  style?: React.CSSProperties;
+  color?: string;
+  strokeWidth?: number;
+}
+
 export interface GraphSettingsDataType {
   colors?: string | string[] | string[][];
   orientation?: 'horizontal' | 'vertical';
   axisTitles?: [string, string];
   graphTitle?: string | React.ReactNode;
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   graphDescription?: string | React.ReactNode;
   footNote?: string | React.ReactNode;
   height?: number;
@@ -1075,6 +1083,9 @@ export interface GraphSettingsDataType {
   minLabelHeight?: number;
   minLabelWidth?: number;
   minLabelRadius?: number;
+  groupOrder?: (string | number)[];
+  showGroups?: boolean;
+  distributionMarkers?: DistributionMarkerDataType[];
 }
 
 export interface InfoBoxDataType {

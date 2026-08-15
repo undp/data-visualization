@@ -97,7 +97,7 @@ interface Props {
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Custom order for labels */
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
   /** Toggle visibility of axis ticks */

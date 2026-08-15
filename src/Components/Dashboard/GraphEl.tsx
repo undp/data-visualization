@@ -1550,6 +1550,10 @@ function GraphEl(props: Props) {
           animate: settings?.animate,
           hideAxisLine: settings?.hideAxisLine,
           numberDisplayOptions: settings?.numberDisplayOptions,
+          groupOrder: settings?.groupOrder,
+          showGroups: settings?.showGroups,
+          truncateBy: settings?.truncateBy,
+          distributionMarkers: settings?.distributionMarkers,
         };
       case 'butterflyChart':
         return {

@@ -30,7 +30,7 @@ import { HorizontalGraph, VerticalGraph } from './Graph';
 interface Props {
   data: GroupedBarGraphDataType[];
   colors?: string[];
-  labelOrder?: string[];
+  labelOrder?: (string | number)[];
   graphTitle?: string | React.ReactNode;
   graphDescription?: string | React.ReactNode;
   footNote?: string | React.ReactNode;
