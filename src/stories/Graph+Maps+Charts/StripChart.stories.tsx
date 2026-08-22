@@ -23,6 +23,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         type: {
           detail: `{
   label: string | number; 
+  group?: string | number; // Groups data points into distinct visual sections. Grouping is applied only when all data points have a group defined. If any data point is missing a group, all group values are ignored.
   position: number;
   color?: string;
   data?: object; //The data key in the object is used when downloading data and can be used to show additional points in mouseover
@@ -39,6 +40,18 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   prefix?: string;
   suffix?: string;
   padZeros?: boolean;
+}`,
+        },
+      },
+    },
+    distributionMarkers: {
+      table: {
+        type: {
+          detail: `{
+  type: 'median' | 'mean' | 'q1' | 'q3';
+  style?: React.CSSProperties;
+  color?: string;
+  strokeWidth?: number;
 }`,
         },
       },
@@ -187,14 +200,22 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   },
   args: {
     data: [
-      { label: '2020 Q1', position: 3 },
-      { label: '2020 Q2', position: 8 },
-      { label: '2020 Q3', position: 11 },
-      { label: '2020 Q4', position: 19 },
-      { label: '2021 Q1', position: 3 },
-      { label: '2022 Q2', position: 8 },
-      { label: '2023 Q3', position: 11 },
-      { label: '2024 Q4', position: 19 },
+      { label: 'Q1', position: 3, group: '2020' },
+      { label: 'Q2', position: 8, group: '2020' },
+      { label: 'Q3', position: 11, group: '2020' },
+      { label: 'Q4', position: 19, group: '2020' },
+      { label: 'Q1', position: 3, group: '2021' },
+      { label: 'Q2', position: 8, group: '2021' },
+      { label: 'Q3', position: 11, group: '2021' },
+      { label: 'Q4', position: 19, group: '2021' },
+      { label: 'Q1', position: 3, group: '2022' },
+      { label: 'Q2', position: 8, group: '2022' },
+      { label: 'Q3', position: 11, group: '2022' },
+      { label: 'Q4', position: 19, group: '2022' },
+      { label: 'Q1', position: 3, group: '2023' },
+      { label: 'Q2', position: 8, group: '2023' },
+      { label: 'Q3', position: 11, group: '2023' },
+      { label: 'Q4', position: 19, group: '2023' },
     ],
   },
   render: ({ colors, highlightedDataPoints, backgroundColor, colorDomain, animate, ...args }) => {

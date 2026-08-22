@@ -1450,6 +1450,11 @@ function GraphEl(props: Props) {
       case 'stripChart':
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
+          truncateBy: settings?.truncateBy,
+          showGroups: settings?.showGroups,
+          groupOrder: settings?.groupOrder,
+          distributionMarkers: settings?.distributionMarkers,
+          highlightSameLabelOnHover: settings?.highlightSameLabelOnHover,
           showDataMinMax: settings?.showDataMinMax,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -1502,6 +1507,7 @@ function GraphEl(props: Props) {
       case 'beeSwarmChart':
         return {
           customLayers: settings?.customLayers,
+          highlightSameLabelOnHover: settings?.highlightSameLabelOnHover,
           strictValuePosition: settings?.strictValuePosition,
           theme: settings?.theme,
           dimmedOpacity: settings?.dimmedOpacity,

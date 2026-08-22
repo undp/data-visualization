@@ -9,6 +9,7 @@ import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
+  DistributionMarkerDataType,
   Languages,
   NumberFormatOptions,
   SourcesDataType,
@@ -75,6 +76,8 @@ interface Props {
   topMargin?: number;
   /** Bottom margin of the graph */
   bottomMargin?: number;
+  /** Custom order for . Only applicable of group is present in the data props */
+  groupOrder?: (string | number)[];
 
   // Values and Ticks
   /** Maximum value for the chart */
@@ -91,18 +94,27 @@ interface Props {
   dotOpacity?: number;
   /** Type of strip */
   stripType?: 'strip' | 'dot';
+  /** Toggle visibility of groups or defines what is shown in the group label */
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  showGroups?: boolean | ((_d: any) => React.ReactNode);
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
   showColorScale?: boolean;
+  /** Value by which the label are truncated. Only applicable if showGroups is true */
+  truncateBy?: number;
   /** Toggle visibility of NA color in the color scale. This is only applicable if the data props hae color parameter and showColorScale prop is true */
   showNAColor?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines if all the data points with same labels are highlighted on hover */
+  highlightSameLabelOnHover?: boolean;
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Toggles if the graph animates in when loaded.  */
   animate?: boolean | AnimateDataType;
   /** Toggles if the graph show the min and max value of the data.  */
   showDataMinMax?: boolean;
+  /** Defines distribution markers  shown as a line for data points. */
+  distributionMarkers?: DistributionMarkerDataType[];
   /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
   numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -187,6 +199,11 @@ export function StripChart(props: Props) {
     customLayers = [],
     showDataMinMax = false,
     numberDisplayOptions,
+    truncateBy = 999,
+    showGroups = true,
+    groupOrder,
+    distributionMarkers = [],
+    highlightSameLabelOnHover = true,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -310,6 +327,12 @@ export function StripChart(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            groupOrder={groupOrder}
+            hasGroups={data.every((d) => d.group !== undefined)}
+            truncateBy={truncateBy}
+            showGroups={showGroups}
+            distributionMarkers={distributionMarkers}
+            highlightSameLabelOnHover={highlightSameLabelOnHover}
           />
         ) : null}
       </GraphArea>

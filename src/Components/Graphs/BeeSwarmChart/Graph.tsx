@@ -83,6 +83,7 @@ interface Props {
   showGroups: boolean | ((_d: any) => React.ReactNode);
   truncateBy: number;
   distributionMarkers: DistributionMarkerDataType[];
+  highlightSameLabelOnHover: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -128,6 +129,7 @@ export function VerticalGraph(props: Props) {
     showGroups,
     truncateBy,
     distributionMarkers,
+    highlightSameLabelOnHover,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -162,11 +164,7 @@ export function VerticalGraph(props: Props) {
   const clusterOrder = useMemo(() => {
     return (
       groupOrder ?? [
-        ...new Set(
-          data
-            .map((d) => (hasGroups ? d : { ...d, group: 'undefined' }))
-            .map((d) => d.group as string | number),
-        ),
+        ...new Set(data.map((d) => (hasGroups ? (d.group as string | number) : 'undefined'))),
       ]
     );
   }, [groupOrder, data, hasGroups]);
@@ -334,8 +332,7 @@ export function VerticalGraph(props: Props) {
             {finalData.map((d) => (
               // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
               <g
-                className='undp-viz-g-with-hover'
-                key={d.label}
+                key={`${d.group}-${d.label}`}
                 transform={`translate(${d.x},${d.y})`}
                 opacity={
                   selectedColor
@@ -344,11 +341,16 @@ export function VerticalGraph(props: Props) {
                         ? 1
                         : dimmedOpacity
                       : dimmedOpacity
-                    : highlightedDataPoints
-                      ? highlightedDataPoints.indexOf(d.label) !== -1
-                        ? 0.85
+                    : mouseOverData
+                      ? mouseOverData.label === d.label &&
+                        (highlightSameLabelOnHover || mouseOverData.group === d.group)
+                        ? 1
                         : dimmedOpacity
-                      : 0.85
+                      : highlightedDataPoints
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85
                 }
                 onMouseEnter={(event) => {
                   setMouseOverData(d);
@@ -443,10 +445,10 @@ export function VerticalGraph(props: Props) {
                 ) : null}
               </g>
             ))}
-            {showGroups && hasGroups && clusterOrder.length > 1
-              ? clusterOrder.map((c) => (
+            {clusterOrder.map((c) => (
+              <g key={`${c}`}>
+                {showGroups && hasGroups && clusterOrder.length > 1 && (
                   <XAxesLabels
-                    key={c}
                     value={
                       typeof showGroups === 'function'
                         ? showGroups(c)
@@ -464,10 +466,7 @@ export function VerticalGraph(props: Props) {
                     animate={{ duration: 0, once: true, amount: 0 }}
                     isInView={true}
                   />
-                ))
-              : null}
-            {clusterOrder.map((c) => (
-              <g key={`${c}`}>
+                )}
                 {distributionMarkers.map((marker) => (
                   <line
                     key={`${c}-${marker.type}`}
@@ -600,6 +599,7 @@ export function HorizontalGraph(props: Props) {
     showGroups,
     truncateBy,
     distributionMarkers,
+    highlightSameLabelOnHover,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -808,8 +808,7 @@ export function HorizontalGraph(props: Props) {
             {finalData.map((d) => (
               // biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph
               <g
-                className='undp-viz-g-with-hover'
-                key={d.label}
+                key={`${d.label}-${d.group}`}
                 transform={`translate(${d.x},${d.y})`}
                 opacity={
                   selectedColor
@@ -818,11 +817,16 @@ export function HorizontalGraph(props: Props) {
                         ? 1
                         : dimmedOpacity
                       : dimmedOpacity
-                    : highlightedDataPoints
-                      ? highlightedDataPoints.indexOf(d.label) !== -1
-                        ? 0.85
+                    : mouseOverData
+                      ? mouseOverData.label === d.label &&
+                        (highlightSameLabelOnHover || mouseOverData.group === d.group)
+                        ? 1
                         : dimmedOpacity
-                      : 0.85
+                      : highlightedDataPoints
+                        ? highlightedDataPoints.indexOf(d.label) !== -1
+                          ? 0.85
+                          : dimmedOpacity
+                        : 0.85
                 }
                 onMouseEnter={(event) => {
                   setMouseOverData(d);
@@ -918,8 +922,9 @@ export function HorizontalGraph(props: Props) {
                 ) : null}
               </g>
             ))}
-            {showGroups && hasGroups && clusterOrder.length > 1
-              ? clusterOrder.map((c) => (
+            {clusterOrder.map((c) => (
+              <g key={c}>
+                {showGroups && hasGroups && clusterOrder.length > 1 && (
                   <YAxesLabels
                     key={c}
                     value={
@@ -939,10 +944,7 @@ export function HorizontalGraph(props: Props) {
                     animate={{ duration: 0, once: true, amount: 0 }}
                     isInView={true}
                   />
-                ))
-              : null}
-            {clusterOrder.map((c) => (
-              <g key={c}>
+                )}
                 {distributionMarkers.map((marker) => (
                   <line
                     key={`${c}-${marker.type}`}

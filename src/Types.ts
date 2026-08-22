@@ -364,6 +364,7 @@ export interface BeeSwarmChartDataType {
 
 export interface StripChartDataType {
   label: string | number;
+  group?: string | number;
   position: number;
   color?: string;
   data?: object;
@@ -1086,6 +1087,7 @@ export interface GraphSettingsDataType {
   groupOrder?: (string | number)[];
   showGroups?: boolean;
   distributionMarkers?: DistributionMarkerDataType[];
+  highlightSameLabelOnHover?: boolean;
 }
 
 export interface InfoBoxDataType {

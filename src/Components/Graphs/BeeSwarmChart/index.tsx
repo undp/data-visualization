@@ -103,10 +103,12 @@ interface Props {
   showNAColor?: boolean;
   /** Toggle visibility of axis line for the  main axis */
   hideAxisLine?: boolean;
-  /** Defines if teh data point are locked exactly to their data value on the axis; if false, nodes are pulled toward their value but may drift when crowded */
+  /** Defines if the data point are locked exactly to their data value on the axis; if false, nodes are pulled toward their value but may drift when crowded */
   strictValuePosition?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
+  /** Defines if all the data points with same labels are highlighted on hover */
+  highlightSameLabelOnHover?: boolean;
   /** Defines the opacity of the non-highlighted data */
   dimmedOpacity?: number;
   /** Maximum radius of the circles  */
@@ -201,6 +203,7 @@ export function BeeSwarmChart(props: Props) {
     showGroups = true,
     groupOrder,
     distributionMarkers = [],
+    highlightSameLabelOnHover = true,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -325,6 +328,7 @@ export function BeeSwarmChart(props: Props) {
             truncateBy={truncateBy}
             showGroups={showGroups}
             distributionMarkers={distributionMarkers}
+            highlightSameLabelOnHover={highlightSameLabelOnHover}
           />
         ) : null}
       </GraphArea>

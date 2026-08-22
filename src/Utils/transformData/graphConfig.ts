@@ -568,6 +568,11 @@ export const ChartConfiguration: {
         multiple: false,
       },
       {
+        id: 'group',
+        required: false,
+        multiple: false,
+      },
+      {
         id: 'position',
         required: true,
         multiple: false,
