@@ -18,12 +18,12 @@ jobs:
        id-token: write
        contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
           lfs: false
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '22.x'
       - name: Install OIDC Client from Core Package
@@ -37,7 +37,7 @@ jobs:
                return await coredemo.getIDToken()
            result-encoding: string
       - name: Install dependencies
-        run: npm install
+        run: npm ci --prefer-online
       - name: Build TypeScript (Generate `.d.ts`)
         run: npm run build  # Ensure this generates `dist/index.d.ts`
       - name: Build Storybook
