@@ -2,7 +2,8 @@
 
 @import "tw-animate-css";
 
-@import '@undp/design-system-react/style.css';
+@import "@undp/design-system-react/style.css";
+@import "@undp/design-system-react/theme.css";
 
 svg title.hidden {
   display: none;
