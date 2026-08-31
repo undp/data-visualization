@@ -84,6 +84,9 @@ interface Props {
   truncateBy: number;
   distributionMarkers: DistributionMarkerDataType[];
   highlightSameLabelOnHover: boolean;
+  minGroupThickness?: number;
+  maxGroupThickness?: number;
+  groupPadding: number;
 }
 
 export function VerticalGraph(props: Props) {
@@ -130,6 +133,9 @@ export function VerticalGraph(props: Props) {
     truncateBy,
     distributionMarkers,
     highlightSameLabelOnHover,
+    minGroupThickness,
+    maxGroupThickness,
+    groupPadding,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -171,8 +177,15 @@ export function VerticalGraph(props: Props) {
   const x = useMemo(() => {
     return scaleBand<string | number>()
       .domain(clusterOrder)
-      .range([0, graphWidth])
-      .paddingInner(0.1);
+      .range([
+        0,
+        minGroupThickness && clusterOrder.length > 1
+          ? Math.max(graphWidth, minGroupThickness * clusterOrder.length)
+          : maxGroupThickness && clusterOrder.length > 1
+            ? Math.min(graphWidth, maxGroupThickness * clusterOrder.length)
+            : graphWidth,
+      ])
+      .paddingInner(groupPadding);
   }, [clusterOrder, graphWidth]);
   const yMaxValue = !checkIfNullOrUndefined(maxValue)
     ? (maxValue as number)
@@ -468,9 +481,13 @@ export function VerticalGraph(props: Props) {
                   />
                 )}
                 {distributionMarkers.map((marker) => (
-                  <line
+                  <g
                     key={`${c}-${marker.type}`}
-                    y1={y(
+                    transform={`translate(${
+                      (x(c) ?? 0) +
+                      x.bandwidth() / 2 -
+                      (x.bandwidth() * (marker.relativeMarkerLength ?? 1)) / 2
+                    }, ${y(
                       marker.type === 'mean'
                         ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
                         : marker.type === 'median'
@@ -484,29 +501,63 @@ export function VerticalGraph(props: Props) {
                                 finalData.filter((d) => d.group === c).map((d) => d.position),
                                 0.75,
                               ),
-                    )}
-                    x1={x(c) ?? 0}
-                    y2={y(
-                      marker.type === 'mean'
-                        ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
-                        : marker.type === 'median'
-                          ? getMedian(finalData.filter((d) => d.group === c).map((d) => d.position))
-                          : marker.type === 'q1'
-                            ? getPercentile(
+                    )})`}
+                  >
+                    <text
+                      y={0}
+                      dy='0.33em'
+                      x={x.bandwidth() * (marker.relativeMarkerLength ?? 1) + 3}
+                      style={{
+                        textAnchor: 'start',
+                        fill: marker.color || '#000000',
+                        ...marker.markerLabel?.style,
+                      }}
+                      className={`${marker.type}-marker-label text-sm text-content-secondary`}
+                    >
+                      {marker.markerLabel?.showType
+                        ? marker.type === 'mean'
+                          ? 'Mean: '
+                          : marker.type === 'median'
+                            ? 'Median: '
+                            : marker.type === 'q1'
+                              ? 'Q1: '
+                              : 'Q3: '
+                        : ''}
+                      {numberFormattingFunction(
+                        marker.type === 'mean'
+                          ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
+                          : marker.type === 'median'
+                            ? getMedian(
                                 finalData.filter((d) => d.group === c).map((d) => d.position),
-                                0.25,
                               )
-                            : getPercentile(
-                                finalData.filter((d) => d.group === c).map((d) => d.position),
-                                0.75,
-                              ),
-                    )}
-                    x2={(x(c) ?? 0) + x.bandwidth()}
-                    className={`${marker.type}-marker`}
-                    style={marker.style}
-                    stroke={marker.color || '#000000'}
-                    strokeWidth={marker.strokeWidth ?? 2}
-                  />
+                            : marker.type === 'q1'
+                              ? getPercentile(
+                                  finalData.filter((d) => d.group === c).map((d) => d.position),
+                                  0.25,
+                                )
+                              : getPercentile(
+                                  finalData.filter((d) => d.group === c).map((d) => d.position),
+                                  0.75,
+                                ),
+                        undefined,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
+                    </text>
+                    <line
+                      y1={0}
+                      x1={0}
+                      y2={0}
+                      x2={x.bandwidth() * (marker.relativeMarkerLength ?? 1)}
+                      className={`${marker.type}-marker`}
+                      style={marker.markerStyle}
+                      stroke={marker.color || '#000000'}
+                      strokeWidth={marker.strokeWidth ?? 2}
+                    />
+                  </g>
                 ))}
               </g>
             ))}
@@ -600,6 +651,9 @@ export function HorizontalGraph(props: Props) {
     truncateBy,
     distributionMarkers,
     highlightSameLabelOnHover,
+    minGroupThickness,
+    maxGroupThickness,
+    groupPadding,
   } = props;
   const svgRef = useRef(null);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -681,8 +735,15 @@ export function HorizontalGraph(props: Props) {
   const y = useMemo(() => {
     return scaleBand<string | number>()
       .domain(clusterOrder)
-      .range([0, graphHeight])
-      .paddingInner(0.1);
+      .range([
+        0,
+        minGroupThickness && clusterOrder.length > 1
+          ? Math.max(graphHeight, minGroupThickness * clusterOrder.length)
+          : maxGroupThickness && clusterOrder.length > 1
+            ? Math.min(graphHeight, maxGroupThickness * clusterOrder.length)
+            : graphHeight,
+      ])
+      .paddingInner(groupPadding);
   }, [clusterOrder, graphHeight]);
   useEffect(() => {
     const dataTemp = (
@@ -946,9 +1007,9 @@ export function HorizontalGraph(props: Props) {
                   />
                 )}
                 {distributionMarkers.map((marker) => (
-                  <line
+                  <g
                     key={`${c}-${marker.type}`}
-                    x1={x(
+                    transform={`translate(${x(
                       marker.type === 'mean'
                         ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
                         : marker.type === 'median'
@@ -962,29 +1023,67 @@ export function HorizontalGraph(props: Props) {
                                 finalData.filter((d) => d.group === c).map((d) => d.position),
                                 0.75,
                               ),
-                    )}
-                    y1={y(c) ?? 0}
-                    x2={x(
-                      marker.type === 'mean'
-                        ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
-                        : marker.type === 'median'
-                          ? getMedian(finalData.filter((d) => d.group === c).map((d) => d.position))
-                          : marker.type === 'q1'
-                            ? getPercentile(
+                    )}, ${
+                      (y(c) ?? 0) +
+                      y.bandwidth() / 2 -
+                      (y.bandwidth() * (marker.relativeMarkerLength ?? 1)) / 2
+                    })`}
+                  >
+                    <text
+                      x={0}
+                      dy='-0.33em'
+                      y={-3}
+                      style={{
+                        textAnchor: 'middle',
+                        fill: marker.color || '#000000',
+                        ...marker.markerLabel?.style,
+                      }}
+                      className={`${marker.type}-marker-label text-sm text-content-secondary`}
+                    >
+                      {marker.markerLabel?.showType
+                        ? marker.type === 'mean'
+                          ? 'Mean: '
+                          : marker.type === 'median'
+                            ? 'Median: '
+                            : marker.type === 'q1'
+                              ? 'Q1: '
+                              : 'Q3: '
+                        : ''}
+                      {numberFormattingFunction(
+                        marker.type === 'mean'
+                          ? getMean(finalData.filter((d) => d.group === c).map((d) => d.position))
+                          : marker.type === 'median'
+                            ? getMedian(
                                 finalData.filter((d) => d.group === c).map((d) => d.position),
-                                0.25,
                               )
-                            : getPercentile(
-                                finalData.filter((d) => d.group === c).map((d) => d.position),
-                                0.75,
-                              ),
-                    )}
-                    y2={(y(c) ?? 0) + y.bandwidth()}
-                    className={`${marker.type}-marker`}
-                    style={marker.style}
-                    stroke={marker.color || '#000000'}
-                    strokeWidth={marker.strokeWidth ?? 2}
-                  />
+                            : marker.type === 'q1'
+                              ? getPercentile(
+                                  finalData.filter((d) => d.group === c).map((d) => d.position),
+                                  0.25,
+                                )
+                              : getPercentile(
+                                  finalData.filter((d) => d.group === c).map((d) => d.position),
+                                  0.75,
+                                ),
+                        undefined,
+                        precision,
+                        prefix,
+                        suffix,
+                        locale,
+                        padZeros,
+                      )}
+                    </text>
+                    <line
+                      x1={0}
+                      y1={0}
+                      x2={0}
+                      y2={y.bandwidth() * (marker.relativeMarkerLength ?? 1)}
+                      className={`${marker.type}-marker`}
+                      style={marker.markerStyle}
+                      stroke={marker.color || '#000000'}
+                      strokeWidth={marker.strokeWidth ?? 2}
+                    />
+                  </g>
                 ))}
               </g>
             ))}

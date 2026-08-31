@@ -112,6 +112,10 @@ interface Props {
   showDateOnHover?: boolean;
   /** Defines how “NA” values should be displayed/labelled in the graph */
   naLabel?: string;
+  /** Toggle interaction of Voronoi cells */
+  useVoronoiInteraction?: boolean;
+  /** Toggle visibility of Voronoi tesselation. Should be used for debugging only */
+  showVoronoiTesselation?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedLines?: (string | number)[];
   /** Defines if the labels should be shown for highlighted lines. */
@@ -208,6 +212,8 @@ export function MultiLineAltChart(props: Props) {
     naLabel = 'NA',
     showDateOnHover = false,
     numberDisplayOptions,
+    showVoronoiTesselation = false,
+    useVoronoiInteraction = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -338,6 +344,8 @@ export function MultiLineAltChart(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            showVoronoiTesselation={showVoronoiTesselation}
+            useVoronoiInteraction={useVoronoiInteraction}
           />
         ) : null}
       </GraphArea>

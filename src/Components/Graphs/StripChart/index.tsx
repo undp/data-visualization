@@ -76,8 +76,14 @@ interface Props {
   topMargin?: number;
   /** Bottom margin of the graph */
   bottomMargin?: number;
-  /** Custom order for . Only applicable of group is present in the data props */
+  /** Custom order for groups. Only applicable of group is present in the data props */
   groupOrder?: (string | number)[];
+  /** Maximum thickness of group. Only applicable of group is present in the data props  */
+  maxGroupThickness?: number;
+  /** Minimum thickness of group. Only applicable of group is present in the data props  */
+  minGroupThickness?: number;
+  /** Padding between groups. Only applicable of group is present in the data props*/
+  groupPadding?: number;
 
   // Values and Ticks
   /** Maximum value for the chart */
@@ -204,6 +210,9 @@ export function StripChart(props: Props) {
     groupOrder,
     distributionMarkers = [],
     highlightSameLabelOnHover = true,
+    minGroupThickness,
+    maxGroupThickness,
+    groupPadding = 0.1,
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
@@ -333,6 +342,9 @@ export function StripChart(props: Props) {
             showGroups={showGroups}
             distributionMarkers={distributionMarkers}
             highlightSameLabelOnHover={highlightSameLabelOnHover}
+            minGroupThickness={minGroupThickness}
+            maxGroupThickness={maxGroupThickness}
+            groupPadding={groupPadding}
           />
         ) : null}
       </GraphArea>

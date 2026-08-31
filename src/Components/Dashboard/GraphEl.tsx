@@ -722,6 +722,8 @@ function GraphEl(props: Props) {
           classNames: settings?.classNames,
           colorDomain: settings?.colorDomain,
           showNAColor: settings?.showNAColor,
+          useVoronoiInteraction: settings?.useVoronoiInteraction,
+          showVoronoiTesselation: settings?.showVoronoiTesselation,
         };
       case 'differenceLineChart':
         return {
@@ -1503,6 +1505,9 @@ function GraphEl(props: Props) {
           styles: settings?.styles,
           classNames: settings?.classNames,
           animate: settings?.animate,
+          maxGroupThickness: settings?.maxGroupThickness,
+          minGroupThickness: settings?.minGroupThickness,
+          groupPadding: settings?.groupPadding,
         };
       case 'beeSwarmChart':
         return {
@@ -1560,6 +1565,9 @@ function GraphEl(props: Props) {
           showGroups: settings?.showGroups,
           truncateBy: settings?.truncateBy,
           distributionMarkers: settings?.distributionMarkers,
+          maxGroupThickness: settings?.maxGroupThickness,
+          minGroupThickness: settings?.minGroupThickness,
+          groupPadding: settings?.groupPadding,
         };
       case 'butterflyChart':
         return {

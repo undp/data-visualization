@@ -74,6 +74,12 @@ interface Props {
   bottomMargin?: number;
   /** Custom order for . Only applicable of group is present in the data props */
   groupOrder?: (string | number)[];
+  /** Maximum thickness of group. Only applicable of group is present in the data props  */
+  maxGroupThickness?: number;
+  /** Minimum thickness of group. Only applicable of group is present in the data props  */
+  minGroupThickness?: number;
+  /** Padding between groups. Only applicable of group is present in the data props*/
+  groupPadding?: number;
 
   // Values and Ticks
   /** Maximum value for the radius of the circle */
@@ -204,6 +210,9 @@ export function BeeSwarmChart(props: Props) {
     groupOrder,
     distributionMarkers = [],
     highlightSameLabelOnHover = true,
+    minGroupThickness,
+    maxGroupThickness,
+    groupPadding = 0.1,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -329,6 +338,9 @@ export function BeeSwarmChart(props: Props) {
             showGroups={showGroups}
             distributionMarkers={distributionMarkers}
             highlightSameLabelOnHover={highlightSameLabelOnHover}
+            minGroupThickness={minGroupThickness}
+            maxGroupThickness={maxGroupThickness}
+            groupPadding={groupPadding}
           />
         ) : null}
       </GraphArea>

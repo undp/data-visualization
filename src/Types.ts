@@ -799,9 +799,14 @@ export interface MapOverlayDataType {
 
 export interface DistributionMarkerDataType {
   type: 'median' | 'mean' | 'q1' | 'q3';
-  style?: React.CSSProperties;
+  markerStyle?: React.CSSProperties;
   color?: string;
   strokeWidth?: number;
+  relativeMarkerLength?: number;
+  markerLabel?: {
+    showType?: boolean;
+    style?: React.CSSProperties;
+  };
 }
 
 export interface GraphSettingsDataType {
@@ -1088,6 +1093,9 @@ export interface GraphSettingsDataType {
   showGroups?: boolean;
   distributionMarkers?: DistributionMarkerDataType[];
   highlightSameLabelOnHover?: boolean;
+  maxGroupThickness?: number;
+  minGroupThickness?: number;
+  groupPadding?: number;
 }
 
 export interface InfoBoxDataType {

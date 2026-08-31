@@ -42,6 +42,7 @@ export function SVGDownloadButton(props: Props) {
   return (
     <Button
       variant={buttonType}
+      arrow={false}
       className={cn(
         'undp-viz-download-button border border-stroke',
         buttonSmall ? 'p-2' : 'py-4 px-6',

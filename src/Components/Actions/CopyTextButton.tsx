@@ -26,6 +26,7 @@ export function CopyTextButton(props: Props) {
     <>
       <Button
         variant='tertiary'
+        arrow={false}
         className={cn(buttonSmall ? 'p-2' : 'py-4 px-6', className)}
         onClick={() => {
           navigator.clipboard.writeText(text);

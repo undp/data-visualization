@@ -91,6 +91,8 @@ interface Props {
   showDateOnHover: boolean;
   locale: string;
   padZeros: boolean;
+  showVoronoiTesselation: boolean;
+  useVoronoiInteraction: boolean;
 }
 
 interface FormattedDataType {
@@ -144,6 +146,8 @@ export function Graph(props: Props) {
     showDateOnHover,
     locale,
     padZeros,
+    showVoronoiTesselation,
+    useVoronoiInteraction,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -151,6 +155,7 @@ export function Graph(props: Props) {
     amount: animate.amount,
   });
   const [hasAnimatedOnce, setHasAnimatedOnce] = useState(false);
+  const [hoveredLine, setHoveredLine] = useState<string | number | undefined>(undefined);
 
   useEffect(() => {
     if (isInView && !hasAnimatedOnce) {
@@ -412,38 +417,40 @@ export function Graph(props: Props) {
                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 variants={{
                   initial: {
-                    opacity: mouseOverData
-                      ? d[0].label === mouseOverData.label
-                        ? 1
-                        : dimmedOpacity
-                      : selectedColor
-                        ? d[0].color
-                          ? lineColors[colorDomain.indexOf(d[0].color)] === selectedColor
-                            ? 1
-                            : dimmedOpacity
+                    opacity:
+                      mouseOverData || hoveredLine
+                        ? d[0].label === mouseOverData?.label || d[0].label === hoveredLine
+                          ? 1
                           : dimmedOpacity
-                        : highlightedLines
-                          ? highlightedLines.indexOf(d[0].label) !== -1
-                            ? 1
+                        : selectedColor
+                          ? d[0].color
+                            ? lineColors[colorDomain.indexOf(d[0].color)] === selectedColor
+                              ? 1
+                              : dimmedOpacity
                             : dimmedOpacity
-                          : 1,
+                          : highlightedLines
+                            ? highlightedLines.indexOf(d[0].label) !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : 1,
                   },
                   whileInView: {
-                    opacity: mouseOverData
-                      ? d[0].label === mouseOverData.label
-                        ? 1
-                        : dimmedOpacity
-                      : selectedColor
-                        ? d[0].color
-                          ? lineColors[colorDomain.indexOf(d[0].color)] === selectedColor
-                            ? 1
-                            : dimmedOpacity
+                    opacity:
+                      mouseOverData || hoveredLine
+                        ? d[0].label === mouseOverData?.label || d[0].label === hoveredLine
+                          ? 1
                           : dimmedOpacity
-                        : highlightedLines
-                          ? highlightedLines.indexOf(d[0].label) !== -1
-                            ? 1
+                        : selectedColor
+                          ? d[0].color
+                            ? lineColors[colorDomain.indexOf(d[0].color)] === selectedColor
+                              ? 1
+                              : dimmedOpacity
                             : dimmedOpacity
-                          : 1,
+                          : highlightedLines
+                            ? highlightedLines.indexOf(d[0].label) !== -1
+                              ? 1
+                              : dimmedOpacity
+                            : 1,
                     transition: { duration: animate.duration },
                   },
                 }}
@@ -467,6 +474,18 @@ export function Graph(props: Props) {
                           ? strokeWidth + Math.max(2, 0.5 * strokeWidth)
                           : strokeWidth
                         : strokeWidth,
+                  }}
+                  onMouseEnter={() => {
+                    if (useVoronoiInteraction) return;
+                    setHoveredLine(d[0].label);
+                  }}
+                  onMouseMove={() => {
+                    if (useVoronoiInteraction) return;
+                    setHoveredLine(d[0].label);
+                  }}
+                  onMouseLeave={() => {
+                    if (useVoronoiInteraction) return;
+                    setHoveredLine(undefined);
                   }}
                   exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   variants={{
@@ -538,6 +557,23 @@ export function Graph(props: Props) {
                             cy: y(el.y as number),
                           },
                         }}
+                        onMouseEnter={(event) => {
+                          setMouseOverData(el);
+                          setEventY(event.clientY);
+                          setEventX(event.clientX);
+                          onSeriesMouseOver?.(el);
+                        }}
+                        onMouseMove={(event) => {
+                          setMouseOverData(el);
+                          setEventY(event.clientY);
+                          setEventX(event.clientX);
+                        }}
+                        onMouseLeave={() => {
+                          setMouseOverData(undefined);
+                          setEventX(undefined);
+                          setEventY(undefined);
+                          onSeriesMouseOver?.(undefined);
+                        }}
                         initial='initial'
                         animate={isInView ? 'whileInView' : 'initial'}
                       />
@@ -546,7 +582,8 @@ export function Graph(props: Props) {
                 ))}
                 {(((highlightedLines || []).indexOf(d[0].label) !== -1 &&
                   showHighlightedLinesLabels) ||
-                  mouseOverData?.label === d[0].label) &&
+                  mouseOverData?.label === d[0].label ||
+                  hoveredLine === d[0].label) &&
                 showLabels ? (
                   <motion.text
                     className='text-sm font-bold'
@@ -635,39 +672,42 @@ export function Graph(props: Props) {
               </>
             ) : null}
           </motion.g>
-          {dataFormatted
-            .filter((d) => !checkIfNullOrUndefined(d.y))
-            .map((d, i) => {
-              return (
-                // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                <g key={i}>
-                  {/* biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph */}
-                  <path
-                    d={voronoiDiagram.renderCell(
-                      dataFormatted.findIndex((el) => el.label === d.label && el.date === d.date),
-                    )}
-                    opacity={0}
-                    onMouseEnter={(event) => {
-                      setMouseOverData(d);
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                      onSeriesMouseOver?.(d);
-                    }}
-                    onMouseMove={(event) => {
-                      setMouseOverData(d);
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                    }}
-                    onMouseLeave={() => {
-                      setMouseOverData(undefined);
-                      setEventX(undefined);
-                      setEventY(undefined);
-                      onSeriesMouseOver?.(undefined);
-                    }}
-                  />
-                </g>
-              );
-            })}
+          {useVoronoiInteraction &&
+            dataFormatted
+              .filter((d) => !checkIfNullOrUndefined(d.y))
+              .map((d, i) => {
+                return (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                  <g key={i}>
+                    {/* biome-ignore lint/a11y/noStaticElementInteractions: interaction for graph */}
+                    <path
+                      d={voronoiDiagram.renderCell(
+                        dataFormatted.findIndex((el) => el.label === d.label && el.date === d.date),
+                      )}
+                      opacity={showVoronoiTesselation ? 1 : 0}
+                      className='stroke-foreground'
+                      style={{ fillOpacity: 0, strokeWidth: 1 }}
+                      onMouseEnter={(event) => {
+                        setMouseOverData(d);
+                        setEventY(event.clientY);
+                        setEventX(event.clientX);
+                        onSeriesMouseOver?.(d);
+                      }}
+                      onMouseMove={(event) => {
+                        setMouseOverData(d);
+                        setEventY(event.clientY);
+                        setEventX(event.clientX);
+                      }}
+                      onMouseLeave={() => {
+                        setMouseOverData(undefined);
+                        setEventX(undefined);
+                        setEventY(undefined);
+                        onSeriesMouseOver?.(undefined);
+                      }}
+                    />
+                  </g>
+                );
+              })}
           {refValues?.map((el) => (
             <RefLineY
               key={el.text}
