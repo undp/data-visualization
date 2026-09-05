@@ -53,7 +53,7 @@ export const Colors = {
   },
   light: {
     graphBackgroundColor: '#F7F7F7',
-    graphNoData: '#FFFFFF',
+    graphNoData: '#FAFAFA',
     grays: {
       white: '#FFFFFF',
       'gray-100': '#FAFAFA',
@@ -316,7 +316,7 @@ export const Colors = {
   },
   dark: {
     graphBackgroundColor: '#232E3D',
-    graphNoData: '#FFFFFF',
+    graphNoData: '#394250',
     grays: {
       white: '#232E3D',
       'gray-100': '#394250',

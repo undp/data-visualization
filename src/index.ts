@@ -108,6 +108,10 @@ export { GraphTitle } from './Components/Typography/GraphTitle';
 export { Source } from './Components/Typography/Source';
 /* ------- Utils ------- */
 export { checkIfNullOrUndefined } from './Utils/checkIfNullOrUndefined';
+export {
+  convertTopoJsonToGeoJson,
+  convertTopoJsonUrlToGeoJson,
+} from './Utils/convertTopoJsonToGeoJson';
 export { excelDownload } from './Utils/excelDownload';
 /* ---------Data fetch and Parse ------------*/
 export {

@@ -23,6 +23,7 @@ import type {
   TimelineDataType,
   ZoomInteractionTypes,
 } from '@/Types';
+import { convertTopoJsonUrlToGeoJson } from '@/Utils/convertTopoJsonToGeoJson';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { getJenks } from '@/Utils/getJenks';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
@@ -96,6 +97,8 @@ interface Props {
   mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
   mapBorderColor?: string;
+  /** Toggle if the coastal border is shown. Only applicable if default world map is used */
+  showCostalBorder?: boolean;
   /** Toggle if the map is a world map */
   isWorldMap?: boolean;
   /** Map projection type */
@@ -162,7 +165,7 @@ export function BiVariateChoroplethMap(props: Props) {
   const {
     data,
     graphTitle,
-    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-v2.json',
+    mapData,
     colors = Colors.light.bivariateColors.colors05x05,
     sources,
     graphDescription,
@@ -190,7 +193,7 @@ export function BiVariateChoroplethMap(props: Props) {
     showColorScale = true,
     highlightedIds,
     onSeriesMouseClick,
-    mapProperty = 'ISO3',
+    mapProperty = 'isoclr',
     graphDownload = false,
     dataDownload = false,
     showAntarctica = false,
@@ -202,7 +205,7 @@ export function BiVariateChoroplethMap(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    mapProjection = 'naturalEarth',
+    mapProjection,
     zoomInteraction = 'button',
     animate = false,
     dimmedOpacity = 0.3,
@@ -215,6 +218,7 @@ export function BiVariateChoroplethMap(props: Props) {
     mapOverlay,
     xNumberDisplayOptions,
     yNumberDisplayOptions,
+    showCostalBorder = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -234,6 +238,7 @@ export function BiVariateChoroplethMap(props: Props) {
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
   const [mapShape, setMapShape] = useState<FeatureCollection | undefined>(undefined);
+  const [mapBorderShape, setMapBorderShape] = useState<FeatureCollection | undefined>(undefined);
   const [overlayMapShape, setOverlayMapShape] = useState<FeatureCollection | undefined>(undefined);
 
   const graphDiv = useRef<HTMLDivElement>(null);
@@ -253,19 +258,39 @@ export function BiVariateChoroplethMap(props: Props) {
     setMapShape(shape);
   });
 
+  const onUpdateMapBorderShape = useEffectEvent((shape: FeatureCollection) => {
+    setMapBorderShape(shape);
+  });
+
   const onUpdateOverlayMapShape = useEffectEvent((shape: FeatureCollection | undefined) => {
     setOverlayMapShape(shape);
   });
   useEffect(() => {
-    if (typeof mapData === 'string') {
-      const fetchData = fetchAndParseJSON(mapData);
+    if (typeof mapData === 'string' || !mapData) {
+      const fetchData = mapData
+        ? fetchAndParseJSON(mapData)
+        : convertTopoJsonUrlToGeoJson(
+            'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_area.json',
+            'BNDA_simplified_wgs84',
+          );
       fetchData.then((d) => {
-        onUpdateShape(d);
+        onUpdateShape(d as FeatureCollection);
       });
+      if (!mapData) {
+        const fetchBorderData = convertTopoJsonUrlToGeoJson(
+          !showCostalBorder
+            ? 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_inland.json'
+            : 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_all.json',
+          'BNDL_simplified_wgs84',
+        );
+        fetchBorderData.then((d) => {
+          onUpdateMapBorderShape(d as FeatureCollection);
+        });
+      }
     } else {
       onUpdateShape(mapData);
     }
-  }, [mapData]);
+  }, [mapData, showCostalBorder]);
   useEffect(() => {
     if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
     if (typeof mapOverlay?.mapData === 'string') {
@@ -362,7 +387,7 @@ export function BiVariateChoroplethMap(props: Props) {
         </div>
       ) : null}
       <GraphArea ref={graphDiv}>
-        {svgWidth && svgHeight && mapShape ? (
+        {svgWidth && svgHeight && mapShape && (mapBorderShape || !mapData) ? (
           <Graph
             data={data.filter((d) =>
               timeline.enabled
@@ -375,10 +400,18 @@ export function BiVariateChoroplethMap(props: Props) {
                 ? mapShape
                 : {
                     ...mapShape,
-                    features: mapShape.features.filter(
-                      (el) => el.properties?.NAME !== 'Antarctica',
+                    features: mapShape.features.filter((el) => el.properties?.isoclr !== 'ATA'),
+                  }
+            }
+            mapBorderData={
+              mapBorderShape
+                ? {
+                    ...mapBorderShape,
+                    features: mapBorderShape.features.filter(
+                      (el) => el.properties?.iso3cd !== 'ATA',
                     ),
                   }
+                : mapBorderShape
             }
             xDomain={
               xDomain ||
@@ -406,11 +439,10 @@ export function BiVariateChoroplethMap(props: Props) {
             mapBorderColor={mapBorderColor}
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
-            isWorldMap={isWorldMap}
             zoomScaleExtend={zoomScaleExtend}
             zoomTranslateExtend={zoomTranslateExtend}
             onSeriesMouseClick={onSeriesMouseClick}
-            mapProperty={mapProperty}
+            mapProperty={!mapData && !mapProperty ? 'isoclr' : mapProperty}
             highlightedIds={highlightedIds}
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             styles={styles}

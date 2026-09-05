@@ -43,6 +43,7 @@ import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 interface Props {
   data: BivariateMapDataType[];
   mapData: FeatureCollection;
+  mapBorderData?: FeatureCollection;
   xDomain: number[];
   yDomain: number[];
   width: number;
@@ -62,7 +63,6 @@ interface Props {
 
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
-  isWorldMap: boolean;
   zoomScaleExtend: [number, number];
   zoomTranslateExtend?: [[number, number], [number, number]];
   highlightedIds?: string[];
@@ -137,6 +137,7 @@ export function Graph(props: Props) {
     yNumberDisplayOptions,
     graphDownload,
     dataDownload,
+    mapBorderData,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
@@ -257,8 +258,6 @@ export function Graph(props: Props) {
                 .translate([width / 2, height / 2])
                 .scale(scaleVar)
             : geoAlbersUsa()
-                .rotate(projectionRotate)
-                .center(centerPoint || (center.geometry.coordinates as [number, number]))
                 .translate([width / 2, height / 2])
                 .scale(scaleVar);
 
@@ -308,8 +307,6 @@ export function Graph(props: Props) {
                   <path
                     d={path}
                     style={{
-                      stroke: mapBorderColor,
-                      strokeWidth: mapBorderWidth,
                       fill: mapNoDataColor,
                       vectorEffect: 'non-scaling-stroke',
                     }}
@@ -319,13 +316,11 @@ export function Graph(props: Props) {
             })}
             <AnimatePresence>
               {data.map((d) => {
-                const index = formattedMapData.features.findIndex(
+                const features = formattedMapData.features.filter(
                   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   (el: any) => d.id === el.properties[mapProperty],
                 );
-                if (index === -1) return null;
-                const path = pathGenerator(formattedMapData.features[index]);
-                if (!path) return null;
+                if (features.length === 0) return null;
                 const xColorCoord = !checkIfNullOrUndefined(d.x)
                   ? xScale(d.x as number)
                   : undefined;
@@ -390,33 +385,64 @@ export function Graph(props: Props) {
                       onSeriesMouseOver?.(undefined);
                     }}
                   >
-                    <motion.path
-                      key={`${d.id}`}
-                      d={path}
-                      variants={{
-                        initial: { fill: color, opacity: 0 },
-                        whileInView: {
-                          fill: color,
-                          opacity: 1,
-                          transition: { duration: animate.duration },
-                        },
-                      }}
-                      initial='initial'
-                      animate={isInView ? 'whileInView' : 'initial'}
-                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                      className={`${
-                        color === mapNoDataColor ? 'stroke-stroke' : 'stroke-background'
-                      }`}
-                      style={{
-                        stroke: mapBorderColor,
-                        strokeWidth: mapBorderWidth,
-                        vectorEffect: 'non-scaling-stroke',
-                      }}
-                    />
+                    {features.map((feature, i) => {
+                      const path = pathGenerator(feature);
+                      if (!path) return null;
+                      return (
+                        <motion.path
+                          key={`${d.id}-${
+                            // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                            i
+                          }`}
+                          d={path}
+                          variants={{
+                            initial: { fill: color, opacity: 0 },
+                            whileInView: {
+                              fill: color,
+                              opacity: 1,
+                              transition: { duration: animate.duration },
+                            },
+                          }}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
+                          exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        />
+                      );
+                    })}
                   </motion.g>
                 );
               })}
             </AnimatePresence>
+            {(mapBorderData || formattedMapData)?.features.map((d, i: number) => {
+              if (!d.properties?.[mapBorderData ? 'iso3cd' : mapProperty]) return null;
+              const path = pathGenerator(d);
+              if (!path) return null;
+              return (
+                <motion.g
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                  key={i}
+                >
+                  <path
+                    d={path}
+                    style={{
+                      stroke: mapBorderColor,
+                      strokeWidth:
+                        d.properties?.bdytyp === 3 || d.properties?.bdytyp === 4
+                          ? Math.max(1, mapBorderWidth)
+                          : mapBorderWidth,
+                      fill: 'none',
+                      vectorEffect: 'non-scaling-stroke',
+                      strokeDasharray:
+                        d.properties?.bdytyp === 3
+                          ? '3 3'
+                          : d.properties?.bdytyp === 4
+                            ? '2 2'
+                            : undefined,
+                    }}
+                  />
+                </motion.g>
+              );
+            })}
             {mouseOverData
               ? formattedMapData.features
                   .filter(

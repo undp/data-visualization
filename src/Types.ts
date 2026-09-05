@@ -1096,6 +1096,7 @@ export interface GraphSettingsDataType {
   maxGroupThickness?: number;
   minGroupThickness?: number;
   groupPadding?: number;
+  showCostalBorder?: boolean;
 }
 
 export interface InfoBoxDataType {

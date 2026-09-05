@@ -23,6 +23,7 @@ import type {
   ZoomInteractionTypes,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { convertTopoJsonUrlToGeoJson } from '@/Utils/convertTopoJsonToGeoJson';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { uniqBy } from '@/Utils/uniqBy';
@@ -93,6 +94,8 @@ interface Props {
   mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
   mapBorderColor?: string;
+  /** Toggle if the coastal border is shown. Only applicable if default world map is used */
+  showCostalBorder?: boolean;
   /** Toggle if the map is a world map */
   isWorldMap?: boolean;
   /** Map projection type */
@@ -154,7 +157,7 @@ interface Props {
 export function DotDensityMap(props: Props) {
   const {
     data,
-    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-v2.json',
+    mapData,
     graphTitle,
     colors,
     sources,
@@ -194,7 +197,7 @@ export function DotDensityMap(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    mapProjection = 'naturalEarth',
+    mapProjection,
     zoomInteraction = 'button',
     animate = false,
     dimmedOpacity = 0.3,
@@ -205,6 +208,7 @@ export function DotDensityMap(props: Props) {
     projectionRotate = [0, 0],
     rewindCoordinatesInMapData = true,
     mapOverlay,
+    showCostalBorder = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -224,6 +228,7 @@ export function DotDensityMap(props: Props) {
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
   const [mapShape, setMapShape] = useState<FeatureCollection | undefined>(undefined);
+  const [mapBorderShape, setMapBorderShape] = useState<FeatureCollection | undefined>(undefined);
   const [overlayMapShape, setOverlayMapShape] = useState<FeatureCollection | undefined>(undefined);
 
   const graphDiv = useRef<HTMLDivElement>(null);
@@ -246,16 +251,36 @@ export function DotDensityMap(props: Props) {
   const onUpdateOverlayMapShape = useEffectEvent((shape: FeatureCollection | undefined) => {
     setOverlayMapShape(shape);
   });
+
+  const onUpdateMapBorderShape = useEffectEvent((shape: FeatureCollection) => {
+    setMapBorderShape(shape);
+  });
   useEffect(() => {
-    if (typeof mapData === 'string') {
-      const fetchData = fetchAndParseJSON(mapData);
+    if (typeof mapData === 'string' || !mapData) {
+      const fetchData = mapData
+        ? fetchAndParseJSON(mapData)
+        : convertTopoJsonUrlToGeoJson(
+            'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_area.json',
+            'BNDA_simplified_wgs84',
+          );
       fetchData.then((d) => {
-        onUpdateShape(d);
+        onUpdateShape(d as FeatureCollection);
       });
+      if (!mapData) {
+        const fetchBorderData = convertTopoJsonUrlToGeoJson(
+          !showCostalBorder
+            ? 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_inland.json'
+            : 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_all.json',
+          'BNDL_simplified_wgs84',
+        );
+        fetchBorderData.then((d) => {
+          onUpdateMapBorderShape(d as FeatureCollection);
+        });
+      }
     } else {
       onUpdateShape(mapData);
     }
-  }, [mapData]);
+  }, [mapData, showCostalBorder]);
   useEffect(() => {
     if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
     if (typeof mapOverlay?.mapData === 'string') {
@@ -346,7 +371,7 @@ export function DotDensityMap(props: Props) {
         </div>
       ) : null}
       <GraphArea ref={graphDiv}>
-        {svgWidth && svgHeight && mapShape ? (
+        {svgWidth && svgHeight && mapShape && (mapBorderShape || !mapData) ? (
           <Graph
             data={data.filter((d) =>
               timeline.enabled
@@ -359,10 +384,18 @@ export function DotDensityMap(props: Props) {
                 ? mapShape
                 : {
                     ...mapShape,
-                    features: mapShape.features.filter(
-                      (el) => el.properties?.NAME !== 'Antarctica',
+                    features: mapShape.features.filter((el) => el.properties?.isoclr !== 'ATA'),
+                  }
+            }
+            mapBorderData={
+              mapBorderShape
+                ? {
+                    ...mapBorderShape,
+                    features: mapBorderShape.features.filter(
+                      (el) => el.properties?.isoclr !== 'ATA',
                     ),
                   }
+                : mapBorderShape
             }
             colorDomain={
               data.filter((el) => el.color).length === 0
@@ -391,7 +424,6 @@ export function DotDensityMap(props: Props) {
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
             showLabels={showLabels}
-            isWorldMap={isWorldMap}
             showColorScale={showColorScale}
             zoomScaleExtend={zoomScaleExtend}
             zoomTranslateExtend={zoomTranslateExtend}

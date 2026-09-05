@@ -26,6 +26,7 @@ import type {
 } from '@/Types';
 import { getJenks, getUniqValue } from '@/Utils';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { convertTopoJsonUrlToGeoJson } from '@/Utils/convertTopoJsonToGeoJson';
 import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
 import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { Graph } from './Graph';
@@ -97,6 +98,8 @@ interface Props {
   mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
   mapBorderColor?: string;
+  /** Toggle if the coastal border is shown. Only applicable if default world map is used */
+  showCostalBorder?: boolean;
   /** Color of the dots in the dot density map */
   dotColor?: string;
   /** Border color of the dots in the dot density map */
@@ -172,7 +175,7 @@ interface Props {
 export function HybridMap(props: Props) {
   const {
     data,
-    mapData = 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/worldMap-v2.json',
+    mapData,
     graphTitle,
     colors,
     sources,
@@ -213,7 +216,7 @@ export function HybridMap(props: Props) {
     detailsOnClick,
     styles,
     classNames,
-    mapProjection = 'naturalEarth',
+    mapProjection,
     zoomInteraction = 'button',
     animate = false,
     dimmedOpacity = 0.3,
@@ -223,7 +226,7 @@ export function HybridMap(props: Props) {
     collapseColorScaleByDefault,
     dotColor = Colors.primaryColors['blue-600'],
     highlightedIds,
-    mapProperty = 'ISO3',
+    mapProperty = 'isoclr',
     dotLegendTitle,
     dotBorderColor,
     labelColor = Colors.primaryColors['blue-600'],
@@ -231,6 +234,7 @@ export function HybridMap(props: Props) {
     rewindCoordinatesInMapData = true,
     numberDisplayOptions,
     mapOverlay,
+    showCostalBorder = false,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -250,6 +254,7 @@ export function HybridMap(props: Props) {
   const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
   const [mapShape, setMapShape] = useState<FeatureCollection | undefined>(undefined);
+  const [mapBorderShape, setMapBorderShape] = useState<FeatureCollection | undefined>(undefined);
   const [overlayMapShape, setOverlayMapShape] = useState<FeatureCollection | undefined>(undefined);
   const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
@@ -279,16 +284,36 @@ export function HybridMap(props: Props) {
   const onUpdateOverlayMapShape = useEffectEvent((shape: FeatureCollection | undefined) => {
     setOverlayMapShape(shape);
   });
+
+  const onUpdateMapBorderShape = useEffectEvent((shape: FeatureCollection) => {
+    setMapBorderShape(shape);
+  });
   useEffect(() => {
-    if (typeof mapData === 'string') {
-      const fetchData = fetchAndParseJSON(mapData);
+    if (typeof mapData === 'string' || !mapData) {
+      const fetchData = mapData
+        ? fetchAndParseJSON(mapData)
+        : convertTopoJsonUrlToGeoJson(
+            'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_area.json',
+            'BNDA_simplified_wgs84',
+          );
       fetchData.then((d) => {
         onUpdateShape(d as FeatureCollection);
       });
+      if (!mapData) {
+        const fetchBorderData = convertTopoJsonUrlToGeoJson(
+          !showCostalBorder
+            ? 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_inland.json'
+            : 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_all.json',
+          'BNDL_simplified_wgs84',
+        );
+        fetchBorderData.then((d) => {
+          onUpdateMapBorderShape(d as FeatureCollection);
+        });
+      }
     } else {
       onUpdateShape(mapData);
     }
-  }, [mapData]);
+  }, [mapData, showCostalBorder]);
   useEffect(() => {
     if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
     if (typeof mapOverlay?.mapData === 'string') {
@@ -379,7 +404,7 @@ export function HybridMap(props: Props) {
         </div>
       ) : null}
       <GraphArea ref={graphDiv}>
-        {svgWidth && svgHeight && mapShape ? (
+        {svgWidth && svgHeight && mapShape && (mapBorderShape || !mapData) ? (
           <Graph
             dotColor={dotColor}
             data={data.filter((d) =>
@@ -393,10 +418,18 @@ export function HybridMap(props: Props) {
                 ? mapShape
                 : {
                     ...mapShape,
-                    features: mapShape.features.filter(
-                      (el) => el.properties?.NAME !== 'Antarctica',
+                    features: mapShape.features.filter((el) => el.properties?.isoclr !== 'ATA'),
+                  }
+            }
+            mapBorderData={
+              mapBorderShape
+                ? {
+                    ...mapBorderShape,
+                    features: mapBorderShape.features.filter(
+                      (el) => el.properties?.iso3cd !== 'ATA',
                     ),
                   }
+                : mapBorderShape
             }
             overlayMapData={overlayMapShape}
             overlayMapBorderColor={mapOverlay?.mapBorderColor}
@@ -425,7 +458,6 @@ export function HybridMap(props: Props) {
             tooltip={tooltip}
             onSeriesMouseOver={onSeriesMouseOver}
             showLabels={showLabels}
-            isWorldMap={isWorldMap}
             showColorScale={showColorScale}
             zoomScaleExtend={zoomScaleExtend}
             zoomTranslateExtend={zoomTranslateExtend}
@@ -453,7 +485,7 @@ export function HybridMap(props: Props) {
             }
             collapseColorScaleByDefault={collapseColorScaleByDefault}
             highlightedIds={highlightedIds}
-            mapProperty={mapProperty}
+            mapProperty={!mapData && !mapProperty ? 'isoclr' : mapProperty}
             dotLegendTitle={dotLegendTitle}
             dotBorderColor={dotBorderColor}
             labelColor={labelColor}

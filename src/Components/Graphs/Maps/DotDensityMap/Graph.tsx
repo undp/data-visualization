@@ -43,6 +43,7 @@ interface Props {
 
   mapData: FeatureCollection;
   colorDomain: string[];
+  mapBorderData?: FeatureCollection;
   width: number;
   height: number;
   scale: number;
@@ -58,7 +59,6 @@ interface Props {
   tooltip?: string | ((_d: any) => React.ReactNode);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
-  isWorldMap: boolean;
   showColorScale: boolean;
   zoomScaleExtend: [number, number];
   zoomTranslateExtend?: [[number, number], [number, number]];
@@ -128,6 +128,7 @@ export function Graph(props: Props) {
     overlayMapBorderWidth,
     graphDownload,
     dataDownload,
+    mapBorderData,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
@@ -234,8 +235,6 @@ export function Graph(props: Props) {
                 .translate([width / 2, height / 2])
                 .scale(scaleVar)
             : geoAlbersUsa()
-                .rotate(projectionRotate)
-                .center(centerPoint || (center.geometry.coordinates as [number, number]))
                 .translate([width / 2, height / 2])
                 .scale(scaleVar);
 
@@ -267,12 +266,39 @@ export function Graph(props: Props) {
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                   key={i}
                   style={{
-                    stroke: mapBorderColor,
-                    strokeWidth: mapBorderWidth,
                     fill: mapNoDataColor,
                     vectorEffect: 'non-scaling-stroke',
                   }}
                 />
+              );
+            })}
+            {(mapBorderData || formattedMapData)?.features.map((d, i: number) => {
+              const path = pathGenerator(d);
+              if (!path) return null;
+              return (
+                <motion.g
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                  key={i}
+                >
+                  <path
+                    d={path}
+                    style={{
+                      stroke: mapBorderColor,
+                      strokeWidth:
+                        d.properties?.bdytyp === 3 || d.properties?.bdytyp === 4
+                          ? Math.max(1, mapBorderWidth)
+                          : mapBorderWidth,
+                      fill: 'none',
+                      vectorEffect: 'non-scaling-stroke',
+                      strokeDasharray:
+                        d.properties?.bdytyp === 3
+                          ? '3 3'
+                          : d.properties?.bdytyp === 4
+                            ? '2 2'
+                            : undefined,
+                    }}
+                  />
+                </motion.g>
               );
             })}
             {formattedOverlayMapData?.features.map((d, i: number) => {
