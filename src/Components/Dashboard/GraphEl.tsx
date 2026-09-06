@@ -834,6 +834,7 @@ function GraphEl(props: Props) {
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
           showCostalBorder: settings?.showCostalBorder,
+          showUNBorder: settings?.showUNBorder,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -896,6 +897,7 @@ function GraphEl(props: Props) {
         return {
           xNumberDisplayOptions: settings?.xNumberDisplayOptions,
           yNumberDisplayOptions: settings?.yNumberDisplayOptions,
+          showUNBorder: settings?.showUNBorder,
           showCostalBorder: settings?.showCostalBorder,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
@@ -963,6 +965,7 @@ function GraphEl(props: Props) {
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           showCostalBorder: settings?.showCostalBorder,
+          showUNBorder: settings?.showUNBorder,
           theme: settings?.theme,
           mapOverlay: settings?.mapOverlay,
           dimmedOpacity: settings?.dimmedOpacity,
@@ -1019,6 +1022,7 @@ function GraphEl(props: Props) {
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
           showCostalBorder: settings?.showCostalBorder,
+          showUNBorder: settings?.showUNBorder,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,

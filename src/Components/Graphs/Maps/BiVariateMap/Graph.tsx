@@ -91,6 +91,7 @@ interface Props {
   graphDownload?: RefObject<HTMLDivElement | null>;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   dataDownload: any;
+  showUNBorder: boolean;
 }
 
 export function Graph(props: Props) {
@@ -138,6 +139,7 @@ export function Graph(props: Props) {
     graphDownload,
     dataDownload,
     mapBorderData,
+    showUNBorder,
   } = props;
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
@@ -413,36 +415,37 @@ export function Graph(props: Props) {
                 );
               })}
             </AnimatePresence>
-            {(mapBorderData || formattedMapData)?.features.map((d, i: number) => {
-              if (!d.properties?.[mapBorderData ? 'iso3cd' : mapProperty]) return null;
-              const path = pathGenerator(d);
-              if (!path) return null;
-              return (
-                <motion.g
-                  // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                  key={i}
-                >
-                  <path
-                    d={path}
-                    style={{
-                      stroke: mapBorderColor,
-                      strokeWidth:
-                        d.properties?.bdytyp === 3 || d.properties?.bdytyp === 4
-                          ? Math.max(1, mapBorderWidth)
-                          : mapBorderWidth,
-                      fill: 'none',
-                      vectorEffect: 'non-scaling-stroke',
-                      strokeDasharray:
-                        d.properties?.bdytyp === 3
-                          ? '3 3'
-                          : d.properties?.bdytyp === 4
-                            ? '2 2'
-                            : undefined,
-                    }}
-                  />
-                </motion.g>
-              );
-            })}
+            {showUNBorder &&
+              (mapBorderData || formattedMapData)?.features.map((d, i: number) => {
+                if (!d.properties?.[mapBorderData ? 'iso3cd' : mapProperty]) return null;
+                const path = pathGenerator(d);
+                if (!path) return null;
+                return (
+                  <motion.g
+                    // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                    key={i}
+                  >
+                    <path
+                      d={path}
+                      style={{
+                        stroke: mapBorderColor,
+                        strokeWidth:
+                          d.properties?.bdytyp === 3 || d.properties?.bdytyp === 4
+                            ? Math.max(1, mapBorderWidth)
+                            : mapBorderWidth,
+                        fill: 'none',
+                        vectorEffect: 'non-scaling-stroke',
+                        strokeDasharray:
+                          d.properties?.bdytyp === 3
+                            ? '3 3'
+                            : d.properties?.bdytyp === 4
+                              ? '2 2'
+                              : undefined,
+                      }}
+                    />
+                  </motion.g>
+                );
+              })}
             {mouseOverData
               ? formattedMapData.features
                   .filter(

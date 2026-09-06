@@ -97,6 +97,8 @@ interface Props {
   mapBorderWidth?: number;
   /** Stroke color of the regions in the map */
   mapBorderColor?: string;
+  /** Toggle if the UN border are shown. */
+  showUNBorder?: boolean;
   /** Toggle if the coastal border is shown. Only applicable if default world map is used */
   showCostalBorder?: boolean;
   /** Toggle if the map is a world map */
@@ -215,6 +217,7 @@ export function ChoroplethMap(props: Props) {
     mapOverlay,
     numberDisplayOptions,
     showCostalBorder = false,
+    showUNBorder,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -253,11 +256,11 @@ export function ChoroplethMap(props: Props) {
     setMapShape(shape);
   });
 
-  const onUpdateMapBorderShape = useEffectEvent((shape: FeatureCollection) => {
+  const onUpdateMapBorderShape = useEffectEvent((shape?: FeatureCollection) => {
     setMapBorderShape(shape);
   });
 
-  const onUpdateOverlayMapShape = useEffectEvent((shape: FeatureCollection | undefined) => {
+  const onUpdateOverlayMapShape = useEffectEvent((shape?: FeatureCollection) => {
     setOverlayMapShape(shape);
   });
   useEffect(() => {
@@ -271,7 +274,7 @@ export function ChoroplethMap(props: Props) {
       fetchData.then((d) => {
         onUpdateShape(d as FeatureCollection);
       });
-      if (!mapData) {
+      if (!mapData || showUNBorder) {
         const fetchBorderData = convertTopoJsonUrlToGeoJson(
           !showCostalBorder
             ? 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_inland.json'
@@ -281,11 +284,13 @@ export function ChoroplethMap(props: Props) {
         fetchBorderData.then((d) => {
           onUpdateMapBorderShape(d as FeatureCollection);
         });
+      } else {
+        onUpdateMapBorderShape(undefined);
       }
     } else {
       onUpdateShape(mapData);
     }
-  }, [mapData, showCostalBorder]);
+  }, [mapData, showCostalBorder, showUNBorder]);
   useEffect(() => {
     if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
     if (typeof mapOverlay?.mapData === 'string') {
@@ -466,6 +471,7 @@ export function ChoroplethMap(props: Props) {
                   : data.filter((d) => d !== undefined)
                 : null
             }
+            showUNBorder={showUNBorder ?? true}
           />
         ) : (
           <div
