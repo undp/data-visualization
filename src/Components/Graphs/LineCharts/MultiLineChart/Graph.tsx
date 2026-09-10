@@ -33,6 +33,7 @@ import type {
   CustomLayerDataType,
   HighlightAreaSettingsDataType,
   MultiLineChartDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -89,7 +90,7 @@ interface Props {
   labelsToBeHidden: (string | number)[];
   locale: string;
   naLabel: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 interface FormattedDataType {

@@ -14,6 +14,7 @@ import type {
   ClassNameObject,
   CustomLayerDataType,
   DistributionMarkerDataType,
+  PadZerosTypes,
   StripChartDataType,
   StyleObject,
 } from '@/Types';
@@ -61,7 +62,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
   hasGroups: boolean;
   groupOrder?: (string | number)[];
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type

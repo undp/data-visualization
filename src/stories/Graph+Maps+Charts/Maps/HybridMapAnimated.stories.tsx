@@ -41,7 +41,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
           detail: `{
   locale?: string; 
   precision?: number;
-  padZeros?: boolean;
+  padZeros?: 'none' | 'all' | 'decimal';
 }`,
         },
       },

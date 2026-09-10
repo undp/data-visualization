@@ -40,7 +40,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   precision?: number;
   prefix?: string;
   suffix?: string;
-  padZeros?: boolean;
+  padZeros?: 'none' | 'all' | 'decimal';
 }`,
         },
       },
@@ -53,7 +53,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   precision?: number;
   prefix?: string;
   suffix?: string;
-  padZeros?: boolean;
+  padZeros?: 'none' | 'all' | 'decimal';
 }`,
         },
       },

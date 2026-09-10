@@ -14,6 +14,7 @@ import type {
   DonutChartDataType,
   Languages,
   NumberFormatOptions,
+  PadZerosTypes,
   SourcesDataType,
   StyleObject,
 } from '@/Types';
@@ -82,7 +83,7 @@ interface Props {
         suffix?: string;
         prefix?: string;
         locale?: string;
-        padZeros?: boolean;
+        padZeros?: PadZerosTypes;
         precision?: number;
       }
     | ReactElement;

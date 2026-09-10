@@ -271,7 +271,7 @@ export function DataCards(props: Props) {
         <div className='flex gap-x-4 gap-y-0 flex-wrap items-start w-full pb-3'>
           {cardSortingOptions ? (
             <div
-              className='grow shrink-0 min-w-[240px]'
+              className='grow shrink-0 min-w-60'
               style={{ width: cardSortingOptions.width || 'calc(25% - 0.75rem)' }}
             >
               <P marginBottom='xs' size='sm' className='text-content-primary'>
@@ -305,7 +305,7 @@ export function DataCards(props: Props) {
           ) : null}
           {filterSettings?.map((d) => (
             <div
-              className='grow shrink-0 min-w-[240px]'
+              className='grow shrink-0 min-w-60'
               style={{ width: d.width || 'calc(25% - 0.75rem)' }}
               key={d.label}
             >

@@ -287,7 +287,7 @@ export function CirclePackingGraph(props: Props) {
             classNames={classNames}
             dimmedOpacity={dimmedOpacity}
             locale={numberDisplayOptions?.locale || 'en'}
-            padZeros={numberDisplayOptions?.padZeros || false}
+            padZeros={numberDisplayOptions?.padZeros || 'none'}
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}

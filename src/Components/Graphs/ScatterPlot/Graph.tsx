@@ -239,7 +239,7 @@ export function Graph(props: Props) {
               prefix={yNumberDisplayOptions?.prefix || ''}
               precision={yNumberDisplayOptions?.precision ?? 2}
               locale={yNumberDisplayOptions?.locale || 'en'}
-              padZeros={yNumberDisplayOptions?.padZeros || false}
+              padZeros={yNumberDisplayOptions?.padZeros || 'none'}
             />
             <Axis
               y1={y(minYValue < 0 ? 0 : minYValue)}
@@ -253,7 +253,7 @@ export function Graph(props: Props) {
                 yNumberDisplayOptions?.prefix || '',
                 yNumberDisplayOptions?.suffix || '',
                 yNumberDisplayOptions?.locale || 'en',
-                yNumberDisplayOptions?.padZeros || false,
+                yNumberDisplayOptions?.padZeros || 'none',
               )}
               labelPos={{
                 x: 0,
@@ -299,7 +299,7 @@ export function Graph(props: Props) {
               prefix={xNumberDisplayOptions?.prefix || ''}
               precision={xNumberDisplayOptions?.precision ?? 2}
               locale={xNumberDisplayOptions?.locale || 'en'}
-              padZeros={xNumberDisplayOptions?.padZeros || false}
+              padZeros={xNumberDisplayOptions?.padZeros || 'none'}
             />
             <Axis
               x1={x(minXValue < 0 ? 0 : minXValue)}
@@ -313,7 +313,7 @@ export function Graph(props: Props) {
                 xNumberDisplayOptions?.prefix || '',
                 xNumberDisplayOptions?.suffix || '',
                 xNumberDisplayOptions?.locale || 'en',
-                xNumberDisplayOptions?.padZeros || false,
+                xNumberDisplayOptions?.padZeros || 'none',
               )}
               labelPos={{
                 x: x(minXValue < 0 ? 0 : minXValue),

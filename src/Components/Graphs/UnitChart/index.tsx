@@ -223,7 +223,7 @@ export function UnitChart(props: Props) {
                       numberDisplayOptions?.prefix,
                       numberDisplayOptions?.suffix,
                       numberDisplayOptions?.locale || 'en',
-                      numberDisplayOptions?.padZeros || false,
+                      numberDisplayOptions?.padZeros || 'none',
                     )}
                   </span>
                 </P>

@@ -416,7 +416,7 @@ export function Graph(props: Props) {
               }}
               labelType='primary'
               showGridLines
-              padZeros={false}
+              padZeros='none'
             />
           </g>
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}

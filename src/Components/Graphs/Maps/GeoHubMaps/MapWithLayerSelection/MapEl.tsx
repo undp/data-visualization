@@ -1,4 +1,4 @@
-import maplibreGl from 'maplibre-gl';
+import * as maplibreGl from 'maplibre-gl';
 import * as pmtiles from 'pmtiles';
 import { useEffect, useRef, useState } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';

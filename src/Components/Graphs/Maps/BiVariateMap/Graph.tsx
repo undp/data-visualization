@@ -539,7 +539,7 @@ export function Graph(props: Props) {
                                     undefined,
                                     undefined,
                                     xNumberDisplayOptions?.locale || 'en',
-                                    xNumberDisplayOptions?.padZeros || false,
+                                    xNumberDisplayOptions?.padZeros || 'none',
                                   )}
                             </text>
                           ))}
@@ -568,7 +568,7 @@ export function Graph(props: Props) {
                                     undefined,
                                     undefined,
                                     yNumberDisplayOptions?.locale || 'en',
-                                    yNumberDisplayOptions?.padZeros || false,
+                                    yNumberDisplayOptions?.padZeros || 'none',
                                   )}
                             </text>
                           </g>

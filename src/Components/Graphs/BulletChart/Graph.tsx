@@ -18,6 +18,7 @@ import type {
   BulletChartDataType,
   ClassNameObject,
   CustomLayerDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -74,7 +75,7 @@ interface Props {
   targetLineThickness: number;
   hideAxisLine: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 export function VerticalGraph(props: Props) {

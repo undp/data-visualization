@@ -91,7 +91,7 @@ interface Props {
   orientation?: 'horizontal' | 'vertical';
   hideAxisLine?: boolean;
   locale?: string;
-  padZeros?: boolean;
+  padZeros?: 'all' | 'decimal' | 'none';
 }
 
 export function GroupedBarGraphEl(props: Props) {
@@ -154,7 +154,7 @@ export function GroupedBarGraphEl(props: Props) {
     orientation = 'vertical',
     hideAxisLine = false,
     locale = 'en',
-    padZeros = false,
+    padZeros = 'none',
   } = props;
 
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;

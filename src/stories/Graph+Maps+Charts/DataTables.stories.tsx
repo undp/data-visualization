@@ -79,7 +79,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   prefix?: string;
   locale?: string;
   precision?: number;
-  padZeros?: boolean;
+  padZeros?: 'none' | 'all' | 'decimal';
   columnWidth?: number;
 }`,
         },

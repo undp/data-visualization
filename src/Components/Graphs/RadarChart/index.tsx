@@ -306,7 +306,7 @@ export function RadarChart(props: Props) {
             precision={numberDisplayOptions?.precision ?? 2}
             customLayers={customLayers}
             locale={numberDisplayOptions?.locale || 'en'}
-            padZeros={numberDisplayOptions?.padZeros || false}
+            padZeros={numberDisplayOptions?.padZeros || 'none'}
           />
         ) : null}
       </GraphArea>

@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { Tooltip } from '@/Components/Elements/Tooltip';
-import type { ClassNameObject, StyleObject, TreeMapDataType } from '@/Types';
+import type { ClassNameObject, PadZerosTypes, StyleObject, TreeMapDataType } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -49,7 +49,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
   minLabelRadius: number;
 }
 

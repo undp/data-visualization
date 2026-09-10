@@ -25,12 +25,12 @@ export function LinearColorLegend(props: Props) {
         </P>
       ) : null}
 
-      <div className='flex gap-0 flex-wrap justify-center w-full min-w-[360px] leading-0'>
+      <div className='flex gap-0 flex-wrap justify-center w-full min-w-90 leading-0'>
         <div
-          className='h-4 mb-1 w-full min-w-[360px]'
+          className='h-4 mb-1 w-full min-w-90'
           style={{ background: `linear-gradient(90deg, ${colors[0]} 0%, ${colors[1]} 100%)` }}
         />
-        <div className='flex justify-between w-full min-w-[360px]'>
+        <div className='flex justify-between w-full min-w-90'>
           <P marginBottom='none' size='sm'>
             {numberFormattingFunction(colorDomain[0], undefined, 2, '', '', locale)}
           </P>

@@ -1,4 +1,4 @@
-import maplibreGl from 'maplibre-gl';
+import * as maplibreGl from 'maplibre-gl';
 import * as pmtiles from 'pmtiles';
 import { useEffect, useRef, useState } from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -99,7 +99,7 @@ export function GeoHubSingleMap(props: Props) {
             style={{ width: '100%', height: '100%' }}
           />
           {mapLegend ? (
-            <div className='absolute left-[22px] bottom-13'>
+            <div className='absolute left-5.5 bottom-13'>
               {showLegend ? (
                 <>
                   <LegendCollapseButton setExpanded={setShowLegend} />

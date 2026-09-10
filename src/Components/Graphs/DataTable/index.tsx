@@ -511,7 +511,7 @@ export function DataTable(props: Props) {
       {popupVisible && (
         <div
           style={popupStyle}
-          className='absolute p-3 border z-[1000] rounded-sm bg-background border-stroke'
+          className='absolute p-3 border z-1000 rounded-sm bg-background border-stroke'
         >
           <div className='max-w-60'>
             <P size='sm' marginBottom='2xs' className='font-bold'>

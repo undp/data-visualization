@@ -1,5 +1,5 @@
 import { cn } from '@undp/design-system-react/cn';
-
+import type { PadZerosTypes } from '@/Types';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
   leftLabel?: boolean;
   precision?: number;
   locale?: string;
-  padZeros?: boolean;
+  padZeros?: PadZerosTypes;
 }
 
 export function XTicksAndGridLines(props: Props) {
@@ -34,7 +34,7 @@ export function XTicksAndGridLines(props: Props) {
     precision = 2,
     leftLabel = false,
     locale = 'en',
-    padZeros = false,
+    padZeros = 'none',
   } = props;
   if (!values && !showGridLines) return null;
   return (
@@ -78,7 +78,7 @@ export function XTicksAndGridLines(props: Props) {
                     prefix,
                     suffix,
                     locale,
-                    padZeros,
+                    padZeros === 'all' ? 'decimal' : padZeros,
                   )}
             </text>
           ) : null}

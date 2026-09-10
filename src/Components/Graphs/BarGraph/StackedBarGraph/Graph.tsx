@@ -18,6 +18,7 @@ import type {
   ClassNameObject,
   CustomLayerDataType,
   GroupedBarGraphDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -71,7 +72,7 @@ interface Props {
   naLabel: string;
   hideAxisLine: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
   minLabelSize: number;
 }
 

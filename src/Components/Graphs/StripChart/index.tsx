@@ -332,7 +332,7 @@ export function StripChart(props: Props) {
             dimmedOpacity={dimmedOpacity}
             customLayers={customLayers}
             locale={numberDisplayOptions?.locale || 'en'}
-            padZeros={numberDisplayOptions?.padZeros || false}
+            padZeros={numberDisplayOptions?.padZeros || 'none'}
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}

@@ -398,7 +398,7 @@ export function ButterflyChart(props: Props) {
             customLayers={customLayers}
             naLabel={naLabel}
             locale={numberDisplayOptions?.locale || 'en'}
-            padZeros={numberDisplayOptions?.padZeros || false}
+            padZeros={numberDisplayOptions?.padZeros || 'none'}
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}

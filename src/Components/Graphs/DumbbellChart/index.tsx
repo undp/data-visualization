@@ -473,7 +473,7 @@ export function DumbbellChart(props: Props) {
             dimmedOpacity={dimmedOpacity}
             rtl={language === 'ar' || language === 'he'}
             locale={numberDisplayOptions?.locale || 'en'}
-            padZeros={numberDisplayOptions?.padZeros || false}
+            padZeros={numberDisplayOptions?.padZeros || 'none'}
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}

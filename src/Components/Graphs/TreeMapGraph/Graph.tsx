@@ -10,6 +10,7 @@ import type {
   AnimateDataType,
   ClassNameObject,
   Languages,
+  PadZerosTypes,
   StyleObject,
   TreeMapDataType,
 } from '@/Types';
@@ -49,7 +50,7 @@ interface Props {
   dimmedOpacity: number;
   precision: number;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
   minLabelWidth: number;
   minLabelHeight: number;
 }

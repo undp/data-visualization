@@ -15,6 +15,7 @@ import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
   WaterfallChartDataType,
@@ -68,7 +69,7 @@ interface Props {
   naLabel: string;
   hideAxisLine: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 function getWaterfallExtent(values: (number | null | undefined)[]) {
   let cumulative = 0;

@@ -11,6 +11,7 @@ import type {
   AnimateDataType,
   ClassNameObject,
   CustomLayerDataType,
+  PadZerosTypes,
   RadarChartDataType,
   StyleObject,
 } from '@/Types';
@@ -53,7 +54,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 export function Graph(props: Props) {

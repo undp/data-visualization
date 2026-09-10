@@ -35,6 +35,7 @@ import type {
   CustomLayerDataType,
   HighlightAreaSettingsDataType,
   LineChartWithConfidenceIntervalDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -87,7 +88,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 interface FormattedDataType {
   y: number;

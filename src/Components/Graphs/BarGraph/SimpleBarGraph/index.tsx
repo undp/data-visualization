@@ -16,6 +16,7 @@ import type {
   ClassNameObject,
   CustomLayerDataType,
   Languages,
+  PadZerosTypes,
   ReferenceDataType,
   SourcesDataType,
   StyleObject,
@@ -96,7 +97,7 @@ interface Props {
   orientation?: 'horizontal' | 'vertical';
   hideAxisLine?: boolean;
   locale?: string;
-  padZeros?: boolean;
+  padZeros?: PadZerosTypes;
 }
 
 export function SimpleBarGraphEl(props: Props) {
@@ -164,7 +165,7 @@ export function SimpleBarGraphEl(props: Props) {
     trackColor,
     hideAxisLine = false,
     locale = 'en',
-    padZeros = false,
+    padZeros = 'none',
   } = props;
   const Comp = orientation === 'horizontal' ? HorizontalGraph : VerticalGraph;
   const [svgWidth, setSvgWidth] = useState(0);

@@ -11,6 +11,7 @@ import type {
   AnimateDataType,
   ClassNameObject,
   HeatMapDataType,
+  PadZerosTypes,
   ScaleDataType,
   StyleObject,
 } from '@/Types';
@@ -52,7 +53,7 @@ interface Props {
   animate: AnimateDataType;
   precision: number;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 export function Graph(props: Props) {

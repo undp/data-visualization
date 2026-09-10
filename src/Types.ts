@@ -72,6 +72,8 @@ export type MapProjectionTypes =
   | 'orthographic'
   | 'albersUSA';
 
+export type PadZerosTypes = 'all' | 'decimal' | 'none';
+
 export interface CustomLayerDataType {
   position: 'before' | 'after';
   layer: React.ReactNode;
@@ -121,7 +123,7 @@ export interface NumberFormatOptions {
   precision?: number;
   prefix?: string;
   suffix?: string;
-  padZeros?: boolean;
+  padZeros?: PadZerosTypes;
 }
 
 export interface StyleObject {
@@ -409,7 +411,7 @@ export interface DataTableColumnDataType {
   prefix?: string;
   locale?: string;
   precision?: number;
-  padZeros?: boolean;
+  padZeros?: PadZerosTypes;
   columnWidth?: number;
 }
 
@@ -856,7 +858,7 @@ export interface GraphSettingsDataType {
         suffix?: string;
         prefix?: string;
         locale?: string;
-        padZeros?: boolean;
+        padZeros?: PadZerosTypes;
         precision?: number;
       }
     | ReactElement;

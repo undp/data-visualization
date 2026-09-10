@@ -35,6 +35,7 @@ import type {
   CustomLayerDataType,
   HighlightAreaSettingsDataType,
   MultiLineAltChartDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -90,7 +91,7 @@ interface Props {
   showHighlightedLinesLabels: boolean;
   showDateOnHover: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
   showVoronoiTesselation: boolean;
   useVoronoiInteraction: boolean;
 }

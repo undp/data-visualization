@@ -667,7 +667,7 @@ export function Graph(props: Props) {
                                 undefined,
                                 undefined,
                                 numberDisplayOptions?.locale || 'en',
-                                numberDisplayOptions?.padZeros || false,
+                                numberDisplayOptions?.padZeros || 'none',
                               )}
                             </text>
                           </g>
@@ -758,7 +758,7 @@ export function Graph(props: Props) {
                             undefined,
                             undefined,
                             numberDisplayOptions?.locale || 'en',
-                            numberDisplayOptions?.padZeros || false,
+                            numberDisplayOptions?.padZeros || 'none',
                           )}`}
                         </P>
                       </div>
@@ -787,7 +787,7 @@ export function Graph(props: Props) {
                             undefined,
                             undefined,
                             numberDisplayOptions?.locale || 'en',
-                            numberDisplayOptions?.padZeros || false,
+                            numberDisplayOptions?.padZeros || 'none',
                           )}`}
                         </P>
                       </div>

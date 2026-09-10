@@ -6,7 +6,13 @@ import { isValidElement, type ReactElement, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import { Tooltip } from '@/Components/Elements/Tooltip';
-import type { AnimateDataType, ClassNameObject, DonutChartDataType, StyleObject } from '@/Types';
+import type {
+  AnimateDataType,
+  ClassNameObject,
+  DonutChartDataType,
+  PadZerosTypes,
+  StyleObject,
+} from '@/Types';
 import { getArc } from '@/Utils/getArc';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -18,7 +24,7 @@ interface Props {
         suffix?: string;
         prefix?: string;
         locale?: string;
-        padZeros?: boolean;
+        padZeros?: PadZerosTypes;
         precision?: number;
       }
     | ReactElement;

@@ -17,6 +17,7 @@ import type {
   CustomLayerDataType,
   GroupedBarGraphDataType,
   Languages,
+  PadZerosTypes,
   ReferenceDataType,
   SourcesDataType,
   StyleObject,
@@ -92,7 +93,7 @@ interface Props {
   naLabel?: string;
   orientation?: 'horizontal' | 'vertical';
   hideAxisLine?: boolean;
-  padZeros?: boolean;
+  padZeros?: PadZerosTypes;
   showTotalValue?: boolean;
   minLabelSize?: number;
 }
@@ -159,7 +160,7 @@ export function StackedBarGraphEl(props: Props) {
     sortData,
     orientation = 'vertical',
     hideAxisLine = false,
-    padZeros = false,
+    padZeros = 'none',
     minLabelSize,
   } = props;
 

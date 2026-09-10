@@ -34,6 +34,7 @@ import type {
   CustomLayerDataType,
   DifferenceLineChartDataType,
   HighlightAreaSettingsDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -84,7 +85,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   locale: string;
   naLabel: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 interface FormattedDataType {

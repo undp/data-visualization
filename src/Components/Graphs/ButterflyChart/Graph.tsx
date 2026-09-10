@@ -14,6 +14,7 @@ import type {
   ButterflyChartDataType,
   ClassNameObject,
   CustomLayerDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -59,7 +60,7 @@ interface Props {
   naLabel: string;
   hideAxisLine: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 export function Graph(props: Props) {

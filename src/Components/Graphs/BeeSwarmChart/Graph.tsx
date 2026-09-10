@@ -20,6 +20,7 @@ import type {
   ClassNameObject,
   CustomLayerDataType,
   DistributionMarkerDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -75,7 +76,7 @@ interface Props {
   rtl?: boolean;
   hideAxisLine: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
   strictValuePosition: boolean;
   hasGroups: boolean;
   groupOrder?: (string | number)[];

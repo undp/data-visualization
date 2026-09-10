@@ -17,6 +17,7 @@ import type {
   ClassNameObject,
   CustomLayerDataType,
   DumbbellChartDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -71,7 +72,7 @@ interface Props {
   rtl: boolean;
   hideAxisLine: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 export function VerticalGraph(props: Props) {

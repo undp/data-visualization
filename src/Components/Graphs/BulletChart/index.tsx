@@ -467,7 +467,7 @@ export function BulletChart(props: Props) {
               targetLineThickness={targetLineThickness}
               rtl={language === 'ar' || language === 'he'}
               locale={numberDisplayOptions?.locale || 'en'}
-              padZeros={numberDisplayOptions?.padZeros || false}
+              padZeros={numberDisplayOptions?.padZeros || 'none'}
               precision={numberDisplayOptions?.precision ?? 2}
             />
           ) : null}

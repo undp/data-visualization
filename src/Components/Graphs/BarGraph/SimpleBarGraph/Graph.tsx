@@ -18,6 +18,7 @@ import type {
   BarGraphDataType,
   ClassNameObject,
   CustomLayerDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -73,7 +74,7 @@ interface Props {
   trackColor?: string;
   hideAxisLine: boolean;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 export function HorizontalGraph(props: Props) {

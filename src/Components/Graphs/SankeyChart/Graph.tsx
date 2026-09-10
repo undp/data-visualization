@@ -13,6 +13,7 @@ import type {
   CustomLayerDataType,
   NodeDataType,
   NodesLinkDataType,
+  PadZerosTypes,
   StyleObject,
 } from '@/Types';
 import { generateRandomString } from '@/Utils/generateRandomString';
@@ -56,7 +57,7 @@ interface Props {
   precision: number;
   customLayers: CustomLayerDataType[];
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
   labelPosition: 'inside' | 'outside' | 'overlap';
   labelWidth: number;
   dimmedNodeOpacity: number;

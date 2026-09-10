@@ -34,6 +34,7 @@ import type {
   CustomLayerDataType,
   HighlightAreaSettingsDataType,
   MultiLineChartDataType,
+  PadZerosTypes,
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
@@ -74,7 +75,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   animate: AnimateDataType;
   locale: string;
-  padZeros: boolean;
+  padZeros: PadZerosTypes;
 }
 
 export function Graph(props: Props) {
