@@ -18,6 +18,7 @@ import isEqual from 'fast-deep-equal';
 import type { FeatureCollection } from 'geojson';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import type { Topology } from 'topojson-specification';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
@@ -37,8 +38,10 @@ import type {
   StyleObject,
   ZoomInteractionTypes,
 } from '@/Types';
+import { convertTopoJsonToGeoJson } from '@/Utils';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
+import AksaiChinStriped from '../shapeFile/aksaiChinStriped.json';
 
 interface Props {
   colorDomain: (number | string)[];
@@ -85,6 +88,7 @@ interface Props {
   overlayMapBorderWidth?: number;
   numberDisplayOptions?: Omit<NumberFormatOptions, 'suffix' | 'prefix'>;
   graphDownload?: RefObject<HTMLDivElement | null>;
+  showAksaiChinAsStriped: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   dataDownload: any;
   showUNBorder: boolean;
@@ -134,7 +138,13 @@ export function Graph(props: Props) {
     dataDownload,
     mapBorderData,
     showUNBorder,
+    showAksaiChinAsStriped,
   } = props;
+
+  const aksaiChinStripedGeoJson = useMemo(
+    () => convertTopoJsonToGeoJson(AksaiChinStriped as unknown as Topology, 'stripes'),
+    [],
+  );
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
 
@@ -277,6 +287,19 @@ export function Graph(props: Props) {
           ref={mapSvg}
           direction='ltr'
         >
+          <defs>
+            <pattern
+              id='aksai-chin-stripes'
+              patternUnits='userSpaceOnUse'
+              width='32'
+              height='32'
+              patternTransform='rotate(45)'
+            >
+              <rect width='32' height='32' fill='#aaa' />
+
+              <rect width='2' height='32' fill='white' opacity='0.8' />
+            </pattern>
+          </defs>
           <g ref={mapG}>
             {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
             {formattedMapData.features.map((d, i: number) => {
@@ -398,6 +421,48 @@ export function Graph(props: Props) {
                   </motion.g>
                 );
               })}
+              {showAksaiChinAsStriped &&
+                aksaiChinStripedGeoJson?.features.map((d, i: number) => {
+                  const path = pathGenerator(d);
+                  const color = !checkIfNullOrUndefined(data.find((el) => el.id === 'CHN')?.x)
+                    ? // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+                      colorScale(data.find((el) => el.id === 'CHN')?.x as any)
+                    : mapNoDataColor;
+                  if (!path) return null;
+                  return (
+                    <motion.g
+                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                      key={`aksai-chin-stripped-${i}`}
+                      variants={{
+                        initial: { opacity: 0 },
+                        whileInView: {
+                          opacity: selectedColor || highlightedIds?.length ? dimmedOpacity : 1,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    >
+                      <motion.path
+                        d={path}
+                        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                        key={`aksai-chin-stripped-${i}`}
+                        variants={{
+                          initial: { fill: color, opacity: 0 },
+                          whileInView: {
+                            fill: color,
+                            opacity: 1,
+                            transition: { duration: animate.duration },
+                          },
+                        }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      />
+                    </motion.g>
+                  );
+                })}
             </AnimatePresence>
             {showUNBorder &&
               (mapBorderData || formattedMapData)?.features.map((d, i: number) => {
@@ -434,7 +499,9 @@ export function Graph(props: Props) {
               ? formattedMapData.features
                   .filter(
                     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                    (d: { properties: any }) => d.properties[mapProperty] === mouseOverData.id,
+                    (d: { properties: any }) =>
+                      d.properties[mapProperty] === mouseOverData.id &&
+                      (d.properties.iso3cd?.[0] !== 'x' || !d.properties.iso3cd),
                   )
                   .map((d, i) => (
                     <path

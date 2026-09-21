@@ -18,6 +18,7 @@ import isEqual from 'fast-deep-equal';
 import type { FeatureCollection } from 'geojson';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import type { Topology } from 'topojson-specification';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
@@ -37,8 +38,10 @@ import type {
   StyleObject,
   ZoomInteractionTypes,
 } from '@/Types';
+import { convertTopoJsonToGeoJson } from '@/Utils';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
+import AksaiChinStriped from '../shapeFile/aksaiChinStriped.json';
 
 interface Props {
   data: BivariateMapDataType[];
@@ -92,6 +95,7 @@ interface Props {
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   dataDownload: any;
   showUNBorder: boolean;
+  showAksaiChinAsStriped: boolean;
 }
 
 export function Graph(props: Props) {
@@ -140,7 +144,13 @@ export function Graph(props: Props) {
     dataDownload,
     mapBorderData,
     showUNBorder,
+    showAksaiChinAsStriped,
   } = props;
+
+  const aksaiChinStripedGeoJson = useMemo(
+    () => convertTopoJsonToGeoJson(AksaiChinStriped as unknown as Topology, 'stripes'),
+    [],
+  );
   const formattedMapData = useMemo(() => {
     if (!rewindCoordinatesInMapData) return mapData;
 
@@ -414,6 +424,55 @@ export function Graph(props: Props) {
                   </motion.g>
                 );
               })}
+              {showAksaiChinAsStriped &&
+                aksaiChinStripedGeoJson?.features.map((d, i: number) => {
+                  const path = pathGenerator(d);
+                  const dataForCHN = data.find((el) => el.id === 'CHN');
+                  const xColorCoord = !checkIfNullOrUndefined(dataForCHN?.x)
+                    ? xScale(dataForCHN?.x as number)
+                    : undefined;
+                  const yColorCoord = !checkIfNullOrUndefined(dataForCHN?.y)
+                    ? yScale(dataForCHN?.y as number)
+                    : undefined;
+                  const color =
+                    xColorCoord !== undefined && yColorCoord !== undefined
+                      ? colors[yColorCoord][xColorCoord]
+                      : mapNoDataColor;
+                  if (!path) return null;
+                  return (
+                    <motion.g
+                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                      key={`aksai-chin-stripped-${i}`}
+                      variants={{
+                        initial: { opacity: 0 },
+                        whileInView: {
+                          opacity: selectedColor || highlightedIds?.length ? dimmedOpacity : 1,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    >
+                      <motion.path
+                        d={path}
+                        // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                        key={`aksai-chin-stripped-${i}`}
+                        variants={{
+                          initial: { fill: color, opacity: 0 },
+                          whileInView: {
+                            fill: color,
+                            opacity: 1,
+                            transition: { duration: animate.duration },
+                          },
+                        }}
+                        initial='initial'
+                        animate={isInView ? 'whileInView' : 'initial'}
+                        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      />
+                    </motion.g>
+                  );
+                })}
             </AnimatePresence>
             {showUNBorder &&
               (mapBorderData || formattedMapData)?.features.map((d, i: number) => {
@@ -450,7 +509,9 @@ export function Graph(props: Props) {
               ? formattedMapData.features
                   .filter(
                     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                    (d: { properties: any }) => d.properties[mapProperty] === mouseOverData.id,
+                    (d: { properties: any }) =>
+                      d.properties[mapProperty] === mouseOverData.id &&
+                      (d.properties.iso3cd?.[0] !== 'x' || !d.properties.iso3cd),
                   )
                   .map((d, i) => (
                     <path

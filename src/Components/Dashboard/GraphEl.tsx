@@ -833,6 +833,7 @@ function GraphEl(props: Props) {
       case 'choroplethMap':
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
+          showAksaiChinAsStriped: settings?.showAksaiChinAsStriped,
           showCostalBorder: settings?.showCostalBorder,
           showUNBorder: settings?.showUNBorder,
           timeline: settings?.timeline,
@@ -897,6 +898,7 @@ function GraphEl(props: Props) {
         return {
           xNumberDisplayOptions: settings?.xNumberDisplayOptions,
           yNumberDisplayOptions: settings?.yNumberDisplayOptions,
+          showAksaiChinAsStriped: settings?.showAksaiChinAsStriped,
           showUNBorder: settings?.showUNBorder,
           showCostalBorder: settings?.showCostalBorder,
           timeline: settings?.timeline,
@@ -1022,6 +1024,7 @@ function GraphEl(props: Props) {
         return {
           numberDisplayOptions: settings?.numberDisplayOptions,
           showCostalBorder: settings?.showCostalBorder,
+          showAksaiChinAsStriped: settings?.showAksaiChinAsStriped,
           showUNBorder: settings?.showUNBorder,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,

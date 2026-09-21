@@ -125,6 +125,8 @@ interface Props {
   mapProperty?: string;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
   showAntarctica?: boolean;
+  /** Show Aksai Chin as striped */
+  showAksaiChinAsStriped?: boolean;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -218,6 +220,7 @@ export function ChoroplethMap(props: Props) {
     numberDisplayOptions,
     showCostalBorder = false,
     showUNBorder,
+    showAksaiChinAsStriped = true,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -472,6 +475,7 @@ export function ChoroplethMap(props: Props) {
                 : null
             }
             showUNBorder={showUNBorder ?? true}
+            showAksaiChinAsStriped={showAksaiChinAsStriped}
           />
         ) : (
           <div

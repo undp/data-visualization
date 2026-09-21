@@ -136,6 +136,8 @@ interface Props {
   collapseColorScaleByDefault?: boolean;
   /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
   showAntarctica?: boolean;
+  /** Show Aksai Chin as striped */
+  showAksaiChinAsStriped?: boolean;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Property in the property object in mapData geoJson object is used to match to the id in the data object */
@@ -238,6 +240,7 @@ export function HybridMap(props: Props) {
     mapOverlay,
     showCostalBorder = false,
     showUNBorder,
+    showAksaiChinAsStriped = true,
   } = props;
 
   const [svgWidth, setSvgWidth] = useState(0);
@@ -506,6 +509,7 @@ export function HybridMap(props: Props) {
                 : null
             }
             showUNBorder={showUNBorder ?? true}
+            showAksaiChinAsStriped={showAksaiChinAsStriped}
           />
         ) : (
           <div

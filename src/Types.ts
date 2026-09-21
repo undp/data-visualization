@@ -1100,6 +1100,7 @@ export interface GraphSettingsDataType {
   groupPadding?: number;
   showCostalBorder?: boolean;
   showUNBorder?: boolean;
+  showAksaiChinAsStriped?: boolean;
 }
 
 export interface InfoBoxDataType {
