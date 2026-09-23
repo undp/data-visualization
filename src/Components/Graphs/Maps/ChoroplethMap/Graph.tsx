@@ -92,6 +92,7 @@ interface Props {
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   dataDownload: any;
   showUNBorder: boolean;
+  isDisputedAreasInteractive: boolean;
 }
 
 export function Graph(props: Props) {
@@ -139,6 +140,7 @@ export function Graph(props: Props) {
     mapBorderData,
     showUNBorder,
     showAksaiChinAsStriped,
+    isDisputedAreasInteractive,
   } = props;
 
   const aksaiChinStripedGeoJson = useMemo(
@@ -411,6 +413,12 @@ export function Graph(props: Props) {
                               opacity: 1,
                               transition: { duration: animate.duration },
                             },
+                          }}
+                          style={{
+                            pointerEvents:
+                              feature.properties?.iso3cd?.[0] === 'x' && !isDisputedAreasInteractive
+                                ? 'none'
+                                : 'auto',
                           }}
                           initial='initial'
                           animate={isInView ? 'whileInView' : 'initial'}

@@ -230,7 +230,7 @@ export function HybridMap(props: Props) {
     collapseColorScaleByDefault,
     dotColor = Colors.primaryColors['blue-600'],
     highlightedIds,
-    mapProperty = 'isoclr',
+    mapProperty = 'isoclr3',
     dotLegendTitle,
     dotBorderColor,
     labelColor = Colors.primaryColors['blue-600'],
@@ -493,7 +493,7 @@ export function HybridMap(props: Props) {
             }
             collapseColorScaleByDefault={collapseColorScaleByDefault}
             highlightedIds={highlightedIds}
-            mapProperty={!mapData && !mapProperty ? 'isoclr' : mapProperty}
+            mapProperty={!mapData && !mapProperty ? 'isoclr3' : mapProperty}
             dotLegendTitle={dotLegendTitle}
             dotBorderColor={dotBorderColor}
             labelColor={labelColor}

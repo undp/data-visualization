@@ -103,6 +103,8 @@ interface Props {
   showCostalBorder?: boolean;
   /** Toggle if the map is a world map */
   isWorldMap?: boolean;
+  /** Toggle if the disputed areas are interactive */
+  isDisputedAreasInteractive?: boolean;
   /** Map projection type */
   mapProjection?: MapProjectionTypes;
   /** Extend of the allowed zoom in the map */
@@ -194,7 +196,7 @@ export function ChoroplethMap(props: Props) {
     graphID,
     highlightedIds,
     onSeriesMouseClick,
-    mapProperty = 'isoclr',
+    mapProperty = 'isoclr3',
     graphDownload = false,
     dataDownload = false,
     showAntarctica = false,
@@ -221,6 +223,7 @@ export function ChoroplethMap(props: Props) {
     showCostalBorder = false,
     showUNBorder,
     showAksaiChinAsStriped = true,
+    isDisputedAreasInteractive = false,
   } = props;
   const [svgWidth, setSvgWidth] = useState(0);
   const [svgHeight, setSvgHeight] = useState(0);
@@ -443,7 +446,7 @@ export function ChoroplethMap(props: Props) {
             zoomScaleExtend={zoomScaleExtend}
             zoomTranslateExtend={zoomTranslateExtend}
             onSeriesMouseClick={onSeriesMouseClick}
-            mapProperty={!mapData && !mapProperty ? 'isoclr' : mapProperty}
+            mapProperty={!mapData && !mapProperty ? 'isoclr3' : mapProperty}
             highlightedIds={highlightedIds}
             resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
             styles={styles}
@@ -476,6 +479,7 @@ export function ChoroplethMap(props: Props) {
             }
             showUNBorder={showUNBorder ?? true}
             showAksaiChinAsStriped={showAksaiChinAsStriped}
+            isDisputedAreasInteractive={isDisputedAreasInteractive}
           />
         ) : (
           <div

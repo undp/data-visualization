@@ -1101,6 +1101,7 @@ export interface GraphSettingsDataType {
   showCostalBorder?: boolean;
   showUNBorder?: boolean;
   showAksaiChinAsStriped?: boolean;
+  isDisputedAreasInteractive?: boolean;
 }
 
 export interface InfoBoxDataType {
