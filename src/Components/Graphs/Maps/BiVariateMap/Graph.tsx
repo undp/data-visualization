@@ -486,7 +486,7 @@ export function Graph(props: Props) {
               (mapBorderData || formattedMapData)?.features.map((d, i: number) => {
                 if (!d.properties?.[mapBorderData ? 'iso3cd' : mapProperty]) return null;
                 const path = pathGenerator(d);
-                if (!path) return null;
+                if (!path || d.properties?.bdytyp === 99) return null;
                 return (
                   <motion.g
                     // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
@@ -526,7 +526,7 @@ export function Graph(props: Props) {
                       // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                       key={i}
                       d={pathGenerator(d) || ''}
-                      className='stroke-foreground'
+                      className='mouseover-map-shape-outline stroke-foreground'
                       style={{
                         fill: 'none',
                         fillOpacity: 0,
