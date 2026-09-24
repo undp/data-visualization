@@ -305,21 +305,23 @@ export function HybridMap(props: Props) {
       fetchData.then((d) => {
         onUpdateShape(d as FeatureCollection);
       });
-      if (!mapData || showUNBorder) {
-        const fetchBorderData = convertTopoJsonUrlToGeoJson(
-          !showCostalBorder
-            ? 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_inland.json'
-            : 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_all.json',
-          'BNDL_simplified_wgs84',
-        );
-        fetchBorderData.then((d) => {
-          onUpdateMapBorderShape(d as FeatureCollection);
-        });
-      } else {
-        onUpdateMapBorderShape(undefined);
-      }
     } else {
       onUpdateShape(mapData);
+    }
+  }, [mapData]);
+  useEffect(() => {
+    if (!mapData || showUNBorder) {
+      const fetchBorderData = convertTopoJsonUrlToGeoJson(
+        !showCostalBorder
+          ? 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_inland.json'
+          : 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_all.json',
+        'BNDL_simplified_wgs84',
+      );
+      fetchBorderData.then((d) => {
+        onUpdateMapBorderShape(d as FeatureCollection);
+      });
+    } else {
+      onUpdateMapBorderShape(undefined);
     }
   }, [mapData, showCostalBorder, showUNBorder]);
   useEffect(() => {
