@@ -1,23 +1,11 @@
-import bbox from '@turf/bbox';
-import centerOfMass from '@turf/center-of-mass';
-import rewind from '@turf/rewind';
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
-import {
-  geoAlbersUsa,
-  geoEqualEarth,
-  geoMercator,
-  geoNaturalEarth1,
-  geoOrthographic,
-  geoPath,
-} from 'd3-geo';
+import { geoPath } from 'd3-geo';
 import { scaleOrdinal, scaleThreshold } from 'd3-scale';
-import { select } from 'd3-selection';
-import { type D3ZoomEvent, type ZoomBehavior, zoom } from 'd3-zoom';
 import isEqual from 'fast-deep-equal';
 import type { FeatureCollection } from 'geojson';
 import { AnimatePresence, motion, useInView } from 'motion/react';
-import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { type RefObject, useMemo, useRef, useState } from 'react';
 import type { Topology } from 'topojson-specification';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
@@ -28,6 +16,8 @@ import {
 } from '@/Components/Elements/LegendExpandControls';
 import { MapZoomButton } from '@/Components/Elements/MapZoomButton';
 import { Tooltip } from '@/Components/Elements/Tooltip';
+import { useMapProjection } from '@/hooks/useMapProjection';
+import { useMapZoom } from '@/hooks/useMapZoom';
 import type {
   AnimateDataType,
   ChoroplethMapDataType,
@@ -82,7 +72,6 @@ interface Props {
   collapseColorScaleByDefault?: boolean;
   zoomAndCenterByHighlightedIds: boolean;
   projectionRotate: [number, number] | [number, number, number];
-  rewindCoordinatesInMapData: boolean;
   overlayMapData?: FeatureCollection;
   overlayMapBorderColor?: string;
   overlayMapBorderWidth?: number;
@@ -130,7 +119,6 @@ export function Graph(props: Props) {
     collapseColorScaleByDefault,
     zoomAndCenterByHighlightedIds,
     projectionRotate,
-    rewindCoordinatesInMapData,
     overlayMapData,
     overlayMapBorderColor,
     overlayMapBorderWidth,
@@ -147,18 +135,31 @@ export function Graph(props: Props) {
     () => convertTopoJsonToGeoJson(AksaiChinStriped as unknown as Topology, 'stripes'),
     [],
   );
-  const formattedMapData = useMemo(() => {
-    if (!rewindCoordinatesInMapData) return mapData;
+  const mapSvg = useRef<SVGSVGElement>(null);
+  const mapG = useRef<SVGGElement>(null);
 
-    return rewind(mapData, { reverse: true }) as FeatureCollection;
-  }, [mapData, rewindCoordinatesInMapData]);
-  const formattedOverlayMapData = useMemo(() => {
-    if (!rewindCoordinatesInMapData || !overlayMapData) return overlayMapData;
-
-    return rewind(overlayMapData, { reverse: true }) as FeatureCollection;
-  }, [overlayMapData, rewindCoordinatesInMapData]);
+  const { handleZoom } = useMapZoom({
+    mapSvg,
+    mapG,
+    width,
+    height,
+    zoomInteraction,
+    zoomScaleExtend,
+    zoomTranslateExtend,
+  });
+  const { projection } = useMapProjection({
+    mapData,
+    mapProperty,
+    zoomAndCenterByHighlightedIds,
+    highlightedIds: highlightedIds || [],
+    width,
+    height,
+    mapProjection,
+    scale,
+    centerPoint,
+    projectionRotate,
+  });
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
-  const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const [showLegend, setShowLegend] = useState(
     collapseColorScaleByDefault === undefined ? !(width < 680) : !collapseColorScaleByDefault,
   );
@@ -168,117 +169,16 @@ export function Graph(props: Props) {
   const [mouseOverData, setMouseOverData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
-  const mapSvg = useRef<SVGSVGElement>(null);
   const isInView = useInView(mapSvg, {
     once: animate.once,
     amount: animate.amount,
   });
-  const mapG = useRef<SVGGElement>(null);
   const colorScale = categorical
     ? scaleOrdinal<number | string, string>().domain(colorDomain).range(colors)
     : scaleThreshold<number, string>()
         .domain(colorDomain as number[])
         .range(colors);
-
-  useEffect(() => {
-    const mapGSelect = select(mapG.current);
-    const mapSvgSelect = select(mapSvg.current);
-    const zoomFilter = (e: D3ZoomEvent<SVGSVGElement, unknown>['sourceEvent']) => {
-      if (zoomInteraction === 'noZoom') return false;
-      if (zoomInteraction === 'button') return !e.type.includes('wheel');
-      const isWheel = e.type === 'wheel';
-      const isTouch = e.type.startsWith('touch');
-      const isDrag = e.type === 'mousedown' || e.type === 'mousemove';
-
-      if (isTouch) return true;
-      if (isWheel) {
-        if (zoomInteraction === 'scroll') return true;
-        return e.ctrlKey;
-      }
-      return isDrag && !e.button && !e.ctrlKey;
-    };
-    const zoomBehavior = zoom<SVGSVGElement, unknown>()
-      .scaleExtent(zoomScaleExtend)
-      .translateExtent(
-        zoomTranslateExtend || [
-          [-20, -20],
-          [width + 20, height + 20],
-        ],
-      )
-      .filter(zoomFilter)
-      .on('zoom', ({ transform }) => {
-        mapGSelect.attr('transform', transform);
-      });
-
-    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-    mapSvgSelect.call(zoomBehavior as any);
-
-    zoomRef.current = zoomBehavior;
-  }, [height, width, zoomInteraction]);
-
-  const bounds = bbox({
-    ...formattedMapData,
-    features: zoomAndCenterByHighlightedIds
-      ? formattedMapData.features.filter(
-          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-          (d: any) =>
-            (highlightedIds || []).length === 0 ||
-            highlightedIds?.indexOf(d.properties[mapProperty]) !== -1,
-        )
-      : formattedMapData.features,
-  });
-
-  const center = centerOfMass({
-    ...formattedMapData,
-    features: zoomAndCenterByHighlightedIds
-      ? formattedMapData.features.filter(
-          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-          (d: any) =>
-            (highlightedIds || []).length === 0 ||
-            highlightedIds?.indexOf(d.properties[mapProperty]) !== -1,
-        )
-      : formattedMapData.features,
-  });
-  const lonDiff = (bounds[2] - bounds[0]) * 1.15;
-  const latDiff = (bounds[3] - bounds[1]) * 1.15;
-  const scaleX = (((width * 190) / 960) * 360) / lonDiff;
-  const scaleY = (((height * 190) / 678) * 180) / latDiff;
-  const scaleVar = scale * Math.min(scaleX, scaleY);
-
-  const projection =
-    mapProjection === 'mercator'
-      ? geoMercator()
-          .rotate(projectionRotate)
-          .center(centerPoint || (center.geometry.coordinates as [number, number]))
-          .translate([width / 2, height / 2])
-          .scale(scaleVar)
-      : mapProjection === 'equalEarth'
-        ? geoEqualEarth()
-            .rotate(projectionRotate)
-            .center(centerPoint || (center.geometry.coordinates as [number, number]))
-            .translate([width / 2, height / 2])
-            .scale(scaleVar)
-        : mapProjection === 'naturalEarth'
-          ? geoNaturalEarth1()
-              .rotate(projectionRotate)
-              .center(centerPoint || (center.geometry.coordinates as [number, number]))
-              .translate([width / 2, height / 2])
-              .scale(scaleVar)
-          : mapProjection === 'orthographic'
-            ? geoOrthographic()
-                .rotate(projectionRotate)
-                .center(centerPoint || (center.geometry.coordinates as [number, number]))
-                .translate([width / 2, height / 2])
-                .scale(scaleVar)
-            : geoAlbersUsa()
-                .translate([width / 2, height / 2])
-                .scale(scaleVar);
   const pathGenerator = geoPath().projection(projection);
-  const handleZoom = (direction: 'in' | 'out') => {
-    if (!mapSvg.current || !zoomRef.current) return;
-    const svg = select(mapSvg.current);
-    svg.call(zoomRef.current.scaleBy, direction === 'in' ? 1.2 : 1 / 1.2);
-  };
   return (
     <>
       <div className='relative'>
@@ -289,22 +189,9 @@ export function Graph(props: Props) {
           ref={mapSvg}
           direction='ltr'
         >
-          <defs>
-            <pattern
-              id='aksai-chin-stripes'
-              patternUnits='userSpaceOnUse'
-              width='32'
-              height='32'
-              patternTransform='rotate(45)'
-            >
-              <rect width='32' height='32' fill='#aaa' />
-
-              <rect width='2' height='32' fill='white' opacity='0.8' />
-            </pattern>
-          </defs>
           <g ref={mapG}>
             {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
-            {formattedMapData.features.map((d, i: number) => {
+            {mapData.features.map((d, i: number) => {
               if (!d.properties?.[mapProperty]) return null;
               const path = pathGenerator(d);
               if (!path) return null;
@@ -334,7 +221,7 @@ export function Graph(props: Props) {
             })}
             <AnimatePresence>
               {data.map((d) => {
-                const features = formattedMapData.features.filter(
+                const features = mapData.features.filter(
                   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   (el: any) => d.id === el.properties[mapProperty],
                 );
@@ -350,17 +237,7 @@ export function Graph(props: Props) {
                     variants={{
                       initial: { opacity: 0 },
                       whileInView: {
-                        opacity: selectedColor
-                          ? selectedColor === color
-                            ? !highlightedIds || highlightedIds.indexOf(d.id) !== -1
-                              ? 1
-                              : dimmedOpacity
-                            : dimmedOpacity
-                          : highlightedIds
-                            ? highlightedIds.indexOf(d.id) !== -1
-                              ? 1
-                              : dimmedOpacity
-                            : 1,
+                        opacity: 1,
                         transition: { duration: animate.duration },
                       },
                     }}
@@ -410,7 +287,20 @@ export function Graph(props: Props) {
                             initial: { fill: color, opacity: 0 },
                             whileInView: {
                               fill: color,
-                              opacity: 1,
+                              opacity: selectedColor
+                                ? selectedColor === color
+                                  ? !highlightedIds || highlightedIds.indexOf(d.id) !== -1
+                                    ? 1
+                                    : dimmedOpacity
+                                  : dimmedOpacity
+                                : highlightedIds
+                                  ? highlightedIds.indexOf(d.id) !== -1
+                                    ? feature.properties?.iso3cd?.[0] === 'x' &&
+                                      !isDisputedAreasInteractive
+                                      ? 1
+                                      : dimmedOpacity
+                                    : dimmedOpacity
+                                  : 1,
                               transition: { duration: animate.duration },
                             },
                           }}
@@ -473,7 +363,7 @@ export function Graph(props: Props) {
                 })}
             </AnimatePresence>
             {showUNBorder &&
-              (mapBorderData || formattedMapData)?.features.map((d, i: number) => {
+              (mapBorderData || mapData)?.features.map((d, i: number) => {
                 if (!d.properties?.[mapBorderData ? 'iso3cd' : mapProperty]) return null;
                 const path = pathGenerator(d);
                 if (!path || d.properties?.bdytyp === 99) return null;
@@ -504,7 +394,7 @@ export function Graph(props: Props) {
                 );
               })}
             {mouseOverData
-              ? formattedMapData.features
+              ? mapData.features
                   .filter(
                     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     (d: { properties: any }) =>
@@ -526,7 +416,7 @@ export function Graph(props: Props) {
                     />
                   ))
               : null}
-            {formattedOverlayMapData?.features.map((d, i: number) => {
+            {overlayMapData?.features.map((d, i: number) => {
               const path = pathGenerator(d);
               if (!path) return null;
               return (

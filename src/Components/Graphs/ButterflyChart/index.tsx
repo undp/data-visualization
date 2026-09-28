@@ -1,14 +1,13 @@
-import { SliderUI } from '@undp/design-system-react/SliderUI';
-import { format } from 'date-fns/format';
-import { parse } from 'date-fns/parse';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { ColorLegend } from '@/Components/Elements/ColorLegend';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { Pause, Play } from '@/Components/Icons';
+import { Timeline } from '@/Components/Elements/Timeline';
+import { useElementSize } from '@/hooks/useElementSize';
+import { useTimeline } from '@/hooks/useTimeline';
 import type {
   AnimateDataType,
   ButterflyChartDataType,
@@ -23,7 +22,6 @@ import type {
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { ensureCompleteDataForButterFlyChart } from '@/Utils/ensureCompleteData';
-import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { Graph } from './Graph';
 
 function getMinMax(
@@ -221,54 +219,11 @@ export function ButterflyChart(props: Props) {
     hideAxisLine = false,
     numberDisplayOptions,
   } = props;
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
-  const [play, setPlay] = useState(timeline.autoplay);
-  const uniqDatesSorted = useMemo(() => {
-    const dates = [
-      ...new Set(
-        data
-          .filter((d) => d.date)
-          .map((d) => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
-      ),
-    ];
-    dates.sort((a, b) => a - b);
-    return dates;
-  }, [data, timeline.dateFormat]);
-  const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
 
-  const graphDiv = useRef<HTMLDivElement>(null);
+  const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
+  const { uniqDatesSorted, index, setIndex, play, setPlay, markObj, activeDate, dateFormat } =
+    useTimeline(data, timeline);
   const graphParentDiv = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setSvgWidth(entries[0].target.clientWidth || 620);
-      setSvgHeight(entries[0].target.clientHeight || 480);
-    });
-    if (graphDiv.current) {
-      resizeObserver.observe(graphDiv.current);
-    }
-    return () => resizeObserver.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => {
-        setIndex((i) => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
-      },
-      (timeline.speed || 2) * 1000,
-    );
-    if (!play) clearInterval(interval);
-    return () => clearInterval(interval);
-  }, [uniqDatesSorted, play, timeline.speed]);
-
-  const markObj = getSliderMarks(
-    uniqDatesSorted,
-    index,
-    timeline.showOnlyActiveDate,
-    timeline.dateFormat || 'yyyy',
-  );
-
   return (
     <GraphContainer
       className={classNames?.graphContainer}
@@ -309,33 +264,15 @@ export function ButterflyChart(props: Props) {
         />
       ) : null}
       {timeline.enabled && uniqDatesSorted.length > 0 && markObj ? (
-        <div className='flex gap-6 items-center' dir='ltr'>
-          <button
-            type='button'
-            onClick={() => {
-              setPlay(!play);
-            }}
-            className='p-0 border-0 cursor-pointer bg-transparent'
-            aria-label={play ? 'Click to pause animation' : 'Click to play animation'}
-          >
-            {play ? <Pause /> : <Play />}
-          </button>
-          <SliderUI
-            min={uniqDatesSorted[0]}
-            max={uniqDatesSorted[uniqDatesSorted.length - 1]}
-            marks={markObj}
-            step={null}
-            defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
-            value={uniqDatesSorted[index]}
-            onChangeComplete={(nextValue) => {
-              setIndex(uniqDatesSorted.indexOf(nextValue as number));
-            }}
-            onChange={(nextValue) => {
-              setIndex(uniqDatesSorted.indexOf(nextValue as number));
-            }}
-            aria-label='Time slider. Use arrow keys to adjust selected time period.'
-          />
-        </div>
+        <Timeline
+          play={play}
+          setPlay={setPlay}
+          uniqDatesSorted={uniqDatesSorted}
+          markObj={markObj}
+          index={index}
+          setIndex={setIndex}
+          color={timeline.color}
+        />
       ) : null}
       {showColorScale && data.length > 0 ? (
         <ColorLegend
@@ -351,12 +288,8 @@ export function ButterflyChart(props: Props) {
         {svgWidth && svgHeight && data.length > 0 ? (
           <Graph
             hideAxisLine={hideAxisLine}
-            data={ensureCompleteDataForButterFlyChart(data, timeline.dateFormat || 'yyyy').filter(
-              (d) =>
-                timeline.enabled
-                  ? `${d.date}` ===
-                    format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
-                  : d,
+            data={ensureCompleteDataForButterFlyChart(data, dateFormat).filter((d) =>
+              timeline.enabled ? `${d.date}` === activeDate : d,
             )}
             barColors={barColors}
             width={svgWidth}

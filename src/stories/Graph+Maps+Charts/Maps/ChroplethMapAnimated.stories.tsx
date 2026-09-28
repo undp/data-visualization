@@ -115,10 +115,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     mapData: { control: 'object' },
     mapProjection: {
       control: 'select',
-      options: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic', 'albersUSA'],
+      options: ['mercator', 'equalEarth', 'naturalEarth', 'orthographic'],
       table: {
         type: {
-          summary: "'mercator' | 'equalEarth' | 'naturalEarth' | 'orthographic' | 'albersUSA'",
+          summary: "'mercator' | 'equalEarth' | 'naturalEarth' | 'orthographic'",
         },
       },
     },
@@ -136,11 +136,27 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       control: 'text',
       table: { type: { summary: '[number, number]' } },
     },
+    showUNBorder: {
+      control: 'boolean',
+      table: { type: { summary: 'boolean' } },
+    },
+    showCostalBorder: {
+      control: 'boolean',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    isDisputedAreasInteractive: {
+      control: 'boolean',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    showAksaiChinAsStriped: {
+      control: 'boolean',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
     projectionRotate: {
       control: 'text',
       table: {
         type: { summary: '[number,number] | [number, number, number]' },
-        defaultValue: { summary: '[0, 0]' },
+        defaultValue: { summary: '[-10, 0]' },
       },
     },
     detailsOnClick: {
@@ -235,6 +251,48 @@ const meta: Meta<PagePropsAndCustomArgs> = {
   showOnlyActiveDate: boolean;
   speed?: number;
   dateFormat?: string; // Available formats can be found here: https://date-fns.org/docs/format
+  color?:
+    | 'azure'
+    | 'blue'
+    | 'green'
+    | 'lime'
+    | 'orange'
+    | 'pink'
+    | 'red'
+    | 'teal'
+    | 'violet'
+    | 'yellow'
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'quaternary'
+    | 'foreground'
+    | 'sdg-1'
+    | 'sdg-2'
+    | 'sdg-3'
+    | 'sdg-4'
+    | 'sdg-5'
+    | 'sdg-6'
+    | 'sdg-7'
+    | 'sdg-8'
+    | 'sdg-9'
+    | 'sdg-10'
+    | 'sdg-11'
+    | 'sdg-12'
+    | 'sdg-13'
+    | 'sdg-14'
+    | 'sdg-15'
+    | 'sdg-16'
+    | 'sdg-17'
+    | 'male'
+    | 'female'
+    | 'urban'
+    | 'rural'
+    | 'child'
+    | 'adolescent'
+    | 'young-adult'
+    | 'adult'
+    | 'older-adult'
 }`,
         },
       },

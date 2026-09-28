@@ -138,7 +138,6 @@ export function UnitChart(props: Props) {
   });
   const totalValue = sum(data.map((d) => d.value));
   const graphParentDiv = useRef<HTMLDivElement>(null);
-  const graphDiv = useRef<HTMLDivElement>(null);
   const gridDimension = size / gridSize;
   const radius = (gridDimension - unitPadding * 2) / 2;
   if (radius <= 0) {
@@ -232,7 +231,7 @@ export function UnitChart(props: Props) {
           </div>
         </div>
       ) : null}
-      <GraphArea ref={graphDiv}>
+      <GraphArea>
         <svg
           width={`${width || size}px`}
           height={`${Math.max(

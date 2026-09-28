@@ -1,14 +1,14 @@
-import { SliderUI } from '@undp/design-system-react/SliderUI';
 import { Spinner } from '@undp/design-system-react/Spinner';
-import { format } from 'date-fns/format';
-import { parse } from 'date-fns/parse';
 import type { FeatureCollection } from 'geojson';
-import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
-import { Pause, Play } from '@/Components/Icons';
+import { Timeline } from '@/Components/Elements/Timeline';
+import { useElementSize } from '@/hooks/useElementSize';
+import { useMapShapeData } from '@/hooks/useMapShapeData';
+import { useTimeline } from '@/hooks/useTimeline';
 import type {
   AnimateDataType,
   ClassNameObject,
@@ -23,9 +23,6 @@ import type {
   ZoomInteractionTypes,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { convertTopoJsonUrlToGeoJson } from '@/Utils/convertTopoJsonToGeoJson';
-import { fetchAndParseJSON } from '@/Utils/fetchAndParseData';
-import { getSliderMarks } from '@/Utils/getSliderMarks';
 import { uniqBy } from '@/Utils/uniqBy';
 import { Graph } from './Graph';
 
@@ -120,8 +117,6 @@ interface Props {
   showColorScale?: boolean;
   /** Toggle if color scale is collapsed by default. */
   collapseColorScaleByDefault?: boolean;
-  /** Toggles the visibility of Antarctica in the default map. Only applicable for the default map. */
-  showAntarctica?: boolean;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
   customLayers?: CustomLayerDataType[];
   /** Configures playback and slider controls for animating the chart over time. The data must have a key date for it to work properly. */
@@ -190,7 +185,6 @@ export function DotDensityMap(props: Props) {
     onSeriesMouseClick,
     graphDownload = false,
     dataDownload = false,
-    showAntarctica = false,
     language = 'en',
     minHeight = 0,
     theme = 'light',
@@ -207,116 +201,25 @@ export function DotDensityMap(props: Props) {
     maxRadiusValue,
     timeline = { enabled: false, autoplay: false, showOnlyActiveDate: true },
     collapseColorScaleByDefault,
-    projectionRotate = [0, 0],
+    projectionRotate = [-10, 0],
     rewindCoordinatesInMapData = true,
     mapOverlay,
     showCostalBorder = false,
     showUNBorder,
   } = props;
-
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
-  const [play, setPlay] = useState(timeline.autoplay);
-  const uniqDatesSorted = useMemo(() => {
-    const dates = [
-      ...new Set(
-        data
-          .filter((d) => d.date)
-          .map((d) => parse(`${d.date}`, timeline.dateFormat || 'yyyy', new Date()).getTime()),
-      ),
-    ];
-    dates.sort((a, b) => a - b);
-    return dates;
-  }, [data, timeline.dateFormat]);
-  const [index, setIndex] = useState(timeline.autoplay ? 0 : uniqDatesSorted.length - 1);
-
-  const [mapShape, setMapShape] = useState<FeatureCollection | undefined>(undefined);
-  const [mapBorderShape, setMapBorderShape] = useState<FeatureCollection | undefined>(undefined);
-  const [overlayMapShape, setOverlayMapShape] = useState<FeatureCollection | undefined>(undefined);
-
-  const graphDiv = useRef<HTMLDivElement>(null);
-  const graphParentDiv = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setSvgWidth(entries[0].target.clientWidth || 620);
-      setSvgHeight(entries[0].target.clientHeight || 480);
-    });
-    if (graphDiv.current) {
-      resizeObserver.observe(graphDiv.current);
-    }
-    return () => resizeObserver.disconnect();
-  }, []);
-
-  const onUpdateShape = useEffectEvent((shape: FeatureCollection) => {
-    setMapShape(shape);
-  });
-
-  const onUpdateOverlayMapShape = useEffectEvent((shape?: FeatureCollection) => {
-    setOverlayMapShape(shape);
-  });
-
-  const onUpdateMapBorderShape = useEffectEvent((shape?: FeatureCollection) => {
-    setMapBorderShape(shape);
-  });
-  useEffect(() => {
-    if (typeof mapData === 'string' || !mapData) {
-      const fetchData = mapData
-        ? fetchAndParseJSON(mapData)
-        : convertTopoJsonUrlToGeoJson(
-            'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_area.json',
-            'BNDA_simplified_wgs84',
-          );
-      fetchData.then((d) => {
-        onUpdateShape(d as FeatureCollection);
-      });
-    } else {
-      onUpdateShape(mapData);
-    }
-  }, [mapData]);
-  useEffect(() => {
-    if (!mapData || showUNBorder) {
-      const fetchBorderData = convertTopoJsonUrlToGeoJson(
-        !showCostalBorder
-          ? 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_inland.json'
-          : 'https://raw.githubusercontent.com/UNDP-Data/dv-country-geojson/refs/heads/main/Topojson_Map_Border/country_border_all.json',
-        'BNDL_simplified_wgs84',
-      );
-      fetchBorderData.then((d) => {
-        onUpdateMapBorderShape(d as FeatureCollection);
-      });
-    } else {
-      onUpdateMapBorderShape(undefined);
-    }
-  }, [mapData, showCostalBorder, showUNBorder]);
-  useEffect(() => {
-    if (!mapOverlay?.mapData) onUpdateOverlayMapShape(undefined);
-    if (typeof mapOverlay?.mapData === 'string') {
-      const fetchData = fetchAndParseJSON(mapOverlay?.mapData);
-      fetchData.then((d) => {
-        onUpdateOverlayMapShape(d as FeatureCollection);
-      });
-    } else {
-      onUpdateOverlayMapShape(mapOverlay?.mapData);
-    }
-  }, [mapOverlay?.mapData]);
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => {
-        setIndex((i) => (i < uniqDatesSorted.length - 1 ? i + 1 : 0));
-      },
-      (timeline.speed || 2) * 1000,
-    );
-    if (!play) clearInterval(interval);
-    return () => clearInterval(interval);
-  }, [uniqDatesSorted, play, timeline.speed]);
-
-  const markObj = getSliderMarks(
-    uniqDatesSorted,
-    index,
-    timeline.showOnlyActiveDate,
-    timeline.dateFormat || 'yyyy',
+  const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
+  const { uniqDatesSorted, index, setIndex, play, setPlay, markObj, activeDate } = useTimeline(
+    data,
+    timeline,
   );
+  const { mapShape, mapBorderShape, overlayMapShape } = useMapShapeData(
+    mapData,
+    mapOverlay?.mapData,
+    rewindCoordinatesInMapData,
+    showCostalBorder,
+    showUNBorder,
+  );
+  const graphParentDiv = useRef<HTMLDivElement>(null);
   return (
     <GraphContainer
       className={classNames?.graphContainer}
@@ -349,51 +252,21 @@ export function DotDensityMap(props: Props) {
         />
       ) : null}
       {timeline.enabled && uniqDatesSorted.length > 0 && markObj ? (
-        <div className='flex gap-6 items-center' dir='ltr'>
-          <button
-            type='button'
-            onClick={() => {
-              setPlay(!play);
-            }}
-            className='p-0 border-0 cursor-pointer bg-transparent'
-            aria-label={play ? 'Click to pause animation' : 'Click to play animation'}
-          >
-            {play ? <Pause /> : <Play />}
-          </button>
-          <SliderUI
-            min={uniqDatesSorted[0]}
-            max={uniqDatesSorted[uniqDatesSorted.length - 1]}
-            marks={markObj}
-            step={null}
-            defaultValue={uniqDatesSorted[uniqDatesSorted.length - 1]}
-            value={uniqDatesSorted[index]}
-            onChangeComplete={(nextValue) => {
-              setIndex(uniqDatesSorted.indexOf(nextValue as number));
-            }}
-            onChange={(nextValue) => {
-              setIndex(uniqDatesSorted.indexOf(nextValue as number));
-            }}
-            aria-label='Time slider. Use arrow keys to adjust selected time period.'
-          />
-        </div>
+        <Timeline
+          play={play}
+          setPlay={setPlay}
+          uniqDatesSorted={uniqDatesSorted}
+          markObj={markObj}
+          index={index}
+          setIndex={setIndex}
+          color={timeline.color}
+        />
       ) : null}
       <GraphArea ref={graphDiv}>
         {svgWidth && svgHeight && mapShape && (mapBorderShape || !mapData) ? (
           <Graph
-            data={data.filter((d) =>
-              timeline.enabled
-                ? `${d.date}` ===
-                  format(new Date(uniqDatesSorted[index]), timeline.dateFormat || 'yyyy')
-                : d,
-            )}
-            mapData={
-              showAntarctica
-                ? mapShape
-                : {
-                    ...mapShape,
-                    features: mapShape.features.filter((el) => el.properties?.isoclr !== 'ATA'),
-                  }
-            }
+            data={data.filter((d) => (timeline.enabled ? `${d.date}` === activeDate : d))}
+            mapData={mapShape}
             mapBorderData={
               mapBorderShape
                 ? {
@@ -458,7 +331,6 @@ export function DotDensityMap(props: Props) {
             }
             collapseColorScaleByDefault={collapseColorScaleByDefault}
             projectionRotate={projectionRotate}
-            rewindCoordinatesInMapData={rewindCoordinatesInMapData}
             graphDownload={graphDownload ? graphParentDiv : undefined}
             dataDownload={
               dataDownload

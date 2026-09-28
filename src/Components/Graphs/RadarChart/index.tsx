@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { useElementSize } from '@/hooks/useElementSize';
 import type {
   AnimateDataType,
   ClassNameObject,
@@ -187,30 +188,9 @@ export function RadarChart(props: Props) {
     customLayers = [],
     numberDisplayOptions,
   } = props;
-
-  const [graphRadius, setGraphRadius] = useState(0);
-  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
-
-  const graphDiv = useRef<HTMLDivElement>(null);
+  const { graphDiv, graphRadius } = useElementSize<HTMLDivElement>();
   const graphParentDiv = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setGraphRadius(
-        (Math.min(
-          ...[
-            entries[0].target.clientWidth || 620,
-            entries[0].target.clientHeight || 480,
-            radius || Infinity,
-          ],
-        ) || 420) / 2,
-      );
-    });
-    if (graphDiv.current) {
-      resizeObserver.observe(graphDiv.current);
-    }
-    return () => resizeObserver.disconnect();
-  }, [radius]);
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
   return (
     <GraphContainer
       className={classNames?.graphContainer}
@@ -274,7 +254,7 @@ export function RadarChart(props: Props) {
                   : [Colors.primaryColors['blue-600']]
                 : (colors as string[] | undefined) || Colors[theme].categoricalColors.colors
             }
-            radius={graphRadius}
+            radius={Math.min(graphRadius, radius ?? Infinity)}
             tooltip={tooltip}
             colorDomain={colorDomain || (uniqBy(data, 'color', true) as string[])}
             onSeriesMouseOver={onSeriesMouseOver}

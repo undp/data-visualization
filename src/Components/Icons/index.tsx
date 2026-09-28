@@ -277,20 +277,20 @@ export function MoreHorizontal() {
   );
 }
 
-export function Play() {
+export function Play({ fillClassName }: { fillClassName: string }) {
   return (
     <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'>
       <circle cx={24} cy={24} r={24} className='fill-surface-sm' />
       <polygon
         points='6 3 20 12 6 21 6 3'
-        className='fill-primary'
+        className={fillClassName}
         transform='translate(10,10) scale(1.25)'
       />
     </svg>
   );
 }
 
-export function Pause() {
+export function Pause({ fillClassName }: { fillClassName: string }) {
   return (
     <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'>
       <circle cx={24} cy={24} r={24} className='fill-surface-sm' />
@@ -300,7 +300,7 @@ export function Pause() {
         width='4'
         height='16'
         rx='1'
-        className='fill-primary'
+        className={fillClassName}
         transform='translate(10,10) scale(1.25)'
       />
       <rect
@@ -309,7 +309,7 @@ export function Pause() {
         width='4'
         height='16'
         rx='1'
-        className='fill-primary'
+        className={fillClassName}
         transform='translate(10,10) scale(1.25)'
       />
     </svg>

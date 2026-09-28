@@ -47,7 +47,6 @@
     "graphDownload": true,
     "dataDownload": true,
     "mapProperty": "NAME",
-    "showAntarctica": false,
     "language": "en",
     "theme": "light"
   }

@@ -65,12 +65,7 @@ export type ZoomInteractionTypes = 'scroll' | 'ctrlScroll' | 'button' | 'noZoom'
 
 export type CurveTypes = 'linear' | 'curve' | 'step' | 'stepAfter' | 'stepBefore';
 
-export type MapProjectionTypes =
-  | 'mercator'
-  | 'equalEarth'
-  | 'naturalEarth'
-  | 'orthographic'
-  | 'albersUSA';
+export type MapProjectionTypes = 'mercator' | 'equalEarth' | 'naturalEarth' | 'orthographic';
 
 export type PadZerosTypes = 'all' | 'decimal' | 'none';
 
@@ -719,12 +714,56 @@ export interface MapLegendDataType {
   legend: string | React.ReactNode;
 }
 
+export type Color =
+  | 'azure'
+  | 'blue'
+  | 'green'
+  | 'lime'
+  | 'orange'
+  | 'pink'
+  | 'red'
+  | 'teal'
+  | 'violet'
+  | 'yellow'
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'quaternary'
+  | 'foreground'
+  | 'sdg-1'
+  | 'sdg-2'
+  | 'sdg-3'
+  | 'sdg-4'
+  | 'sdg-5'
+  | 'sdg-6'
+  | 'sdg-7'
+  | 'sdg-8'
+  | 'sdg-9'
+  | 'sdg-10'
+  | 'sdg-11'
+  | 'sdg-12'
+  | 'sdg-13'
+  | 'sdg-14'
+  | 'sdg-15'
+  | 'sdg-16'
+  | 'sdg-17'
+  | 'male'
+  | 'female'
+  | 'urban'
+  | 'rural'
+  | 'child'
+  | 'adolescent'
+  | 'young-adult'
+  | 'adult'
+  | 'older-adult';
+
 export interface TimelineDataType {
   autoplay: boolean;
   enabled: boolean;
   showOnlyActiveDate: boolean;
   speed?: number;
   dateFormat?: string;
+  color?: Color;
 }
 
 export interface FogDataType {
@@ -903,7 +942,6 @@ export interface GraphSettingsDataType {
   zoomTranslateExtend?: [[number, number], [number, number]];
   highlightedIds?: string[];
   mapProperty?: string;
-  showAntarctica?: boolean;
   mapStyles?: [string, string];
   center?: [number, number];
   zoomLevel?: number;

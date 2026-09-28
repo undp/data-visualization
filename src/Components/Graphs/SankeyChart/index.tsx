@@ -6,6 +6,7 @@ import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { useElementSize } from '@/hooks/useElementSize';
 import type {
   AnimateDataType,
   ClassNameObject,
@@ -205,13 +206,9 @@ export function SankeyChart(props: Props) {
     minLabelHeight = 25,
     linkColor = 'source-target',
   } = props;
-
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
-  const [sankeyData, setSankeyData] = useState<NodesLinkDataType | undefined>(undefined);
-
-  const graphDiv = useRef<HTMLDivElement>(null);
+  const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
   const graphParentDiv = useRef<HTMLDivElement>(null);
+  const [sankeyData, setSankeyData] = useState<NodesLinkDataType | undefined>(undefined);
 
   const updateSankeyDataEvent = useEffectEvent((data: NodesLinkDataType) => {
     setSankeyData(data);
@@ -277,18 +274,6 @@ export function SankeyChart(props: Props) {
       })),
     });
   }, [data, sortNodes, sourceColorDomain, sourceColors, targetColorDomain, targetColors]);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setSvgWidth(entries[0].target.clientWidth || 620);
-      setSvgHeight(entries[0].target.clientHeight || 480);
-    });
-    if (graphDiv.current) {
-      resizeObserver.observe(graphDiv.current);
-    }
-    return () => resizeObserver.disconnect();
-  }, []);
-
   return (
     <GraphContainer
       className={classNames?.graphContainer}
@@ -335,7 +320,7 @@ export function SankeyChart(props: Props) {
             data={sankeyData}
             nodePadding={nodePadding}
             nodeWidth={nodeWidth}
-            width={fillContainer || !width ? svgWidth : svgWidth < width ? svgWidth : width}
+            width={fillContainer || !width ? svgWidth : Math.min(svgWidth, width)}
             height={svgHeight}
             showLabels={showLabels}
             leftMargin={leftMargin}

@@ -10,14 +10,15 @@ import type { Topology } from 'topojson-specification';
  */
 export function convertTopoJsonToGeoJson(
   topoJson: Topology,
-  key: string,
+  key?: string,
 ): FeatureCollection<Geometry> {
-  return feature(topoJson, topoJson.objects[key]) as FeatureCollection<Geometry>;
+  const keyToUse = key || Object.keys(topoJson.objects)[0];
+  return feature(topoJson, topoJson.objects[keyToUse]) as FeatureCollection<Geometry>;
 }
 
 export function convertTopoJsonUrlToGeoJson(
   url: string,
-  key: string,
+  key?: string,
 ): Promise<FeatureCollection<Geometry>> {
   return fetch(url)
     .then((response) => {
@@ -27,7 +28,8 @@ export function convertTopoJsonUrlToGeoJson(
       return response.json();
     })
     .then((topoJson: Topology) => {
-      const geoJson = feature(topoJson, topoJson.objects[key]);
+      const keyToUse = key || Object.keys(topoJson.objects)[0];
+      const geoJson = feature(topoJson, topoJson.objects[keyToUse]);
       return geoJson as FeatureCollection<Geometry>;
     });
 }

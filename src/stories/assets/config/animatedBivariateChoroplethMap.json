@@ -60,7 +60,6 @@
     "graphDownload": true,
     "dataDownload": true,
     "mapProperty": "ISO3",
-    "showAntarctica": false,
     "rtl": false,
     "language": "en",
     "theme": "light"

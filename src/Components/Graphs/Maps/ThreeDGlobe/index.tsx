@@ -6,6 +6,7 @@ import { Colors } from '@/Components/ColorPalette';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { useElementSize } from '@/hooks/useElementSize';
 import type {
   ChoroplethMapDataType,
   ClassNameObject,
@@ -209,25 +210,11 @@ export function ThreeDGlobe(props: Props) {
     collapseColorScaleByDefault,
     numberDisplayOptions,
   } = props;
-  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  const [mapShape, setMapShape] = useState<any>(undefined);
-
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
-
-  const graphDiv = useRef<HTMLDivElement>(null);
+  const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
   const graphParentDiv = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setSvgWidth(entries[0].target.clientWidth || 620);
-      setSvgHeight(entries[0].target.clientHeight || 480);
-    });
-    if (graphDiv.current) {
-      resizeObserver.observe(graphDiv.current);
-    }
-    return () => resizeObserver.disconnect();
-  }, []);
+  // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+  const [mapShape, setMapShape] = useState<any>(undefined);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   const onUpdateShape = useEffectEvent((shape: any) => {
     setMapShape(shape);

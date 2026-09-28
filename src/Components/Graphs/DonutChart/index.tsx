@@ -2,12 +2,13 @@ import { cn } from '@undp/design-system-react/cn';
 import { Spacer } from '@undp/design-system-react/Spacer';
 import { P } from '@undp/design-system-react/Typography';
 import orderBy from 'lodash.orderby';
-import { type ReactElement, useEffect, useRef, useState } from 'react';
+import { type ReactElement, useRef } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { useElementSize } from '@/hooks/useElementSize';
 import type {
   AnimateDataType,
   ClassNameObject,
@@ -166,27 +167,9 @@ export function DonutChart(props: Props) {
     numberDisplayOptions,
   } = props;
 
-  const [graphRadius, setGraphRadius] = useState(0);
-
-  const graphDiv = useRef<HTMLDivElement>(null);
+  const { graphDiv, graphRadius } = useElementSize<HTMLDivElement>();
   const graphParentDiv = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setGraphRadius(
-        (Math.min(
-          ...[entries[0].target.clientWidth || 620, entries[0].target.clientHeight || 480],
-        ) || 420) / 2,
-      );
-    });
-    if (graphDiv.current) {
-      resizeObserver.observe(graphDiv.current);
-    }
-    return () => resizeObserver.disconnect();
-  }, []);
-
   const sortedData = sortData ? orderBy(data, ['size'], [sortData]) : data;
-
   return (
     <GraphContainer
       className={classNames?.graphContainer}
@@ -276,7 +259,7 @@ export function DonutChart(props: Props) {
             mainText={mainText}
             data={sortedData}
             colors={colors}
-            radius={radius || graphRadius}
+            radius={Math.min(graphRadius, radius ?? Infinity)}
             subNote={subNote}
             strokeWidth={strokeWidth}
             tooltip={tooltip}

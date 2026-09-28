@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { ColorLegendWithMouseOver } from '@/Components/Elements/ColorLegendWithMouseOver';
 import { EmptyState } from '@/Components/Elements/EmptyState';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
 import { GraphHeader } from '@/Components/Elements/GraphHeader';
+import { useElementSize } from '@/hooks/useElementSize';
 import type {
   AnimateDataType,
   AnnotationSettingsDataType,
@@ -216,22 +217,9 @@ export function MultiLineAltChart(props: Props) {
     useVoronoiInteraction = true,
   } = props;
 
-  const [svgWidth, setSvgWidth] = useState(0);
-  const [svgHeight, setSvgHeight] = useState(0);
+  const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
   const [selectedColor, setSelectedColor] = useState<string | undefined>(undefined);
-
-  const graphDiv = useRef<HTMLDivElement>(null);
   const graphParentDiv = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      setSvgWidth(entries[0].target.clientWidth || 620);
-      setSvgHeight(entries[0].target.clientHeight || 480);
-    });
-    if (graphDiv.current) {
-      resizeObserver.observe(graphDiv.current);
-    }
-    return () => resizeObserver.disconnect();
-  }, []);
 
   return (
     <GraphContainer
