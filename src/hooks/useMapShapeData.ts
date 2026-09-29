@@ -23,10 +23,10 @@ export function useMapShapeData(
   useEffect(() => {
     if (typeof mapData !== 'string' && mapData) {
       const geoJson =
-        detectGeoFormat(overlayMapData) === 'geojson'
-          ? (overlayMapData as FeatureCollection)
-          : convertTopoJsonToGeoJson(overlayMapData as Topology);
-      setOverlayMapShape(
+        detectGeoFormat(mapData) === 'geojson'
+          ? (mapData as FeatureCollection)
+          : convertTopoJsonToGeoJson(mapData as Topology);
+      setMapShape(
         rewindCoordinatesInMapData
           ? (rewind(geoJson, { reverse: true }) as FeatureCollection)
           : geoJson,

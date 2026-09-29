@@ -12,6 +12,9 @@ export function convertTopoJsonToGeoJson(
   topoJson: Topology,
   key?: string,
 ): FeatureCollection<Geometry> {
+  if (!topoJson?.objects) {
+    throw new Error('Invalid TopoJSON object');
+  }
   const keyToUse = key || Object.keys(topoJson.objects)[0];
   return feature(topoJson, topoJson.objects[keyToUse]) as FeatureCollection<Geometry>;
 }
