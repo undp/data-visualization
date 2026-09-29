@@ -73,6 +73,7 @@ interface Props {
   hideAxisLine: boolean;
   locale: string;
   padZeros: PadZerosTypes;
+  repositionOverlappingLabels: boolean;
 }
 
 export function VerticalGraph(props: Props) {
@@ -433,7 +434,6 @@ export function VerticalGraph(props: Props) {
                             }}
                             className={cn(
                               'graph-value text-sm font-bold',
-                              checkIfNullOrUndefined(el) ? 'opacity-0' : 'opacity-100',
                               classNames?.graphObjectValues,
                             )}
                             dx={radius + 3}
@@ -444,7 +444,7 @@ export function VerticalGraph(props: Props) {
                               whileInView: {
                                 y: y(el || 0),
                                 fill: valueColor || dotColors[j],
-                                opacity: 1,
+                                opacity: checkIfNullOrUndefined(el) ? 0 : 1,
                                 transition: { duration: animate.duration },
                               },
                             }}
@@ -553,6 +553,7 @@ export function HorizontalGraph(props: Props) {
     dimmedOpacity,
     locale,
     padZeros,
+    repositionOverlappingLabels,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -767,120 +768,135 @@ export function HorizontalGraph(props: Props) {
                   initial='initial'
                   animate={isInView ? 'whileInView' : 'initial'}
                 />
-                {d.x.map((el, j) => (
-                  <motion.g
-                    // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                    key={j}
-                    onMouseEnter={(event) => {
-                      setMouseOverData({ ...d, xIndex: j });
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                      onSeriesMouseOver?.({ ...d, xIndex: j });
-                    }}
-                    onClick={() => {
-                      if (onSeriesMouseClick || detailsOnClick) {
-                        if (
-                          isEqual(mouseClickData, { ...d, xIndex: j }) &&
-                          resetSelectionOnDoubleClick
-                        ) {
-                          setMouseClickData(undefined);
-                          onSeriesMouseClick?.(undefined);
-                        } else {
-                          setMouseClickData({ ...d, xIndex: j });
-                          if (onSeriesMouseClick) onSeriesMouseClick({ ...d, xIndex: j });
+                {d.x.map((el, j) => {
+                  const sortedX = [...d.x]
+                    .filter((el) => !checkIfNullOrUndefined(el))
+                    .sort((a, b) => a - b);
+                  const sortedIndex = sortedX.indexOf(el);
+
+                  const isLabelPositionTop =
+                    sortedIndex === 0 || !repositionOverlappingLabels || checkIfNullOrUndefined(el)
+                      ? true
+                      : x(el) - x(sortedX[sortedIndex - 1]) > 30;
+                  return (
+                    <motion.g
+                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
+                      key={j}
+                      onMouseEnter={(event) => {
+                        setMouseOverData({ ...d, xIndex: j });
+                        setEventY(event.clientY);
+                        setEventX(event.clientX);
+                        onSeriesMouseOver?.({ ...d, xIndex: j });
+                      }}
+                      onClick={() => {
+                        if (onSeriesMouseClick || detailsOnClick) {
+                          if (
+                            isEqual(mouseClickData, { ...d, xIndex: j }) &&
+                            resetSelectionOnDoubleClick
+                          ) {
+                            setMouseClickData(undefined);
+                            onSeriesMouseClick?.(undefined);
+                          } else {
+                            setMouseClickData({ ...d, xIndex: j });
+                            if (onSeriesMouseClick) onSeriesMouseClick({ ...d, xIndex: j });
+                          }
                         }
-                      }
-                    }}
-                    onMouseMove={(event) => {
-                      setMouseOverData({ ...d, xIndex: j });
-                      setEventY(event.clientY);
-                      setEventX(event.clientX);
-                    }}
-                    onMouseLeave={() => {
-                      setMouseOverData(undefined);
-                      setEventX(undefined);
-                      setEventY(undefined);
-                      onSeriesMouseOver?.(undefined);
-                    }}
-                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                    variants={{
-                      initial: {
-                        opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
-                      },
-                      whileInView: {
-                        opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
-                        transition: { duration: animate.duration },
-                      },
-                    }}
-                    initial='initial'
-                    animate={isInView ? 'whileInView' : 'initial'}
-                  >
-                    {checkIfNullOrUndefined(el) ? null : (
-                      <>
-                        <motion.circle
-                          cy={0}
-                          r={radius}
-                          style={{
-                            fill: dotColors[j],
-                            fillOpacity: 0.85,
-                            stroke: dotColors[j],
-                            strokeWidth: 1,
-                            opacity: checkIfNullOrUndefined(el) ? 0 : 1,
-                          }}
-                          exit={{ opacity: 0, transition: { duration: animate.duration } }}
-                          variants={{
-                            initial: { cx: x(0), opacity: 0 },
-                            whileInView: {
-                              cx: x(el || 0),
-                              opacity: checkIfNullOrUndefined(el) ? 0 : 1,
-                              transition: { duration: animate.duration },
-                            },
-                          }}
-                          initial='initial'
-                          animate={isInView ? 'whileInView' : 'initial'}
-                        />
-                        {showValues ? (
-                          <motion.text
-                            y={0}
+                      }}
+                      onMouseMove={(event) => {
+                        setMouseOverData({ ...d, xIndex: j });
+                        setEventY(event.clientY);
+                        setEventX(event.clientX);
+                      }}
+                      onMouseLeave={() => {
+                        setMouseOverData(undefined);
+                        setEventX(undefined);
+                        setEventY(undefined);
+                        onSeriesMouseOver?.(undefined);
+                      }}
+                      exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                      variants={{
+                        initial: {
+                          opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                        },
+                        whileInView: {
+                          opacity: selectedColor ? (dotColors[j] === selectedColor ? 1 : 0.3) : 1,
+                          transition: { duration: animate.duration },
+                        },
+                      }}
+                      initial='initial'
+                      animate={isInView ? 'whileInView' : 'initial'}
+                    >
+                      {checkIfNullOrUndefined(el) ? null : (
+                        <>
+                          <motion.circle
+                            cy={0}
+                            r={radius}
                             style={{
-                              textAnchor: 'middle',
-                              ...(styles?.graphObjectValues || {}),
+                              fill: dotColors[j],
+                              fillOpacity: 0.85,
+                              stroke: dotColors[j],
+                              strokeWidth: 1,
+                              opacity: checkIfNullOrUndefined(el) ? 0 : 1,
                             }}
-                            dx={0}
-                            dy={0 - radius - 3}
-                            className={cn(
-                              'graph-value text-sm font-bold',
-                              checkIfNullOrUndefined(el) ? '0opacity-0' : 'opacity-100',
-                              classNames?.graphObjectValues,
-                            )}
                             exit={{ opacity: 0, transition: { duration: animate.duration } }}
                             variants={{
-                              initial: { x: x(0), opacity: 0, fill: valueColor || dotColors[j] },
+                              initial: { cx: x(0), opacity: 0 },
                               whileInView: {
-                                x: x(el || 0),
-                                fill: valueColor || dotColors[j],
-                                opacity: 1,
+                                cx: x(el || 0),
+                                opacity: checkIfNullOrUndefined(el) ? 0 : 1,
                                 transition: { duration: animate.duration },
                               },
                             }}
                             initial='initial'
                             animate={isInView ? 'whileInView' : 'initial'}
-                          >
-                            {numberFormattingFunction(
-                              el,
-                              undefined,
-                              precision,
-                              prefix,
-                              suffix,
-                              locale,
-                              padZeros,
-                            )}
-                          </motion.text>
-                        ) : null}
-                      </>
-                    )}
-                  </motion.g>
-                ))}
+                          />
+                          {showValues ? (
+                            <motion.text
+                              y={0}
+                              style={{
+                                textAnchor: 'middle',
+                                ...(styles?.graphObjectValues || {}),
+                              }}
+                              dx={0}
+                              className={cn(
+                                'graph-value text-sm font-bold',
+                                classNames?.graphObjectValues,
+                              )}
+                              exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                              variants={{
+                                initial: {
+                                  x: x(0),
+                                  dy: 0 - radius - 3,
+                                  opacity: 0,
+                                  fill: valueColor || dotColors[j],
+                                },
+                                whileInView: {
+                                  x: x(el || 0),
+                                  fill: valueColor || dotColors[j],
+                                  opacity: checkIfNullOrUndefined(el) ? 0 : 1,
+                                  dy: isLabelPositionTop ? 0 - radius - 3 : radius + 12,
+                                  transition: { duration: animate.duration },
+                                },
+                              }}
+                              initial='initial'
+                              animate={isInView ? 'whileInView' : 'initial'}
+                            >
+                              {numberFormattingFunction(
+                                el,
+                                undefined,
+                                precision,
+                                prefix,
+                                suffix,
+                                locale,
+                                padZeros,
+                              )}
+                            </motion.text>
+                          ) : null}
+                        </>
+                      )}
+                    </motion.g>
+                  );
+                })}
               </motion.g>
             ))}
             {refValues?.map((el) => (

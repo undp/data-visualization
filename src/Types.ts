@@ -1140,6 +1140,7 @@ export interface GraphSettingsDataType {
   showUNBorder?: boolean;
   showAksaiChinAsStriped?: boolean;
   isDisputedAreasInteractive?: boolean;
+  repositionOverlappingLabels?: boolean;
 }
 
 export interface InfoBoxDataType {

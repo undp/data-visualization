@@ -1254,6 +1254,7 @@ function GraphEl(props: Props) {
         };
       case 'dumbbellChart':
         return {
+          repositionOverlappingLabels: settings?.repositionOverlappingLabels,
           numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,

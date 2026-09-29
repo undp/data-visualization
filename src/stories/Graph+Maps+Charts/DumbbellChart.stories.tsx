@@ -81,6 +81,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    repositionOverlappingLabels: {
+      control: 'boolean',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+        defaultValue: { summary: 'false' },
+      },
+    },
     sources: { table: { type: { detail: SOURCE_OBJECT } } },
 
     // Colors and Styling

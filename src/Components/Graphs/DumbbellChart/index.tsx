@@ -118,6 +118,8 @@ interface Props {
   showColorScale?: boolean;
   /** Toggle if the is a arrow head at the end of the connector */
   arrowConnector?: boolean;
+  /** Toggle if the labels are repositioned to avoid overlapping. Only applicable to horizontal dumbbell charts. */
+  repositionOverlappingLabels?: boolean;
   /** Data points to highlight. Use the label value from data to highlight the data point */
   highlightedDataPoints?: (string | number)[];
   /** Defines the opacity of the non-highlighted data */
@@ -233,6 +235,7 @@ export function DumbbellChart(props: Props) {
     sortData,
     hideAxisLine = false,
     numberDisplayOptions,
+    repositionOverlappingLabels = false,
   } = props;
 
   const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
@@ -392,6 +395,7 @@ export function DumbbellChart(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            repositionOverlappingLabels={repositionOverlappingLabels}
           />
         ) : null}
       </GraphArea>

@@ -5,7 +5,7 @@ function App() {
   return (
     <div
       style={{
-        height: '90vh',
+        height: '100vh',
         maxWidth: '712px',
         margin: '0 auto',
         padding: '2rem',

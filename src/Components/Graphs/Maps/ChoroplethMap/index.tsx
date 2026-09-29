@@ -100,7 +100,7 @@ interface Props {
   showCostalBorder?: boolean;
   /** Toggle if the map is a world map */
   isWorldMap?: boolean;
-  /** Toggle if the disputed areas are interactive */
+  /** Toggle if the disputed areas are interactive. The way it works is it check for a property name `iso3cd` in map shape data if it starts with 'x' then the area is considered disputed. */
   isDisputedAreasInteractive?: boolean;
   /** Map projection type */
   mapProjection?: MapProjectionTypes;

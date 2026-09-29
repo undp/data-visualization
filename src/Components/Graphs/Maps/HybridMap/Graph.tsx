@@ -228,7 +228,9 @@ export function Graph(props: Props) {
                       ? dimmedOpacity
                       : highlightedIds
                         ? highlightedIds.indexOf(d.properties[mapProperty]) !== -1
-                          ? 1
+                          ? d.properties?.iso3cd?.[0] !== 'x' || isDisputedAreasInteractive
+                            ? 1
+                            : dimmedOpacity
                           : dimmedOpacity
                         : 1
                   }
@@ -248,8 +250,7 @@ export function Graph(props: Props) {
                 .filter((d) => d.id)
                 .map((d) => {
                   const features = mapData.features.filter(
-                    // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-                    (el: any) => d.id === el.properties[mapProperty],
+                    (el) => d.id === el.properties?.[mapProperty],
                   );
                   if (features.length === 0) return null;
                   const color = !checkIfNullOrUndefined(d.x)
@@ -322,12 +323,17 @@ export function Graph(props: Props) {
                                     : dimmedOpacity
                                   : highlightedIds
                                     ? highlightedIds.indexOf(d.id as string) !== -1
-                                      ? feature.properties?.iso3cd?.[0] === 'x' &&
-                                        !isDisputedAreasInteractive
+                                      ? feature.properties?.iso3cd?.[0] !== 'x' ||
+                                        isDisputedAreasInteractive
                                         ? 1
                                         : dimmedOpacity
                                       : dimmedOpacity
                                     : 1,
+                                pointerEvents:
+                                  feature.properties?.iso3cd?.[0] === 'x' &&
+                                  !isDisputedAreasInteractive
+                                    ? 'none'
+                                    : 'auto',
                                 transition: { duration: animate.duration },
                               },
                             }}
