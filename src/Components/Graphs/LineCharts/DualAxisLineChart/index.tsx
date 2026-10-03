@@ -85,6 +85,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of dots on the line */
   showDots?: boolean;
+  /** Controls the fill of the area under the line. If the type is number then the number is used to define the opacity of the fill. */
+  fillArea?: boolean | number;
   /** Stroke width of the line */
   strokeWidth?: number;
   /** Toggle the initial animation of the line. If the type is number then it uses the number as the time in seconds for animation. */
@@ -184,6 +186,7 @@ export function DualAxisLineChart(props: Props) {
     customLayers = [],
     showAxisLabels = true,
     naLabel = 'NA',
+    fillArea = 0,
   } = props;
 
   const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
@@ -242,6 +245,7 @@ export function DualAxisLineChart(props: Props) {
         {svgWidth && svgHeight && data.length > 0 ? (
           <Graph
             data={data}
+            fillArea={fillArea === true ? 0.3 : fillArea || 0}
             sameAxes={sameAxes}
             lineColors={lineColors}
             width={svgWidth}

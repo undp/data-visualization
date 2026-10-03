@@ -449,7 +449,7 @@ function GraphEl(props: Props) {
           numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
-          area: settings?.area,
+          fillArea: settings?.fillArea,
           curveType: settings?.curveType,
           data: graphData,
           graphID: settings?.graphID,
@@ -557,6 +557,7 @@ function GraphEl(props: Props) {
       case 'dualAxisLineChart':
         return {
           naLabel: settings?.naLabel,
+          fillArea: settings?.fillArea,
           showAxisLabels: settings?.showAxisLabels,
           showColorScale: settings?.showColorScale,
           customLayers: settings?.customLayers,
@@ -610,6 +611,7 @@ function GraphEl(props: Props) {
       case 'multiLineChart':
         return {
           naLabel: settings?.naLabel,
+          fillArea: settings?.fillArea,
           numberDisplayOptions: settings?.numberDisplayOptions,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -1691,7 +1693,7 @@ function GraphEl(props: Props) {
           height: settings?.height,
           sources: settings?.sources,
           dateFormat: settings?.dateFormat,
-          area: settings?.area,
+          fillArea: settings?.fillArea,
           backgroundColor: settings?.backgroundColor,
           padding: settings?.padding,
           leftMargin: settings?.leftMargin,

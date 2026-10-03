@@ -72,8 +72,8 @@ interface Props {
   // Graph Parameters
   /** Format of the date in the data object. Available formats can be found [here](https://date-fns.org/docs/format)  */
   dateFormat?: string;
-  /** Toggles the visibility of the area below the line */
-  area?: boolean;
+  /** Toggles the visibility of the area below the line. If the type is number then the number is used to define the opacity of the area */
+  fillArea?: boolean | number;
   /** Curve type for the line */
   curveType?: CurveTypes;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -111,7 +111,7 @@ export function SparkLine(props: Props) {
     width,
     footNote,
     dateFormat = 'yyyy',
-    area = false,
+    fillArea = 0,
     padding,
     backgroundColor = true,
     leftMargin = 5,
@@ -185,7 +185,7 @@ export function SparkLine(props: Props) {
             width={svgWidth}
             height={svgHeight}
             dateFormat={dateFormat}
-            areaId={area ? generateRandomString(8) : undefined}
+            areaId={fillArea ? generateRandomString(8) : undefined}
             leftMargin={leftMargin}
             rightMargin={rightMargin}
             topMargin={topMargin}
@@ -198,6 +198,7 @@ export function SparkLine(props: Props) {
             styles={styles}
             classNames={classNames}
             customLayers={customLayers}
+            fillArea={fillArea === true ? 0.3 : fillArea || 0}
           />
         ) : null}
       </GraphArea>

@@ -84,7 +84,7 @@ interface Props {
   customLayers: CustomLayerDataType[];
   locale: string;
   padZeros: PadZerosTypes;
-  showArea: boolean;
+  fillArea: number;
 }
 
 interface FormattedDataType {
@@ -131,7 +131,7 @@ export function Graph(props: Props) {
     customLayers,
     locale,
     padZeros,
-    showArea,
+    fillArea,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -377,12 +377,12 @@ export function Graph(props: Props) {
           />
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
-            {showArea && (
+            {fillArea && (
               <motion.path
                 style={{
                   stroke: 'none',
                   fill: lineColor,
-                  fillOpacity: 0.3,
+                  fillOpacity: fillArea,
                   ...styles?.area,
                 }}
                 className={cn('line-chart-area', classNames?.area)}

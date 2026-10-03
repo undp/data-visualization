@@ -183,6 +183,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: 'en' },
       },
     },
+    fillArea: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+        },
+      },
+    },
     theme: {
       control: 'inline-radio',
       options: ['light', 'dark'],
@@ -205,7 +213,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
     labels: ['Apples', 'Oranges'],
   },
-  render: ({ animate, backgroundColor, lineColors, labels, ...args }) => {
+  render: ({ animate, backgroundColor, lineColors, labels, fillArea, ...args }) => {
     return (
       <DualAxisLineChart
         animate={
@@ -223,6 +231,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         labels={parseValue(labels, ['Apples', 'Oranges'])}
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
+        }
+        fillArea={
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+          (fillArea as any) === 'false'
+            ? false
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+              (fillArea as any) === 'true'
+              ? true
+              : parseValue(fillArea)
         }
         {...args}
       />

@@ -89,8 +89,6 @@ interface Props {
   // Graph Parameters
   /** Toggle visibility of values */
   showValues?: boolean;
-  /** Toggle visibility of area under the line */
-  area?: boolean;
   /** Toggle visibility of dots on the line */
   showDots?: boolean;
   /** Stroke width of the line */
@@ -111,6 +109,8 @@ interface Props {
   regressionLine?: boolean | string;
   /** Curve type for the line */
   curveType?: CurveTypes;
+  /** Controls the fill of the area under the line. If the type is number then the number is used to define the opacity of the fill. */
+  fillArea?: boolean | number;
   /** Configuration options for controlling number formatting, localization, prefixes/suffixes, precision, and zero padding. */
   numberDisplayOptions?: NumberFormatOptions;
   /** Optional SVG <g> element or function that renders custom content behind or in front of the graph. */
@@ -185,7 +185,7 @@ export function SimpleLineChart(props: Props) {
     classNames,
     customLayers = [],
     numberDisplayOptions,
-    area = false,
+    fillArea = 0,
   } = props;
   const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
   const graphParentDiv = useRef<HTMLDivElement>(null);
@@ -233,7 +233,7 @@ export function SimpleLineChart(props: Props) {
         {svgWidth && svgHeight && data.length > 0 ? (
           <Graph
             data={data}
-            showArea={area}
+            fillArea={fillArea === true ? 0.3 : fillArea || 0}
             lineColor={lineColor || Colors.primaryColors['blue-600']}
             width={svgWidth}
             height={svgHeight}

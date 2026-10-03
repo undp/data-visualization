@@ -46,6 +46,7 @@ interface Props {
   styles?: StyleObject;
   classNames?: ClassNameObject;
   customLayers: CustomLayerDataType[];
+  fillArea: number;
 }
 
 interface FormattedDataType {
@@ -73,6 +74,7 @@ export function Graph(props: Props) {
     styles,
     classNames,
     customLayers,
+    fillArea,
   } = props;
   const curve =
     curveType === 'linear'
@@ -218,6 +220,7 @@ export function Graph(props: Props) {
                 style={{
                   fill: `url(#${areaId})`,
                   clipPath: 'url(#clip)',
+                  fillOpacity: fillArea,
                   ...styles?.area,
                 }}
                 className={classNames?.area}

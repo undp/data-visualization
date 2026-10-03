@@ -108,6 +108,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: '5' },
       },
     },
+    fillArea: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+        },
+      },
+    },
     noOfYTicks: { table: { defaultValue: { summary: '5' } } },
     minDate: { control: 'text' },
     maxDate: { control: 'text' },
@@ -238,7 +246,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
     ],
     labels: ['Apples', 'Oranges'],
   },
-  render: ({ animate, backgroundColor, labels, highlightedLines, lineColors, ...args }) => {
+  render: ({
+    animate,
+    backgroundColor,
+    labels,
+    highlightedLines,
+    lineColors,
+    fillArea,
+    ...args
+  }) => {
     return (
       <MultiLineChart
         animate={
@@ -257,6 +273,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         highlightedLines={parseValue(highlightedLines)}
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
+        }
+        fillArea={
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+          (fillArea as any) === 'false'
+            ? false
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+              (fillArea as any) === 'true'
+              ? true
+              : parseValue(fillArea)
         }
         {...args}
       />

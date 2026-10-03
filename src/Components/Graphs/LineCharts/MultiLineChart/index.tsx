@@ -102,6 +102,8 @@ interface Props {
   showValues?: boolean;
   /** Toggle visibility of dots on the line */
   showDots?: boolean;
+  /** Controls the fill of the area under the line. If the type is number then the number is used to define the opacity of the fill. */
+  fillArea?: boolean | number;
   /** Toggle visibility of color scale. */
   showColorScale?: boolean;
   /** Stroke width of the line */
@@ -211,6 +213,7 @@ export function MultiLineChart(props: Props) {
     showColorScale = true,
     numberDisplayOptions,
     naLabel = 'NA',
+    fillArea = 0,
   } = props;
   const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
   const graphParentDiv = useRef<HTMLDivElement>(null);
@@ -316,6 +319,7 @@ export function MultiLineChart(props: Props) {
             suffix={numberDisplayOptions?.suffix || ''}
             prefix={numberDisplayOptions?.prefix || ''}
             precision={numberDisplayOptions?.precision ?? 2}
+            fillArea={fillArea === true ? 0.3 : fillArea || 0}
           />
         ) : null}
       </GraphArea>

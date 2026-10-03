@@ -926,7 +926,7 @@ export interface GraphSettingsDataType {
   labels?: (string | number)[];
   showColorLegendAtTop?: boolean;
   highlightedLines?: (string | number)[];
-  area?: boolean;
+  fillArea?: boolean | number;
   mapData?: FeatureCollection | string;
   xColorLegendTitle?: string;
   yColorLegendTitle?: string;

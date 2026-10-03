@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type React from 'react';
 import { SparkLine } from '@/index';
+import { parseValue } from '@/stories/assets/parseValue';
 import {
   CLASS_NAME_OBJECT,
   CUSTOM_LAYERS_OBJECT,
@@ -76,6 +77,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    fillArea: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+        },
+      },
+    },
     styles: { table: { type: { detail: STYLE_OBJECT } } },
     classNames: { table: { type: { detail: CLASS_NAME_OBJECT } } },
 
@@ -137,11 +146,20 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { date: '2027', y: 19 },
     ],
   },
-  render: ({ backgroundColor, ...args }) => {
+  render: ({ backgroundColor, fillArea, ...args }) => {
     return (
       <SparkLine
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
+        }
+        fillArea={
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+          (fillArea as any) === 'false'
+            ? false
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+              (fillArea as any) === 'true'
+              ? true
+              : parseValue(fillArea)
         }
         {...args}
       />

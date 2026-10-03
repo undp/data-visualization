@@ -202,6 +202,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    fillArea: {
+      control: 'text',
+      table: {
+        type: {
+          summary: 'boolean | number',
+        },
+      },
+    },
     dataDownload: { table: { defaultValue: { summary: 'false' } } },
 
     // Interactions and Callbacks
@@ -244,7 +252,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { date: '2027', y: 19 },
     ],
   },
-  render: ({ animate, backgroundColor, regressionLine, ...args }) => {
+  render: ({ animate, backgroundColor, regressionLine, fillArea, ...args }) => {
     return (
       <SimpleLineChart
         animate={
@@ -263,6 +271,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         }
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
+        }
+        fillArea={
+          // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+          (fillArea as any) === 'false'
+            ? false
+            : // biome-ignore lint/suspicious/noExplicitAny: undefined data type
+              (fillArea as any) === 'true'
+              ? true
+              : parseValue(fillArea)
         }
         {...args}
       />

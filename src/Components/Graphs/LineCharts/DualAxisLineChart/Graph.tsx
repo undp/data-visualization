@@ -3,6 +3,7 @@ import { bisectCenter } from 'd3-array';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { pointer, select } from 'd3-selection';
 import {
+  area,
   curveLinear,
   curveMonotoneX,
   curveStep,
@@ -66,6 +67,7 @@ interface Props {
   leftLineNumberDisplayOptions?: NumberFormatOptions;
   rightLineNumberDisplayOptions?: NumberFormatOptions;
   naLabel: string;
+  fillArea: number;
 }
 
 interface FormattedDataType {
@@ -106,6 +108,7 @@ export function Graph(props: Props) {
     customLayers,
     showAxisLabels,
     naLabel,
+    fillArea,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -216,11 +219,21 @@ export function Graph(props: Props) {
     .x((d) => x(d.date))
     .y((d) => y1(d.y1))
     .curve(curve);
+  const areaShape1 = area<FormattedDataType>()
+    .x((d) => x(d.date))
+    .y0(() => y1(minParam > 0 ? minParam : 0))
+    .y1((d) => y1(d.y1))
+    .curve(curve);
 
   const lineShape2 = line<FormattedDataType>()
     .defined((d) => !checkIfNullOrUndefined(d.y2))
     .x((d) => x(d.date))
     .y((d) => y2(d.y2))
+    .curve(curve);
+  const areaShape2 = area<FormattedDataType>()
+    .x((d) => x(d.date))
+    .y0(() => y2(minParam > 0 ? minParam : 0))
+    .y1((d) => y2(d.y2))
     .curve(curve);
   const y1Ticks = y1.ticks(noOfYTicks);
   const y2Ticks = y2.ticks(noOfYTicks);
@@ -421,6 +434,36 @@ export function Graph(props: Props) {
           </g>
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
+            {fillArea && (
+              <motion.path
+                style={{
+                  stroke: 'none',
+                  fill: lineColors[0],
+                  fillOpacity: fillArea,
+                  ...styles?.area,
+                }}
+                className={cn('line-chart-area-1', classNames?.area)}
+                d={
+                  areaShape1(
+                    dataFormatted.filter(
+                      (el): el is FormattedDataType => !checkIfNullOrUndefined(el.y1),
+                    ),
+                  ) || ''
+                }
+                exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                variants={{
+                  initial: {
+                    opacity: 0,
+                  },
+                  whileInView: {
+                    opacity: 1,
+                    transition: { duration: animate.duration },
+                  },
+                }}
+                initial='initial'
+                animate={isInView ? 'whileInView' : 'initial'}
+              />
+            )}
             <motion.path
               style={{
                 stroke: lineColors[0],
@@ -454,6 +497,36 @@ export function Graph(props: Props) {
               initial='initial'
               animate={isInView ? 'whileInView' : 'initial'}
             />
+            {fillArea && (
+              <motion.path
+                style={{
+                  stroke: 'none',
+                  fill: lineColors[1],
+                  fillOpacity: fillArea,
+                  ...styles?.area,
+                }}
+                className={cn('line-chart-area-2', classNames?.area)}
+                d={
+                  areaShape2(
+                    dataFormatted.filter(
+                      (el): el is FormattedDataType => !checkIfNullOrUndefined(el.y2),
+                    ),
+                  ) || ''
+                }
+                exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                variants={{
+                  initial: {
+                    opacity: 0,
+                  },
+                  whileInView: {
+                    opacity: 1,
+                    transition: { duration: animate.duration },
+                  },
+                }}
+                initial='initial'
+                animate={isInView ? 'whileInView' : 'initial'}
+              />
+            )}
             <motion.path
               d={
                 lineShape2(

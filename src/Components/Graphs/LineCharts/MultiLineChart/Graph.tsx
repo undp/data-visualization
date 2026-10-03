@@ -3,6 +3,7 @@ import { bisectCenter } from 'd3-array';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { pointer, select } from 'd3-selection';
 import {
+  area,
   curveLinear,
   curveMonotoneX,
   curveStep,
@@ -90,6 +91,7 @@ interface Props {
   labelsToBeHidden: (string | number)[];
   locale: string;
   naLabel: string;
+  fillArea: number;
   padZeros: PadZerosTypes;
 }
 
@@ -143,6 +145,7 @@ export function Graph(props: Props) {
     labelsToBeHidden,
     locale,
     naLabel,
+    fillArea,
     padZeros,
   } = props;
   const svgRef = useRef(null);
@@ -264,6 +267,11 @@ export function Graph(props: Props) {
   const lineShape = line<FormattedDataType>()
     .x((d) => x(d.date))
     .y((d) => y(d.y))
+    .curve(curve);
+  const areaShape = area<FormattedDataType>()
+    .x((d) => x(d.date))
+    .y0(() => y(minParam > 0 ? minParam : 0))
+    .y1((d) => y(d.y))
     .curve(curve);
 
   const yTicks = y.ticks(noOfYTicks);
@@ -451,6 +459,35 @@ export function Graph(props: Props) {
                 initial='initial'
                 animate={isInView ? 'whileInView' : 'initial'}
               >
+                {fillArea && (
+                  <motion.path
+                    clipPath={`url(#${revealClipId})`}
+                    style={{
+                      stroke: 'none',
+                      fill: lineColors[i],
+                      fillOpacity: fillArea,
+                      ...styles?.area,
+                    }}
+                    className={cn(`line-chart-area-${i}`, classNames?.area)}
+                    d={
+                      areaShape(
+                        d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
+                      ) || ''
+                    }
+                    exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                    variants={{
+                      initial: {
+                        opacity: 0,
+                      },
+                      whileInView: {
+                        opacity: 1,
+                        transition: { duration: animate.duration },
+                      },
+                    }}
+                    initial='initial'
+                    animate={isInView ? 'whileInView' : 'initial'}
+                  />
+                )}
                 <motion.path
                   style={{
                     fill: 'none',
