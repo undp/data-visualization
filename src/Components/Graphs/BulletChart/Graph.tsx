@@ -23,6 +23,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -143,8 +144,7 @@ export function VerticalGraph(props: Props) {
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const barMaxValue =
     Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number)) <
@@ -667,8 +667,7 @@ export function HorizontalGraph(props: Props) {
     left: leftMargin,
     right: rightMargin,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const barMaxValue =
     Math.max(...data.filter((d) => !checkIfNullOrUndefined(d.size)).map((d) => d.size as number)) <

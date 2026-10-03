@@ -19,6 +19,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { getMean, getMedian, getPercentile } from '@/Utils/getSimpleStatistics';
 import { getTickPositions } from '@/Utils/getTickPosition';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
@@ -139,8 +140,7 @@ export function VerticalGraph(props: Props) {
     left: leftMargin,
     right: rightMargin,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithGroup = data.map((d) => ({
     ...d,
@@ -781,8 +781,7 @@ export function HorizontalGraph(props: Props) {
     left: hasGroups && showGroups ? (leftMargin ?? 100) : (leftMargin ?? 5),
     right: rightMargin,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithGroup = data.map((d) => ({
     ...d,

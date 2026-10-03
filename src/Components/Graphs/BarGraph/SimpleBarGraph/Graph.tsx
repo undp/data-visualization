@@ -23,6 +23,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -141,8 +142,7 @@ export function HorizontalGraph(props: Props) {
     left: leftMargin,
     right: rightMargin,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithId = useMemo(() => {
     const idSet = new Set<string | number>();
@@ -541,8 +541,7 @@ export function VerticalGraph(props: Props) {
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithId = useMemo(() => {
     const idSet = new Set<string | number>();

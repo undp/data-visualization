@@ -33,6 +33,7 @@ import type {
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { getLineEndPoint } from '@/Utils/getLineEndPoint';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 
 interface Props {
   data: ScatterPlotDataType[];
@@ -154,8 +155,7 @@ export function Graph(props: Props) {
     right: rightMargin,
   };
   const dataWithId = data.map((d, i) => ({ ...d, id: `${i}` }));
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const radiusScale =
     data.filter((d) => d.radius === undefined || d.radius === null).length !== data.length
       ? scaleSqrt().domain([0, maxRadiusValue]).range([0.25, radius]).nice()

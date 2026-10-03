@@ -16,6 +16,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { uniqBy } from '@/Utils/uniqBy';
@@ -104,8 +105,7 @@ export function Graph(props: Props) {
   const [mouseOverData, setMouseOverData] = useState<HeatMapDataType | undefined>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const columns = uniqBy(data, 'column', true) as string[];
   const rows = uniqBy(data, 'row', true) as string[];
   const y = scaleBand().domain(rows).range([0, graphHeight]);

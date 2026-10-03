@@ -18,6 +18,7 @@ import type {
   ReferenceDataType,
   StyleObject,
 } from '@/Types';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -119,8 +120,7 @@ export function Graph(props: Props) {
     left: leftMargin,
     right: rightMargin,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithId = data.map((d, i) => ({ ...d, id: `${i}` }));
   const y = scaleBand()

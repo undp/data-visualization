@@ -32,6 +32,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -164,8 +165,7 @@ export function Graph(props: Props) {
       d.coordinates[1] === null ? null : parse(`${d.coordinates[1]}`, dateFormat, new Date()),
     ],
   }));
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const minYear = minDate ? parse(`${minDate}`, dateFormat, new Date()) : dataFormatted[0].date;
   const maxYear = maxDate
     ? parse(`${maxDate}`, dateFormat, new Date())

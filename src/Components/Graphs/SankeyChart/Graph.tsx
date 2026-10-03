@@ -17,6 +17,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { generateRandomString } from '@/Utils/generateRandomString';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { getTextColorBasedOnBgColor } from '@/Utils/getTextColorBasedOnBgColor';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -129,8 +130,7 @@ export function Graph(props: Props) {
     left: leftMargin,
     right: rightMargin,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const sankeyGenerator =
     sortNodes === 'mostReadable'
       ? sankey()

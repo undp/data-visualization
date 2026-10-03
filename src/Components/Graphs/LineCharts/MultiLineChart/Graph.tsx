@@ -40,6 +40,7 @@ import type {
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { generateRandomString } from '@/Utils/generateRandomString';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { getLineEndPoint } from '@/Utils/getLineEndPoint';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -218,8 +219,7 @@ export function Graph(props: Props) {
       j % 2 === 0 ? parse(`${el}`, dateFormat, new Date()) : (el as number),
     ),
   }));
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const minYear = minDate ? parse(`${minDate}`, dateFormat, new Date()) : dataFormatted[0].date;
   const maxYear = maxDate
     ? parse(`${maxDate}`, dateFormat, new Date())

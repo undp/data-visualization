@@ -24,6 +24,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 
 interface Props {
   data: LineChartDataType[];
@@ -105,8 +106,7 @@ export function Graph(props: Props) {
     ['date'],
     ['asc'],
   );
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const minYear = dataFormatted[0].date;
   const maxYear = dataFormatted[dataFormatted.length - 1].date;
   const minParam: number =

@@ -23,6 +23,7 @@ import type {
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 
 interface Props {
   data: GroupedBarGraphDataType[];
@@ -132,8 +133,7 @@ export function HorizontalGraph(props: Props) {
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithId = useMemo(() => {
     const idSet = new Set<string | number>();
@@ -471,8 +471,7 @@ export function VerticalGraph(props: Props) {
   const [mouseClickData, setMouseClickData] = useState<any>(undefined);
   const [eventX, setEventX] = useState<number | undefined>(undefined);
   const [eventY, setEventY] = useState<number | undefined>(undefined);
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithId = useMemo(() => {
     const idSet = new Set<string | number>();

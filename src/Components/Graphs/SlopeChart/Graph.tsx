@@ -16,6 +16,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 
 interface Props {
   data: SlopeChartDataType[];
@@ -96,8 +97,7 @@ export function Graph(props: Props) {
     left: leftMargin,
     right: rightMargin,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const minY = Math.min(Math.min(...data.map((d) => d.y1)), Math.min(...data.map((d) => d.y2)));
   const maxY = Math.max(Math.max(...data.map((d) => d.y1)), Math.max(...data.map((d) => d.y2)));
   const y = scaleLinear()

@@ -39,6 +39,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { getLineEndPoint } from '@/Utils/getLineEndPoint';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
@@ -166,8 +167,7 @@ export function Graph(props: Props) {
       y1: sum(el.y.filter((_element, k) => k <= i)),
     }));
   });
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
   const minYear = dataFormatted[0].date;
   const maxYear = dataFormatted[dataFormatted.length - 1].date;
   const minParam = checkIfNullOrUndefined(minValue) ? 0 : (minValue as number);

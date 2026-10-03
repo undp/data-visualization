@@ -26,6 +26,7 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
@@ -130,8 +131,7 @@ export function Graph(props: Props) {
     left: leftMargin + 50,
     right: rightMargin + 65,
   };
-  const graphWidth = width - margin.left - margin.right;
-  const graphHeight = height - margin.top - margin.bottom;
+  const { graphHeight, graphWidth } = getGraphDimensions({ width, height }, margin);
 
   const dataWithId = data.map((d, i) => ({ ...d, id: `${i}` }));
   const x = scaleBand()
