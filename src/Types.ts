@@ -729,6 +729,17 @@ export type Color =
   | 'secondary'
   | 'tertiary'
   | 'quaternary'
+  | 'background'
+  | 'surface'
+  | 'surface-2xs'
+  | 'surface-xs'
+  | 'surface-sm'
+  | 'surface-md'
+  | 'surface-lg'
+  | 'surface-xl'
+  | 'surface-2xl'
+  | 'surface-3xl'
+  | 'surface-4xl'
   | 'foreground'
   | 'sdg-1'
   | 'sdg-2'
@@ -763,7 +774,21 @@ export interface TimelineDataType {
   showOnlyActiveDate: boolean;
   speed?: number;
   dateFormat?: string;
-  color?: Color;
+  color?: Exclude<
+    Color,
+    | 'background'
+    | 'surface'
+    | 'surface-2xs'
+    | 'surface-xs'
+    | 'surface-sm'
+    | 'surface-md'
+    | 'surface-lg'
+    | 'surface-xl'
+    | 'surface-2xl'
+    | 'surface-3xl'
+    | 'surface-4xl'
+    | 'foreground'
+  >;
 }
 
 export interface FogDataType {

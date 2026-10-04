@@ -127,6 +127,7 @@ export { graphList } from './Utils/getGraphList';
 export { getJenks } from './Utils/getJenks';
 export { getPercentileValue } from './Utils/getPercentileValue';
 export { getQueryParamsFromLink } from './Utils/getQueryParamsFromLink';
+export { getScatteredCircleCoordinates } from './Utils/getScatteredCircleCoordinates';
 export {
   getMean,
   getMedian,

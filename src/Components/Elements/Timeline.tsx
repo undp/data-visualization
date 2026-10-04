@@ -9,7 +9,21 @@ interface Props {
   markObj: Record<number, string>;
   index: number;
   setIndex: (_value: number) => void;
-  color?: Color;
+  color?: Exclude<
+    Color,
+    | 'background'
+    | 'surface'
+    | 'surface-2xs'
+    | 'surface-xs'
+    | 'surface-sm'
+    | 'surface-md'
+    | 'surface-lg'
+    | 'surface-xl'
+    | 'surface-2xl'
+    | 'surface-3xl'
+    | 'surface-4xl'
+    | 'foreground'
+  >;
 }
 
 const fillClassNames = {

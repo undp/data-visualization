@@ -7,6 +7,7 @@ export { graphList } from './getGraphList';
 export { getJenks } from './getJenks';
 export { getPercentileValue } from './getPercentileValue';
 export { getQueryParamsFromLink } from './getQueryParamsFromLink';
+export { getScatteredCircleCoordinates } from './getScatteredCircleCoordinates';
 export {
   getMean,
   getMedian,

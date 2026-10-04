@@ -4,6 +4,7 @@ import type { JSX } from 'react';
 import { CSVLink } from 'react-csv';
 
 import { FileDown } from '@/Components/Icons';
+import type { Color } from '@/Types';
 
 interface HeaderProps {
   label: string;
@@ -12,24 +13,7 @@ interface HeaderProps {
 
 interface Props {
   buttonContent?: string | JSX.Element;
-  buttonType?:
-    | 'link'
-    | 'primary'
-    | 'secondary'
-    | 'background'
-    | 'error'
-    | 'tertiary'
-    | 'warning'
-    | 'success'
-    | 'info'
-    | 'quaternary'
-    | 'surface'
-    | 'outline'
-    | 'icon'
-    | 'surface-hard'
-    | 'background-soft'
-    | 'foreground'
-    | 'foreground-soft';
+  buttonColor?: Color;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any;
   fileName?: string;
@@ -61,7 +45,7 @@ const transformDataForCsv = (data: any) => {
 export function CsvDownloadButton(props: Props) {
   const {
     buttonContent,
-    buttonType = 'surface',
+    buttonColor = 'surface-sm',
     csvData,
     fileName = 'data',
     headers,
@@ -82,13 +66,14 @@ export function CsvDownloadButton(props: Props) {
       aria-label='Click to download the data as csv'
     >
       <Button
-        variant={buttonType}
+        variant='primary'
         className={cn(
           'undp-viz-download-button no-underline border border-stroke',
           buttonSmall ? 'p-2' : 'py-4 px-6',
           className,
         )}
-        arrow={false}
+        endIcon='none'
+        color={buttonColor}
       >
         {buttonContent || <FileDown />}
       </Button>

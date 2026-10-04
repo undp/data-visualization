@@ -341,7 +341,6 @@ export function DataCards(props: Props) {
             onSearch={(e) => {
               setSearchQuery(e || '');
             }}
-            buttonVariant='icon'
             inputVariant={uiMode}
             showSearchButton={false}
             inputSize='sm'

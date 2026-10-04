@@ -2,28 +2,12 @@ import { Button } from '@undp/design-system-react/Button';
 import { cn } from '@undp/design-system-react/cn';
 import type { JSX, RefObject } from 'react';
 import { ImageDown } from '@/Components/Icons';
+import type { Color } from '@/Types';
 import { imageDownload } from '@/Utils/imageDownload';
 
 interface Props {
   buttonContent?: string | JSX.Element;
-  buttonType?:
-    | 'link'
-    | 'primary'
-    | 'secondary'
-    | 'background'
-    | 'error'
-    | 'tertiary'
-    | 'warning'
-    | 'success'
-    | 'info'
-    | 'quaternary'
-    | 'surface'
-    | 'outline'
-    | 'icon'
-    | 'surface-hard'
-    | 'background-soft'
-    | 'foreground'
-    | 'foreground-soft';
+  buttonColor?: Color;
   nodeID: string | RefObject<HTMLDivElement | null>;
   filename?: string;
   buttonSmall?: boolean;
@@ -35,14 +19,14 @@ export function ImageDownloadButton(props: Props) {
     nodeID,
     filename = 'image',
     buttonContent,
-    buttonType = 'surface',
+    buttonColor = 'surface-sm',
     buttonSmall,
     className = '',
   } = props;
   return (
     <Button
-      variant={buttonType}
-      arrow={false}
+      variant='primary'
+      endIcon='none'
       className={cn(
         'undp-viz-download-button no-underline border border-stroke',
         buttonSmall ? 'p-2' : 'py-4 px-6',
@@ -59,6 +43,7 @@ export function ImageDownloadButton(props: Props) {
           imageDownload(nodeID.current as HTMLDivElement, filename);
         }
       }}
+      color={buttonColor}
       aria-label='Click to download the graph as image'
     >
       {buttonContent || <ImageDown />}

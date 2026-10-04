@@ -4,10 +4,12 @@ import { Toaster } from '@undp/design-system-react/Toaster';
 import { useToast } from '@undp/design-system-react/ToasterHooks';
 
 import { Copy } from '@/Components/Icons';
+import type { Color } from '@/Types';
 
 interface Props {
   text: string;
   successMessage?: string;
+  buttonColor?: Color;
   buttonText?: string;
   buttonSmall?: boolean;
   className?: string;
@@ -19,15 +21,17 @@ export function CopyTextButton(props: Props) {
     successMessage = 'Text copied',
     buttonText,
     buttonSmall = false,
+    buttonColor = 'surface-sm',
     className = '',
   } = props;
   const { toast } = useToast();
   return (
     <>
       <Button
-        variant='tertiary'
-        arrow={false}
+        variant='primary'
         className={cn(buttonSmall ? 'p-2' : 'py-4 px-6', className)}
+        endIcon='none'
+        color={buttonColor}
         onClick={() => {
           navigator.clipboard.writeText(text);
           toast({

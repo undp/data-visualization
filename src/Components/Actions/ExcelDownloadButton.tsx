@@ -2,6 +2,7 @@ import { Button } from '@undp/design-system-react/Button';
 import { cn } from '@undp/design-system-react/cn';
 import type { JSX } from 'react';
 import { FileDown } from '@/Components/Icons';
+import type { Color } from '@/Types';
 import { excelDownload } from '@/Utils/excelDownload';
 
 interface WsColInterface {
@@ -10,24 +11,7 @@ interface WsColInterface {
 
 interface Props {
   buttonContent?: string | JSX.Element;
-  buttonType?:
-    | 'link'
-    | 'primary'
-    | 'secondary'
-    | 'background'
-    | 'error'
-    | 'tertiary'
-    | 'warning'
-    | 'success'
-    | 'info'
-    | 'quaternary'
-    | 'surface'
-    | 'outline'
-    | 'icon'
-    | 'surface-hard'
-    | 'background-soft'
-    | 'foreground'
-    | 'foreground-soft';
+  buttonColor?: Color;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   csvData: any;
   fileName?: string;
@@ -42,7 +26,7 @@ interface Props {
 export function ExcelDownloadButton(props: Props) {
   const {
     buttonContent,
-    buttonType = 'surface',
+    buttonColor = 'surface-sm',
     csvData,
     fileName = 'data',
     headers,
@@ -53,7 +37,8 @@ export function ExcelDownloadButton(props: Props) {
   } = props;
   return (
     <Button
-      variant={buttonType}
+      variant='primary'
+      endIcon='none'
       className={cn(
         'undp-viz-download-button no-underline border border-stroke',
         buttonSmall ? 'p-2' : 'py-4 px-6',
@@ -61,7 +46,7 @@ export function ExcelDownloadButton(props: Props) {
       )}
       onClick={() => excelDownload(csvData, fileName, headers, xlsxHeader, wscols)}
       aria-label='Click to download the data as xlsx'
-      arrow={false}
+      color={buttonColor}
     >
       {buttonContent || <FileDown />}
     </Button>

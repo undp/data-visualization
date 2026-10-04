@@ -31,9 +31,9 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
+import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 import { getLineEndPoint } from '@/Utils/getLineEndPoint';
 import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
-import { getGraphDimensions } from '@/Utils/getGraphDimensions';
 
 interface Props {
   data: ScatterPlotDataType[];

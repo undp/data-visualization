@@ -305,18 +305,20 @@ export function Graph(props: Props) {
                               fill: color,
                               opacity: selectedColor
                                 ? selectedColor === color
-                                  ? !highlightedIds || highlightedIds.indexOf(d.id) !== -1
+                                  ? 1
+                                  : dimmedOpacity
+                                : mouseOverData
+                                  ? mouseOverData.id === d.id
                                     ? 1
                                     : dimmedOpacity
-                                  : dimmedOpacity
-                                : highlightedIds
-                                  ? highlightedIds.indexOf(d.id) !== -1
-                                    ? feature.properties?.iso3cd?.[0] !== 'x' ||
-                                      isDisputedAreasInteractive
-                                      ? 1
+                                  : highlightedIds
+                                    ? highlightedIds.indexOf(d.id) !== -1
+                                      ? feature.properties?.iso3cd?.[0] !== 'x' ||
+                                        isDisputedAreasInteractive
+                                        ? 1
+                                        : dimmedOpacity
                                       : dimmedOpacity
-                                    : dimmedOpacity
-                                  : 1,
+                                    : 1,
                               pointerEvents:
                                 feature.properties?.iso3cd?.[0] === 'x' &&
                                 !isDisputedAreasInteractive
@@ -415,30 +417,6 @@ export function Graph(props: Props) {
                   </motion.g>
                 );
               })}
-            {mouseOverData
-              ? mapData.features
-                  .filter(
-                    (d) =>
-                      d.properties?.[mapProperty] === mouseOverData.id &&
-                      (d.properties?.iso3cd?.[0] !== 'x' ||
-                        !d.properties?.iso3cd ||
-                        isDisputedAreasInteractive),
-                  )
-                  .map((d, i) => (
-                    <path
-                      // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                      key={i}
-                      d={pathGenerator(d) || ''}
-                      className='mouseover-map-shape-outline stroke-foreground'
-                      style={{
-                        fill: 'none',
-                        fillOpacity: 0,
-                        strokeWidth: '0.5',
-                        vectorEffect: 'non-scaling-stroke',
-                      }}
-                    />
-                  ))
-              : null}
             {overlayMapData?.features.map((d, i: number) => {
               const path = pathGenerator(d);
               if (!path) return null;
