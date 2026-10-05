@@ -15,6 +15,7 @@ interface Props {
   random?: () => number;
   verticalRange?: [number, number];
   horizontalRange?: [number, number];
+  angleRange?: [number, number];
 }
 
 export const getScatteredCircleCoordinates = ({
@@ -27,6 +28,7 @@ export const getScatteredCircleCoordinates = ({
   random = Math.random,
   verticalRange = [0, 1],
   horizontalRange = [0, 1],
+  angleRange = [0, 2 * Math.PI],
 }: Props): CoordinatesProps[] => {
   const rMin = innerRadius + pointRadius;
   const rMax = Math.max(rMin, outerRadius - pointRadius);
@@ -82,7 +84,7 @@ export const getScatteredCircleCoordinates = ({
     };
 
     for (let tick = 0; tick <= noOfTicks; tick++) {
-      const angle = random() * Math.PI * 2;
+      const angle = angleRange[0] + random() * (angleRange[1] - angleRange[0]);
       const d = random() * (rMax - rMin) + rMin;
       const x = d * Math.cos(angle);
       const y = d * Math.sin(angle);

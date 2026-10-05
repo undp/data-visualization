@@ -1,0 +1,58 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Utilities/getScatteredCircleCoordinates" />
+
+# getScatteredCircleCoordinates
+
+Calculates evenly-distributed polar coordinates for placing items in a circle around a center point.
+
+```ts
+function getScatteredCircleCoordinates({
+  noOfPoints: number;
+  pointRadius?: number;
+  outerRadius?: number;
+  innerRadius?: number;
+  padding?: number;
+  noOfTicks?: number;
+  random?: () => number;
+  verticalRange?: [number, number];
+  horizontalRange?: [number, number];
+  angleRange?: [number, number];
+}): {
+  id: number;
+  x: number;
+  y: number;
+  distanceFromCenter: number;
+}[]
+```
+
+## Parameters
+
+- `noOfPoints` - The number of points to generate.
+- `pointRadius` - Radius of each point (default: 6).
+- `outerRadius` - The outer radius of the circle (default: 500).
+- `innerRadius` - Radius of an empty hole in the middle. Any value above 0 produces a ring or donut layout. Point centers stay at least innerRadius + pointRadius from the center. (default: 0).
+- `padding` - The padding between points (default: 0).
+- `noOfTicks` - Maximum candidate positions tried per point. Higher values give fewer overlaps in dense layouts but run slower. (default: 1000).
+- `random` - A function to generate random numbers (default: Math.random).
+- `verticalRange` - Restricts points to a vertical band of the circle's bounding box. Values are fractions of its height: 0 is the top and 1 is the bottom. Values are clamped to [0, 1]. (default: [0, 1]).
+- `horizontalRange` - Restricts points to a horizontal band of the circle's bounding box. Values are fractions of its width: 0 is the left and 1 is the right. Values are clamped to [0, 1] (default: [0, 1]).
+- `angleRange` - Restricts points to a angle band of the circle's bounding box. Values are clamped to [0, 2 * Math.PI] (default: [0, 2 * Math.PI]).
+
+## Returns
+
+Gets an array of coordinates for the circle
+
+## Example Usage
+
+```js
+// Example of how to use the function
+getScatteredCircleCoordinates({
+  noOfPoints: 200,
+  outerRadius: 300,
+  innerRadius: 80,
+  pointRadius: 5,
+  padding: 2,
+  verticalRange: [0, 0.5], // top half only
+  random: d3.randomLcg(42),
+})

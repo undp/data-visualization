@@ -1,6 +1,12 @@
-import bbox from '@turf/bbox';
-import { centerOfMass } from '@turf/center-of-mass';
-import { geoEqualEarth, geoMercator, geoNaturalEarth1, geoOrthographic } from 'd3-geo';
+import centerOfMass from '@turf/center-of-mass';
+import {
+  type GeoProjection,
+  geoBounds,
+  geoEqualEarth,
+  geoMercator,
+  geoNaturalEarth1,
+  geoOrthographic,
+} from 'd3-geo';
 import type { MapProjectionTypes } from '@/Types';
 
 interface useMapProjectionOptions {
@@ -16,6 +22,13 @@ interface useMapProjectionOptions {
   projectionRotate: [number, number] | [number, number, number];
 }
 
+const projections: Record<MapProjectionTypes, () => GeoProjection> = {
+  mercator: geoMercator,
+  naturalEarth: geoNaturalEarth1,
+  orthographic: geoOrthographic,
+  equalEarth: geoEqualEarth,
+};
+
 export function useMapProjection({
   mapData,
   mapProperty,
@@ -28,7 +41,9 @@ export function useMapProjection({
   centerPoint,
   projectionRotate,
 }: useMapProjectionOptions) {
-  const bounds = bbox({
+  const isZoomingToHighlights =
+    zoomAndCenterByHighlightedIds && !!mapProperty && highlightedIds.length > 0;
+  const filteredMapData = {
     ...mapData,
     features:
       zoomAndCenterByHighlightedIds && mapProperty
@@ -39,49 +54,38 @@ export function useMapProjection({
               highlightedIds?.indexOf(d.properties[mapProperty]) !== -1,
           )
         : mapData.features,
-  });
+  };
 
-  const center = centerOfMass({
-    ...mapData,
-    features:
-      zoomAndCenterByHighlightedIds && mapProperty
-        ? mapData.features.filter(
-            // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-            (d: any) =>
-              highlightedIds.length === 0 ||
-              highlightedIds?.indexOf(d.properties[mapProperty]) !== -1,
-          )
-        : mapData.features,
-  });
-  const lonDiff = (bounds[2] - bounds[0]) * 1.15;
-  const latDiff = (bounds[3] - bounds[1]) * 1.15;
-  const scaleX = (((width * 190) / 960) * 360) / lonDiff;
-  const scaleY = (((height * 190) / 678) * 180) / latDiff;
-  const scaleVar = scale * Math.min(scaleX, scaleY);
+  const center = centerOfMass(filteredMapData).geometry.coordinates as [number, number];
+  let rotate = projectionRotate;
+  if (isZoomingToHighlights) {
+    const [[west, _south], [east, _north]] = geoBounds(filteredMapData);
+    const midLon = center[0];
+    const midLat = center[1];
+    if (mapProjection === 'orthographic') {
+      rotate = [-midLon, -midLat];
+    } else if (west > east) {
+      rotate = [-midLon, 0];
+    }
+  }
 
-  const projection =
-    mapProjection === 'mercator'
-      ? geoMercator()
-          .rotate(projectionRotate)
-          .center(centerPoint || (center.geometry.coordinates as [number, number]))
-          .translate([width / 2, height / 2])
-          .scale(scaleVar)
-      : mapProjection === 'naturalEarth'
-        ? geoNaturalEarth1()
-            .rotate(projectionRotate)
-            .center(centerPoint || (center.geometry.coordinates as [number, number]))
-            .translate([width / 2, height / 2])
-            .scale(scaleVar)
-        : mapProjection === 'orthographic'
-          ? geoOrthographic()
-              .rotate(projectionRotate)
-              .center(centerPoint || (center.geometry.coordinates as [number, number]))
-              .translate([width / 2, height / 2])
-              .scale(scaleVar)
-          : geoEqualEarth()
-              .rotate(projectionRotate)
-              .center(centerPoint || (center.geometry.coordinates as [number, number]))
-              .translate([width / 2, height / 2])
-              .scale(scaleVar);
+  const projection = (projections[mapProjection] ?? geoEqualEarth)()
+    .rotate(rotate)
+    .fitSize([width, height], filteredMapData);
+  const cx = width / 2;
+  const cy = height / 2;
+  const [tx, ty] = projection.translate();
+  projection
+    .scale(projection.scale() * scale)
+    .translate([cx + (tx - cx) * scale, cy + (ty - cy) * scale]);
+
+  if (centerPoint) {
+    const p = projection(centerPoint);
+    if (p) {
+      const [tx2, ty2] = projection.translate();
+      projection.translate([tx2 + cx - p[0], ty2 + cy - p[1]]);
+    }
+  }
+
   return { projection };
 }
