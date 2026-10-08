@@ -22,8 +22,8 @@ import type {
   StyleObject,
 } from '@/Types';
 import { checkIfNullOrUndefined } from '@/Utils/checkIfNullOrUndefined';
-import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 import { getGraphDimensions } from '@/Utils/getGraphDimensions';
+import { numberFormattingFunction } from '@/Utils/numberFormattingFunction';
 
 interface Props {
   data: GroupedBarGraphDataType[];
@@ -71,6 +71,7 @@ interface Props {
   hideAxisLine: boolean;
   locale: string;
   padZeros: PadZerosTypes;
+  cornerRadius: number;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -115,6 +116,7 @@ export function HorizontalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    cornerRadius,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -274,6 +276,7 @@ export function HorizontalGraph(props: Props) {
                       {!checkIfNullOrUndefined(el) ? (
                         <motion.rect
                           y={subBarScale(`${j}`)}
+                          rx={cornerRadius}
                           variants={{
                             initial: {
                               width: 0,
@@ -453,6 +456,7 @@ export function VerticalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    cornerRadius,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -644,6 +648,7 @@ export function VerticalGraph(props: Props) {
                       }}
                     >
                       <motion.rect
+                        rx={cornerRadius}
                         x={subBarScale(`${j}`)}
                         width={subBarScale.bandwidth()}
                         variants={{

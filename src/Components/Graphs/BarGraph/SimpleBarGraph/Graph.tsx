@@ -76,6 +76,7 @@ interface Props {
   hideAxisLine: boolean;
   locale: string;
   padZeros: PadZerosTypes;
+  cornerRadius: number;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -124,6 +125,7 @@ export function HorizontalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    cornerRadius,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -309,6 +311,7 @@ export function HorizontalGraph(props: Props) {
                           fill: trackColor,
                         },
                       }}
+                      rx={cornerRadius}
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
@@ -316,6 +319,7 @@ export function HorizontalGraph(props: Props) {
                   )}
                   {d.size ? (
                     <motion.rect
+                      rx={cornerRadius}
                       variants={{
                         initial: {
                           width: 0,
@@ -523,6 +527,7 @@ export function VerticalGraph(props: Props) {
     hideAxisLine,
     locale,
     padZeros,
+    cornerRadius,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -745,6 +750,7 @@ export function VerticalGraph(props: Props) {
                           fill: trackColor,
                         },
                       }}
+                      rx={cornerRadius}
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
@@ -754,6 +760,7 @@ export function VerticalGraph(props: Props) {
                     <motion.rect
                       width={x.bandwidth()}
                       initial='initial'
+                      rx={cornerRadius}
                       animate={isInView ? 'whileInView' : 'initial'}
                       variants={{
                         initial: {

@@ -128,6 +128,7 @@ function GraphEl(props: Props) {
     switch (graphType) {
       case 'barChart':
         return {
+          cornerRadius: settings?.cornerRadius,
           numberDisplayOptions: settings?.numberDisplayOptions,
           timeline: settings?.timeline,
           trackColor: settings?.trackColor,
@@ -258,6 +259,7 @@ function GraphEl(props: Props) {
         };
       case 'groupedBarChart':
         return {
+          cornerRadius: settings?.cornerRadius,
           timeline: settings?.timeline,
           customLayers: settings?.customLayers,
           theme: settings?.theme,
@@ -315,6 +317,7 @@ function GraphEl(props: Props) {
         };
       case 'stackedBarChart':
         return {
+          cornerRadius: settings?.cornerRadius,
           numberDisplayOptions: settings?.numberDisplayOptions,
           minLabelSize: settings?.minLabelSize,
           timeline: settings?.timeline,

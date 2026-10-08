@@ -102,6 +102,8 @@ interface Props {
   naLabel?: string;
   /** Toggle visibility of axis ticks */
   showTicks?: boolean;
+  /** Corner radius of the bars */
+  cornerRadius?: number;
   /** Toggle visibility of axis line for the  main axis */
   hideAxisLine?: boolean;
   /** Toggle visibility of color scale. This is only applicable if the data props hae color parameter */
@@ -220,6 +222,7 @@ export function SimpleBarGraph(props: Props) {
     trackColor,
     hideAxisLine = false,
     numberDisplayOptions,
+    cornerRadius,
   } = props;
   return (
     <SimpleBarGraphEl
@@ -287,6 +290,7 @@ export function SimpleBarGraph(props: Props) {
       hideAxisLine={hideAxisLine}
       locale={numberDisplayOptions?.locale}
       padZeros={numberDisplayOptions?.padZeros}
+      cornerRadius={cornerRadius}
     />
   );
 }
@@ -374,6 +378,8 @@ interface GroupedBarChartProps {
   // Graph Parameters
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   showLabels?: boolean | ((_d: any) => React.ReactNode);
+  /** Corner radius of the bars */
+  cornerRadius?: number;
   /** Toggle visibility of values */
   showValues?: boolean;
   /** Custom order for labels */
@@ -481,6 +487,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     naLabel,
     hideAxisLine = false,
     numberDisplayOptions,
+    cornerRadius,
   } = props;
 
   return (
@@ -544,6 +551,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       hideAxisLine={hideAxisLine}
       locale={numberDisplayOptions?.locale}
       padZeros={numberDisplayOptions?.padZeros}
+      cornerRadius={cornerRadius}
     />
   );
 }
@@ -630,6 +638,8 @@ interface StackedBarChartProps {
   showValues?: boolean;
   /** Minimum size of the value to be visible. Default value depends on the orientation of the graph */
   minLabelSize?: number;
+  /** Corner radius of the bars */
+  cornerRadius?: number;
   /** Toggle visibility of the total value. If not defined it takes the value or `showValues` */
   showTotalValue?: boolean;
   /** Custom order for labels */
@@ -748,6 +758,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
     numberDisplayOptions,
     showTotalValue,
     minLabelSize,
+    cornerRadius,
   } = props;
 
   return (
@@ -814,6 +825,7 @@ export function StackedBarGraph(props: StackedBarChartProps) {
       padZeros={numberDisplayOptions?.padZeros}
       showTotalValue={showTotalValue}
       minLabelSize={minLabelSize}
+      cornerRadius={cornerRadius}
     />
   );
 }

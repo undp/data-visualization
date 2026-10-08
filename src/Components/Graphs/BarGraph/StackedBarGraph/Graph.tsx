@@ -75,6 +75,7 @@ interface Props {
   locale: string;
   padZeros: PadZerosTypes;
   minLabelSize: number;
+  cornerRadius: number;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -121,6 +122,7 @@ export function HorizontalGraph(props: Props) {
     padZeros,
     showTotalValue,
     minLabelSize,
+    cornerRadius,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -282,6 +284,7 @@ export function HorizontalGraph(props: Props) {
                           y={0}
                           style={{ fill: barColors[j] }}
                           height={y.bandwidth()}
+                          rx={cornerRadius}
                           exit={{
                             width: 0,
                             x: x(0),
@@ -529,6 +532,7 @@ export function VerticalGraph(props: Props) {
     padZeros,
     showTotalValue,
     minLabelSize,
+    cornerRadius,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -712,6 +716,7 @@ export function VerticalGraph(props: Props) {
                       <motion.rect
                         x={0}
                         width={x.bandwidth()}
+                        rx={cornerRadius}
                         variants={{
                           initial: {
                             height: 0,

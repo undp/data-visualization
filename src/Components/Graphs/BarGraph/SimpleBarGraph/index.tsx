@@ -96,6 +96,7 @@ interface Props {
   hideAxisLine?: boolean;
   locale?: string;
   padZeros?: PadZerosTypes;
+  cornerRadius?: number;
 }
 
 export function SimpleBarGraphEl(props: Props) {
@@ -164,6 +165,7 @@ export function SimpleBarGraphEl(props: Props) {
     hideAxisLine = false,
     locale = 'en',
     padZeros = 'none',
+    cornerRadius = 0,
   } = props;
   const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
   const { uniqDatesSorted, index, setIndex, play, setPlay, markObj, activeDate, dateFormat } =
@@ -342,6 +344,7 @@ export function SimpleBarGraphEl(props: Props) {
             naLabel={naLabel}
             locale={locale}
             padZeros={padZeros}
+            cornerRadius={cornerRadius}
           />
         ) : null}
       </GraphArea>

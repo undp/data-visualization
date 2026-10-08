@@ -94,6 +94,7 @@ interface Props {
   padZeros?: PadZerosTypes;
   showTotalValue?: boolean;
   minLabelSize?: number;
+  cornerRadius?: number;
 }
 
 export function StackedBarGraphEl(props: Props) {
@@ -160,6 +161,7 @@ export function StackedBarGraphEl(props: Props) {
     hideAxisLine = false,
     padZeros = 'none',
     minLabelSize,
+    cornerRadius = 0,
   } = props;
 
   const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
@@ -312,6 +314,7 @@ export function StackedBarGraphEl(props: Props) {
               locale={locale}
               padZeros={padZeros}
               minLabelSize={minLabelSize ?? (orientation === 'horizontal' ? 25 : 15)}
+              cornerRadius={cornerRadius}
             />
           ) : null}
         </GraphArea>

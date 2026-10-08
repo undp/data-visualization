@@ -55,6 +55,15 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    cornerRadius: {
+      control: 'number',
+      table: {
+        type: {
+          summary: 'number',
+        },
+        defaultValue: { summary: '0' },
+      },
+    },
     customLayers: {
       table: {
         type: {

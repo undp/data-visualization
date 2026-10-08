@@ -90,6 +90,7 @@ interface Props {
   hideAxisLine?: boolean;
   locale?: string;
   padZeros?: 'all' | 'decimal' | 'none';
+  cornerRadius?: number;
 }
 
 export function GroupedBarGraphEl(props: Props) {
@@ -153,6 +154,7 @@ export function GroupedBarGraphEl(props: Props) {
     hideAxisLine = false,
     locale = 'en',
     padZeros = 'none',
+    cornerRadius = 0,
   } = props;
 
   const { graphDiv, svgWidth, svgHeight } = useElementSize<HTMLDivElement>();
@@ -330,6 +332,7 @@ export function GroupedBarGraphEl(props: Props) {
               naLabel={naLabel}
               locale={locale}
               padZeros={padZeros}
+              cornerRadius={cornerRadius}
             />
           ) : null}
         </GraphArea>
