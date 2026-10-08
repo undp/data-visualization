@@ -1144,7 +1144,7 @@ export interface GraphSettingsDataType {
   yNumberDisplayOptions?: NumberFormatOptions;
   defaultColor?: string;
   strictValuePosition?: boolean;
-  gridIcon?: string[];
+  gridIcon?: { width?: number; height?: number; d: string[] };
   showTotalValue?: boolean;
   labelPosition?: 'inside' | 'outside' | 'overlap';
   dimmedNodeOpacity?: number;

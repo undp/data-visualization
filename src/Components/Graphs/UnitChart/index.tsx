@@ -64,7 +64,7 @@ interface Props {
   /** No. of grid icons in a single row */
   gridSize?: number;
   /** Defines the `d` attribute values for the SVG paths used as grid icons. Each path should be designed for a 24px × 24px viewBox. The order of paths determines the rendering order. If no paths are provided, a circle icon is used as the default. */
-  gridIcon?: string[];
+  gridIcon?: { width?: number; height?: number; d: string[] };
   /** Spacing between 2 grid icons */
   unitPadding?: number;
   /** Total no. of grid icon that are rendered in the chart */
@@ -276,9 +276,9 @@ export function UnitChart(props: Props) {
                       style={{
                         strokeWidth: 1,
                       }}
-                      viewBox='0 0 24 24'
-                      width={radius * 2}
-                      height={radius * 2}
+                      viewBox={`0 0 ${gridIcon?.width || 24} ${gridIcon?.height || 24}`}
+                      width={gridIcon?.width || radius * 2}
+                      height={gridIcon?.height || radius * 2}
                       variants={{
                         initial: {
                           fill: '#fff',
@@ -291,8 +291,12 @@ export function UnitChart(props: Props) {
                           opacity: 1,
                           ...(!showStrokeForWhiteDots ? { stroke: d.color } : {}),
                           strokeWidth: 1,
-                          x: (i % gridSize) * gridDimension,
-                          y: Math.floor(i / gridSize) * gridDimension,
+                          x:
+                            (i % gridSize) *
+                            (gridIcon?.width ? gridIcon.width + unitPadding : gridDimension),
+                          y:
+                            Math.floor(i / gridSize) *
+                            (gridIcon?.height ? gridIcon.height + unitPadding : gridDimension),
                           transition: {
                             duration: 0,
                             delay: (animateValue.duration / cellsData.length) * i,
@@ -310,7 +314,7 @@ export function UnitChart(props: Props) {
                           : ''
                       }
                     >
-                      {gridIcon.map((el) => (
+                      {gridIcon.d.map((el) => (
                         <path d={el} key={el} />
                       ))}
                     </motion.svg>

@@ -77,8 +77,7 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       table: { type: { summary: 'string[]' } },
     },
     gridIcon: {
-      control: 'text',
-      table: { type: { summary: 'string[]' } },
+      table: { type: { detail: '{ width?: number; height?: number; d: string[] }' } },
     },
     backgroundColor: {
       control: 'text',
@@ -132,11 +131,10 @@ const meta: Meta<PagePropsAndCustomArgs> = {
       { label: 'Female', value: 8 },
     ],
   },
-  render: ({ colors, gridIcon, backgroundColor, ...args }) => {
+  render: ({ colors, backgroundColor, ...args }) => {
     return (
       <UnitChart
         colors={parseValue(colors, colors)}
-        gridIcon={parseValue(gridIcon, gridIcon)}
         backgroundColor={
           backgroundColor === 'false' ? false : backgroundColor === 'true' ? true : backgroundColor
         }
