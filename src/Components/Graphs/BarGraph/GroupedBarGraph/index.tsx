@@ -55,6 +55,7 @@ interface Props {
   sortData?: 'asc' | 'desc';
   showColorScale?: boolean;
   minHeight?: number;
+  trackColor?: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   tooltip?: string | ((_d: any) => React.ReactNode);
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -154,6 +155,7 @@ export function GroupedBarGraphEl(props: Props) {
     hideAxisLine = false,
     locale = 'en',
     padZeros = 'none',
+    trackColor,
     cornerRadius = 0,
   } = props;
 
@@ -333,6 +335,7 @@ export function GroupedBarGraphEl(props: Props) {
               locale={locale}
               padZeros={padZeros}
               cornerRadius={cornerRadius}
+              trackColor={trackColor}
             />
           ) : null}
         </GraphArea>

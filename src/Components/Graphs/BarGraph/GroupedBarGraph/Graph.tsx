@@ -72,6 +72,7 @@ interface Props {
   locale: string;
   padZeros: PadZerosTypes;
   cornerRadius: number;
+  trackColor?: string;
 }
 
 export function HorizontalGraph(props: Props) {
@@ -117,6 +118,7 @@ export function HorizontalGraph(props: Props) {
     locale,
     padZeros,
     cornerRadius,
+    trackColor,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -273,6 +275,29 @@ export function HorizontalGraph(props: Props) {
                         }
                       }}
                     >
+                      {trackColor && (
+                        <motion.rect
+                          height={y.bandwidth()}
+                          variants={{
+                            initial: {
+                              width: graphWidth,
+                              x: 0,
+                              y: y(`${d.id}`),
+                              fill: trackColor,
+                            },
+                            whileInView: {
+                              width: graphWidth,
+                              x: 0,
+                              y: y(`${d.id}`),
+                              fill: trackColor,
+                            },
+                          }}
+                          rx={cornerRadius}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
+                          exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        />
+                      )}
                       {!checkIfNullOrUndefined(el) ? (
                         <motion.rect
                           y={subBarScale(`${j}`)}
@@ -457,6 +482,7 @@ export function VerticalGraph(props: Props) {
     locale,
     padZeros,
     cornerRadius,
+    trackColor,
   } = props;
   const svgRef = useRef(null);
   const isInView = useInView(svgRef, {
@@ -647,37 +673,62 @@ export function VerticalGraph(props: Props) {
                         }
                       }}
                     >
-                      <motion.rect
-                        rx={cornerRadius}
-                        x={subBarScale(`${j}`)}
-                        width={subBarScale.bandwidth()}
-                        variants={{
-                          initial: {
+                      {trackColor && (
+                        <motion.rect
+                          width={x.bandwidth()}
+                          variants={{
+                            initial: {
+                              height: graphHeight,
+                              y: 0,
+                              x: x(`${d.id}`),
+                              fill: trackColor,
+                            },
+                            whileInView: {
+                              height: graphHeight,
+                              y: 0,
+                              x: x(`${d.id}`),
+                              fill: trackColor,
+                            },
+                          }}
+                          rx={cornerRadius}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
+                          exit={{ opacity: 0, transition: { duration: animate.duration } }}
+                        />
+                      )}
+                      {!checkIfNullOrUndefined(el) ? (
+                        <motion.rect
+                          rx={cornerRadius}
+                          x={subBarScale(`${j}`)}
+                          width={subBarScale.bandwidth()}
+                          variants={{
+                            initial: {
+                              height: 0,
+                              y: y(0),
+                              fill: barColors[j],
+                            },
+                            whileInView: {
+                              height: !checkIfNullOrUndefined(el)
+                                ? Math.abs(y(el as number) - y(0))
+                                : 0,
+                              y: !checkIfNullOrUndefined(el)
+                                ? (el as number) > 0
+                                  ? y(el as number)
+                                  : y(0)
+                                : y(0),
+                              fill: barColors[j],
+                              transition: { duration: animate.duration },
+                            },
+                          }}
+                          exit={{
                             height: 0,
                             y: y(0),
-                            fill: barColors[j],
-                          },
-                          whileInView: {
-                            height: !checkIfNullOrUndefined(el)
-                              ? Math.abs(y(el as number) - y(0))
-                              : 0,
-                            y: !checkIfNullOrUndefined(el)
-                              ? (el as number) > 0
-                                ? y(el as number)
-                                : y(0)
-                              : y(0),
-                            fill: barColors[j],
                             transition: { duration: animate.duration },
-                          },
-                        }}
-                        exit={{
-                          height: 0,
-                          y: y(0),
-                          transition: { duration: animate.duration },
-                        }}
-                        initial='initial'
-                        animate={isInView ? 'whileInView' : 'initial'}
-                      />
+                          }}
+                          initial='initial'
+                          animate={isInView ? 'whileInView' : 'initial'}
+                        />
+                      ) : null}
                       {showValues ? (
                         <motion.text
                           x={(subBarScale(`${j}`) as number) + subBarScale.bandwidth() / 2}
