@@ -70,6 +70,9 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    trackColor: {
+      control: 'color',
+    },
     cornerRadius: {
       control: 'number',
       table: {

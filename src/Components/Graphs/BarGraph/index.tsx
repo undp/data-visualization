@@ -362,6 +362,8 @@ interface GroupedBarChartProps {
   minValue?: number;
   /** Value by which the label are truncated. Only applicable if showLabel is true */
   truncateBy?: number;
+  /** Track color (i.e. the color of the bars background) of the bar chart */
+  trackColor?: string;
   /** Toggles if data points which have all the values as undefined or null are filtered out.  */
   filterNA?: boolean;
   /** Parameter to sort the data. If a number is provided, it refers to the index of the size array to determine which value to sort by. If set to total, it sorts by the sum of all the values. */
@@ -488,6 +490,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
     hideAxisLine = false,
     numberDisplayOptions,
     cornerRadius,
+    trackColor,
   } = props;
 
   return (
@@ -552,6 +555,7 @@ export function GroupedBarGraph(props: GroupedBarChartProps) {
       locale={numberDisplayOptions?.locale}
       padZeros={numberDisplayOptions?.padZeros}
       cornerRadius={cornerRadius}
+      trackColor={trackColor}
     />
   );
 }

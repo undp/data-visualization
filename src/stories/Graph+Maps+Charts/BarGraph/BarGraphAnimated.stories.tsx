@@ -80,6 +80,9 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         },
       },
     },
+    trackColor: {
+      control: 'color',
+    },
     footNote: {
       control: 'text',
       table: {

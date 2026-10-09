@@ -100,6 +100,9 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         defaultValue: { summary: '0' },
       },
     },
+    trackColor: {
+      control: 'color',
+    },
     colorDomain: { control: 'text' },
     backgroundColor: {
       control: 'text',
