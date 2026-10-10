@@ -215,131 +215,121 @@ export function GroupedBarGraphEl(props: Props) {
           color={timeline.color}
         />
       ) : null}
-      <div className='grow flex flex-col justify-center gap-3 w-full'>
-        {showColorScale && data.length > 0 ? (
-          <ColorLegendWithMouseOver
-            width={width}
+      {showColorScale && data.length > 0 ? (
+        <ColorLegendWithMouseOver
+          width={width}
+          colorDomain={colorDomain}
+          colors={colors}
+          colorLegendTitle={colorLegendTitle}
+          setSelectedColor={setSelectedColor}
+          showNAColor={false}
+          className={classNames?.colorLegend}
+        />
+      ) : null}
+      <GraphArea ref={graphDiv}>
+        {data.length === 0 && <EmptyState />}
+        {svgWidth && svgHeight && data.length > 0 ? (
+          <Comp
+            hideAxisLine={hideAxisLine}
+            data={
+              sortParameter !== undefined
+                ? sortParameter === 'total'
+                  ? orderBy(
+                      ensureCompleteDataForStackedBarChart(data, dateFormat)
+                        .filter((d) => (timeline.enabled ? `${d.date}` === activeDate : d))
+                        .filter((d) => (filterNA ? !d.size.every((item) => item == null) : d)),
+                      (d) => sum(d.size.filter((el) => !checkIfNullOrUndefined(el))),
+                      [sortData || 'asc'],
+                    )
+                  : orderBy(
+                      ensureCompleteDataForStackedBarChart(data, dateFormat)
+                        .filter((d) => (timeline.enabled ? `${d.date}` === activeDate : d))
+                        .filter((d) => (filterNA ? !d.size.every((item) => item == null) : d)),
+                      (d) =>
+                        checkIfNullOrUndefined(d.size[sortParameter])
+                          ? -Infinity
+                          : d.size[sortParameter],
+                      [sortData || 'asc'],
+                    )
+                : ensureCompleteDataForStackedBarChart(data, dateFormat)
+                    .filter((d) => (timeline.enabled ? `${d.date}` === activeDate : d))
+                    .filter((d) => (filterNA ? !d.size.every((item) => item == null) : d))
+            }
+            barColors={colors}
+            width={svgWidth}
+            height={svgHeight}
+            suffix={suffix}
+            prefix={prefix}
+            showValues={showValues}
+            barPadding={barPadding}
+            showTicks={showTicks}
+            leftMargin={leftMargin}
+            rightMargin={rightMargin}
+            topMargin={topMargin}
+            bottomMargin={bottomMargin}
+            truncateBy={truncateBy}
+            showLabels={showLabels}
+            tooltip={tooltip}
+            onSeriesMouseOver={onSeriesMouseOver}
+            refValues={refValues}
+            maxValue={
+              !checkIfNullOrUndefined(maxValue)
+                ? (maxValue as number)
+                : Math.max(
+                      ...data.map((d) =>
+                        Math.max(...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
+                      ),
+                    ) < 0
+                  ? 0
+                  : Math.max(
+                      ...data.map((d) =>
+                        Math.max(...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
+                      ),
+                    )
+            }
+            minValue={
+              !checkIfNullOrUndefined(minValue)
+                ? (minValue as number)
+                : Math.min(
+                      ...data.map((d) =>
+                        Math.min(...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
+                      ),
+                    ) >= 0
+                  ? 0
+                  : Math.min(
+                      ...data.map((d) =>
+                        Math.min(...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[])),
+                      ),
+                    )
+            }
+            onSeriesMouseClick={onSeriesMouseClick}
+            selectedColor={selectedColor}
+            labelOrder={labelOrder}
+            rtl={language === 'he' || language === 'ar'}
+            maxBarThickness={maxBarThickness}
+            resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
+            detailsOnClick={detailsOnClick}
+            barAxisTitle={barAxisTitle}
+            noOfTicks={noOfTicks}
+            valueColor={valueColor}
+            styles={styles}
+            classNames={classNames}
             colorDomain={colorDomain}
-            colors={colors}
-            colorLegendTitle={colorLegendTitle}
-            setSelectedColor={setSelectedColor}
-            showNAColor={false}
-            className={classNames?.colorLegend}
+            animate={
+              animate === true
+                ? { duration: 0.5, once: true, amount: 0.5 }
+                : animate || { duration: 0, once: true, amount: 0 }
+            }
+            precision={precision}
+            customLayers={customLayers}
+            naLabel={naLabel}
+            locale={locale}
+            padZeros={padZeros}
+            cornerRadius={cornerRadius}
+            trackColor={trackColor}
           />
         ) : null}
-        <GraphArea ref={graphDiv}>
-          {data.length === 0 && <EmptyState />}
-          {svgWidth && svgHeight && data.length > 0 ? (
-            <Comp
-              hideAxisLine={hideAxisLine}
-              data={
-                sortParameter !== undefined
-                  ? sortParameter === 'total'
-                    ? orderBy(
-                        ensureCompleteDataForStackedBarChart(data, dateFormat)
-                          .filter((d) => (timeline.enabled ? `${d.date}` === activeDate : d))
-                          .filter((d) => (filterNA ? !d.size.every((item) => item == null) : d)),
-                        (d) => sum(d.size.filter((el) => !checkIfNullOrUndefined(el))),
-                        [sortData || 'asc'],
-                      )
-                    : orderBy(
-                        ensureCompleteDataForStackedBarChart(data, dateFormat)
-                          .filter((d) => (timeline.enabled ? `${d.date}` === activeDate : d))
-                          .filter((d) => (filterNA ? !d.size.every((item) => item == null) : d)),
-                        (d) =>
-                          checkIfNullOrUndefined(d.size[sortParameter])
-                            ? -Infinity
-                            : d.size[sortParameter],
-                        [sortData || 'asc'],
-                      )
-                  : ensureCompleteDataForStackedBarChart(data, dateFormat)
-                      .filter((d) => (timeline.enabled ? `${d.date}` === activeDate : d))
-                      .filter((d) => (filterNA ? !d.size.every((item) => item == null) : d))
-              }
-              barColors={colors}
-              width={svgWidth}
-              height={svgHeight}
-              suffix={suffix}
-              prefix={prefix}
-              showValues={showValues}
-              barPadding={barPadding}
-              showTicks={showTicks}
-              leftMargin={leftMargin}
-              rightMargin={rightMargin}
-              topMargin={topMargin}
-              bottomMargin={bottomMargin}
-              truncateBy={truncateBy}
-              showLabels={showLabels}
-              tooltip={tooltip}
-              onSeriesMouseOver={onSeriesMouseOver}
-              refValues={refValues}
-              maxValue={
-                !checkIfNullOrUndefined(maxValue)
-                  ? (maxValue as number)
-                  : Math.max(
-                        ...data.map((d) =>
-                          Math.max(
-                            ...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[]),
-                          ),
-                        ),
-                      ) < 0
-                    ? 0
-                    : Math.max(
-                        ...data.map((d) =>
-                          Math.max(
-                            ...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[]),
-                          ),
-                        ),
-                      )
-              }
-              minValue={
-                !checkIfNullOrUndefined(minValue)
-                  ? (minValue as number)
-                  : Math.min(
-                        ...data.map((d) =>
-                          Math.min(
-                            ...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[]),
-                          ),
-                        ),
-                      ) >= 0
-                    ? 0
-                    : Math.min(
-                        ...data.map((d) =>
-                          Math.min(
-                            ...(d.size.filter((l) => !checkIfNullOrUndefined(l)) as number[]),
-                          ),
-                        ),
-                      )
-              }
-              onSeriesMouseClick={onSeriesMouseClick}
-              selectedColor={selectedColor}
-              labelOrder={labelOrder}
-              rtl={language === 'he' || language === 'ar'}
-              maxBarThickness={maxBarThickness}
-              resetSelectionOnDoubleClick={resetSelectionOnDoubleClick}
-              detailsOnClick={detailsOnClick}
-              barAxisTitle={barAxisTitle}
-              noOfTicks={noOfTicks}
-              valueColor={valueColor}
-              styles={styles}
-              classNames={classNames}
-              colorDomain={colorDomain}
-              animate={
-                animate === true
-                  ? { duration: 0.5, once: true, amount: 0.5 }
-                  : animate || { duration: 0, once: true, amount: 0 }
-              }
-              precision={precision}
-              customLayers={customLayers}
-              naLabel={naLabel}
-              locale={locale}
-              padZeros={padZeros}
-              cornerRadius={cornerRadius}
-              trackColor={trackColor}
-            />
-          ) : null}
-        </GraphArea>
-      </div>
+      </GraphArea>
       {sources || footNote ? (
         <GraphFooter
           styles={{ footnote: styles?.footnote, source: styles?.source }}

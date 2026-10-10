@@ -30,7 +30,6 @@ export const GraphContainer = React.forwardRef<HTMLDivElement, Props>(
       padding,
       children,
       style,
-      graphID,
       ariaLabel,
       ...props
     },
@@ -40,8 +39,9 @@ export const GraphContainer = React.forwardRef<HTMLDivElement, Props>(
       <div
         {...props}
         className={cn(
-          `${theme || 'light'} ${language || 'en'} mx-auto box-border flex ${width ? 'grow-0' : 'grow w-full'}${relativeHeight ? '' : ' h-full'} flex-col`,
-          // Merge background color logic here
+          `${theme || 'light'} ${language || 'en'} mx-auto box-border flex flex-col`,
+          width ? 'grow-0' : 'grow w-full',
+          relativeHeight || height ? 'grow-0' : 'h-full',
           !backgroundColor ? 'bg-transparent' : backgroundColor === true ? 'bg-surface' : '',
           className,
         )}
@@ -56,7 +56,6 @@ export const GraphContainer = React.forwardRef<HTMLDivElement, Props>(
           padding: backgroundColor ? padding || '1rem' : padding || 0,
           ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
         }}
-        id={graphID}
         ref={ref}
       >
         <div className='flex flex-col w-full h-full grow justify-between'>{children}</div>

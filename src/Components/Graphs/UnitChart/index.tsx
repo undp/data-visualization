@@ -96,7 +96,7 @@ interface Props {
 export function UnitChart(props: Props) {
   const {
     data,
-    size = 200,
+    size,
     graphTitle,
     sources,
     colors = Colors.light.categoricalColors.colors,
@@ -136,9 +136,10 @@ export function UnitChart(props: Props) {
     once: animateValue.once,
     amount: animateValue.amount,
   });
+  const sizeVal = size || gridIcon  ? (gridIcon?.width || 24) * gridSize + unitPadding * (gridSize - 1) : 200;
   const totalValue = sum(data.map((d) => d.value));
   const graphParentDiv = useRef<HTMLDivElement>(null);
-  const gridDimension = size / gridSize;
+  const gridDimension = sizeVal / gridSize;
   const radius = (gridDimension - unitPadding * 2) / 2;
   if (radius <= 0) {
     console.error(
@@ -233,7 +234,7 @@ export function UnitChart(props: Props) {
       ) : null}
       <GraphArea>
         <svg
-          width={`${width || size}px`}
+          width={`${width || sizeVal}px`}
           height={`${Math.max(
             minHeight,
             height
@@ -251,7 +252,7 @@ export function UnitChart(props: Props) {
           )}px`}
           ref={svgRef}
           direction='ltr'
-          viewBox={`0 0 ${width || size} ${Math.max(
+          viewBox={`0 0 ${width || sizeVal} ${Math.max(
             minHeight,
             height
               ? relativeHeight && width

@@ -277,18 +277,18 @@ export function HorizontalGraph(props: Props) {
                     >
                       {trackColor && (
                         <motion.rect
-                          height={y.bandwidth()}
+                          height={subBarScale.bandwidth()}
                           variants={{
                             initial: {
                               width: graphWidth,
                               x: 0,
-                              y: y(`${d.id}`),
+                              y: subBarScale(`${j}`),
                               fill: trackColor,
                             },
                             whileInView: {
                               width: graphWidth,
                               x: 0,
-                              y: y(`${d.id}`),
+                              y: subBarScale(`${j}`),
                               fill: trackColor,
                             },
                           }}
@@ -675,18 +675,18 @@ export function VerticalGraph(props: Props) {
                     >
                       {trackColor && (
                         <motion.rect
-                          width={x.bandwidth()}
+                          width={subBarScale.bandwidth()}
                           variants={{
                             initial: {
                               height: graphHeight,
                               y: 0,
-                              x: x(`${d.id}`),
+                              x: subBarScale(`${j}`),
                               fill: trackColor,
                             },
                             whileInView: {
                               height: graphHeight,
                               y: 0,
-                              x: x(`${d.id}`),
+                              x: subBarScale(`${j}`),
                               fill: trackColor,
                             },
                           }}
