@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const entries = {
   // Main entry point
@@ -186,6 +187,9 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    viteStaticCopy({
+      targets: [{ src: 'src/styles/*', dest: 'styles', rename: { stripBase: 2 } }],
+    }),
     dts({
       include: ['src/'],
       entryRoot: 'src',

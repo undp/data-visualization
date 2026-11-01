@@ -1,6 +1,6 @@
 /* ------- Style Sheet ------- */
 import '@undp/design-system-react/style.css';
-import './styles/styles.css';
+import './index.css';
 
 /* ---------GraphTypes-------------*/
 export type { GeoHubGraphType, GraphType, GraphTypeForGriddedGraph } from '@/Types';

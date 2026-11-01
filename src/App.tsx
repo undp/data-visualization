@@ -1,4 +1,4 @@
-import './styles/styles.css';
+import './index.css';
 import { A, H3, P } from '@undp/design-system-react/Typography';
 
 function App() {
