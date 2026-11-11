@@ -144,8 +144,14 @@ const meta: Meta<PagePropsAndCustomArgs> = {
         description: 'Lorem ipsum dolor sit amet <...>',
       },
     ],
-    cardTemplate:
-      "<div style='padding: 24px;'><h6 class='undp-viz-typography'>{{label}}</h6><p class='undp-viz-typography' style='font-size: 16px;'>{{description}}</p></div>",
+    cardTemplate: (d) => (
+      <div style={{ padding: '24px' }}>
+        <h6 className='undp-viz-typography'>{d.label}</h6>
+        <p className='undp-viz-typography' style={{ fontSize: '16px' }}>
+          {d.description}
+        </p>
+      </div>
+    ),
   },
   render: ({ backgroundColor, cardSearchColumns, ...args }) => {
     return (

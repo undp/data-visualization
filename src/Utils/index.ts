@@ -1,6 +1,5 @@
 export { checkIfNullOrUndefined } from './checkIfNullOrUndefined';
 export { convertTopoJsonToGeoJson, convertTopoJsonUrlToGeoJson } from './convertTopoJsonToGeoJson';
-export { excelDownload } from './excelDownload';
 export { generateEmbedLink, generateIframeCode } from './generateCodes';
 export { getCentroidCoordinates } from './getCentroidCoordinates';
 export { graphList } from './getGraphList';

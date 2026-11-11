@@ -8,7 +8,6 @@ export { CopyTextButton } from './Components/Actions/CopyTextButton';
 export { CsvDownloadButton } from './Components/Actions/CsvDownloadButton';
 /* ------- All Button ------- */
 // Utility Buttons
-export { ExcelDownloadButton } from './Components/Actions/ExcelDownloadButton';
 export { ImageDownloadButton } from './Components/Actions/ImageDownloadButton';
 export { SVGDownloadButton } from './Components/Actions/SVGDownloadButton';
 /* ------- Color Palette ------- */
@@ -112,7 +111,6 @@ export {
   convertTopoJsonToGeoJson,
   convertTopoJsonUrlToGeoJson,
 } from './Utils/convertTopoJsonToGeoJson';
-export { excelDownload } from './Utils/excelDownload';
 /* ---------Data fetch and Parse ------------*/
 export {
   fetchAndParseCSV,

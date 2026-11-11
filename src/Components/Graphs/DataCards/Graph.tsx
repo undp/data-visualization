@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { FileDown } from '@/Components/Icons';
 import type { ClassNameObject, StyleObject } from '@/Types';
-import { string2HTML } from '@/Utils/string2HTML';
 
 export type FilterDataType = {
   column: string;
@@ -22,11 +21,11 @@ interface Props {
   width?: number;
   height?: number;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  cardTemplate: string | ((_d: any) => React.ReactNode);
+  cardTemplate: (_d: any) => React.ReactNode;
   cardMinWidth: number;
   noOfItemsInAPage?: number;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   allowDataDownloadOnDetail: boolean | string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;
@@ -112,15 +111,8 @@ export function Graph(props: Props) {
                   setSelectedData(d);
                 }
               }}
-              // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
-              dangerouslySetInnerHTML={
-                typeof cardTemplate === 'string'
-                  ? { __html: string2HTML(cardTemplate, d) }
-                  : undefined
-              }
             >
-              {typeof cardTemplate === 'function' ? cardTemplate(d) : null}
+              {cardTemplate(d)}
             </div>
           ))}
       </div>
@@ -131,18 +123,7 @@ export function Graph(props: Props) {
             setSelectedData(undefined);
           }}
         >
-          <div
-            className='graph-modal-content m-0'
-            // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
-            dangerouslySetInnerHTML={
-              typeof detailsOnClick === 'string'
-                ? { __html: string2HTML(detailsOnClick, selectedData) }
-                : undefined
-            }
-          >
-            {typeof detailsOnClick === 'function' ? detailsOnClick(selectedData) : null}
-          </div>
+          <div className='graph-modal-content m-0'>{detailsOnClick(selectedData)}</div>
           {allowDataDownloadOnDetail ? (
             <div className='flex'>
               <CsvDownloadButton

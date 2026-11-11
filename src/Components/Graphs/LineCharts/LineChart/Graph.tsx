@@ -60,7 +60,7 @@ interface Props {
   topMargin: number;
   bottomMargin: number;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   refValues: ReferenceDataType[];

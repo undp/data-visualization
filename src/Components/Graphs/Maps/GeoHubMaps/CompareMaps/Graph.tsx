@@ -12,20 +12,19 @@ import {
 } from '@dnd-kit/core';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 import { select } from 'd3-selection';
-import React from 'react';
+import type React from 'react';
 import {
   LegendCollapseButton,
   LegendExpandButton,
 } from '@/Components/Elements/LegendExpandControls';
 import { ChevronLeftRight } from '@/Components/Icons';
-import { string2HTML } from '@/Utils/string2HTML';
 
 interface Props {
   width: number;
   height: number;
   mapStyles: [string, string];
   center: [number, number];
-  mapLegend?: string | React.ReactNode;
+  mapLegend?: React.ReactNode;
   zoomLevel: number;
 }
 
@@ -216,16 +215,7 @@ export function Graph(props: Props) {
           {showLegend ? (
             <>
               <LegendCollapseButton setExpanded={setShowLegend} />
-              <div
-                className='color-legend-box p-2 bg-surface-sm/70'
-                // biome-ignore lint/security/noDangerouslySetInnerHtmlWithChildren: Allow setInnerHTML here
-                // biome-ignore lint/security/noDangerouslySetInnerHtml: Allow setInnerHTML here
-                dangerouslySetInnerHTML={
-                  typeof mapLegend === 'string' ? { __html: string2HTML(mapLegend) } : undefined
-                }
-              >
-                {React.isValidElement(mapLegend) ? mapLegend : null}
-              </div>
+              <div className='color-legend-box p-2 bg-surface-sm/70'>{mapLegend}</div>
             </>
           ) : (
             <LegendExpandButton setExpanded={setShowLegend} />

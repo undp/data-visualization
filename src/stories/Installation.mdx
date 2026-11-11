@@ -40,9 +40,9 @@ This package requires several peer dependencies that you need to install in your
 
 __Required__
 
-* `react` `^19.1.0`
-* `react-dom` `^19.1.0`
-* `@undp/design-system-react` `^1.2.7`
+* `react`
+* `react-dom`
+* `@undp/design-system-react`
 
 __Feature-Specific__
 
@@ -50,8 +50,6 @@ Depending on what features you use, you may also need:
 * Drag & Drop (for Geohub compare map)
   * `@dnd-kit/core`
   * `@dnd-kit/modifiers`
-* Schema validation
-  * `ajv`
 * Map visualizations (for Geohub maps)
   * `maplibre-gl`
   * `pmtiles`
@@ -62,8 +60,7 @@ Depending on what features you use, you may also need:
   * `tw-animate-css`
 * For SVG download
   * `dom-to-svg`
-  * `file-saver`
-* For tooltip (if formatting using handlebars)
+* For string2HTML (if formatting using handlebars)
   * `handlebars`
   * `marked`
   * `math-expression-evaluator`
@@ -73,5 +70,5 @@ __Quick install__
 If you want every feature specific dependencies:
 
 ```
-npm install @dnd-kit/core @dnd-kit/modifiers ajv dom-to-svg file-saver handlebars maplibre-gl marked math-expression-evaluator pmtiles react-globe.gl tw-animate-css three
+npm install @dnd-kit/core @dnd-kit/modifiers ajv dom-to-svg handlebars maplibre-gl marked math-expression-evaluator pmtiles react-globe.gl tw-animate-css three
 ```

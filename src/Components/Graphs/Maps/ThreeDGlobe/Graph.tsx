@@ -40,7 +40,7 @@ interface Props {
   mapBorderColor: string;
   atmosphereColor: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -52,7 +52,7 @@ interface Props {
   showColorScale: boolean;
   hoverStrokeColor: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   resetSelectionOnDoubleClick: boolean;
   highlightedIds?: string[];
   scale: number;

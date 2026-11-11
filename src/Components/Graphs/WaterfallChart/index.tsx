@@ -129,12 +129,12 @@ interface Props {
   dataDownload?: boolean;
 
   // Interactions and Callbacks
-  /** Tooltip content. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
+  /** Tooltip content */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
-  /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
+  tooltip?: (_d: any) => React.ReactNode;
+  /** Details displayed on the modal when user clicks of a data point */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   /** Callback for mouse over event */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;

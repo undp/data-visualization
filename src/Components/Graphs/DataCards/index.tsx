@@ -60,9 +60,9 @@ interface Props {
   padding?: string;
 
   // Graph Parameters
-  /** Html for each card. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data. */
+  /** Html for each card */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  cardTemplate: string | ((_d: any) => React.ReactNode);
+  cardTemplate: (_d: any) => React.ReactNode;
   /** Allows users to add a dropdown menus, that can be used as filters in the graph. Each filter is an object that specifies the column to filter by, and the default value. All the filters are single select only.  */
   cardFilters?: FilterDataType[];
   /** Allows users to add a dropdown menus, that can be used to sort the cards based on different columns. */
@@ -85,9 +85,9 @@ interface Props {
   noOfItemsInAPage?: number;
 
   // Interactions and Callbacks
-  /** Details displayed on the modal when user clicks of a data point. If the type is string then this uses the [handlebar](../?path=/docs/misc-handlebars-templates-and-custom-helpers--docs) template to display the data */
+  /** Details displayed on the modal when user clicks of a data point */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   /** Callback for mouse click event */
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseClick?: (_d: any) => void;

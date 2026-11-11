@@ -39,7 +39,7 @@ interface Props {
   prefix: string;
   showValues?: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -52,7 +52,7 @@ interface Props {
   sortNodes: 'asc' | 'desc' | 'mostReadable' | 'none';
   resetSelectionOnDoubleClick: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   precision: number;

@@ -40,7 +40,7 @@ interface Props {
   radius: number;
   showLabels: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   maxValue: number;
@@ -57,7 +57,7 @@ interface Props {
   minBarThickness?: number;
   resetSelectionOnDoubleClick: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   axisTitle?: string;
   noOfTicks: number;
   valueColor?: string;

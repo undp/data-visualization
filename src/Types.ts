@@ -902,7 +902,7 @@ export interface GraphSettingsDataType {
   maxValue?: number;
   minValue?: number;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   refValues?: ReferenceDataType[];
   graphID?: string;
   highlightedDataPoints?: (string | number)[];
@@ -1069,7 +1069,7 @@ export interface GraphSettingsDataType {
   resetSelectionOnDoubleClick?: boolean;
   intervalAreaOpacity?: number;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   valueColor?: string;
   labelColor?: string;
   noOfYTicks?: number;

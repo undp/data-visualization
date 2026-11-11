@@ -30,13 +30,13 @@ yarn add @undp/data-viz
 
 It is recommended to import what you need and the use it. For example, import the `HorizontalBarGraph` like this:
 
-```
+```tsx
 import { HorizontalBarGraph } from '@undp/data-viz'
 ```
 
 It is also recommended to import the css because some setting expect the CSS to be imported to look good. You can import the css file like this:
 
-```
+```tsx
 import '@undp/data-viz/style.css';
 ```
 
@@ -87,8 +87,6 @@ __Optional peer dependencies__
 * dnd-kit - For creating comparison maps (Peer optional dependency: only needed when using GeoHub compare maps)
 * ajv - For schema validation (Peer optional dependency: only needed when validating schemas for good developer experience)
 * dom-to-svg - For downloading div as svg (Peer optional dependency: only needed when using SVG download functionality)
-* file-saver - For downloading files (Peer optional dependency: only needed when using XLSX download functionality)
-* xlsx - For generating a xlsx file (Optional dependency: only needed when using XLSX download functionality)
 
 ### How to add a new chart or graph
 

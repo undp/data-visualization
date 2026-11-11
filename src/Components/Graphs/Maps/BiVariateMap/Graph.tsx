@@ -50,7 +50,7 @@ interface Props {
   centerPoint?: [number, number];
   mapBorderColor: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   zoomInteraction: ZoomInteractionTypes;
   mapProjection: MapProjectionTypes;
 
@@ -65,7 +65,7 @@ interface Props {
   mapProperty: string;
   resetSelectionOnDoubleClick: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   showColorScale: boolean;
   collapseColorScaleByDefault?: boolean;
   styles?: StyleObject;

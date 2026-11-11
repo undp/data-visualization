@@ -24,7 +24,7 @@ interface Props {
   axisLabels: (string | number)[];
   data: RadarChartDataType[];
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   selectedColor?: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
@@ -32,7 +32,7 @@ interface Props {
   onSeriesMouseClick?: (_d: any) => void;
   colorDomain: string[];
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   strokeWidth: number;
   styles?: StyleObject;
   classNames?: ClassNameObject;

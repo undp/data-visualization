@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "3.8.0",
+  "version": "3.10.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -291,11 +291,6 @@
       "import": "./dist/GriddedGraphsFromConfig.js",
       "require": "./dist/GriddedGraphsFromConfig.cjs"
     },
-    "./ExcelDownloadButton": {
-      "types": "./dist/ExcelDownloadButton.d.ts",
-      "import": "./dist/ExcelDownloadButton.js",
-      "require": "./dist/ExcelDownloadButton.cjs"
-    },
     "./ImageDownloadButton": {
       "types": "./dist/ImageDownloadButton.d.ts",
       "import": "./dist/ImageDownloadButton.js",
@@ -380,6 +375,11 @@
       "types": "./dist/fetchAndParseData.d.ts",
       "import": "./dist/fetchAndParseData.js",
       "require": "./dist/fetchAndParseData.cjs"
+    },
+    "./string2HTML": {
+      "types": "./dist/string2HTML.d.ts",
+      "import": "./dist/string2HTML.js",
+      "require": "./dist/string2HTML.cjs"
     },
     "./transformData": {
       "types": "./dist/transformData.d.ts",
@@ -468,9 +468,8 @@
   "peerDependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
-    "@undp/design-system-react": "^3.4.0",
+    "@undp/design-system-react": "^3.4.6",
     "dom-to-svg": "^0.12.2",
-    "file-saver": "^2.0.5",
     "handlebars": "^4.7.8",
     "maplibre-gl": "^6.9.0",
     "marked": "^18.0.9",
@@ -512,9 +511,6 @@
     "dom-to-svg": {
       "optional": true
     },
-    "file-saver": {
-      "optional": true
-    },
     "marked": {
       "optional": true
     },
@@ -524,9 +520,6 @@
     "handlebars": {
       "optional": true
     }
-  },
-  "optionalDependencies": {
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
@@ -552,7 +545,6 @@
     "@types/d3-selection": "^3.0.11",
     "@types/d3-shape": "^3.1.7",
     "@types/d3-zoom": "^3.0.8",
-    "@types/file-saver": "^2.0.7",
     "@types/geojson": "^7946.0.16",
     "@types/lodash.flattendeep": "^4.4.9",
     "@types/lodash.intersection": "^4.4.9",
@@ -570,7 +562,6 @@
     "autoprefixer": "^10.4.21",
     "cross-env": "^10.1.0",
     "dom-to-svg": "^0.12.2",
-    "file-saver": "^2.0.5",
     "handlebars": "^4.7.8",
     "maplibre-gl": "^6.9.0",
     "marked": "^18.0.9",

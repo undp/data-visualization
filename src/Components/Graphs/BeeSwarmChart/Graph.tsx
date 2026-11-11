@@ -52,7 +52,7 @@ interface Props {
   suffix: string;
   prefix: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   refValues?: ReferenceDataType[];
@@ -67,7 +67,7 @@ interface Props {
   onSeriesMouseClick?: (_d: any) => void;
   resetSelectionOnDoubleClick: boolean;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  detailsOnClick?: string | ((_d: any) => React.ReactNode);
+  detailsOnClick?: (_d: any) => React.ReactNode;
   styles?: StyleObject;
   classNames?: ClassNameObject;
   noOfTicks: number;

@@ -51,7 +51,7 @@ interface Props {
   sameAxes: boolean;
   highlightAreaSettings: HighlightAreaSettingsDataType[];
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
-  tooltip?: string | ((_d: any) => React.ReactNode);
+  tooltip?: (_d: any) => React.ReactNode;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   onSeriesMouseOver?: (_d: any) => void;
   animate: AnimateDataType;
