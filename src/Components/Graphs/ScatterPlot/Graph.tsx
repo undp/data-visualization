@@ -3,7 +3,8 @@ import { Delaunay } from 'd3-delaunay';
 import { scaleLinear, scaleSqrt } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
 import orderBy from 'lodash.orderby';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef, useState } from 'react';
 import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import { Colors } from '@/Components/ColorPalette';
@@ -190,7 +191,7 @@ export function Graph(props: Props) {
   const predict = linearRegressionLine(regressionLineParam);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -386,7 +387,7 @@ export function Graph(props: Props) {
               })}
             {dataOrdered.map((d, i) => {
               return (
-                <motion.g
+                <m.g
                   key={`${d.label || i}`}
                   variants={{
                     initial: {
@@ -461,7 +462,7 @@ export function Graph(props: Props) {
                     }
                   }}
                 >
-                  <motion.circle
+                  <m.circle
                     cx={0}
                     cy={0}
                     exit={{ r: 0, transition: { duration: animate.duration } }}
@@ -517,7 +518,7 @@ export function Graph(props: Props) {
                     }}
                   />
                   {showLabels && !checkIfNullOrUndefined(d.label) ? (
-                    <motion.text
+                    <m.text
                       style={{
                         ...(styles?.graphObjectValues || {}),
                       }}
@@ -561,12 +562,12 @@ export function Graph(props: Props) {
                       dx={3}
                     >
                       {d.label}
-                    </motion.text>
+                    </m.text>
                   ) : highlightedDataPoints &&
                     !checkIfNullOrUndefined(d.label) &&
                     showHighlightedDataPointsLabels ? (
                     highlightedDataPoints.indexOf(d.label as string | number) !== -1 ? (
-                      <motion.text
+                      <m.text
                         style={{
                           ...(styles?.graphObjectValues || {}),
                         }}
@@ -610,10 +611,10 @@ export function Graph(props: Props) {
                         dx={3}
                       >
                         {d.label}
-                      </motion.text>
+                      </m.text>
                     ) : null
                   ) : null}
-                </motion.g>
+                </m.g>
               );
             })}
             {refXValues?.map((el) => (
@@ -735,7 +736,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

@@ -1,7 +1,8 @@
 import { cn } from '@undp/design-system-react/cn';
 import { scaleLinear } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { Axis } from '@/Components/Elements/Axes/Axis';
@@ -109,7 +110,7 @@ export function Graph(props: Props) {
     .nice();
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -158,7 +159,7 @@ export function Graph(props: Props) {
           <AnimatePresence>
             {data.map((d) => {
               return (
-                <motion.g
+                <m.g
                   key={d.label}
                   variants={{
                     initial: {
@@ -229,7 +230,7 @@ export function Graph(props: Props) {
                     }
                   }}
                 >
-                  <motion.circle
+                  <m.circle
                     variants={{
                       initial: {
                         cx: radius,
@@ -276,7 +277,7 @@ export function Graph(props: Props) {
                     }}
                   />
                   {showLabels ? (
-                    <motion.text
+                    <m.text
                       variants={{
                         initial: {
                           y: y(d.y1),
@@ -314,10 +315,10 @@ export function Graph(props: Props) {
                       dx={0 - radius - 3}
                     >
                       {d.label}
-                    </motion.text>
+                    </m.text>
                   ) : highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
-                      <motion.text
+                      <m.text
                         variants={{
                           initial: {
                             y: y(d.y1),
@@ -354,10 +355,10 @@ export function Graph(props: Props) {
                         dx={-3}
                       >
                         {d.label}
-                      </motion.text>
+                      </m.text>
                     ) : null
                   ) : null}
-                  <motion.circle
+                  <m.circle
                     variants={{
                       initial: {
                         cx: graphWidth - radius,
@@ -404,7 +405,7 @@ export function Graph(props: Props) {
                     }}
                   />
                   {showLabels ? (
-                    <motion.text
+                    <m.text
                       variants={{
                         initial: {
                           y: y(d.y2),
@@ -441,10 +442,10 @@ export function Graph(props: Props) {
                       dx={radius + 3}
                     >
                       {d.label}
-                    </motion.text>
+                    </m.text>
                   ) : highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
-                      <motion.text
+                      <m.text
                         variants={{
                           initial: {
                             y: y(d.y2),
@@ -481,10 +482,10 @@ export function Graph(props: Props) {
                         dx={3}
                       >
                         {d.label}
-                      </motion.text>
+                      </m.text>
                     ) : null
                   ) : null}
-                  <motion.line
+                  <m.line
                     variants={{
                       initial: {
                         x1: radius,
@@ -522,13 +523,13 @@ export function Graph(props: Props) {
                       ...styles?.dataConnectors,
                     }}
                   />
-                </motion.g>
+                </m.g>
               );
             })}
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

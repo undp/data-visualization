@@ -14,7 +14,8 @@ import {
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
-import { motion, useInView } from 'motion/react';
+import { useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useEffect, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { Annotation } from '@/Components/Elements/Annotations';
@@ -300,7 +301,7 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -411,9 +412,9 @@ export function Graph(props: Props) {
             />
           </g>
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
-          <motion.g>
+          <m.g>
             {lineArray.map((d) => (
-              <motion.g
+              <m.g
                 key={d[0].label}
                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 variants={{
@@ -458,7 +459,7 @@ export function Graph(props: Props) {
                 initial='initial'
                 animate={isInView ? 'whileInView' : 'initial'}
               >
-                <motion.path
+                <m.path
                   d={
                     lineShape(
                       d.filter((el): el is FormattedDataType => !checkIfNullOrUndefined(el.y)),
@@ -525,9 +526,9 @@ export function Graph(props: Props) {
                 />
                 {d.map((el, j) => (
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-                  <motion.g key={`${el.label}_${j}`}>
+                  <m.g key={`${el.label}_${j}`}>
                     {!checkIfNullOrUndefined(el.y) && showDots ? (
-                      <motion.circle
+                      <m.circle
                         r={graphWidth / d.length < 5 ? 0 : graphWidth / d.length < 20 ? 2 : 4}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                         variants={{
@@ -579,14 +580,14 @@ export function Graph(props: Props) {
                         animate={isInView ? 'whileInView' : 'initial'}
                       />
                     ) : null}
-                  </motion.g>
+                  </m.g>
                 ))}
                 {(((highlightedLines || []).indexOf(d[0].label) !== -1 &&
                   showHighlightedLinesLabels) ||
                   mouseOverData?.label === d[0].label ||
                   hoveredLine === d[0].label) &&
                 showLabels ? (
-                  <motion.text
+                  <m.text
                     className='text-sm font-bold'
                     dx={5}
                     dy={4}
@@ -623,9 +624,9 @@ export function Graph(props: Props) {
                     animate={isInView ? 'whileInView' : 'initial'}
                   >
                     {d[0].label}
-                  </motion.text>
+                  </m.text>
                 ) : null}
-              </motion.g>
+              </m.g>
             ))}
             {mouseOverData ? (
               <>
@@ -672,7 +673,7 @@ export function Graph(props: Props) {
                 )}
               </>
             ) : null}
-          </motion.g>
+          </m.g>
           {useVoronoiInteraction &&
             dataFormatted
               .filter((d) => !checkIfNullOrUndefined(d.y))
@@ -797,7 +798,7 @@ export function Graph(props: Props) {
           </g>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

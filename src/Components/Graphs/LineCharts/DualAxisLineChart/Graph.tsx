@@ -14,7 +14,8 @@ import {
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
-import { motion, useInView } from 'motion/react';
+import { useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useEffect, useRef, useState } from 'react';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
@@ -268,7 +269,7 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -435,7 +436,7 @@ export function Graph(props: Props) {
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
             {fillArea && (
-              <motion.path
+              <m.path
                 style={{
                   stroke: 'none',
                   fill: lineColors[0],
@@ -464,7 +465,7 @@ export function Graph(props: Props) {
                 animate={isInView ? 'whileInView' : 'initial'}
               />
             )}
-            <motion.path
+            <m.path
               style={{
                 stroke: lineColors[0],
                 strokeWidth,
@@ -498,7 +499,7 @@ export function Graph(props: Props) {
               animate={isInView ? 'whileInView' : 'initial'}
             />
             {fillArea && (
-              <motion.path
+              <m.path
                 style={{
                   stroke: 'none',
                   fill: lineColors[1],
@@ -527,7 +528,7 @@ export function Graph(props: Props) {
                 animate={isInView ? 'whileInView' : 'initial'}
               />
             )}
-            <motion.path
+            <m.path
               d={
                 lineShape2(
                   dataFormatted.filter(
@@ -581,11 +582,11 @@ export function Graph(props: Props) {
           <g>
             {dataFormatted.map((d, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-              <motion.g key={i}>
+              <m.g key={i}>
                 {!checkIfNullOrUndefined(d.y1) ? (
                   <>
                     {showDots ? (
-                      <motion.circle
+                      <m.circle
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -617,7 +618,7 @@ export function Graph(props: Props) {
                       />
                     ) : null}
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         dy={
                           checkIfNullOrUndefined(d.y2)
                             ? -8
@@ -664,14 +665,14 @@ export function Graph(props: Props) {
                           leftLineNumberDisplayOptions?.locale,
                           leftLineNumberDisplayOptions?.padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
                   </>
                 ) : null}
                 {!checkIfNullOrUndefined(d.y2) ? (
                   <>
                     {showDots ? (
-                      <motion.circle
+                      <m.circle
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -703,7 +704,7 @@ export function Graph(props: Props) {
                       />
                     ) : null}
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         dy={
                           checkIfNullOrUndefined(d.y1)
                             ? -8
@@ -750,11 +751,11 @@ export function Graph(props: Props) {
                           rightLineNumberDisplayOptions?.locale,
                           rightLineNumberDisplayOptions?.padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
                   </>
                 ) : null}
-              </motion.g>
+              </m.g>
             ))}
           </g>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
@@ -768,7 +769,7 @@ export function Graph(props: Props) {
             height={graphHeight}
           />
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

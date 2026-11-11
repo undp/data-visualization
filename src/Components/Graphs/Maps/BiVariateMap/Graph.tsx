@@ -4,7 +4,8 @@ import { geoPath } from 'd3-geo';
 import { scaleThreshold } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
 import type { FeatureCollection } from 'geojson';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { type RefObject, useMemo, useRef, useState } from 'react';
 import type { Topology } from 'topojson-specification';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
@@ -190,7 +191,7 @@ export function Graph(props: Props) {
   return (
     <>
       <div className='relative'>
-        <motion.svg
+        <svg
           viewBox={`0 0 ${width} ${height}`}
           width={`${width}px`}
           height={`${height}px`}
@@ -204,7 +205,7 @@ export function Graph(props: Props) {
               const path = pathGenerator(d);
               if (!path) return null;
               return (
-                <motion.g
+                <m.g
                   // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                   key={i}
                   opacity={
@@ -226,7 +227,7 @@ export function Graph(props: Props) {
                       vectorEffect: 'non-scaling-stroke',
                     }}
                   />
-                </motion.g>
+                </m.g>
               );
             })}
             <AnimatePresence>
@@ -247,7 +248,7 @@ export function Graph(props: Props) {
                     : mapNoDataColor;
 
                 return (
-                  <motion.g
+                  <m.g
                     className='undp-map-shapes'
                     key={d.id}
                     variants={{
@@ -293,7 +294,7 @@ export function Graph(props: Props) {
                       const path = pathGenerator(feature);
                       if (!path) return null;
                       return (
-                        <motion.path
+                        <m.path
                           key={`${d.id}-${
                             // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                             i
@@ -333,7 +334,7 @@ export function Graph(props: Props) {
                         />
                       );
                     })}
-                  </motion.g>
+                  </m.g>
                 );
               })}
               {showAksaiChinAsStriped &&
@@ -352,7 +353,7 @@ export function Graph(props: Props) {
                       : mapNoDataColor;
                   if (!path) return null;
                   return (
-                    <motion.g
+                    <m.g
                       // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                       key={`aksai-chin-stripped-${i}`}
                       variants={{
@@ -366,7 +367,7 @@ export function Graph(props: Props) {
                       animate={isInView ? 'whileInView' : 'initial'}
                       exit={{ opacity: 0, transition: { duration: animate.duration } }}
                     >
-                      <motion.path
+                      <m.path
                         d={path}
                         // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                         key={`aksai-chin-stripped-${i}`}
@@ -382,7 +383,7 @@ export function Graph(props: Props) {
                         animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       />
-                    </motion.g>
+                    </m.g>
                   );
                 })}
             </AnimatePresence>
@@ -392,7 +393,7 @@ export function Graph(props: Props) {
                 const path = pathGenerator(d);
                 if (!path || d.properties?.bdytyp === 99) return null;
                 return (
-                  <motion.g
+                  <m.g
                     // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                     key={i}
                   >
@@ -414,7 +415,7 @@ export function Graph(props: Props) {
                               : undefined,
                       }}
                     />
-                  </motion.g>
+                  </m.g>
                 );
               })}
             {overlayMapData?.features.map((d, i: number) => {
@@ -438,7 +439,7 @@ export function Graph(props: Props) {
             })}
             {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           </g>
-        </motion.svg>
+        </svg>
         {showColorScale === false ? null : (
           <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
             {showLegend ? (

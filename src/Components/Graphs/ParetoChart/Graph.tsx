@@ -9,7 +9,8 @@ import {
   line,
 } from 'd3-shape';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef, useState } from 'react';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
@@ -190,7 +191,7 @@ export function Graph(props: Props) {
   const y2Ticks = y2.ticks(noOfTicks);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -335,7 +336,7 @@ export function Graph(props: Props) {
           <AnimatePresence>
             {dataWithId.map((d, i) => {
               return (
-                <motion.g
+                <m.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
                   opacity={0.85}
@@ -368,7 +369,7 @@ export function Graph(props: Props) {
                     onSeriesMouseOver?.(undefined);
                   }}
                 >
-                  <motion.rect
+                  <m.rect
                     variants={{
                       initial: {
                         attrY: y1(0),
@@ -396,7 +397,7 @@ export function Graph(props: Props) {
                     width={x.bandwidth()}
                   />
                   {showValues && !checkIfNullOrUndefined(d.bar) ? (
-                    <motion.text
+                    <m.text
                       x={(x(`${d.id}`) as number) + x.bandwidth() / 2}
                       exit={{
                         attrY: y1(0),
@@ -434,7 +435,7 @@ export function Graph(props: Props) {
                         barNumberDisplayOptions?.locale,
                         barNumberDisplayOptions?.padZeros,
                       )}
-                    </motion.text>
+                    </m.text>
                   ) : null}
                   {showLabels ? (
                     <XAxesLabels
@@ -454,10 +455,10 @@ export function Graph(props: Props) {
                       isInView={isInView}
                     />
                   ) : null}
-                </motion.g>
+                </m.g>
               );
             })}
-            <motion.path
+            <m.path
               exit={{
                 opacity: 0,
                 transition: { duration: animate.duration },
@@ -516,7 +517,7 @@ export function Graph(props: Props) {
                       onSeriesMouseOver?.(undefined);
                     }}
                   >
-                    <motion.circle
+                    <m.circle
                       exit={{
                         cy: y2(0),
                         opacity: 0,
@@ -547,7 +548,7 @@ export function Graph(props: Props) {
                       }
                     />
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         x={(x(`${d.id}`) as number) + x.bandwidth() / 2}
                         exit={{
                           y: y2(0),
@@ -585,7 +586,7 @@ export function Graph(props: Props) {
                           lineNumberDisplayOptions?.locale,
                           lineNumberDisplayOptions?.padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
                   </g>
                 ) : null}
@@ -594,7 +595,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

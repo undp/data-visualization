@@ -1,6 +1,6 @@
-// Scrollytelling.tsx
-import { motion, useInView } from 'motion/react';
-import { useRef, useState } from 'react';
+import { domAnimation, LazyMotion, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
+import { useEffect, useRef, useState } from 'react';
 import type {
   ChaptersDataType,
   GraphTypeForGriddedGraph,
@@ -50,41 +50,43 @@ export function ScrollStory(props: Props) {
     });
   });
   return (
-    <div className='relative w-full h-full'>
-      <motion.div
-        key={sectionsArr[activeIndex].chapter}
-        className='fixed top-0 h-full -z-10'
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        style={{
-          left: mode === 'overlay' ? 0 : infoPosition === 'right' ? 0 : infoWidth,
-          width: mode === 'overlay' ? '100%' : `calc(100% - ${infoWidth})`,
-        }}
-      >
-        <SingleGraphDashboard
-          graphType={sectionsArr[activeIndex].graphType as GraphTypeForGriddedGraph}
-          dataSettings={sectionsArr[activeIndex].dataSettings}
-          graphSettings={sectionsArr[activeIndex].graphSettings}
-          graphDataConfiguration={sectionsArr[activeIndex].graphDataConfiguration}
-        />
-      </motion.div>
-      <div>
-        {sectionsArr.map((section, idx) => (
-          <ScrollySection
-            width={infoWidth}
-            key={`${section.chapter}-${section.section}`}
-            index={idx}
-            infoBox={section.infoBox}
-            setActiveIndex={setActiveIndex}
-            position={infoPosition}
-            mode={mode}
-            visibilityThreshold={visibilityThreshold}
-            backgroundColor={infoBackgroundColor}
+    <LazyMotion features={domAnimation}>
+      <div className='relative w-full h-full'>
+        <m.div
+          key={sectionsArr[activeIndex].chapter}
+          className='fixed top-0 h-full -z-10'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          style={{
+            left: mode === 'overlay' ? 0 : infoPosition === 'right' ? 0 : infoWidth,
+            width: mode === 'overlay' ? '100%' : `calc(100% - ${infoWidth})`,
+          }}
+        >
+          <SingleGraphDashboard
+            graphType={sectionsArr[activeIndex].graphType as GraphTypeForGriddedGraph}
+            dataSettings={sectionsArr[activeIndex].dataSettings}
+            graphSettings={sectionsArr[activeIndex].graphSettings}
+            graphDataConfiguration={sectionsArr[activeIndex].graphDataConfiguration}
           />
-        ))}
+        </m.div>
+        <div>
+          {sectionsArr.map((section, idx) => (
+            <ScrollySection
+              width={infoWidth}
+              key={`${section.chapter}-${section.section}`}
+              index={idx}
+              infoBox={section.infoBox}
+              setActiveIndex={setActiveIndex}
+              position={infoPosition}
+              mode={mode}
+              visibilityThreshold={visibilityThreshold}
+              backgroundColor={infoBackgroundColor}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </LazyMotion>
   );
 }
 
@@ -112,7 +114,9 @@ function ScrollySection({
     once: false,
     amount: visibilityThreshold,
   });
-  if (isInView) setActiveIndex(index);
+  useEffect(() => {
+    if (isInView) setActiveIndex(index);
+  }, [isInView, index, setActiveIndex]);
   return (
     <section
       ref={ref}

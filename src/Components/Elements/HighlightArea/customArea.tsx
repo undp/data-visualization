@@ -1,6 +1,6 @@
 import { cn } from '@undp/design-system-react/cn';
 import type { NumberValue } from 'd3-scale';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import type { AnimateDataType } from '@/Types';
 import { getPathFromPoints } from '@/Utils/getPathFromPoints';
 
@@ -23,7 +23,7 @@ export function CustomArea(props: Props) {
   return (
     <>
       {areaSettings.map((d) => (
-        <motion.g
+        <m.g
           key={d.coordinates
             .map((item) => (item instanceof Date ? item.toISOString() : item.toString()))
             .join('~')}
@@ -68,7 +68,7 @@ export function CustomArea(props: Props) {
               className={cn(!d.color ? 'stroke-stroke-sm' : '', d.className)}
             />
           )}
-        </motion.g>
+        </m.g>
       ))}
     </>
   );

@@ -1,5 +1,5 @@
 import { cn } from '@undp/design-system-react/cn';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 
 import type { AnimateDataType } from '@/Types';
 
@@ -25,7 +25,7 @@ export function RefLineY(props: RefLineYProps) {
   const { text, x1, x2, y, classNames, styles, color, animate, isInView } = props;
   if (!text) return null;
   return (
-    <motion.g
+    <m.g
       key={`${x1}-${x2}-${y}`}
       exit={{ opacity: 0, transition: { duration: animate?.duration || 0 } }}
       variants={{
@@ -72,7 +72,7 @@ export function RefLineY(props: RefLineYProps) {
       >
         {text}
       </text>
-    </motion.g>
+    </m.g>
   );
 }
 
@@ -99,7 +99,7 @@ export function RefLineX(props: RefLineXProps) {
   const { text, y1, y2, x, classNames, styles, color, textSide, animate, isInView } = props;
   if (!text) return null;
   return (
-    <motion.g
+    <m.g
       key={`${y1}-${y2}-${x}`}
       exit={{ opacity: 0, transition: { duration: animate?.duration || 0 } }}
       variants={{
@@ -147,6 +147,6 @@ export function RefLineX(props: RefLineXProps) {
       >
         {text}
       </text>
-    </motion.g>
+    </m.g>
   );
 }

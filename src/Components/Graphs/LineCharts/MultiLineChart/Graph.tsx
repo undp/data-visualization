@@ -14,7 +14,8 @@ import {
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
-import { motion, useInView } from 'motion/react';
+import { useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@/Components/Elements/Annotations';
 import { Axis } from '@/Components/Elements/Axes/Axis';
@@ -305,7 +306,7 @@ export function Graph(props: Props) {
   }, [x, dataFormatted, onSeriesMouseOver]);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -315,7 +316,7 @@ export function Graph(props: Props) {
         <g transform={`translate(${margin.left},${margin.top})`}>
           <defs>
             <clipPath id={revealClipId}>
-              <motion.rect
+              <m.rect
                 x={0}
                 y={0}
                 height={graphHeight}
@@ -436,7 +437,7 @@ export function Graph(props: Props) {
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
             {dataArray.map((d, i) => (
-              <motion.g
+              <m.g
                 key={labels[i]}
                 exit={{ opacity: 0, transition: { duration: animate.duration } }}
                 variants={{
@@ -460,7 +461,7 @@ export function Graph(props: Props) {
                 animate={isInView ? 'whileInView' : 'initial'}
               >
                 {fillArea && (
-                  <motion.path
+                  <m.path
                     clipPath={`url(#${revealClipId})`}
                     style={{
                       stroke: 'none',
@@ -488,7 +489,7 @@ export function Graph(props: Props) {
                     animate={isInView ? 'whileInView' : 'initial'}
                   />
                 )}
-                <motion.path
+                <m.path
                   style={{
                     fill: 'none',
                     strokeWidth,
@@ -530,7 +531,7 @@ export function Graph(props: Props) {
                     {!checkIfNullOrUndefined(el.y) ? (
                       <>
                         {showDots ? (
-                          <motion.circle
+                          <m.circle
                             r={
                               graphWidth / dataFormatted.length < 5
                                 ? 0
@@ -562,7 +563,7 @@ export function Graph(props: Props) {
                           />
                         ) : null}
                         {showValues ? (
-                          <motion.text
+                          <m.text
                             dy={-8}
                             style={{
                               textAnchor: 'middle',
@@ -603,14 +604,14 @@ export function Graph(props: Props) {
                               locale,
                               padZeros,
                             )}
-                          </motion.text>
+                          </m.text>
                         ) : null}
                       </>
                     ) : null}
                   </g>
                 ))}
                 {showColorLegendAtTop || labelsToBeHidden.includes(labels[i]) ? null : (
-                  <motion.text
+                  <m.text
                     className='text-xs'
                     dx={5}
                     dy={4}
@@ -637,9 +638,9 @@ export function Graph(props: Props) {
                     animate={isInView ? 'whileInView' : 'initial'}
                   >
                     {labels[i]}
-                  </motion.text>
+                  </m.text>
                 )}
-              </motion.g>
+              </m.g>
             ))}
             {mouseOverData ? (
               <line
@@ -749,7 +750,7 @@ export function Graph(props: Props) {
             height={graphHeight}
           />
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

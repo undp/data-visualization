@@ -1,7 +1,8 @@
 import { cn } from '@undp/design-system-react/cn';
 import { scaleBand, scaleLinear, scaleOrdinal, scaleThreshold } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
-import { motion, useInView } from 'motion/react';
+import { useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef, useState } from 'react';
 import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
 import { YAxesLabels } from '@/Components/Elements/Axes/YAxesLabels';
@@ -124,7 +125,7 @@ export function Graph(props: Props) {
             .range(colors);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -240,7 +241,7 @@ export function Graph(props: Props) {
                   }}
                   opacity={selectedColor ? (selectedColor === color ? 1 : 0.3) : 1}
                 >
-                  <motion.rect
+                  <m.rect
                     x={0}
                     y={0}
                     width={barWidth}
@@ -259,7 +260,7 @@ export function Graph(props: Props) {
                     animate={isInView ? 'whileInView' : 'initial'}
                   />
                   {showValues && !checkIfNullOrUndefined(d.value) ? (
-                    <motion.g
+                    <m.g
                       variants={{
                         initial: { opacity: 0 },
                         whileInView: { opacity: 1, transition: { duration: animate.duration } },
@@ -292,7 +293,7 @@ export function Graph(props: Props) {
                           </p>
                         </div>
                       </foreignObject>
-                    </motion.g>
+                    </m.g>
                   ) : null}
                 </g>
               );
@@ -312,7 +313,7 @@ export function Graph(props: Props) {
             />
           ) : null}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

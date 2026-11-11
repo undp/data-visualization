@@ -2,7 +2,8 @@ import { cn } from '@undp/design-system-react/cn';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
 import sum from 'lodash.sum';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useMemo, useRef, useState } from 'react';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
@@ -239,7 +240,7 @@ export function VerticalGraph(props: Props) {
   const yTicks = y.ticks(noOfTicks);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -314,7 +315,7 @@ export function VerticalGraph(props: Props) {
           <AnimatePresence>
             {dataWithId.map((d) =>
               !checkIfNullOrUndefined(x(d.id)) ? (
-                <motion.g
+                <m.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
                   onMouseEnter={(event) => {
@@ -372,7 +373,7 @@ export function VerticalGraph(props: Props) {
                 >
                   {d.qualitativeRange
                     ? d.qualitativeRange.map((_el, j) => (
-                        <motion.rect
+                        <m.rect
                           // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                           key={j}
                           x={0}
@@ -422,7 +423,7 @@ export function VerticalGraph(props: Props) {
                       ))
                     : null}
                   {d.target && targetStyle === 'background' ? (
-                    <motion.rect
+                    <m.rect
                       x={0}
                       width={x.bandwidth()}
                       exit={{
@@ -449,7 +450,7 @@ export function VerticalGraph(props: Props) {
                     />
                   ) : null}
                   {d.size ? (
-                    <motion.rect
+                    <m.rect
                       x={x.bandwidth() * ((1 - measureBarWidthFactor) / 2)}
                       width={x.bandwidth() * measureBarWidthFactor}
                       style={{
@@ -476,7 +477,7 @@ export function VerticalGraph(props: Props) {
                     />
                   ) : null}
                   {d.target && targetStyle === 'line' ? (
-                    <motion.rect
+                    <m.rect
                       x={0}
                       width={x.bandwidth()}
                       exit={{
@@ -522,7 +523,7 @@ export function VerticalGraph(props: Props) {
                     />
                   ) : null}
                   {showValues ? (
-                    <motion.text
+                    <m.text
                       x={x.bandwidth() / 2}
                       style={{
                         textAnchor: 'middle',
@@ -556,9 +557,9 @@ export function VerticalGraph(props: Props) {
                         locale,
                         padZeros,
                       )}
-                    </motion.text>
+                    </m.text>
                   ) : null}
-                </motion.g>
+                </m.g>
               ) : null,
             )}
             {refValues?.map((el) => (
@@ -578,7 +579,7 @@ export function VerticalGraph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}
@@ -762,7 +763,7 @@ export function HorizontalGraph(props: Props) {
 
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -813,7 +814,7 @@ export function HorizontalGraph(props: Props) {
           <AnimatePresence>
             {dataWithId.map((d) =>
               !checkIfNullOrUndefined(y(d.id)) ? (
-                <motion.g
+                <m.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
                   onMouseEnter={(event) => {
@@ -871,7 +872,7 @@ export function HorizontalGraph(props: Props) {
                 >
                   {d.qualitativeRange
                     ? d.qualitativeRange.map((el, j) => (
-                        <motion.rect
+                        <m.rect
                           // biome-ignore lint/suspicious/noArrayIndexKey: index is the identifier
                           key={j}
                           exit={{
@@ -908,7 +909,7 @@ export function HorizontalGraph(props: Props) {
                       ))
                     : null}
                   {d.target && targetStyle === 'background' ? (
-                    <motion.rect
+                    <m.rect
                       y={0}
                       x={d.target >= 0 ? x(0) : x(d.target)}
                       height={y.bandwidth()}
@@ -936,7 +937,7 @@ export function HorizontalGraph(props: Props) {
                     />
                   ) : null}
                   {d.size ? (
-                    <motion.rect
+                    <m.rect
                       y={y.bandwidth() * ((1 - measureBarWidthFactor) / 2)}
                       style={{
                         fill: barColor,
@@ -963,7 +964,7 @@ export function HorizontalGraph(props: Props) {
                     />
                   ) : null}
                   {d.target && targetStyle === 'line' ? (
-                    <motion.rect
+                    <m.rect
                       y={0}
                       height={y.bandwidth()}
                       width={targetLineThickness}
@@ -1009,7 +1010,7 @@ export function HorizontalGraph(props: Props) {
                     />
                   ) : null}
                   {showValues ? (
-                    <motion.text
+                    <m.text
                       y={y.bandwidth() / 2}
                       style={{
                         textAnchor: d.size ? (d.size < 0 ? 'end' : 'start') : 'start',
@@ -1044,9 +1045,9 @@ export function HorizontalGraph(props: Props) {
                         locale,
                         padZeros,
                       )}
-                    </motion.text>
+                    </m.text>
                   ) : null}
-                </motion.g>
+                </m.g>
               ) : null,
             )}
             {refValues?.map((el) => (
@@ -1067,7 +1068,7 @@ export function HorizontalGraph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

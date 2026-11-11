@@ -14,7 +14,8 @@ import {
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
-import { motion, useInView } from 'motion/react';
+import { useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useEffect, useRef, useState } from 'react';
 import { Annotation } from '@/Components/Elements/Annotations';
 import { Axis } from '@/Components/Elements/Axes/Axis';
@@ -297,7 +298,7 @@ export function Graph(props: Props) {
   }, [x, dataFormatted, onSeriesMouseOver]);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -423,7 +424,7 @@ export function Graph(props: Props) {
           />
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <g>
-            <motion.path
+            <m.path
               clipPath={`url(#below${idSuffix})`}
               d={mainGraphArea(dataFormatted) || ''}
               style={{ fill: diffAreaColors[1] }}
@@ -435,7 +436,7 @@ export function Graph(props: Props) {
               initial='initial'
               animate={isInView ? 'whileInView' : 'initial'}
             />
-            <motion.path
+            <m.path
               clipPath={`url(#above${idSuffix})`}
               d={mainGraphArea(dataFormatted) || ''}
               style={{ fill: diffAreaColors[0] }}
@@ -449,7 +450,7 @@ export function Graph(props: Props) {
             />
           </g>
           <g>
-            <motion.path
+            <m.path
               d={lineShape1(dataFormatted) || ''}
               style={{
                 fill: 'none',
@@ -469,7 +470,7 @@ export function Graph(props: Props) {
               initial='initial'
               animate={isInView ? 'whileInView' : 'initial'}
             />
-            <motion.path
+            <m.path
               style={{
                 fill: 'none',
                 stroke: lineColors[1],
@@ -490,7 +491,7 @@ export function Graph(props: Props) {
             />
             {showColorLegendAtTop ? null : (
               <g>
-                <motion.text
+                <m.text
                   key={colorDomain[0]}
                   className='text-xs'
                   dx={5}
@@ -518,8 +519,8 @@ export function Graph(props: Props) {
                   animate={isInView ? 'whileInView' : 'initial'}
                 >
                   {colorDomain[0]}
-                </motion.text>
-                <motion.text
+                </m.text>
+                <m.text
                   key={colorDomain[1]}
                   className='text-xs'
                   dx={5}
@@ -547,7 +548,7 @@ export function Graph(props: Props) {
                   animate={isInView ? 'whileInView' : 'initial'}
                 >
                   {colorDomain[1]}
-                </motion.text>
+                </m.text>
               </g>
             )}
             {mouseOverData ? (
@@ -562,11 +563,11 @@ export function Graph(props: Props) {
             ) : null}
             {dataFormatted.map((d, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-              <motion.g key={i}>
+              <m.g key={i}>
                 {!checkIfNullOrUndefined(d.y1) ? (
                   <>
                     {showDots ? (
-                      <motion.circle
+                      <m.circle
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -590,7 +591,7 @@ export function Graph(props: Props) {
                       />
                     ) : null}
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         dy={d.y2 < d.y1 ? -8 : '1em'}
                         style={{
                           textAnchor: 'middle',
@@ -626,14 +627,14 @@ export function Graph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
                   </>
                 ) : null}
                 {!checkIfNullOrUndefined(d.y2) ? (
                   <>
                     {showDots ? (
-                      <motion.circle
+                      <m.circle
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -660,7 +661,7 @@ export function Graph(props: Props) {
                       />
                     ) : null}
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         dy={d.y2 > d.y1 ? -8 : '1em'}
                         style={{
                           textAnchor: 'middle',
@@ -696,11 +697,11 @@ export function Graph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
                   </>
                 ) : null}
-              </motion.g>
+              </m.g>
             ))}
           </g>
           {refValues?.map((el) => (
@@ -800,7 +801,7 @@ export function Graph(props: Props) {
             height={graphHeight}
           />
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

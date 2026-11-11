@@ -1,7 +1,8 @@
 import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
 import { stratify, treemap } from 'd3-hierarchy';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
@@ -133,7 +134,7 @@ export function Graph(props: Props) {
 
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -144,7 +145,7 @@ export function Graph(props: Props) {
           <AnimatePresence>
             {treeMapVizData.children?.map((d) => {
               return (
-                <motion.g
+                <m.g
                   className='undp-viz-g-with-hover'
                   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                   key={(d.data as any).id}
@@ -217,7 +218,7 @@ export function Graph(props: Props) {
                     onSeriesMouseOver?.(undefined);
                   }}
                 >
-                  <motion.rect
+                  <m.rect
                     x={0}
                     y={0}
                     exit={{
@@ -263,7 +264,7 @@ export function Graph(props: Props) {
                   {d.x1 - d.x0 >= minLabelWidth &&
                   d.y1 - d.y0 >= minLabelHeight &&
                   (showLabels || showValues) ? (
-                    <motion.g
+                    <m.g
                       variants={{
                         initial: { opacity: 0 },
                         whileInView: {
@@ -382,14 +383,14 @@ export function Graph(props: Props) {
                           )}
                         </div>
                       </foreignObject>
-                    </motion.g>
+                    </m.g>
                   ) : null}
-                </motion.g>
+                </m.g>
               );
             })}
           </AnimatePresence>
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

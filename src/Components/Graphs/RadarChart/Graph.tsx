@@ -2,7 +2,8 @@ import { cn } from '@undp/design-system-react/cn';
 import { scaleLinear } from 'd3-scale';
 import { curveCardinalClosed, curveLinearClosed, lineRadial } from 'd3-shape';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
@@ -153,7 +154,7 @@ export function Graph(props: Props) {
     .curve(curve);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${radius * 2}px`}
         height={`${radius * 2}px`}
         viewBox={`0 0 ${radius * 2} ${radius * 2}`}
@@ -245,7 +246,7 @@ export function Graph(props: Props) {
             ))}
             <AnimatePresence>
               {data.map((d, i) => (
-                <motion.g
+                <m.g
                   key={d.label || i}
                   variants={{
                     initial: {
@@ -320,7 +321,7 @@ export function Graph(props: Props) {
                     }
                   }}
                 >
-                  <motion.path
+                  <m.path
                     d={lineShape(d.values) || ''}
                     variants={{
                       initial: {
@@ -373,7 +374,7 @@ export function Graph(props: Props) {
                         {!checkIfNullOrUndefined(el) ? (
                           <>
                             {showDots ? (
-                              <motion.circle
+                              <m.circle
                                 r={4}
                                 variants={{
                                   initial: {
@@ -406,7 +407,7 @@ export function Graph(props: Props) {
                               />
                             ) : null}
                             {showValues ? (
-                              <motion.text
+                              <m.text
                                 style={{
                                   ...(styles?.graphObjectValues || {}),
                                 }}
@@ -461,20 +462,20 @@ export function Graph(props: Props) {
                                   locale,
                                   padZeros,
                                 )}
-                              </motion.text>
+                              </m.text>
                             ) : null}
                           </>
                         ) : null}
                       </g>
                     ))}
                   </g>
-                </motion.g>
+                </m.g>
               ))}
             </AnimatePresence>
           </g>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

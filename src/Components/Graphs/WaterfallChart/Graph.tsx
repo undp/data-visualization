@@ -1,7 +1,8 @@
 import { cn } from '@undp/design-system-react/cn';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useMemo, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { Axis } from '@/Components/Elements/Axes/Axis';
@@ -210,7 +211,7 @@ export function Graph(props: Props) {
   });
   return (
     <>
-      <motion.svg
+      <svg
         ref={svgRef}
         width={`${width}px`}
         height={`${height}px`}
@@ -285,7 +286,7 @@ export function Graph(props: Props) {
           <AnimatePresence>
             {waterfallData.map((d, _i) =>
               !checkIfNullOrUndefined(x(d.id)) ? (
-                <motion.g
+                <m.g
                   className='undp-viz-g-with-hover'
                   key={d.label}
                   initial='initial'
@@ -350,7 +351,7 @@ export function Graph(props: Props) {
                   }}
                 >
                   {d.size ? (
-                    <motion.rect
+                    <m.rect
                       width={x.bandwidth()}
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
@@ -405,7 +406,7 @@ export function Graph(props: Props) {
                     />
                   ) : null}
                   {showValues && Math.abs(y(d.start) - y(d.end)) > 16 ? (
-                    <motion.text
+                    <m.text
                       style={{
                         textAnchor: 'middle',
                         ...(styles?.graphObjectValues || {}),
@@ -457,9 +458,9 @@ export function Graph(props: Props) {
                         locale,
                         padZeros,
                       )}
-                    </motion.text>
+                    </m.text>
                   ) : null}
-                </motion.g>
+                </m.g>
               ) : null,
             )}
             {refValues?.map((el) => (
@@ -479,7 +480,7 @@ export function Graph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

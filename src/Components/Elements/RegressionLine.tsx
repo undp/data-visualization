@@ -1,5 +1,5 @@
 import { cn } from '@undp/design-system-react/cn';
-import { AnimatePresence, motion } from 'motion/react';
+import * as m from 'motion/react-m';
 
 import type { AnimateDataType } from '@/Types';
 import { generateRandomString } from '@/Utils/generateRandomString';
@@ -29,36 +29,34 @@ export function RegressionLine(props: Props) {
           <rect x='0' y='0' width={graphWidth} height={graphHeight} />
         </clipPath>
       </defs>
-      <AnimatePresence>
-        <motion.line
-          clipPath={`url(#${id})`}
-          className={cn('undp-ref-line', !color ? 'stroke-foreground-soft' : undefined, className)}
-          style={{
-            fill: 'none',
-            ...(style || {}),
-          }}
-          exit={{ opacity: 0, transition: { duration: animate.duration } }}
-          variants={{
-            initial: {
-              y1,
-              y2: y1,
-              x1,
-              x2: x1,
-              ...(color && { stroke: color }),
-            },
-            whileInView: {
-              y1,
-              y2,
-              x1,
-              x2,
-              ...(color && { stroke: color }),
-              transition: { duration: animate.duration },
-            },
-          }}
-          initial='initial'
-          animate={isInView ? 'whileInView' : 'initial'}
-        />
-      </AnimatePresence>
+      <m.line
+        clipPath={`url(#${id})`}
+        className={cn('undp-ref-line', !color ? 'stroke-foreground-soft' : undefined, className)}
+        style={{
+          fill: 'none',
+          ...(style || {}),
+        }}
+        exit={{ opacity: 0, transition: { duration: animate.duration } }}
+        variants={{
+          initial: {
+            y1,
+            y2: y1,
+            x1,
+            x2: x1,
+            ...(color && { stroke: color }),
+          },
+          whileInView: {
+            y1,
+            y2,
+            x1,
+            x2,
+            ...(color && { stroke: color }),
+            transition: { duration: animate.duration },
+          },
+        }}
+        initial='initial'
+        animate={isInView ? 'whileInView' : 'initial'}
+      />
     </g>
   );
 }

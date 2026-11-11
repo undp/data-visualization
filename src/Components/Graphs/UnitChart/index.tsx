@@ -1,6 +1,7 @@
 import { H2, P } from '@undp/design-system-react/Typography';
 import sum from 'lodash.sum';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { GraphArea, GraphContainer } from '@/Components/Elements/GraphContainer';
@@ -136,7 +137,8 @@ export function UnitChart(props: Props) {
     once: animateValue.once,
     amount: animateValue.amount,
   });
-  const sizeVal = size || gridIcon  ? (gridIcon?.width || 24) * gridSize + unitPadding * (gridSize - 1) : 200;
+  const sizeVal =
+    size || gridIcon ? (gridIcon?.width || 24) * gridSize + unitPadding * (gridSize - 1) : 200;
   const totalValue = sum(data.map((d) => d.value));
   const graphParentDiv = useRef<HTMLDivElement>(null);
   const gridDimension = sizeVal / gridSize;
@@ -272,7 +274,7 @@ export function UnitChart(props: Props) {
             <g>
               {gridIcon
                 ? cellsData.map((d, i) => (
-                    <motion.svg
+                    <m.svg
                       key={d.index}
                       style={{
                         strokeWidth: 1,
@@ -318,10 +320,10 @@ export function UnitChart(props: Props) {
                       {gridIcon.d.map((el) => (
                         <path d={el} key={el} />
                       ))}
-                    </motion.svg>
+                    </m.svg>
                   ))
                 : cellsData.map((d, i) => (
-                    <motion.circle
+                    <m.circle
                       key={d.index}
                       style={{
                         strokeWidth: 1,

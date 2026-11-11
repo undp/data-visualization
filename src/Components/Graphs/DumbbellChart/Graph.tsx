@@ -1,7 +1,8 @@
 import { cn } from '@undp/design-system-react/cn';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useMemo, useRef, useState } from 'react';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { AxisTitle } from '@/Components/Elements/Axes/AxisTitle';
@@ -183,7 +184,7 @@ export function VerticalGraph(props: Props) {
 
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -272,7 +273,7 @@ export function VerticalGraph(props: Props) {
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
             {dataWithId.map((d) => (
-              <motion.g
+              <m.g
                 className='undp-viz-g-with-hover'
                 key={d.label}
                 variants={{
@@ -318,7 +319,7 @@ export function VerticalGraph(props: Props) {
                     isInView={isInView}
                   />
                 ) : null}
-                <motion.line
+                <m.line
                   x1={0}
                   x2={0}
                   style={{
@@ -355,7 +356,7 @@ export function VerticalGraph(props: Props) {
                   animate={isInView ? 'whileInView' : 'initial'}
                 />
                 {d.x.map((el, j) => (
-                  <motion.g
+                  <m.g
                     // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                     key={j}
                     onMouseEnter={(event) => {
@@ -404,7 +405,7 @@ export function VerticalGraph(props: Props) {
                   >
                     {checkIfNullOrUndefined(el) ? null : (
                       <>
-                        <motion.circle
+                        <m.circle
                           cx={0}
                           r={radius}
                           style={{
@@ -426,7 +427,7 @@ export function VerticalGraph(props: Props) {
                           animate={isInView ? 'whileInView' : 'initial'}
                         />
                         {showValues ? (
-                          <motion.text
+                          <m.text
                             x={0}
                             style={{
                               textAnchor: 'start',
@@ -460,13 +461,13 @@ export function VerticalGraph(props: Props) {
                               locale,
                               padZeros,
                             )}
-                          </motion.text>
+                          </m.text>
                         ) : null}
                       </>
                     )}
-                  </motion.g>
+                  </m.g>
                 ))}
-              </motion.g>
+              </m.g>
             ))}
             {refValues?.map((el) => (
               <RefLineY
@@ -485,7 +486,7 @@ export function VerticalGraph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}
@@ -615,7 +616,7 @@ export function HorizontalGraph(props: Props) {
 
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -684,7 +685,7 @@ export function HorizontalGraph(props: Props) {
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
           <AnimatePresence>
             {dataWithId.map((d) => (
-              <motion.g
+              <m.g
                 className='undp-viz-g-with-hover'
                 key={d.label}
                 variants={{
@@ -730,7 +731,7 @@ export function HorizontalGraph(props: Props) {
                     isInView={isInView}
                   />
                 ) : null}
-                <motion.line
+                <m.line
                   y1={0}
                   y2={0}
                   style={{
@@ -778,7 +779,7 @@ export function HorizontalGraph(props: Props) {
                       ? true
                       : x(el) - x(sortedX[sortedIndex - 1]) > 30;
                   return (
-                    <motion.g
+                    <m.g
                       // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                       key={j}
                       onMouseEnter={(event) => {
@@ -827,7 +828,7 @@ export function HorizontalGraph(props: Props) {
                     >
                       {checkIfNullOrUndefined(el) ? null : (
                         <>
-                          <motion.circle
+                          <m.circle
                             cy={0}
                             r={radius}
                             style={{
@@ -850,7 +851,7 @@ export function HorizontalGraph(props: Props) {
                             animate={isInView ? 'whileInView' : 'initial'}
                           />
                           {showValues ? (
-                            <motion.text
+                            <m.text
                               y={0}
                               style={{
                                 textAnchor: 'middle',
@@ -889,14 +890,14 @@ export function HorizontalGraph(props: Props) {
                                 locale,
                                 padZeros,
                               )}
-                            </motion.text>
+                            </m.text>
                           ) : null}
                         </>
                       )}
-                    </motion.g>
+                    </m.g>
                   );
                 })}
-              </motion.g>
+              </m.g>
             ))}
             {refValues?.map((el) => (
               <RefLineX
@@ -916,7 +917,7 @@ export function HorizontalGraph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

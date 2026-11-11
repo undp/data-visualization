@@ -1,7 +1,8 @@
 import { cn } from '@undp/design-system-react/cn';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useRef, useState } from 'react';
 import { Axis } from '@/Components/Elements/Axes/Axis';
 import { XTicksAndGridLines } from '@/Components/Elements/Axes/XTicksAndGridLines';
@@ -139,7 +140,7 @@ export function Graph(props: Props) {
   const xLeftTicks = xLeftBar.ticks(noOfTicks);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -176,7 +177,7 @@ export function Graph(props: Props) {
             <AnimatePresence>
               {dataWithId.map((d) => {
                 return (
-                  <motion.g
+                  <m.g
                     className='undp-viz-g-with-hover'
                     key={d.label}
                     opacity={0.85}
@@ -210,7 +211,7 @@ export function Graph(props: Props) {
                     }}
                   >
                     {d.leftBar ? (
-                      <motion.rect
+                      <m.rect
                         y={y(d.id)}
                         style={{ fill: barColors[0] }}
                         height={y.bandwidth()}
@@ -238,7 +239,7 @@ export function Graph(props: Props) {
                       />
                     ) : null}
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         y={(y(d.id) as number) + y.bandwidth() / 2}
                         style={{
                           textAnchor: d.leftBar ? (d.leftBar > 0 ? 'end' : 'start') : 'start',
@@ -278,9 +279,9 @@ export function Graph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
-                  </motion.g>
+                  </m.g>
                 );
               })}
               <Axis
@@ -336,7 +337,7 @@ export function Graph(props: Props) {
             <AnimatePresence>
               {dataWithId.map((d) => {
                 return (
-                  <motion.g
+                  <m.g
                     className='undp-viz-g-with-hover'
                     key={d.label}
                     opacity={0.85}
@@ -370,7 +371,7 @@ export function Graph(props: Props) {
                     }}
                   >
                     {d.rightBar ? (
-                      <motion.rect
+                      <m.rect
                         y={y(d.id)}
                         style={{ fill: barColors[1] }}
                         height={y.bandwidth()}
@@ -398,7 +399,7 @@ export function Graph(props: Props) {
                       />
                     ) : null}
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         y={(y(d.id) as number) + y.bandwidth() / 2}
                         style={{
                           textAnchor: d.rightBar ? (d.rightBar < 0 ? 'end' : 'start') : 'start',
@@ -438,9 +439,9 @@ export function Graph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
-                  </motion.g>
+                  </m.g>
                 );
               })}
               <Axis
@@ -470,7 +471,7 @@ export function Graph(props: Props) {
             </AnimatePresence>
           </g>
           <AnimatePresence>
-            <motion.g transform={`translate(${graphWidth / 2},${0})`}>
+            <m.g transform={`translate(${graphWidth / 2},${0})`}>
               {dataWithId.map((d) => (
                 <YAxesLabels
                   key={d.id}
@@ -490,7 +491,7 @@ export function Graph(props: Props) {
                   isInView={isInView}
                 />
               ))}
-            </motion.g>
+            </m.g>
           </AnimatePresence>
           <g transform={`translate(${0},${graphHeight})`}>
             <text
@@ -524,7 +525,7 @@ export function Graph(props: Props) {
           </g>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

@@ -1,5 +1,5 @@
 import { cn } from '@undp/design-system-react/cn';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 
 import type { AnimateDataType } from '@/Types';
 
@@ -30,7 +30,7 @@ export function YAxesLabels(props: Props) {
     isInView,
   } = props;
   return (
-    <motion.g
+    <m.g
       key={x}
       variants={{
         initial: {
@@ -67,6 +67,6 @@ export function YAxesLabels(props: Props) {
           )}
         </div>
       </foreignObject>
-    </motion.g>
+    </m.g>
   );
 }

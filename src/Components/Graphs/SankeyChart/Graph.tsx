@@ -2,7 +2,8 @@ import { cn } from '@undp/design-system-react/cn';
 import { P } from '@undp/design-system-react/Typography';
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useMemo, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
@@ -166,7 +167,7 @@ export function Graph(props: Props) {
   const linkPathGenerator = sankeyLinkHorizontal();
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -245,7 +246,7 @@ export function Graph(props: Props) {
                       `target_${el.target}` === (d.target as any).name,
                   );
                 return (
-                  <motion.g
+                  <m.g
                     className='undp-viz-g-with-hover'
                     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
                     key={`${(d.source as any).name}-${(d.target as any).name}`}
@@ -305,7 +306,7 @@ export function Graph(props: Props) {
                             : defaultLinkOpacity
                     }
                   >
-                    <motion.path
+                    <m.path
                       key={`${(d.source as NodeDataType).name}-${(d.target as NodeDataType).name}`}
                       d={linkPathGenerator(d) || ''}
                       style={{
@@ -344,7 +345,7 @@ export function Graph(props: Props) {
                       initial='initial'
                       animate={isInView ? 'whileInView' : 'initial'}
                     />
-                  </motion.g>
+                  </m.g>
                 );
               })}
             </AnimatePresence>
@@ -679,7 +680,7 @@ export function Graph(props: Props) {
             ))}
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

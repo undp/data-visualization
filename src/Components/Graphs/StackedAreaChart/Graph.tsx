@@ -14,7 +14,8 @@ import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
 import sum from 'lodash.sum';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useEffect, useRef, useState } from 'react';
 import { Annotation } from '@/Components/Elements/Annotations';
 import { Axis } from '@/Components/Elements/Axes/Axis';
@@ -215,7 +216,7 @@ export function Graph(props: Props) {
   }, [x, dataFormatted, onSeriesMouseOver]);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -223,7 +224,7 @@ export function Graph(props: Props) {
         ref={svgRef}
       >
         <AnimatePresence>
-          <motion.g transform={`translate(${margin.left},${margin.top})`}>
+          <m.g transform={`translate(${margin.left},${margin.top})`}>
             <HighlightArea
               areaSettings={highlightAreaSettingsFormatted}
               width={graphWidth}
@@ -325,10 +326,10 @@ export function Graph(props: Props) {
               padZeros={padZeros}
             />
             {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
-            <motion.g>
+            <m.g>
               {dataArray.map((d, i) => {
                 return (
-                  <motion.path
+                  <m.path
                     // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                     key={i}
                     // biome-ignore lint/suspicious/noExplicitAny: undefined data type
@@ -371,7 +372,7 @@ export function Graph(props: Props) {
                   style={styles?.mouseOverLine}
                 />
               ) : null}
-            </motion.g>
+            </m.g>
             {refValues?.map((el) => (
               <RefLineY
                 key={el.text}
@@ -468,9 +469,9 @@ export function Graph(props: Props) {
               width={graphWidth}
               height={graphHeight}
             />
-          </motion.g>
+          </m.g>
         </AnimatePresence>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

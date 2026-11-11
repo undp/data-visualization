@@ -1,5 +1,5 @@
 import { cn } from '@undp/design-system-react/cn';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 
 import type { AnimateDataType } from '@/Types';
 
@@ -40,7 +40,7 @@ export function Annotation(props: Props) {
   const { connectorsSettings, text, color, labelSettings, classNames, styles, animate, isInView } =
     props;
   return (
-    <motion.g
+    <m.g
       exit={{ opacity: 0, transition: { duration: animate.duration } }}
       variants={{
         initial: {
@@ -115,6 +115,6 @@ export function Annotation(props: Props) {
           {text}
         </p>
       </foreignObject>
-    </motion.g>
+    </m.g>
   );
 }

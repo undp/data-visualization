@@ -14,7 +14,8 @@ import {
 import { format } from 'date-fns/format';
 import { parse } from 'date-fns/parse';
 import orderBy from 'lodash.orderby';
-import { motion, useInView } from 'motion/react';
+import { useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useEffect, useRef, useState } from 'react';
 import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import { Annotation } from '@/Components/Elements/Annotations';
@@ -293,7 +294,7 @@ export function Graph(props: Props) {
   const predict = linearRegressionLine(regressionLineParam);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -394,7 +395,7 @@ export function Graph(props: Props) {
             ))}
           </g>
           {customLayers.filter((d) => d.position === 'before').map((d) => d.layer)}
-          <motion.path
+          <m.path
             style={{
               fill: intervalAreaColor,
             }}
@@ -412,7 +413,7 @@ export function Graph(props: Props) {
           />
           {intervalLineStrokeWidth ? (
             <>
-              <motion.path
+              <m.path
                 style={{
                   stroke: intervalLineColors[0],
                   fill: 'none',
@@ -435,7 +436,7 @@ export function Graph(props: Props) {
                 initial='initial'
                 animate={isInView ? 'whileInView' : 'initial'}
               />
-              <motion.path
+              <m.path
                 style={{
                   stroke: intervalLineColors[1],
                   fill: 'none',
@@ -460,7 +461,7 @@ export function Graph(props: Props) {
               />
             </>
           ) : null}
-          <motion.path
+          <m.path
             style={{
               stroke: lineColor,
               fill: 'none',
@@ -496,11 +497,11 @@ export function Graph(props: Props) {
           <g>
             {dataFormatted.map((d, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-              <motion.g key={i}>
+              <m.g key={i}>
                 {!checkIfNullOrUndefined(d.y) ? (
                   <>
                     {showDots ? (
-                      <motion.circle
+                      <m.circle
                         r={
                           graphWidth / dataFormatted.length < 5
                             ? 0
@@ -528,7 +529,7 @@ export function Graph(props: Props) {
                     ) : null}
                     {showIntervalDots ? (
                       <>
-                        <motion.circle
+                        <m.circle
                           r={
                             graphWidth / dataFormatted.length < 5
                               ? 0
@@ -558,7 +559,7 @@ export function Graph(props: Props) {
                           initial='initial'
                           animate={isInView ? 'whileInView' : 'initial'}
                         />
-                        <motion.circle
+                        <m.circle
                           r={
                             graphWidth / dataFormatted.length < 5
                               ? 0
@@ -591,7 +592,7 @@ export function Graph(props: Props) {
                       </>
                     ) : null}
                     {showValues ? (
-                      <motion.text
+                      <m.text
                         dy={-8}
                         style={{
                           textAnchor: 'middle',
@@ -627,11 +628,11 @@ export function Graph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null}
                     {showIntervalValues ? (
                       <>
-                        <motion.text
+                        <m.text
                           dy='1em'
                           style={{
                             textAnchor: 'middle',
@@ -669,8 +670,8 @@ export function Graph(props: Props) {
                             locale,
                             padZeros,
                           )}
-                        </motion.text>
-                        <motion.text
+                        </m.text>
+                        <m.text
                           dy={-8}
                           style={{
                             textAnchor: 'middle',
@@ -708,12 +709,12 @@ export function Graph(props: Props) {
                             locale,
                             padZeros,
                           )}
-                        </motion.text>
+                        </m.text>
                       </>
                     ) : null}
                   </>
                 ) : null}
-              </motion.g>
+              </m.g>
             ))}
           </g>
           {refValues.map((el) => (
@@ -830,7 +831,7 @@ export function Graph(props: Props) {
             height={graphHeight}
           />
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

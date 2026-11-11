@@ -4,7 +4,8 @@ import { geoPath } from 'd3-geo';
 import { scaleSqrt } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
 import type { FeatureCollection } from 'geojson';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { type RefObject, useRef, useState } from 'react';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
 import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
@@ -168,7 +169,7 @@ export function Graph(props: Props) {
   return (
     <>
       <div className='relative'>
-        <motion.svg
+        <svg
           width={`${width}px`}
           height={`${height}px`}
           viewBox={`0 0 ${width} ${height}`}
@@ -197,7 +198,7 @@ export function Graph(props: Props) {
                 const path = pathGenerator(d);
                 if (!path) return null;
                 return (
-                  <motion.g
+                  <m.g
                     // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                     key={i}
                   >
@@ -219,7 +220,7 @@ export function Graph(props: Props) {
                               : undefined,
                       }}
                     />
-                  </motion.g>
+                  </m.g>
                 );
               })}
             {overlayMapData?.features.map((d, i: number) => {
@@ -250,7 +251,7 @@ export function Graph(props: Props) {
                       ? Colors.gray
                       : colors[colorDomain.indexOf(`${d.color}`)];
                 return (
-                  <motion.g
+                  <m.g
                     className='undp-map-dots'
                     key={d.label || `${d.lat}-${d.long}`}
                     variants={{
@@ -303,7 +304,7 @@ export function Graph(props: Props) {
                       (projection([d.long, d.lat]) as [number, number])[0]
                     },${(projection([d.long, d.lat]) as [number, number])[1]})`}
                   >
-                    <motion.circle
+                    <m.circle
                       cx={0}
                       cy={0}
                       variants={{
@@ -348,7 +349,7 @@ export function Graph(props: Props) {
                       }}
                     />
                     {showLabels && d.label ? (
-                      <motion.text
+                      <m.text
                         variants={{
                           initial: {
                             opacity: 0,
@@ -386,15 +387,15 @@ export function Graph(props: Props) {
                         dy={5}
                       >
                         {d.label}
-                      </motion.text>
+                      </m.text>
                     ) : null}
-                  </motion.g>
+                  </m.g>
                 );
               })}
             </AnimatePresence>
             {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
           </g>
-        </motion.svg>
+        </svg>
         {data.filter((el) => el.color).length === 0 || showColorScale === false ? null : (
           <div className={cn('absolute left-4 bottom-4 map-color-legend', classNames?.colorLegend)}>
             {showLegend ? (

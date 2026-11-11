@@ -1,7 +1,8 @@
 import { H2, P } from '@undp/design-system-react/Typography';
 import { pie } from 'd3-shape';
 import isEqual from 'fast-deep-equal';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { isValidElement, type ReactElement, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
@@ -88,7 +89,7 @@ export function Graph(props: Props) {
   const [eventY, setEventY] = useState<number | undefined>(undefined);
   return (
     <>
-      <motion.svg
+      <svg
         ref={svgRef}
         width={`${radius * 2}px`}
         height={`${radius * 2}px`}
@@ -96,7 +97,7 @@ export function Graph(props: Props) {
         direction='ltr'
         className='mx-auto'
       >
-        <motion.g transform={`translate(${radius} ${radius})`}>
+        <m.g transform={`translate(${radius} ${radius})`}>
           {mainText || subNote ? (
             <foreignObject
               y={0 - (radius - strokeWidth)}
@@ -162,7 +163,7 @@ export function Graph(props: Props) {
           <AnimatePresence>
             {/* biome-ignore lint/suspicious/noExplicitAny: undefined data type */}
             {pieData(data as any).map((d, i) => (
-              <motion.path
+              <m.path
                 // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
                 key={i}
                 variants={{
@@ -244,8 +245,8 @@ export function Graph(props: Props) {
               />
             ))}
           </AnimatePresence>
-        </motion.g>
-      </motion.svg>
+        </m.g>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

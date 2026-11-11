@@ -1,5 +1,5 @@
 import type { NumberValue } from 'd3-scale';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 
 import { Colors } from '@/Components/ColorPalette';
 import type { AnimateDataType } from '@/Types';
@@ -25,40 +25,39 @@ export function HighlightArea(props: Props) {
     <>
       {areaSettings.map((d, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-        <motion.g key={i}>
+        <g key={i}>
           {d.coordinates[0] === null && d.coordinates[1] === null ? null : (
-            <motion.g>
-              <motion.rect
-                style={{
-                  fill: d.color || Colors.light.grays['gray-300'],
-                  strokeWidth: d.strokeWidth,
-                  ...(d.style || {}),
-                }}
-                className={d.className}
-                y={0}
-                height={height}
-                variants={{
-                  initial: {
-                    width: 0,
-                    x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
-                    opacity: 1,
-                  },
-                  whileInView: {
-                    width: d.coordinates[1]
+            <m.rect
+              style={{
+                fill: d.color || Colors.light.grays['gray-300'],
+                strokeWidth: d.strokeWidth,
+                ...(d.style || {}),
+              }}
+              className={d.className}
+              y={0}
+              height={height}
+              variants={{
+                initial: {
+                  width: 0,
+                  x: d.coordinates[0] !== null ? scale(d.coordinates[0]) : 0,
+                  opacity: 1,
+                },
+                whileInView: {
+                  width:
+                    d.coordinates[1] !== null
                       ? scale(d.coordinates[1]) - (d.coordinates[0] ? scale(d.coordinates[0]) : 0)
                       : width - (d.coordinates[0] ? scale(d.coordinates[0]) : 0),
-                    x: d.coordinates[0] ? scale(d.coordinates[0]) : 0,
-                    opacity: 1,
-                    transition: { duration: animate.duration },
-                  },
-                }}
-                initial='initial'
-                animate={isInView ? 'whileInView' : 'initial'}
-                exit={{ opacity: 0, width: 0, transition: { duration: animate.duration } }}
-              />
-            </motion.g>
+                  x: d.coordinates[0] !== null ? scale(d.coordinates[0]) : 0,
+                  opacity: 1,
+                  transition: { duration: animate.duration },
+                },
+              }}
+              initial='initial'
+              animate={isInView ? 'whileInView' : 'initial'}
+              exit={{ opacity: 0, width: 0, transition: { duration: animate.duration } }}
+            />
           )}
-        </motion.g>
+        </g>
       ))}
     </>
   );
@@ -86,51 +85,52 @@ export function HighlightAreaForScatterPlot(props: ScatterPlotProps) {
     <>
       {areaSettings.map((d, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: index is the unique identifier
-        <motion.g key={`highlight_area_${i}`}>
+        <g key={`highlight_area_${i}`}>
           {d.coordinates.filter((el) => el === null).length === 4 ? null : (
-            <motion.g>
-              <motion.rect
-                style={{
-                  fill: d.color || Colors.light.grays['gray-300'],
-                  strokeWidth: d.strokeWidth,
-                  ...(d.style || {}),
-                }}
-                className={d.className}
-                variants={{
-                  initial: {
-                    x: d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0,
-                    width: 0,
-                    y: d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0,
-                    height: 0,
-                  },
-                  whileInView: {
-                    x: d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0,
-                    width: d.coordinates[1]
-                      ? scaleX(d.coordinates[1] as number) -
-                        (d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0)
-                      : width - (d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0),
-                    y: d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0,
-                    height:
-                      d.coordinates[2] !== null
-                        ? scaleY(d.coordinates[2] as number) -
-                          (d.coordinates[3] ? scaleY(d.coordinates[3] as number) : 0)
-                        : height -
-                          (d.coordinates[3] ? height - scaleY(d.coordinates[3] as number) : 0),
-                    transition: { duration: animate.duration },
-                  },
-                }}
-                initial='initial'
-                animate={isInView ? 'whileInView' : 'initial'}
-                exit={{
-                  opacity: 0,
+            <m.rect
+              style={{
+                fill: d.color || Colors.light.grays['gray-300'],
+                strokeWidth: d.strokeWidth,
+                ...(d.style || {}),
+              }}
+              className={d.className}
+              variants={{
+                initial: {
+                  x: d.coordinates[0] !== null ? scaleX(d.coordinates[0] as number) : 0,
                   width: 0,
+                  y: d.coordinates[3] !== null ? scaleY(d.coordinates[3] as number) : 0,
                   height: 0,
+                },
+                whileInView: {
+                  x: d.coordinates[0] !== null ? scaleX(d.coordinates[0] as number) : 0,
+                  width:
+                    d.coordinates[1] !== null
+                      ? scaleX(d.coordinates[1] as number) -
+                        (d.coordinates[0] !== null ? scaleX(d.coordinates[0] as number) : 0)
+                      : width - (d.coordinates[0] ? scaleX(d.coordinates[0] as number) : 0),
+                  y: d.coordinates[3] !== null ? scaleY(d.coordinates[3] as number) : 0,
+                  height:
+                    d.coordinates[2] !== null
+                      ? scaleY(d.coordinates[2] as number) -
+                        (d.coordinates[3] !== null ? scaleY(d.coordinates[3] as number) : 0)
+                      : height -
+                        (d.coordinates[3] !== null
+                          ? height - scaleY(d.coordinates[3] as number)
+                          : 0),
                   transition: { duration: animate.duration },
-                }}
-              />
-            </motion.g>
+                },
+              }}
+              initial='initial'
+              animate={isInView ? 'whileInView' : 'initial'}
+              exit={{
+                opacity: 0,
+                width: 0,
+                height: 0,
+                transition: { duration: animate.duration },
+              }}
+            />
           )}
-        </motion.g>
+        </g>
       ))}
     </>
   );

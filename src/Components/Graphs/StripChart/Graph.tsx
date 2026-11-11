@@ -2,7 +2,8 @@ import { cn } from '@undp/design-system-react/cn';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import isEqual from 'fast-deep-equal';
 import orderBy from 'lodash.orderby';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { AnimatePresence, useInView } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useMemo, useRef, useState } from 'react';
 import { Colors } from '@/Components/ColorPalette';
 import { XAxesLabels } from '@/Components/Elements/Axes/XAxesLabels';
@@ -197,7 +198,7 @@ export function VerticalGraph(props: Props) {
   const yTicks = getTickPositions(noOfTicks, graphHeight);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -209,7 +210,7 @@ export function VerticalGraph(props: Props) {
           <AnimatePresence>
             {sortedData.map((d) => {
               return (
-                <motion.g
+                <m.g
                   key={`${d.label}-${d.group}`}
                   variants={{
                     initial: {
@@ -272,7 +273,7 @@ export function VerticalGraph(props: Props) {
                   }}
                 >
                   {stripType === 'dot' ? (
-                    <motion.circle
+                    <m.circle
                       cy={0}
                       cx={0}
                       variants={{
@@ -316,7 +317,7 @@ export function VerticalGraph(props: Props) {
                       r={radius}
                     />
                   ) : (
-                    <motion.rect
+                    <m.rect
                       y={-1}
                       height={2}
                       variants={{
@@ -365,7 +366,7 @@ export function VerticalGraph(props: Props) {
                   )}
                   {highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
-                      <motion.text
+                      <m.text
                         y={0}
                         dy='0.33em'
                         variants={{
@@ -430,10 +431,10 @@ export function VerticalGraph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null
                   ) : null}
-                </motion.g>
+                </m.g>
               );
             })}
             {clusterOrder.map((c) => (
@@ -472,7 +473,7 @@ export function VerticalGraph(props: Props) {
                           .map((d) => d.position),
                       ),
                     ].map((d, i) => (
-                      <motion.g
+                      <m.g
                         key={i === 0 ? `min-value-${c}` : `max-value-${c}`}
                         variants={{
                           initial: {
@@ -491,7 +492,7 @@ export function VerticalGraph(props: Props) {
                         animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       >
-                        <motion.text
+                        <m.text
                           y={0}
                           dy='0.33em'
                           variants={{
@@ -526,12 +527,12 @@ export function VerticalGraph(props: Props) {
                             locale,
                             padZeros,
                           )}
-                        </motion.text>
-                      </motion.g>
+                        </m.text>
+                      </m.g>
                     ))
                   : null}
                 {distributionMarkers.map((marker) => (
-                  <motion.g
+                  <m.g
                     key={`${c}-${marker.type}`}
                     variants={{
                       initial: {
@@ -593,7 +594,7 @@ export function VerticalGraph(props: Props) {
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   >
                     {marker.markerLabel && (
-                      <motion.text
+                      <m.text
                         y={0}
                         dy='0.33em'
                         variants={{
@@ -651,7 +652,7 @@ export function VerticalGraph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     )}
                     <line
                       y1={0}
@@ -663,7 +664,7 @@ export function VerticalGraph(props: Props) {
                       stroke={marker.color || '#000000'}
                       strokeWidth={marker.strokeWidth ?? 2}
                     />
-                  </motion.g>
+                  </m.g>
                 ))}
               </g>
             ))}
@@ -694,7 +695,7 @@ export function VerticalGraph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}
@@ -842,7 +843,7 @@ export function HorizontalGraph(props: Props) {
   }, [clusterOrder, graphHeight]);
   return (
     <>
-      <motion.svg
+      <svg
         width={`${width}px`}
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
@@ -854,7 +855,7 @@ export function HorizontalGraph(props: Props) {
           <AnimatePresence>
             {sortedData.map((d) => {
               return (
-                <motion.g
+                <m.g
                   key={d.label}
                   variants={{
                     initial: {
@@ -917,7 +918,7 @@ export function HorizontalGraph(props: Props) {
                   }}
                 >
                   {stripType === 'dot' ? (
-                    <motion.circle
+                    <m.circle
                       cy={0}
                       cx={0}
                       variants={{
@@ -961,7 +962,7 @@ export function HorizontalGraph(props: Props) {
                       r={radius}
                     />
                   ) : (
-                    <motion.rect
+                    <m.rect
                       x={-1}
                       width={2}
                       variants={{
@@ -1010,7 +1011,7 @@ export function HorizontalGraph(props: Props) {
                   )}
                   {highlightedDataPoints ? (
                     highlightedDataPoints.indexOf(d.label) !== -1 ? (
-                      <motion.text
+                      <m.text
                         x={0}
                         variants={{
                           initial: {
@@ -1074,10 +1075,10 @@ export function HorizontalGraph(props: Props) {
                           locale,
                           padZeros,
                         )}
-                      </motion.text>
+                      </m.text>
                     ) : null
                   ) : null}
-                </motion.g>
+                </m.g>
               );
             })}
             {clusterOrder.map((c) => (
@@ -1116,7 +1117,7 @@ export function HorizontalGraph(props: Props) {
                           .map((d) => d.position),
                       ),
                     ].map((d, i) => (
-                      <motion.g
+                      <m.g
                         key={i === 0 ? `min-value-${c}` : `max-value-${c}`}
                         variants={{
                           initial: {
@@ -1135,7 +1136,7 @@ export function HorizontalGraph(props: Props) {
                         animate={isInView ? 'whileInView' : 'initial'}
                         exit={{ opacity: 0, transition: { duration: animate.duration } }}
                       >
-                        <motion.text
+                        <m.text
                           x={0}
                           variants={{
                             initial: {
@@ -1169,12 +1170,12 @@ export function HorizontalGraph(props: Props) {
                             locale,
                             padZeros,
                           )}
-                        </motion.text>
-                      </motion.g>
+                        </m.text>
+                      </m.g>
                     ))
                   : null}
                 {distributionMarkers.map((marker) => (
-                  <motion.g
+                  <m.g
                     key={`${c}-${marker.type}`}
                     variants={{
                       initial: {
@@ -1235,7 +1236,7 @@ export function HorizontalGraph(props: Props) {
                     animate={isInView ? 'whileInView' : 'initial'}
                     exit={{ opacity: 0, transition: { duration: animate.duration } }}
                   >
-                    <motion.text
+                    <m.text
                       x={0}
                       dy='-0.33em'
                       variants={{
@@ -1291,7 +1292,7 @@ export function HorizontalGraph(props: Props) {
                         locale,
                         padZeros,
                       )}
-                    </motion.text>
+                    </m.text>
                     <line
                       x1={0}
                       y1={0}
@@ -1302,7 +1303,7 @@ export function HorizontalGraph(props: Props) {
                       stroke={marker.color || '#000000'}
                       strokeWidth={marker.strokeWidth ?? 2}
                     />
-                  </motion.g>
+                  </m.g>
                 ))}
               </g>
             ))}
@@ -1334,7 +1335,7 @@ export function HorizontalGraph(props: Props) {
           </AnimatePresence>
           {customLayers.filter((d) => d.position === 'after').map((d) => d.layer)}
         </g>
-      </motion.svg>
+      </svg>
       {mouseOverData && tooltip && eventX && eventY ? (
         <Tooltip
           data={mouseOverData}

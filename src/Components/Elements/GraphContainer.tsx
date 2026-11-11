@@ -1,6 +1,6 @@
 import { cn } from '@undp/design-system-react/cn';
+import { domAnimation, LazyMotion } from 'motion/react';
 import React from 'react';
-
 import type { Languages } from '@/Types';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -36,30 +36,32 @@ export const GraphContainer = React.forwardRef<HTMLDivElement, Props>(
     ref,
   ) => {
     return (
-      <div
-        {...props}
-        className={cn(
-          `${theme || 'light'} ${language || 'en'} mx-auto box-border flex flex-col`,
-          width ? 'grow-0' : 'grow w-full',
-          relativeHeight || height ? 'grow-0' : 'h-full',
-          !backgroundColor ? 'bg-transparent' : backgroundColor === true ? 'bg-surface' : '',
-          className,
-        )}
-        dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
-        style={{
-          ...(style || {}),
-          ...(width ? { width: `${width}px` } : {}),
-          ...(height ? { height: `${height}px` } : {}),
-          minHeight: minHeight ? `${minHeight}px` : 'auto',
-          ...(relativeHeight ? { aspectRatio: 1 / relativeHeight } : {}),
-          // Merge padding and background color logic
-          padding: backgroundColor ? padding || '1rem' : padding || 0,
-          ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
-        }}
-        ref={ref}
-      >
-        <div className='flex flex-col w-full h-full grow justify-between'>{children}</div>
-      </div>
+      <LazyMotion features={domAnimation}>
+        <div
+          {...props}
+          className={cn(
+            `${theme || 'light'} ${language || 'en'} mx-auto box-border flex flex-col`,
+            width ? 'grow-0' : 'grow w-full',
+            relativeHeight || height ? 'grow-0' : 'h-full',
+            !backgroundColor ? 'bg-transparent' : backgroundColor === true ? 'bg-surface' : '',
+            className,
+          )}
+          dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
+          style={{
+            ...(style || {}),
+            ...(width ? { width: `${width}px` } : {}),
+            ...(height ? { height: `${height}px` } : {}),
+            minHeight: minHeight ? `${minHeight}px` : 'auto',
+            ...(relativeHeight ? { aspectRatio: 1 / relativeHeight } : {}),
+            // Merge padding and background color logic
+            padding: backgroundColor ? padding || '1rem' : padding || 0,
+            ...(backgroundColor && backgroundColor !== true ? { backgroundColor } : {}),
+          }}
+          ref={ref}
+        >
+          <div className='flex flex-col w-full h-full grow justify-between'>{children}</div>
+        </div>
+      </LazyMotion>
     );
   },
 );
