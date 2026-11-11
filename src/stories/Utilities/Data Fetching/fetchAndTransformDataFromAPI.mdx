@@ -14,7 +14,6 @@ function fetchAndTransformDataFromAPI(
     column: string;
     delimiter?: string;
   }[],
-  dataTransformation?: string,
   debugMode?: boolean,
 ): Promise
 ```
@@ -24,7 +23,6 @@ function fetchAndTransformDataFromAPI(
 - `requestURL` - The URL of the API to fetch data from.
 - `headers` - Optional headers to include in the API request.
 - `columnsToArray` - Optional columns configuration to transform certain columns to arrays.
-- `dataTransformation` - Optional Handlebars template for data transformation.
 - `debugMode` - Optional flag to log data to the console for debugging.
 
 ## Returns

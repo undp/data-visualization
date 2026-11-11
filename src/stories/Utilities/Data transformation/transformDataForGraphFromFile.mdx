@@ -17,7 +17,6 @@ function transformDataForGraphFromFile(
     delimiter?: string;
     columnsToArray?: ColumnConfigurationDataType[];
     apiHeaders?: any;
-    dataTransformation?: string;
   }[],
   dataConfiguration: {
     columnId: string | string[];
@@ -31,7 +30,6 @@ function transformDataForGraphFromFile(
     delimiter?: string;
   }[],
   apiHeaders?: any,
-  dataTransformation?: string,
   idColumnTitle?: string,
 ): Promise<any> 
 ```
@@ -45,7 +43,6 @@ function transformDataForGraphFromFile(
 - `delimiter` - The delimiter used in CSV files (default is ',' if not provided).
 - `columnsToArray` - Configuration for columns that need to be transformed into arrays (optional).
 - `apiHeaders` - Headers for the API request (optional).
-- `dataTransformation` - A Handlebars template used for transforming the data (optional).
 - `idColumnTitle` - The title of the ID column when merging multiple data sources (optional).
 
 ## Returns

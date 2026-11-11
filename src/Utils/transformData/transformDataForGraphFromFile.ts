@@ -26,7 +26,6 @@ import { transformDataForGraph } from './transformDataForGraph';
  * @param delimiter - The delimiter used in CSV files (default is ',' if not provided).
  * @param columnsToArray - Configuration for columns that need to be transformed into arrays (optional).
  * @param apiHeaders - Headers for the API request (optional).
- * @param dataTransformation - A Handlebars template used for transforming the data (optional).
  * @param idColumnTitle - The title of the ID column when merging multiple data sources (optional).
  *
  * @returns A Promise that resolves to the transformed data ready for the graph, or null if an error occurs.
@@ -57,7 +56,6 @@ export async function transformDataForGraphFromFile(
   columnsToArray?: ColumnConfigurationDataType[],
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any,
-  dataTransformation?: string,
   idColumnTitle?: string,
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
 ): Promise<any> {
@@ -65,16 +63,10 @@ export async function transformDataForGraphFromFile(
   try {
     const fetchedData = await (typeof dataURL === 'string'
       ? fileType === 'json'
-        ? fetchAndParseJSON(dataURL, columnsToArray, dataTransformation, false)
+        ? fetchAndParseJSON(dataURL, columnsToArray, false)
         : fileType === 'api'
-          ? fetchAndTransformDataFromAPI(
-              dataURL,
-              apiHeaders,
-              columnsToArray,
-              dataTransformation,
-              false,
-            )
-          : fetchAndParseCSV(dataURL, dataTransformation, columnsToArray, false, delimiter, true)
+          ? fetchAndTransformDataFromAPI(dataURL, apiHeaders, columnsToArray, false)
+          : fetchAndParseCSV(dataURL, columnsToArray, false, delimiter, true)
       : fetchAndParseMultipleDataSources(dataURL, idColumnTitle));
 
     const formattedData = transformDataForGraph(

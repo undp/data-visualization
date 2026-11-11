@@ -9,7 +9,6 @@ Parses CSV data from a string, applying optional transformations.
 ```ts
 function fetchAndParseCSVFromTextBlob(
   dataURL: string,
-  dataTransformation?: string,
   columnsToArray?: {
     column: string;
     delimiter?: string;
@@ -23,7 +22,6 @@ function fetchAndParseCSVFromTextBlob(
 ## Parameters
 
 - `data` - The CSV data as a string.
-- `dataTransformation` - Optional Handlebars template for data transformation.
 - `columnsToArray` - Optional columns configuration to transform certain columns to arrays.
 - `debugMode` - Optional flag to log data to the console for debugging.
 - `delimiter` - Optional delimiter used in the CSV file (default is comma).

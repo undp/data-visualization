@@ -1,24 +1,11 @@
-import Handlebars from 'handlebars';
 import Papa from 'papaparse';
 import type { ColumnConfigurationDataType, FileSettingsDataType } from '@/Types';
 import { mergeMultipleData } from './transformData/mergeMultipleData';
 import { transformColumnsToArray } from './transformData/transformColumnsToArray';
-
-// biome-ignore lint/suspicious/noExplicitAny: undefined data type
-function reFormatData(data: any, dataTransformation?: string) {
-  if (!dataTransformation) return data;
-  Handlebars.registerHelper(
-    'json',
-    (context) => new Handlebars.SafeString(JSON.stringify(context, null, 2)),
-  );
-  const template = Handlebars.compile(dataTransformation);
-  return JSON.parse(template(data));
-}
 /**
  * Fetches a CSV file from a URL, parses it, and applies transformations based on the provided configuration.
  *
  * @param dataURL - The URL of the CSV file to fetch.
- * @param dataTransformation - Optional Handlebars template for data transformation.
  * @param columnsToArray - Optional columns configuration to transform certain columns to arrays.
  * @param debugMode - Optional flag to log data to the console for debugging.
  * @param delimiter - Optional delimiter used in the CSV file (default is comma).
@@ -33,7 +20,6 @@ function reFormatData(data: any, dataTransformation?: string) {
  */
 export async function fetchAndParseCSV(
   dataURL: string,
-  dataTransformation?: string,
   columnsToArray?: ColumnConfigurationDataType[],
   debugMode?: boolean,
   delimiter?: string,
@@ -57,8 +43,8 @@ export async function fetchAndParseCSV(
             // biome-ignore lint/suspicious/noConsole: This is for debug mode
             console.log('Data after transformation of column to array:', transformedData);
           }
-          resolve(reFormatData(transformedData, dataTransformation));
-        } else resolve(reFormatData(results.data, dataTransformation));
+          resolve(transformedData);
+        } else resolve(results.data);
       },
       error(error) {
         reject(error);
@@ -70,7 +56,6 @@ export async function fetchAndParseCSV(
  * Parses CSV data from a string, applying optional transformations.
  *
  * @param data - The CSV data as a string.
- * @param dataTransformation - Optional Handlebars template for data transformation.
  * @param columnsToArray - Optional columns configuration to transform certain columns to arrays.
  * @param debugMode - Optional flag to log data to the console for debugging.
  * @param delimiter - Optional delimiter used in the CSV file (default is comma).
@@ -80,7 +65,6 @@ export async function fetchAndParseCSV(
  */
 export async function fetchAndParseCSVFromTextBlob(
   data: string,
-  dataTransformation?: string,
   columnsToArray?: ColumnConfigurationDataType[],
   debugMode?: boolean,
   delimiter?: string,
@@ -102,8 +86,8 @@ export async function fetchAndParseCSVFromTextBlob(
             // biome-ignore lint/suspicious/noConsole: This is for debug mode
             console.log('Data after transformation of column to array:', transformedData);
           }
-          resolve(reFormatData(transformedData, dataTransformation));
-        } else resolve(reFormatData(results.data, dataTransformation));
+          resolve(transformedData);
+        } else resolve(results.data);
       },
       error(error: Error) {
         reject(error);
@@ -116,7 +100,6 @@ export async function fetchAndParseCSVFromTextBlob(
  *
  * @param dataURL - The URL of the JSON file to fetch.
  * @param columnsToArray - Optional columns configuration to transform certain columns to arrays.
- * @param dataTransformation - Optional Handlebars template for data transformation.
  * @param debugMode - Optional flag to log data to the console for debugging.
  *
  * @returns A promise that resolves to the parsed and transformed data.
@@ -124,7 +107,6 @@ export async function fetchAndParseCSVFromTextBlob(
 export async function fetchAndParseJSON(
   dataURL: string,
   columnsToArray?: ColumnConfigurationDataType[],
-  dataTransformation?: string,
   debugMode?: boolean,
 ) {
   const url = dataURL;
@@ -134,20 +116,19 @@ export async function fetchAndParseJSON(
       throw new Error(`Response status: ${response.status}`);
     }
     const json = await response.json();
-    const reFormatedJson = reFormatData(json, dataTransformation);
     if (debugMode) {
       // biome-ignore lint/suspicious/noConsole: This is for debug mode
       console.log('Data from file:', json);
     }
     if (columnsToArray) {
-      const transformedData = transformColumnsToArray(reFormatedJson, columnsToArray);
+      const transformedData = transformColumnsToArray(json, columnsToArray);
       if (debugMode) {
         // biome-ignore lint/suspicious/noConsole: This is for debug mode
         console.log('Data after transformation of column to array:', transformedData);
       }
       return transformedData;
     }
-    return reFormatedJson;
+    return json;
   } catch (error) {
     return error;
   }
@@ -158,7 +139,6 @@ export async function fetchAndParseJSON(
  * @param requestURL - The URL of the API to fetch data from.
  * @param headers - Optional headers to include in the API request.
  * @param columnsToArray - Optional columns configuration to transform certain columns to arrays.
- * @param dataTransformation - Optional Handlebars template for data transformation.
  * @param debugMode - Optional flag to log data to the console for debugging.
  *
  * @returns A promise that resolves to the transformed data.
@@ -168,7 +148,6 @@ export async function fetchAndTransformDataFromAPI(
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   headers?: any,
   columnsToArray?: ColumnConfigurationDataType[],
-  dataTransformation?: string,
   debugMode?: boolean,
 ) {
   const response = await fetch(requestURL, {
@@ -179,22 +158,19 @@ export async function fetchAndTransformDataFromAPI(
     throw new Error('Network response was not ok');
   }
   const json = await response.json();
-  const reFormatedJson = reFormatData(json, dataTransformation);
   if (debugMode) {
     // biome-ignore lint/suspicious/noConsole: This is for debug mode
     console.log('Data from api:', json);
-    // biome-ignore lint/suspicious/noConsole: This is for debug mode
-    console.log('Data from api after transformation:', reFormatedJson);
   }
   if (columnsToArray) {
-    const transformedData = transformColumnsToArray(reFormatedJson, columnsToArray);
+    const transformedData = transformColumnsToArray(json, columnsToArray);
     if (debugMode) {
       // biome-ignore lint/suspicious/noConsole: This is for debug mode
       console.log('Data after transformation of column to array:', transformedData);
     }
     return transformedData;
   }
-  return reFormatedJson;
+  return json;
 }
 /**
  * Fetches and parses data from multiple sources (CSV, JSON, API), and merges the results.
@@ -211,23 +187,10 @@ export async function fetchAndParseMultipleDataSources(
   const data = await Promise.all(
     dataURL.map((d) =>
       d.fileType === 'json'
-        ? fetchAndParseJSON(d.dataURL as string, d.columnsToArray, d.dataTransformation, false)
+        ? fetchAndParseJSON(d.dataURL as string, d.columnsToArray, false)
         : d.fileType === 'api'
-          ? fetchAndTransformDataFromAPI(
-              d.dataURL as string,
-              d.apiHeaders,
-              d.columnsToArray,
-              d.dataTransformation,
-              false,
-            )
-          : fetchAndParseCSV(
-              d.dataURL as string,
-              d.dataTransformation,
-              d.columnsToArray,
-              false,
-              d.delimiter,
-              true,
-            ),
+          ? fetchAndTransformDataFromAPI(d.dataURL as string, d.apiHeaders, d.columnsToArray, false)
+          : fetchAndParseCSV(d.dataURL as string, d.columnsToArray, false, d.delimiter, true),
     ),
   );
   const mergedData = mergeMultipleData(

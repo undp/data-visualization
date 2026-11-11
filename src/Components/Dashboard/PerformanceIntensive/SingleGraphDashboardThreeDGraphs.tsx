@@ -149,7 +149,6 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
               ? await fetchAndParseJSON(
                   dataSettings.dataURL,
                   dataSettings.columnsToArray,
-                  dataSettings.dataTransformation,
                   debugMode,
                 )
               : dataSettings.fileType === 'api'
@@ -157,12 +156,10 @@ export function SingleGraphDashboardThreeDGraphs(props: Props) {
                     dataSettings.dataURL,
                     dataSettings.apiHeaders,
                     dataSettings.columnsToArray,
-                    dataSettings.dataTransformation,
                     debugMode,
                   )
                 : await fetchAndParseCSV(
                     dataSettings.dataURL,
-                    dataSettings.dataTransformation,
                     dataSettings.columnsToArray,
                     debugMode,
                     dataSettings.delimiter,

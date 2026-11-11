@@ -9,7 +9,6 @@ Fetches a CSV file from a URL, parses it, and applies transformations based on t
 ```ts
 function fetchAndParseCSV(
   dataURL: string,
-  dataTransformation?: string,
   columnsToArray?: {
     column: string;
     delimiter?: string;
@@ -23,7 +22,6 @@ function fetchAndParseCSV(
 ## Parameters
 
 - `dataURL` - The URL of the CSV file to fetch.
-- `dataTransformation` - Optional Handlebars template for data transformation.
 - `columnsToArray` - Optional columns configuration to transform certain columns to arrays.
 - `debugMode` - Optional flag to log data to the console for debugging.
 - `delimiter` - Optional delimiter used in the CSV file (default is comma).

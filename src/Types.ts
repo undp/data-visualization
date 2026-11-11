@@ -574,7 +574,6 @@ export interface FileSettingsDataType {
   columnsToArray?: ColumnConfigurationDataType[];
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any;
-  dataTransformation?: string;
 }
 
 export interface DataSettingsDataType {
@@ -584,7 +583,6 @@ export interface DataSettingsDataType {
   columnsToArray?: ColumnConfigurationDataType[];
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any;
-  dataTransformation?: string;
   idColumnTitle?: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   data?: any;
@@ -598,7 +596,6 @@ export interface DataSettingsWideToLongDataType {
   data?: any;
   keyColumn: string;
   idColumnTitle?: string;
-  dataTransformation?: string;
   // biome-ignore lint/suspicious/noExplicitAny: undefined data type
   apiHeaders?: any;
 }

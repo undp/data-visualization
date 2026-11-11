@@ -13,7 +13,6 @@ function fetchAndParseJSON(
     column: string;
     delimiter?: string;
   }[],
-  dataTransformation?: string,
   debugMode?: boolean,
 ): Promise
 ```
@@ -22,7 +21,6 @@ function fetchAndParseJSON(
 
 - `dataURL` - The URL of the JSON file to fetch.
 - `columnsToArray` - Optional columns configuration to transform certain columns to arrays.
-- `dataTransformation` - Optional Handlebars template for data transformation.
 - `debugMode` - Optional flag to log data to the console for debugging.
 
 ## Returns
