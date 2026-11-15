@@ -1,5 +1,5 @@
 import { cn } from '@undp/design-system-react/cn';
-import { H3 } from '@undp/design-system-react/Typography';
+import { Metric } from '@undp/design-system-react/Typography';
 import sum from 'lodash.sum';
 
 import { GraphFooter } from '@/Components/Elements/GraphFooter';
@@ -104,7 +104,7 @@ export function StatCardFromData(props: Props) {
         id={graphID}
         dir={language === 'he' || language === 'ar' ? 'rtl' : undefined}
         className={cn(
-          `${theme || 'light'} flex flex-col w-full box-border h-full ${
+          `group ${theme || 'light'} flex flex-col w-full box-border h-full ${
             !backgroundColor ? 'bg-transparent' : backgroundColor === true ? 'bg-surface' : ''
           } ${language || 'en'}`,
           classNames?.graphContainer,
@@ -143,18 +143,18 @@ export function StatCardFromData(props: Props) {
                       : 'justify-center'
                 }`}
               >
-                <H3
+                <Metric
                   marginBottom='base'
-                  className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] text-shadow-none font-heading ${
+                  size='sm'
+                  className={`${
                     centerAlign
                       ? 'text-center'
                       : language === 'he' || language === 'ar'
                         ? 'text-right'
                         : 'text-left'
-                  } ${textBackground ? 'text-content-primary' : 'text-transparent'}`}
+                  } ${textBackground ? 'text-content-primary [-webkit-text-stroke:0px]' : 'text-transparent'}`}
                   style={{
                     fontSize: headingFontSize,
-                    letterSpacing: '0.05rem',
                   }}
                 >
                   {data.filter((d) => typeof d.value === 'string').length > 0 ||
@@ -211,7 +211,7 @@ export function StatCardFromData(props: Props) {
                             )}{' '}
                   {year ? (
                     <span
-                      className='text-lg font-normal mt-0 mb-4 text-content-secondary'
+                      className='text-lg font-normal font-body mt-0 mb-4 text-content-secondary'
                       style={{
                         marginLeft: '-8px',
                         lineHeight: '1.09',
@@ -222,7 +222,7 @@ export function StatCardFromData(props: Props) {
                       ({year})
                     </span>
                   ) : null}
-                </H3>
+                </Metric>
               </div>
               {sources || footNote ? (
                 <GraphFooter
@@ -238,18 +238,18 @@ export function StatCardFromData(props: Props) {
             </>
           ) : (
             <>
-              <H3
-                marginBottom={layout === 'secondary' ? 'none' : 'base'}
-                className={`leading-xs [-webkit-text-stroke:2px_var(--content-primary)] text-shadow-none font-heading ${
+              <Metric
+                marginBottom='base'
+                size='sm'
+                className={`${
                   centerAlign
                     ? 'text-center'
                     : language === 'he' || language === 'ar'
                       ? 'text-right'
                       : 'text-left'
-                } ${textBackground ? 'text-content-primary' : 'text-transparent'}`}
+                } ${textBackground ? 'text-content-primary [-webkit-text-stroke:0px]' : 'text-transparent'}`}
                 style={{
                   fontSize: headingFontSize,
-                  letterSpacing: '0.05rem',
                 }}
               >
                 {data.filter((d) => typeof d.value === 'string').length > 0 ||
@@ -306,7 +306,7 @@ export function StatCardFromData(props: Props) {
                           )}{' '}
                 {year ? (
                   <span
-                    className='text-lg font-normal mt-0 mb-4 text-content-secondary'
+                    className='text-lg font-normal font-body mt-0 mb-4 text-content-secondary'
                     style={{
                       marginLeft: '-8px',
                       lineHeight: '1.09',
@@ -317,7 +317,7 @@ export function StatCardFromData(props: Props) {
                     ({year})
                   </span>
                 ) : null}
-              </H3>
+              </Metric>
               {graphTitle || graphDescription ? (
                 <GraphHeader
                   styles={{
