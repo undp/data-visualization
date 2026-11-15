@@ -176,9 +176,9 @@ const entries = {
   ),
 
   // Action/Button Components
-  ImageDownloadButton: path.resolve(
+  PngDownloadButton: path.resolve(
     import.meta.dirname,
-    'src/Components/Actions/ImageDownloadButton.tsx',
+    'src/Components/Actions/PngDownloadButton.tsx',
   ),
   SVGDownloadButton: path.resolve(
     import.meta.dirname,
@@ -222,6 +222,7 @@ const entries = {
 
   // Utility Functions
   utils: path.resolve(import.meta.dirname, 'src/Utils/index.ts'),
+  imageExport: path.resolve(import.meta.dirname, 'src/Utils/imageExport/index.ts'),
 
   // Data Processing Utils
   fetchAndParseData: path.resolve(import.meta.dirname, 'src/Utils/fetchAndParseData.ts'),

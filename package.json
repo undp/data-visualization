@@ -1,6 +1,6 @@
 {
   "name": "@undp/data-viz",
-  "version": "3.10.3",
+  "version": "3.11.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -370,6 +370,11 @@
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
+    },
+    "./imageExport": {
+      "types": "./dist/imageExport.d.ts",
+      "import": "./dist/imageExport.js",
+      "require": "./dist/imageExport.cjs"
     },
     "./fetchAndParseData": {
       "types": "./dist/fetchAndParseData.d.ts",

@@ -87,6 +87,11 @@ __Optional peer dependencies__
 * dnd-kit - For creating comparison maps (Peer optional dependency: only needed when using GeoHub compare maps)
 * ajv - For schema validation (Peer optional dependency: only needed when validating schemas for good developer experience)
 * dom-to-svg - For downloading div as svg (Peer optional dependency: only needed when using SVG download functionality)
+* handlebars - For converting string to html (Peer optional dependency: only needed when using string2HTML functionality)
+* marked - For converting string to html (Peer optional dependency: only needed when using string2HTML functionality)
+* math-expression-evaluator - For converting string to html (Peer optional dependency: only needed when using string2HTML functionality)
+* react-globe.gl (v ^2.37.0) - For 3D globe maps (Peer optional dependency: only needed when using 3D globe map functionality)
+* three (v ^0.182.0) - For 3D globe maps (Peer optional dependency: only needed when using 3D globe map functionality)
 
 ### How to add a new chart or graph
 

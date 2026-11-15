@@ -3,7 +3,7 @@ import { cn } from '@undp/design-system-react/cn';
 import type { JSX } from 'react';
 import { ImageDown } from '@/Components/Icons';
 import type { Color } from '@/Types';
-import { svgDownload } from '@/Utils/svgDownload';
+import { svgDownload } from '@/Utils/imageExport/svgDownload';
 
 interface Props {
   buttonContent?: string | JSX.Element;

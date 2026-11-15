@@ -17,7 +17,5 @@ export {
 } from './getSimpleStatistics';
 export { getTextColorBasedOnBgColor } from './getTextColorBasedOnBgColor';
 export { getUniqValue } from './getUniqValue';
-export { imageDownload } from './imageDownload';
 export { numberFormattingFunction } from './numberFormattingFunction';
 export { removeOutliers } from './removeOutliers';
-export { svgDownload } from './svgDownload';

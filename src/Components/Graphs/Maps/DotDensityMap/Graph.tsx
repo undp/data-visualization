@@ -8,7 +8,7 @@ import { AnimatePresence, useInView } from 'motion/react';
 import * as m from 'motion/react-m';
 import { type RefObject, useRef, useState } from 'react';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
-import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
+import { PngDownloadButton } from '@/Components/Actions/PngDownloadButton';
 import { Colors } from '@/Components/ColorPalette';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import {
@@ -452,7 +452,7 @@ export function Graph(props: Props) {
         {(graphDownload || dataDownload) && (
           <div className='absolute right-4 top-4 flex flex-col image-download-button gap-2'>
             {graphDownload && (
-              <ImageDownloadButton nodeID={graphDownload} buttonSmall className='p-1' />
+              <PngDownloadButton nodeID={graphDownload} buttonSmall className='p-1' />
             )}
             {dataDownload && dataDownload.length > 0 && (
               <CsvDownloadButton

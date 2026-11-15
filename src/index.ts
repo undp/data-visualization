@@ -8,7 +8,7 @@ export { CopyTextButton } from './Components/Actions/CopyTextButton';
 export { CsvDownloadButton } from './Components/Actions/CsvDownloadButton';
 /* ------- All Button ------- */
 // Utility Buttons
-export { ImageDownloadButton } from './Components/Actions/ImageDownloadButton';
+export { PngDownloadButton } from './Components/Actions/PngDownloadButton';
 export { SVGDownloadButton } from './Components/Actions/SVGDownloadButton';
 /* ------- Color Palette ------- */
 export { Colors } from './Components/ColorPalette';
@@ -136,10 +136,10 @@ export {
 } from './Utils/getSimpleStatistics';
 export { getTextColorBasedOnBgColor } from './Utils/getTextColorBasedOnBgColor';
 export { getUniqValue } from './Utils/getUniqValue';
-export { imageDownload } from './Utils/imageDownload';
+export { pngDownload } from './Utils/imageExport/pngDownload';
+export { svgDownload } from './Utils/imageExport/svgDownload';
 export { numberFormattingFunction } from './Utils/numberFormattingFunction';
 export { removeOutliers } from './Utils/removeOutliers';
-export { svgDownload } from './Utils/svgDownload';
 export { transformColumnsToArray } from './Utils/transformData/transformColumnsToArray';
 /* ---------Data Transformations ------------*/
 export { transformDataForAggregation } from './Utils/transformData/transformDataForAggregation';

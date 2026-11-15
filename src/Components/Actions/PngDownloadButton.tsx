@@ -3,7 +3,7 @@ import { cn } from '@undp/design-system-react/cn';
 import type { JSX, RefObject } from 'react';
 import { ImageDown } from '@/Components/Icons';
 import type { Color } from '@/Types';
-import { imageDownload } from '@/Utils/imageDownload';
+import { pngDownload } from '@/Utils/imageExport/pngDownload';
 
 interface Props {
   buttonContent?: string | JSX.Element;
@@ -14,7 +14,7 @@ interface Props {
   className?: string;
 }
 
-export function ImageDownloadButton(props: Props) {
+export function PngDownloadButton(props: Props) {
   const {
     nodeID,
     filename = 'image',
@@ -35,12 +35,12 @@ export function ImageDownloadButton(props: Props) {
       onClick={() => {
         if (typeof nodeID === 'string') {
           if (document.getElementById(nodeID)) {
-            imageDownload(document.getElementById(nodeID) as HTMLElement, filename);
+            pngDownload(document.getElementById(nodeID) as HTMLElement, filename);
           } else {
             console.error('Cannot find the html element');
           }
         } else {
-          imageDownload(nodeID.current as HTMLDivElement, filename);
+          pngDownload(nodeID.current as HTMLDivElement, filename);
         }
       }}
       color={buttonColor}

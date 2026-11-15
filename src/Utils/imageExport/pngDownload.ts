@@ -10,10 +10,10 @@ import { domToPng } from 'modern-screenshot';
  *
  * @example
  * const element = document.getElementById('myElement');
- * imageDownload(element, 'screenshot');
+ * pngDownload(element, 'screenshot');
  */
 
-export function imageDownload(node: HTMLElement, filename: string) {
+export function pngDownload(node: HTMLElement, filename: string) {
   domToPng(node, {
     quality: 1,
     scale: 2,

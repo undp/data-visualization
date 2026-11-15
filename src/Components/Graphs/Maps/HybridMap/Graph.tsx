@@ -11,7 +11,7 @@ import * as m from 'motion/react-m';
 import { type RefObject, useMemo, useRef, useState } from 'react';
 import type { Topology } from 'topojson-specification';
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
-import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
+import { PngDownloadButton } from '@/Components/Actions/PngDownloadButton';
 import { DetailsModal } from '@/Components/Elements/DetailsModal';
 import {
   LegendCollapseButton,
@@ -792,7 +792,7 @@ export function Graph(props: Props) {
         {(graphDownload || dataDownload) && (
           <div className='absolute right-4 top-4 flex flex-col image-download-button gap-2'>
             {graphDownload && (
-              <ImageDownloadButton nodeID={graphDownload} buttonSmall className='p-1' />
+              <PngDownloadButton nodeID={graphDownload} buttonSmall className='p-1' />
             )}
             {dataDownload && dataDownload.length > 0 && (
               <CsvDownloadButton

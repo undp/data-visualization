@@ -1,7 +1,7 @@
 import type { RefObject } from 'react';
 
 import { CsvDownloadButton } from '@/Components/Actions/CsvDownloadButton';
-import { ImageDownloadButton } from '@/Components/Actions/ImageDownloadButton';
+import { PngDownloadButton } from '@/Components/Actions/PngDownloadButton';
 import { GraphDescription } from '@/Components/Typography/GraphDescription';
 import { GraphTitle } from '@/Components/Typography/GraphTitle';
 
@@ -54,7 +54,7 @@ export function GraphHeader(props: Props) {
       </div>
       {graphDownload || dataDownload ? (
         <div className='flex gap-3'>
-          {graphDownload ? <ImageDownloadButton nodeID={graphDownload} buttonSmall /> : null}
+          {graphDownload ? <PngDownloadButton nodeID={graphDownload} buttonSmall /> : null}
           {dataDownload && dataDownload.length > 0 ? (
             <CsvDownloadButton
               csvData={dataDownload}
