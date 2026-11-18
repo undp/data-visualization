@@ -112,3 +112,12 @@ Adding documentation and stories in storybook:
 * Add a config file for the graph in `./src/stories/assets/config` folder
 * Add the graph in `./src/stories/assets/graphSettingsSelect.ts`
 * Add the graph in `./src/stories/assets/graphDataConfigSelect.ts`
+
+### Maintainers
+
+This library is maintained by the UNDP Data team.
+
+### Contact
+
+* **Bugs and feature requests:** please [open an issue](https://github.com/undp/data-visualization/issues). This is the fastest way to reach us, and it lets others find the answer too.
+* **Questions about using the library:** check the [documentation](https://dataviz.design.undp.org) first, then open an issue.
